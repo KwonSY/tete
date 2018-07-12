@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="52dp"
+    android:background="#efefef"
+    tools:context="honbab.pumkit.com.tete.MainActivity">
+    
+    <View
+        android:id="@+id/line_maincolor"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#ff0000"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_below="@id/line_maincolor"
+        android:layout_height="wrap_content"
+        android:text="title bar"/>
+
+    <LinearLayout
+        android:id="@+id/layout_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layout_topbar"
+        android:visibility="gone"
+        android:orientation="horizontal">
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_weight="0"
+            android:text="검색" />
+    </LinearLayout>
+</RelativeLayout>
