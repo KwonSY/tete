@@ -1,6 +1,7 @@
 package honbab.pumkit.com.widget;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -36,9 +37,13 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
     @Override
     protected void onPostExecute(String s) {
 //        super.onPostExecute(s);
+        Log.e("abc", "onPostExecute s = " + s);
+
         List<HashMap<String, String>> nearbyPlaceList = null;
         DataParser parser = new DataParser();
+//        Log.e("abc", "parser = " + parser.);
         nearbyPlaceList = parser.parse(s);
+        Log.e("abc", "nearbyPlaceList = " + nearbyPlaceList);
         showNearbyPlaces(nearbyPlaceList);
     }
 
@@ -47,15 +52,24 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
             MarkerOptions markerOptions = new MarkerOptions();
             HashMap<String, String> googlePlace = nearbyPlaceList.get(i);
 
+            for (String name: googlePlace.keySet()){
+                String key =name.toString();
+//                String value = example.get(name).toString();
+//                System.out.println(key + " " + value);
+                Log.e("abc", "show key = " + key);
+            }
+
             String placeName = googlePlace.get("place_name");
             String vicinity = googlePlace.get("vicinity");
-            double lat = Double.parseDouble(googlePlace.get("lat"));
-            double lng = Double.parseDouble(googlePlace.get("lng"));
+            double lat = Double.parseDouble( googlePlace.get("lat"));
+            double lng = Double.parseDouble( googlePlace.get("lag"));
+            Log.e("abc", "showNearbyPlaces = " + lat + ", " + lng);
 
             LatLng latLng = new LatLng(lat, lng);
             markerOptions.position(latLng);
-            markerOptions.title(placeName + " : " + vicinity);
-            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+//            markerOptions.title(placeName + " : " + vicinity);
+            markerOptions.title(placeName);
+            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
 
             mMap.addMarker(markerOptions);
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));

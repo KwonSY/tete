@@ -33,7 +33,7 @@ public class DataParser {
             googlePlacesMap.put("place_name", placeName);
             googlePlacesMap.put("vicinity", vicinity);
             googlePlacesMap.put("lat", latitude);
-            googlePlacesMap.put("lag", latitude);
+            googlePlacesMap.put("lag", longitude);
             googlePlacesMap.put("reference", reference);
         } catch (JSONException e) {
             e.printStackTrace();
