@@ -21,6 +21,7 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
 
     @Override
     protected String doInBackground(Object... objects) {
+        Log.e("abc", "GetNearbyPlacesData doInBackground = " + objects);
         mMap = (GoogleMap) objects[0];
         url = (String) objects[1];
 
@@ -73,7 +74,7 @@ public class GetNearbyPlacesData extends AsyncTask<Object, String, String> {
 
             mMap.addMarker(markerOptions);
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+//            mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
         }
     }
 
