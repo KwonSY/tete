@@ -24,6 +24,7 @@
             android:src="@drawable/icon_noprofile_circle" />
 
         <EditText
+            android:id="@+id/edit_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="hong@voltage.com"
@@ -31,6 +32,7 @@
             android:textSize="12sp" />
 
         <EditText
+            android:id="@+id/edit_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="******"
@@ -43,6 +45,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/btn_go_join"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
@@ -56,7 +59,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="5dp"
-                android:text="회원가입하기" />
+                android:text="로그인" />
         </RelativeLayout>
 
     </LinearLayout>

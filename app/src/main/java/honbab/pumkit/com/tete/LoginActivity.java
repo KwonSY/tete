@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 
+import honbab.pumkit.com.task.LoginTask;
 import honbab.pumkit.com.widget.Encryption;
 import honbab.pumkit.com.widget.OkHttpClientSingleton;
 import honbab.pumkit.com.widget.SessionManager;
@@ -77,7 +78,7 @@ public class LoginActivity extends AppCompatActivity {
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.btn_login:
-                    new LoginTask().execute();
+                    new LoginTask(LoginActivity.this, httpClient).execute(edit_email.getText().toString(), edit_password.getText().toString());
 
                     break;
                 case R.id.btn_go_join:
@@ -90,7 +91,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     };
 
-    private class LoginTask extends AsyncTask<Void, Void, Void> {
+    private class LoginTask2 extends AsyncTask<Void, Void, Void> {
         String result;
         String user_name, age;
 
@@ -104,8 +105,6 @@ public class LoginActivity extends AppCompatActivity {
             Encryption.setPassword(password);
             Encryption.encryption(password);
             password = Encryption.getPassword();
-            Log.e("abc", "email = " + email);
-            Log.e("abc", "password = " + password);
         }
 
         @Override
@@ -179,29 +178,6 @@ public class LoginActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
-
-//                firebaseAuth.signInWithEmailAndPassword(email, password)
-//                        .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-//                            @Override
-//                            public void onComplete(@NonNull Task<AuthResult> task) {
-//
-//                                progressDialog.dismiss();
-//                                Log.e("abc", "progressDialog myGender = " + myGender);
-//                                session.createLoginSession(my_id, myGender);
-//
-//                                if(task.isSuccessful()){
-//                                    finish();
-//                                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-////                                    intent.putExtra("type", type); //vvvvvvvvvvvvvvvvvvvvvvvvvvvv
-//                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                                    startActivity(intent);
-//
-////                                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
-//                                }
-//
-//                            }
-//                        });
-
             } else if (result.equals("1")) {
                 //Toast.makeText(getBaseContext(), "비밀번호를 맞지않습니다.", Toast.LENGTH_LONG).show();
                 Toast.makeText(getApplicationContext(), "비밀번호가 맞지 않습니다.", Toast.LENGTH_SHORT).show();

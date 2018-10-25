@@ -151,12 +151,19 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
 
             Context context = itemView.getContext();
 
+            //수락대기 리스트
             GridLayoutManager layoutManager = new GridLayoutManager(context, 2);
             recyclerView_feedee = itemView.findViewById(R.id.recyclerView_req_feedee);
             recyclerView_feedee.setLayoutManager(layoutManager);
 //            mAdapter = new ReqFeedeeAdapter(context, httpClient, feed_id, usersList);
 //            recyclerView.setAdapter(mAdapter);
 
+//            //내가 찌른 피드 리스트
+//            LinearLayoutManager layoutManager3 = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+//            recyclerView_poke = itemView.findViewById(R.id.recyclerView_poke);
+//            recyclerView_poke.setLayoutManager(layoutManager3);
+
+            //수락해서 코멘트하기
             LinearLayoutManager layoutManager2 = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
             recyclerView_comment = itemView.findViewById(R.id.recyclerView_comment);
             recyclerView_comment.setLayoutManager(layoutManager2);

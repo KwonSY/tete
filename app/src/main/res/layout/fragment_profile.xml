@@ -77,6 +77,25 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="4dp"
+                        android:text="피드 신청 수"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/badge_poke_cnt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="3" />
+                </LinearLayout>
             </LinearLayout>
 
             <Button

@@ -44,10 +44,11 @@ public class ProfileFragment extends Fragment {
     private ImageView image_myProfile;
     private TextView txt_my_name, txt_comment;
     private TextView title_reserve;
-    //    private TextView txt_restName;
-//    private ListView listView_myFeed;
+    private TextView badge_poke_cnt;
     public static RecyclerView recyclerView_myFeed;
     private MyFeedListAdapter myFeedListAdapter;
+
+    int cnt_my = 0, cnt_yours = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -91,7 +92,7 @@ public class ProfileFragment extends Fragment {
         Button btn_setting = (Button) getActivity().findViewById(R.id.btn_setting);
         btn_setting.setOnClickListener(mOnClickListener);
 
-//        txt_restName = (TextView) getActivity().findViewById(R.id.txt_restName);
+        badge_poke_cnt = (TextView) getActivity().findViewById(R.id.badge_poke_cnt);
     }
 
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
@@ -153,9 +154,6 @@ public class ProfileFragment extends Fragment {
                     String gender = user_obj.getString("gender");
                     img_url = Statics.main_url + user_obj.getString("img_url");
                     comment = user_obj.getString("comment");
-//                    Log.e("abc", "img_url : " + img_url);
-
-//                    ReservData data = new ReservData();
                 } else {
 //                    Log.d(TAG, "Error : " + response.code() + ", " + response.message());
                 }
@@ -190,6 +188,7 @@ public class ProfileFragment extends Fragment {
 
     public class MyFeedListTask extends AsyncTask<Void, Void, ArrayList<FeedReqData>> {
         String result;
+        String host;
         String rest_name;
 
 //        ArrayList<FeedReqData> feedReqList = new ArrayList<>();
@@ -197,8 +196,6 @@ public class ProfileFragment extends Fragment {
         @Override
         protected void onPreExecute() {
 //            feedReqList.clear();
-
-//            txt_restName = (TextView) getActivity().findViewById(R.id.txt_restName);
         }
 
         @Override
@@ -233,14 +230,11 @@ public class ProfileFragment extends Fragment {
 
                             String feed_id = feedObj.getString("sid");
 
-                            JSONObject hostObj = feedObj.getJSONObject("host");
-                            String host_id = hostObj.getString("sid");
-                            String host_name = hostObj.getString("name");
-                            String host_img = hostObj.getString("img_url");
-//                            if (host_id.equals(Statics.my_id))
-//                                result = "host";
-//                            else
-//                                result = "not_host";
+                            host = feedObj.getString("host");
+                            if (host.equals("my"))
+                                cnt_my++;
+                            else if (host.equals("your"))
+                                cnt_yours++;
 
                             JSONObject restObj = feedObj.getJSONObject("rest");
                             String rest_id = restObj.getString("sid");
@@ -314,41 +308,14 @@ public class ProfileFragment extends Fragment {
                 myFeedListAdapter = new MyFeedListAdapter(getActivity(), httpClient, feedReqList);
                 recyclerView_myFeed.setAdapter(myFeedListAdapter);
                 myFeedListAdapter.notifyDataSetChanged();
+
+                Log.e("abc", "xxxxxxxxxxx " + cnt_yours);
+                    badge_poke_cnt.setText(String.valueOf(cnt_yours));
             } else {
                 title_reserve.setVisibility(View.GONE);
                 recyclerView_myFeed.setVisibility(View.GONE);
             }
 
-//            for (int i=0; i<feedReqList.size(); i++) {
-//                FeedReqData data = feedReqList.get(i);
-//                ArrayList<UserData> usersList = data.getUsersList();
-////                ArrayList<UserData> usersList = feedReqList.get(i).getUsersList();
-////                ArrayList<UserData> usersList = data.getUsersList();
-////                Log.e("abc", i + "번째, " + "usersList = " + usersList);
-//                Log.e("abc", i + "번째, " + "usersList size = " + usersList.size());
-//
-//                for (int j=0; j<usersList.size(); j++) {
-//                    UserData userData = usersList.get(j);
-//                    String status = userData.getStatus();
-//                    Log.e("abc", "onPostExecute status = " + status);
-//
-//                    if (status.equals("y")) {
-////                    RecyclerView recyclerView = getActivity().findViewById(R.id.recyclerView_req_feedee);
-////                    recyclerView.setVisibility(View.GONE);
-//                        myFeedListAdapter = new MyFeedListAdapter(getActivity(), httpClient, feedReqList);
-//                        recyclerView_myFeed.setAdapter(myFeedListAdapter);
-//                        myFeedListAdapter.notifyDataSetChanged();
-//                    } else {
-//                        title_reserve.setVisibility(View.VISIBLE);
-//
-//                        myFeedListAdapter = new MyFeedListAdapter(getActivity(), httpClient, feedReqList);
-//                        recyclerView_myFeed.setAdapter(myFeedListAdapter);
-//                        myFeedListAdapter.notifyDataSetChanged();
-//                    }
-//                }
-//
-//                usersList.clear();
-//            }
         }
 
     }
