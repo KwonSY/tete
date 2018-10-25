@@ -1,15 +1,18 @@
 package honbab.pumkit.com.fragment;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -23,6 +26,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.io.IOException;
 import java.util.List;
 
+import honbab.pumkit.com.tete.DaumMapActivity;
 import honbab.pumkit.com.tete.R;
 
 public class ReservMapFragment extends Fragment implements OnMapReadyCallback {
@@ -48,8 +52,19 @@ public class ReservMapFragment extends Fragment implements OnMapReadyCallback {
         return rootView;
     }
 
+    Button btn_reserv;
     private void initControls() {
 //        mMapView = getActivity().findViewById(R.id.mapView);
+
+        btn_reserv = (Button) getActivity().findViewById(R.id.btn_reserve);
+        btn_reserv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.e("abc", "xxxxxxxxxxx");
+                Intent intent = new Intent(getActivity(), DaumMapActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override

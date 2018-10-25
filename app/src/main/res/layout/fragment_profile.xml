@@ -6,10 +6,86 @@
     android:layout_height="match_parent"
     tools:context="honbab.pumkit.com.tete.MainActivity">
 
-    <TextView
-        android:id="@+id/title_detail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="프로필" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="30dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="50dp">
+
+                <ImageView
+                    android:id="@+id/image_myProfile"
+                    android:layout_width="@dimen/profile_l"
+                    android:layout_height="@dimen/profile_l"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/icon_noprofile_circle" />
+
+                <TextView
+                    android:id="@+id/txt_my_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="12dp"
+                    android:text="내 프로필 읽어오는 중..." />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="80dp"
+                        android:layout_height="wrap_content"
+                        android:text="내소개"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txt_comment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/border_round_gr1"
+                        android:padding="8dp"
+                        android:text="내 소개 읽어오는 중..." />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/title_reserve"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="30dp"
+                        android:text="예약현황"
+                        android:textStyle="bold" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recyclerView_myFeed"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_setting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_margin="10dp"
+                android:text="설정" />
+        </RelativeLayout>
+    </ScrollView>
 </RelativeLayout>

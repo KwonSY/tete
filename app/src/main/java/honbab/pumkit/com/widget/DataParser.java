@@ -1,5 +1,7 @@
 package honbab.pumkit.com.widget;
 
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,8 +18,15 @@ public class DataParser {
         String vicinity = "-NA-";
         String latitude = "";
         String longitude = "";
-        String reference = "";
 
+        String photo_height = "";
+        String photo_html_attributions = "";
+        String photo_reference = "";
+        String photo_width = "";
+
+        String place_id = "";
+        String reference = "";
+        Log.e("abc", "googlePlaceJson = " + googlePlaceJson);
         try {
             if (!googlePlaceJson.isNull("name")) {
                 placeName = googlePlaceJson.getString("name");
@@ -28,12 +37,29 @@ public class DataParser {
             latitude = googlePlaceJson.getJSONObject("geometry").getJSONObject("location").getString("lat");
             longitude = googlePlaceJson.getJSONObject("geometry").getJSONObject("location").getString("lng");
 
+            if (!googlePlaceJson.isNull("photos")) {
+                photo_height = googlePlaceJson.getJSONArray("photos").getJSONObject(0).getString("height");
+                photo_html_attributions = googlePlaceJson.getJSONArray("photos").getJSONObject(0).getString("html_attributions");
+                photo_reference = googlePlaceJson.getJSONArray("photos").getJSONObject(0).getString("photo_reference");
+                photo_width = googlePlaceJson.getJSONArray("photos").getJSONObject(0).getString("width");
+            }
+
+            place_id = googlePlaceJson.getString("place_id");
+
             reference = googlePlaceJson.getString("reference");
 
             googlePlacesMap.put("place_name", placeName);
             googlePlacesMap.put("vicinity", vicinity);
             googlePlacesMap.put("lat", latitude);
             googlePlacesMap.put("lag", longitude);
+
+            googlePlacesMap.put("photo_height", photo_height);
+            googlePlacesMap.put("photo_html_attributions", photo_html_attributions);
+            googlePlacesMap.put("photo_reference", photo_reference);
+            googlePlacesMap.put("photo_width", photo_width);
+
+            googlePlacesMap.put("place_id", place_id);
+
             googlePlacesMap.put("reference", reference);
         } catch (JSONException e) {
             e.printStackTrace();

@@ -4,6 +4,9 @@
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -15,9 +18,9 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBlXNd3-sYmoi9cmaNHVvVrQHSN7kImHR0" />
+            android:value="AIzaSyD2-H992mDR2dLm2DQof3lIcyUCFikePO0" />
 
-        <activity android:name=".MapsActivity">
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,9 +28,31 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="honbab.pumkit.com.tete.ProfileActivity"/>
-        <activity android:name="honbab.pumkit.com.tete.OneReservActivity"/>
 
+
+        <activity android:name="honbab.pumkit.com.tete.SplashActivity"/>
+
+        <activity android:name="honbab.pumkit.com.tete.LoginActivity"/>
+        <activity android:name="honbab.pumkit.com.tete.JoinActivity"/>
+
+        <activity android:name="honbab.pumkit.com.tete.FeedMapActivity"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity android:name="honbab.pumkit.com.tete.DelayHandlerActivity"/>
+        <activity android:name="honbab.pumkit.com.tete.GridViewActivity"/>
+        <activity android:name="honbab.pumkit.com.tete.MapsActivity"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity android:name="honbab.pumkit.com.tete.ReservActivity"/>
+        <activity android:name="honbab.pumkit.com.tete.OneFeedActivity"/>
+        <activity android:name="honbab.pumkit.com.tete.OneImageActivity"/>
+        <activity android:name="honbab.pumkit.com.tete.OneRestaurantActivity"/>
+
+        <activity android:name="honbab.pumkit.com.tete.ProfileActivity"/>
+        <activity android:name="honbab.pumkit.com.tete.SettingActivity"/>
+
+
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="7e146f9c98e75bf4dde5b028ccd06aa4"/>
 
     </application>
 

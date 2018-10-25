@@ -21,12 +21,6 @@ import honbab.pumkit.com.widget.CustomTimePickerDialog;
 
 public class ReservFragment extends Fragment {
 
-    //    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//
-////        httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
-//    }
     String TAG = "abc";
     public static final int LOCATION_UPDATE_MIN_DISTANCE = 10;
     public static final int LOCATION_UPDATE_MIN_TIME = 5000;
@@ -81,7 +75,7 @@ public class ReservFragment extends Fragment {
 
     private void initControls() {
         ImageView btn_gomap = (ImageView) getActivity().findViewById(R.id.btn_gomap);
-        btn_gomap.setOnClickListener(mOnClickListner);
+        btn_gomap.setOnClickListener(mOnClickListener);
 
         Date currentTime = new Date();
         Calendar calendar = GregorianCalendar.getInstance();
@@ -97,7 +91,7 @@ public class ReservFragment extends Fragment {
             public void onClick(View view) {
 //                Date currentTime = Calendar.getInstance().getTime();
 
-                CustomTimePickerDialog dialog = new CustomTimePickerDialog(getActivity(), listener,hourOfDay, minute, false);
+                CustomTimePickerDialog dialog = new CustomTimePickerDialog(getActivity(), listener, hourOfDay, minute, false);
 //                dialog.updateTime();
                 dialog.show();
             }
@@ -105,7 +99,7 @@ public class ReservFragment extends Fragment {
 
     }
 
-    private View.OnClickListener mOnClickListner = new View.OnClickListener() {
+    private View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
 
@@ -122,10 +116,6 @@ public class ReservFragment extends Fragment {
 
                     View view2 = (View) ((ViewGroup) v.getParent().getParent()).getChildAt(1);
                     int fragment_id = view2.getId();
-
-                    Log.e(TAG, "아이디가 무엇인고1? = " + (ViewGroup) v.getParent().getParent());
-                    Log.e(TAG, "아이디가 무엇인고2? = " + view2);
-                    Log.e(TAG, "아이디가 무엇인고3? = " + fragment_id);
 
                     FragmentTransaction transaction = getFragmentManager().beginTransaction();
 //                    transaction.remove(ReservFragment.newInstance());

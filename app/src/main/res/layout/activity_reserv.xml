@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_slidingPanel"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom"
+    app:umanoPanelHeight="20dp"
+    app:umanoShadowHeight="0dp"
+    tools:context="honbab.pumkit.com.tete.ReservActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include
+            android:id="@+id/topbar"
+            layout="@layout/layout_topbar_backtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <EditText
+            android:id="@+id/edit_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="100dp" />
+
+        <ImageView
+            android:id="@+id/btn_go_map"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/icon_map" />
+
+        <TextView
+            android:id="@+id/title_nearRest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/edit_search"
+            android:text="가까운 추천 음식점" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView_rest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title_nearRest"
+            android:layout_marginBottom="10dp" />
+    </RelativeLayout>
+
+    <include
+        layout="@layout/layout_slidingpanel_reserv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>

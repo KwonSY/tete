@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_reserv_dialog"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:background="#efefef"
+    android:paddingBottom="10dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingTop="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="11dp"
+            android:layout_marginTop="5dp">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="장소"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txt_restName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="음식점을 선택하세요" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="11dp">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="예약시간"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txt_clock"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_round_gr1"
+                android:paddingBottom="7dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingTop="7dp"
+                android:text="오후 7시 00분" />
+        </LinearLayout>
+
+        <!--
+        <RelativeLayout
+            android:id="@+id/layout_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="11dp">
+
+            <TextView
+                android:id="@+id/title_style"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:text="기타 설정"
+                android:textStyle="bold" />
+
+            <co.ceryle.radiorealbutton.RadioRealButtonGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title_style"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                app:rrbg_animate="true"
+                app:rrbg_animateTexts_enter="overshoot">
+
+                <co.ceryle.radiorealbutton.RadioRealButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:rrb_ripple="true"
+                    app:rrb_rippleColor="#4a4a4a"
+                    app:rrb_text="조용히 먹고 싶어요" />
+
+                <co.ceryle.radiorealbutton.RadioRealButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:rrb_ripple="true"
+                    app:rrb_rippleColor="#4a4a4a"
+                    app:rrb_text="간단한 대화를 원해요" />
+
+                <co.ceryle.radiorealbutton.RadioRealButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:rrb_ripple="true"
+                    app:rrb_rippleColor="#4a4a4a"
+                    app:rrb_text="수다를 원해요" />
+
+            </co.ceryle.radiorealbutton.RadioRealButtonGroup>
+        </RelativeLayout>
+        -->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="11dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="comment"
+                android:textStyle="bold"
+                android:textSize="12sp"/>
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:inputType="text"
+                android:hint="상대방에게 남기고 싶은 메시지"/>
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/btn_reserv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="예약하기"
+            android:textSize="12sp" />
+    </LinearLayout>
+</RelativeLayout>

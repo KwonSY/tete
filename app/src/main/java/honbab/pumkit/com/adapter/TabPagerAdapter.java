@@ -1,12 +1,13 @@
-package honbab.pumkit.com.widget;
+package honbab.pumkit.com.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import honbab.pumkit.com.fragment.FeedFragment;
+import honbab.pumkit.com.fragment.NoProfileFragment;
 import honbab.pumkit.com.fragment.ProfileFragment;
-import honbab.pumkit.com.fragment.ReservMapFragment;
+import honbab.pumkit.com.tete.Statics;
 
 public class TabPagerAdapter extends FragmentStatePagerAdapter {
 
@@ -26,14 +27,20 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
             case 0:
                 FeedFragment tabFragment1 = new FeedFragment();
                 return tabFragment1;
+//            case 1:
+////                ReservFragment tabFragment2 = new ReservFragment();
+////                return tabFragment2;
+////                return ReservFragment.newInstance();
+//                return ReservMapFragment.newInstance();
             case 1:
-//                ReservFragment tabFragment2 = new ReservFragment();
-//                return tabFragment2;
-//                return ReservFragment.newInstance();
-                return ReservMapFragment.newInstance();
-            case 2:
-                ProfileFragment tabFragment3 = new ProfileFragment();
-                return tabFragment3;
+                if (Statics.my_id == null) {
+                    NoProfileFragment tabFragment2 = new NoProfileFragment();
+                    return tabFragment2;
+                } else {
+                    ProfileFragment tabFragment2 = new ProfileFragment();
+                    return tabFragment2;
+                }
+
             default:
                 return null;
         }

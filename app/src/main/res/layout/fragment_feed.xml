@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:id="@+id/layout_fragment_feed"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="honbab.pumkit.com.tete.MainActivity">
 
@@ -13,10 +13,32 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <ListView
-        android:id="@+id/listView_feed"
+    <ImageView
+        android:id="@+id/btn_go_map"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/icon_map" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/gridView_feed"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/layout_topbar" />
+
+    <Button
+        android:id="@+id/btn_reserve_google"
         android:layout_width="wrap_content"
-        android:layout_below="@id/layout_topbar"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/circle_green"
+        android:text="+예약하기" />
 
 </RelativeLayout>

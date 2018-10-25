@@ -1,12 +1,10 @@
 package honbab.pumkit.com.tete;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,13 +12,18 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -32,11 +35,19 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
-import honbab.pumkit.com.widget.GetNearbyPlacesData;
+import honbab.pumkit.com.adapter.RecyclerViewRestAdapter;
+import honbab.pumkit.com.widget.GetNearPlacesTaskForMap;
+import honbab.pumkit.com.widget.GetNearPlacesTaskForReserv;
+import honbab.pumkit.com.widget.SnapHelper;
+
+import static com.sothree.slidinguppanel.SlidingUpPanelLayout.*;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleMap.OnMyLocationButtonClickListener,
@@ -55,53 +66,146 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Location lastlocation;
     private Marker currentLocationmMarker;
     public static final int REQUEST_LOCATION_CODE = 99;
-    int PROXIMITY_RADIUS = 1000;
+    int PROXIMITY_RADIUS = 700;
     double latitude, longitude;
 
     int i = 0;
     int j = 0;
 
+    SlidingUpPanelLayout layout_slidingPanel;
+    public static RecyclerView recyclerView;
+    public static RecyclerViewRestAdapter recyclerViewRestAdapter;
+
+    ArrayList<String> mNames = new ArrayList<>();
+    ArrayList<Marker> mMarkersList = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
+        setContentView(R.layout.activity_reservmap);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // API 23 이상
             checkLocationPermission();
-
         }
+
+        layout_slidingPanel = (SlidingUpPanelLayout) findViewById(R.id.layout_slidingPanel);
+        layout_slidingPanel.setFadeOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.e("abc", "setFadeOnClickListener");
+                layout_slidingPanel.setPanelState(PanelState.COLLAPSED);
+            }
+        });
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        if (i == 0) {
-            mapFragment.getMapAsync(this);
-        } else if (i == 1) {
-            mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
-                @Override
-                public void onMyLocationChange(Location location) {
-                    latitude = location.getLatitude();
-                    longitude = location.getLongitude();
-                    lastlocation = location;
-                    if (currentLocationmMarker != null) {
-                        currentLocationmMarker.remove();
-                    }
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
 
 
-                    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-//                    mMap.animateCamera(CameraUpdateFactory.zoomBy(3));
-                    mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+//        Parcelable mCurrentLocation = savedInstanceState.getParcelable("location");
+//        Log.e("abc", "mCurrentLocation = " + mCurrentLocation.toString());
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView_rest);
+        recyclerView.setLayoutManager(layoutManager);
+        SnapHelper snapHelper = new SnapHelper();
+        snapHelper.attachToRecyclerView(recyclerView);
+        final GestureDetector gestureDetector;
+        gestureDetector = new GestureDetector(getApplicationContext(),new GestureDetector.SimpleOnGestureListener() {
+
+            //누르고 뗄 때 한번만 인식하도록 하기위해서
+            @Override
+            public boolean onSingleTapUp(MotionEvent e) {
+                return true;
+            }
+        });
+        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+                //손으로 터치한 곳의 좌표를 토대로 해당 Item의 View를 가져옴
+                View childView = rv.findChildViewUnder(e.getX(),e.getY());
+
+                //터치한 곳의 View가 RecyclerView 안의 아이템이고 그 아이템의 View가 null이 아니라
+                //정확한 Item의 View를 가져왔고, gestureDetector에서 한번만 누르면 true를 넘기게 구현했으니
+                //한번만 눌려서 그 값이 true가 넘어왔다면
+                if(childView != null && gestureDetector.onTouchEvent(e)){
+                    int currentPosition = rv.getChildAdapterPosition(childView);
+
+                    layout_slidingPanel.setPanelState(PanelState.ANCHORED);
+
+//                    Student currentItemStudent = arrayListOfStudent.get(currentPosition);
+//                    Toast.makeText(MainActivity.this, "현재 터치한 Item의 Student Name은 " + currentItemStudent.getStudentName(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(this, "현재 터치한 Item의 Student Name은 " + currentPosition, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(this, currentPosition, Toast.LENGTH_LONG).show();
+
+//                    Marker marker = mMarkersList.get(currentPosition);
+//                    marker.showInfoWindow();
+//
+////                    mMap.animateCamera(CameraUpdateFactory.newLatLng(GetNearPlacesTaskForMap.mMapRestList.get(currentPosition).getLatLng()));
+//                    mMap.animateCamera(CameraUpdateFactory.newLatLng(mMarkersList.get(currentPosition).getPosition()));
+//                    recyclerView.smoothScrollToPosition(currentPosition);
+
+                    return true;
                 }
-            });
-        } else {
+                return false;
+            }
 
-        }
+            @Override
+            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+
+            }
+
+            @Override
+            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+            }
+        });
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                int lastVisibleItemPosition = ((LinearLayoutManager) recyclerView.getLayoutManager()).findLastCompletelyVisibleItemPosition();
+                int itemTotalCount = recyclerView.getAdapter().getItemCount() - 1;
+                if (lastVisibleItemPosition == itemTotalCount) {
+                    Toast.makeText(MapsActivity.this, "Last Position", Toast.LENGTH_SHORT).show();
+                }
+
+                Log.e("abc", "lastVisibleItemPosition = " + lastVisibleItemPosition);
+                if (lastVisibleItemPosition >= 0) {
+                    Marker marker = mMarkersList.get(lastVisibleItemPosition);
+                    marker.showInfoWindow();
+
+//                    mMap.animateCamera(CameraUpdateFactory.newLatLng(GetNearPlacesTaskForMap.mMapRestList.get(lastVisibleItemPosition).getLatLng()));
+                    mMap.animateCamera(CameraUpdateFactory.newLatLng(mMarkersList.get(lastVisibleItemPosition).getPosition()));
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+            }
+        });
     }
+
+
+
+
+
+
+
+
+
+    boolean mLocationPermissionGranted;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         Log.e("abc", "onRequestPermissionsResult" + requestCode);
+        mLocationPermissionGranted = false;
+
         switch (requestCode) {
             case REQUEST_LOCATION_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -110,6 +214,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             bulidGoogleApiClient();
                         }
                         mMap.setMyLocationEnabled(true);
+                        mLocationPermissionGranted = true;
                     }
                 } else {
                     Toast.makeText(this, "Permission Denied", Toast.LENGTH_LONG).show();
@@ -137,129 +242,152 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //            bulidGoogleApiClient();
             mMap.setMyLocationEnabled(true);
 
-            // edited by KSY 2018-07-30
-            mMap.setMaxZoomPreference(18);
-            mMap.setMinZoomPreference(9);
-
-//            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-//            new GoogleApiClient.Builder(this)
-//                    .addApi(LocationServices.API)
-//                    .addConnectionCallbacks(this)
-//                    .addOnConnectionFailedListener(this)
-//                    .build();
-
-                Log.e("abc", "내 위치를 찾아서" + i);
-            mMap.setOnMyLocationButtonClickListener(this);
-            mMap.setOnMyLocationClickListener(this);
-            enableMyLocation();
-
-//                mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
-//                    @Override
-//                    public void onMyLocationChange(Location location) {
-//                        latitude = location.getLatitude();
-//                        longitude = location.getLongitude();
-//                        lastlocation = location;
-//                        if (currentLocationmMarker != null) {
-//                            currentLocationmMarker.remove();
-//                        }
-//
-//
-//                        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-//                        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-////                    mMap.animateCamera(CameraUpdateFactory.zoomBy(3));
-//                        mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-//
-//                    }
-//                });
-
-                i++;
-
-            // setOnMyLocationChangeListener
-            // deprecated되어서 수정해야 할 것
-//            GeoDataClient mGeoDataClient = Places.getGeoDataClient(this, null);
-//            PlaceDetectionClient mPlaceDetectionClient = Places.getPlaceDetectionClient(this, null);
-//            FusedLocationProviderClient mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        } else {
-            Log.e("abc", "2 mapReady checkSelfPermission = " + ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION));
-            mMap.setOnMyLocationButtonClickListener(this);
-            mMap.setOnMyLocationClickListener(this);
-            enableMyLocation();
+            i++;
         }
+//        else {
+//            Log.e("abc", "2 mapReady checkSelfPermission = " + ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION));
+//            mMap.setOnMyLocationButtonClickListener(this);
+//            mMap.setOnMyLocationClickListener(this);
+//            enableMyLocation();
+//        }
+
+        // edited by KSY 2018-07-30
+        mMap.setMaxZoomPreference(18);
+        mMap.setMinZoomPreference(9);
+
+        mMap.setOnMyLocationButtonClickListener(this);
+        mMap.setOnMyLocationClickListener(this);
+        enableMyLocation();
+
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                marker.getId();
+                Log.e("abc", "xxxxx marker = " + marker.getTitle());
+            }
+        });
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                String markerId = marker.getId();
+                LatLng markerPosition = marker.getPosition();
+                String markerSnippet = marker.getSnippet();
+                float markerZIndex = marker.getZIndex();
+
+                //마커 -> recycler 적용
+                int position = mNames.indexOf(marker.getTitle());
+                recyclerView.smoothScrollToPosition(position);
+
+                return false;
+            }
+        });
+
+
+
+
+        //처음에 마커를 GetNearPlacesTaskForReserv.mMapList에서 가져다서 쓴다.
+        LatLng first_latLng = null;
+//        Paint mPaint = new Paint();
+//        mPaint.setColor(Color.RED);
+//        Path mPath = new Path();
+//        RectF mRectF = new RectF(20, 20, 240, 240);
+//        mPath.addRect(mRectF, Path.Direction.CCW);
+//        mPaint.setStrokeWidth(20);
+//        mPaint.setStyle(Paint.Style.STROKE);
+////        canvas.drawPath(mPath, mPaint);
+
+//        Bitmap.Config conf = Bitmap.Config.ARGB_8888;
+//        Bitmap bmp = Bitmap.createBitmap(200, 50, conf);
+//        Canvas canvas = new Canvas(bmp);
+//        canvas.drawText("TEXT", 0, 50, mPaint);
+
+        for (int i=0; i<GetNearPlacesTaskForReserv.mMapList.size(); i++) {
+            LatLng latLng = GetNearPlacesTaskForReserv.mMapList.get(i).getLatLng();
+            MarkerOptions markerOptions = new MarkerOptions().position(latLng);
+            markerOptions.title(GetNearPlacesTaskForReserv.mMapList.get(i).getRest_name());
+//            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bmp));
+//            markerOptions.anchor(0.5f, 1);
+            markerOptions.snippet(String.valueOf(i+1));
+
+            Marker marker = mMap.addMarker(markerOptions);
+
+            mMarkersList.add(marker);
+
+            if (i==0) {
+                GetNearPlacesTaskForMap.mMapRestList = GetNearPlacesTaskForReserv.mMapList;
+                first_latLng = GetNearPlacesTaskForReserv.mMapList.get(i).getLatLng();
+
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(first_latLng));
+                marker.showInfoWindow();
+            }
+
+            mNames.add(GetNearPlacesTaskForReserv.mMapList.get(i).getRest_name());
+        }
+
+        recyclerViewRestAdapter = new RecyclerViewRestAdapter(MapsActivity.this, GetNearPlacesTaskForReserv.mMapList);
+        recyclerView.setAdapter(recyclerViewRestAdapter);
+        recyclerViewRestAdapter.notifyDataSetChanged();
+
+        Toast.makeText(MapsActivity.this, "주변 음식점 검색", Toast.LENGTH_SHORT).show();
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    private FusedLocationProviderClient mFusedLocationClient;
+
     private void enableMyLocation() {
-        Log.e("abc", "enableMyLocation FINE_LOCATION = " + ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION));
-        Log.e("abc", "enableMyLocation PERMISSION_GRANTED = " + PackageManager.PERMISSION_GRANTED);
+        Log.e("abc", "enableMyLocation FINE_LOCATION = " + ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) + "     , enableMyLocation PERMISSION_GRANTED = " + PackageManager.PERMISSION_GRANTED);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // Permission to access the location is missing.
             Log.e("abc", "enableMyLocation PermissionUtils");
             // v= 퍼미션이 없으면 수락을 받아내라
-//            PermissionUtils.requestPermission(this, LOCATION_PERMISSION_REQUEST_CODE,
-//                    Manifest.permission.ACCESS_FINE_LOCATION, true);
+//            PermissionUtils.requestPermission(this, LOCATION_PERMISSION_REQUEST_CODE, Manifest.permission.ACCESS_FINE_LOCATION, true);
         } else if (mMap != null) {
             // 이미 설치되어 퍼미션 완료한 상태
             Log.e("abc", "enableMyLocation mMap.isMyLocationEnabled() = " + mMap.isMyLocationEnabled());
             // Access to the location has been granted to the app.
             mMap.setMyLocationEnabled(true);
 
+            if (mMap.isMyLocationEnabled()) {
 
-            if(mMap.isMyLocationEnabled()) {
-//                mMap.setMyLocationEnabled(true);
+                mFusedLocationClient.getLastLocation()
+                        .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                            @Override
+                            public void onSuccess(Location location) {
+                                // Got last known location. In some rare situations this can be null.
+                                if (location != null) {
+                                    // Logic to handle location object
+//                                    Location myLocation = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+                                    Log.e("abc", "myLocation = " + location);
+                                    latitude = location.getLatitude();
+                                    longitude = location.getLongitude();
+                                    LatLng latLng = new LatLng(latitude, longitude);
 
-                LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-//            Criteria criteria = new Criteria();
+//                                    mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+                                    mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+                                }
+                            }
+                        });
 
-//            Location myLocation  = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
-                Location myLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                Log.e("abc", "enableMyLocation myLocation = " + myLocation);
-                if (myLocation == null) {
-                    Log.e("abc", "GPS 비었다!! = " + myLocation);
-
-//                mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
-//                @Override
-//                public void onMyLocationChange(Location location) {
-//                    latitude = location.getLatitude();
-//                    longitude = location.getLongitude();
-//                    lastlocation = location;
-//                    if (currentLocationmMarker != null) {
-//                        currentLocationmMarker.remove();
-//                    }
-//
-//
-//                    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-//                    mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-////                    mMap.animateCamera(CameraUpdateFactory.zoomBy(3));
-//                    mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-//
-//                }
-//                });
-
-//                FusedLocationProviderClient mFusedLocationProviderClient  = LocationServices.getFusedLocationProviderClient(this);
-//                Task<Location> lastTask = mFusedLocationProviderClient.getLastLocation();
-//                double latitude = lastTask.getResult().getLatitude();
-//                double longitude = lastTask.getResult().getLongitude();
-//                Log.e("abc", "lastLocation = " + latitude  + longitude);
-////                lastLocation.
-//                mMap.setMyLocationEnabled(false);
-                    new GoogleApiClient.Builder(this)
-                            .addApi(LocationServices.API)
-                            .addConnectionCallbacks(this)
-                            .addOnConnectionFailedListener(this)
-                            .build();
-
-                } else {
-                    latitude = myLocation.getLatitude();
-                    longitude = myLocation.getLongitude();
-
-                    LatLng latLng = new LatLng(latitude, longitude);
-
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-                    mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-                }
             }
         }
     }
+
+
 
 
 
@@ -277,7 +405,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (currentLocationmMarker != null) {
             currentLocationmMarker.remove();
         }
-        Log.e("abc",  j + "onLocationChanged lat,lon = (" + latitude + "," + longitude + ")");
+
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latLng);
@@ -292,14 +420,48 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         j++;
+
+        //vvvvvvvvvvvvvvvvvvv
+        Log.e("abc",  "location = " + j + ", " + location.getAltitude());
+        recyclerView.scrollToPosition(3);
+
+//        getPhotos();
     }
 
+    // Request photos and metadata for the specified place.
+//    private void getPhotos() {
+//        final String placeId = "ChIJa147K9HX3IAR-lwiGIQv9i4";
+//        final Task<PlacePhotoMetadataResponse> photoMetadataResponse = mGeoDataClient.getPlacePhotos(placeId);
+//        photoMetadataResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoMetadataResponse>() {
+//            @Override
+//            public void onComplete(@NonNull Task<PlacePhotoMetadataResponse> task) {
+//                // Get the list of photos.
+//                PlacePhotoMetadataResponse photos = task.getResult();
+//                // Get the PlacePhotoMetadataBuffer (metadata for all of the photos).
+//                PlacePhotoMetadataBuffer photoMetadataBuffer = photos.getPhotoMetadata();
+//                // Get the first photo in the list.
+//                PlacePhotoMetadata photoMetadata = photoMetadataBuffer.get(0);
+//                // Get the attribution text.
+//                CharSequence attribution = photoMetadata.getAttributions();
+//                // Get a full-size bitmap for the photo.
+//                Task<PlacePhotoResponse> photoResponse = mGeoDataClient.getPhoto(photoMetadata);
+//                photoResponse.addOnCompleteListener(new OnCompleteListener<PlacePhotoResponse>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<PlacePhotoResponse> task) {
+//                        PlacePhotoResponse photo = task.getResult();
+//                        Bitmap bitmap = photo.getBitmap();
+//                    }
+//                });
+//            }
+//        });
+//    }
+
     public void onClick(View v) {
-        Object dataTransfer[] = new Object[2];
-        GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
+        Object dataTransfer[] = new Object[3];
+        GetNearPlacesTaskForMap getNearPlacesTaskForMap = new GetNearPlacesTaskForMap();
 
         switch (v.getId()) {
-            case R.id.B_search:
+            case R.id.btn_search_word:
 
 
                 EditText tf_location = findViewById(R.id.TF_location);
@@ -329,41 +491,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                 }
                 break;
-            case R.id.B_hopistals:
-                mMap.clear();
-                String hospital = "hospital";
-                String url = getUrl(latitude, longitude, hospital);
-                dataTransfer[0] = mMap;
-                dataTransfer[1] = url;
-
-                getNearbyPlacesData.execute(dataTransfer);
-                Toast.makeText(MapsActivity.this, "Showing Nearby Hospitals", Toast.LENGTH_SHORT).show();
-                break;
-
-
-            case R.id.B_schools:
-                mMap.clear();
-                String school = "school";
-                url = getUrl(latitude, longitude, school);
-                dataTransfer[0] = mMap;
-                dataTransfer[1] = url;
-
-                getNearbyPlacesData.execute(dataTransfer);
-                Toast.makeText(MapsActivity.this, "Showing Nearby Schools", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.B_restaurants:
+            case R.id.btn_search_near:
                 mMap.clear();
                 String search = "음식점";
-                Log.e("abc = ", "restuarant lat,lon = (" + latitude + "," + longitude + ")" + search);
-                url = getUrl(latitude, longitude, search);
+                Log.e("abc", "restuarant lat,lon = (" + latitude + "," + longitude + ") , " + search);
+                String url = getUrl(latitude, longitude, search);
                 dataTransfer[0] = mMap;
                 dataTransfer[1] = url;
+                dataTransfer[2] = this;
 
-                getNearbyPlacesData.execute(dataTransfer);
-//                Toast.makeText(MapsActivity.this, "Showing Nearby Restaurants", Toast.LENGTH_SHORT).show();
-                Toast.makeText(MapsActivity.this, "주위 음식점", Toast.LENGTH_SHORT).show();
+                getNearPlacesTaskForMap.execute(dataTransfer);
+
+                Toast.makeText(MapsActivity.this, "주변 음식점 검색", Toast.LENGTH_SHORT).show();
+
                 break;
-            case R.id.B_to:
         }
     }
 
@@ -379,15 +520,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=Museum%20of%20Contemporary%20Art%20Australia&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key=YOUR_API_KEY
         //https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=1500&type=restaurant&keyword=cruise&key=YOUR_API_KEY
 
+
+//        https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&rankby=distance&type=food&key=YOUR_API_KEY
+        //https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=1500&type=restaurant&keyword=cruise&key=YOUR_API_KEY
+
         StringBuilder googlePlaceUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
-        googlePlaceUrl.append("location=" + latitude + "," + longitude);
+        googlePlaceUrl.append("language=ko");
+        googlePlaceUrl.append("&location=" + latitude + "," + longitude);
+//        googlePlaceUrl.append("&rankby=" + "distance");
         googlePlaceUrl.append("&radius=" + PROXIMITY_RADIUS);
         googlePlaceUrl.append("&type=" + nearbyPlace);
         googlePlaceUrl.append("&keyword=" + nearbyPlace);
+//        googlePlaceUrl.append("&fields=" + "photos,formatted_address,name,opening_hours,rating");
         googlePlaceUrl.append("&sensor=true");
+//        googlePlaceUrl.append("&locationbias=circle:2000@" + latitude + "," + longitude);
         googlePlaceUrl.append("&key=" + getString(R.string.google_maps_api_key));
 
-        Log.d("abc", "url = " + googlePlaceUrl.toString());
+
+//        StringBuilder googlePlaceUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/findplacefromtext/json?");
+//        googlePlaceUrl.append("input=" + nearbyPlace);
+//        googlePlaceUrl.append("&language=ko");
+//        googlePlaceUrl.append("&inputtype=textquery");
+//        googlePlaceUrl.append("&fields=photos,formatted_address,name,opening_hours,rating");
+//        googlePlaceUrl.append("&locationbias=circle:800@" + latitude + "," + longitude);
+//        googlePlaceUrl.append("&key=" + getString(R.string.google_maps_api_key2));
+
+        Log.e("abc", "url = " + googlePlaceUrl.toString());
 
         return googlePlaceUrl.toString();
     }
