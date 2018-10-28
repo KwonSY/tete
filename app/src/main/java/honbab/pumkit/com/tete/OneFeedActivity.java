@@ -1,30 +1,25 @@
 package honbab.pumkit.com.tete;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import honbab.pumkit.com.adapter.ViewPagerAdapter;
+import honbab.pumkit.com.data.MapData;
+import honbab.pumkit.com.task.GetPhotoTask;
 import honbab.pumkit.com.utils.ButtonUtil;
+import honbab.pumkit.com.utils.GoogleMapUtil;
 import honbab.pumkit.com.widget.OkHttpClientSingleton;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -34,17 +29,17 @@ public class OneFeedActivity extends AppCompatActivity {
 
     private OkHttpClient httpClient;
 
-    String reservId;
-
-    ViewPager viewPager;
+    public ViewPager viewPager;
     ViewPagerAdapter viewPagerAdapter;
 
-    //Adapter
     public TextView[] dots;
-    private LinearLayout dotsLayout;
+    public LinearLayout dotsLayout;
     private ArrayList<Integer> layouts2 = new ArrayList<>();
     private ArrayList<String> img_arr = new ArrayList<>();
     int chk = 0;
+
+    String feed_id, place_id;
+    public ArrayList<MapData> mMapList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,25 +49,29 @@ public class OneFeedActivity extends AppCompatActivity {
         httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
 
         Intent intent = getIntent();
-        reservId = intent.getStringExtra("reservId");
-        Log.e("abc", "예약번호 = " + reservId);
+        feed_id = intent.getStringExtra("feed_id");
+        place_id = intent.getStringExtra("place_id");
+        Log.e("abc", "feed_id = " + feed_id);
+        Log.e("abc", "place_id = " + place_id);
 
-        viewPagerAdapter = new ViewPagerAdapter();
-
+        //같이먹기 버튼
         Button btn_reserv = (Button) findViewById(R.id.btn_reserv);
         btn_reserv.setOnClickListener(mOnClickListener);
 
-//        ImageButton btn_back = (ImageButton) findViewById(R.id.btn_back);
-//        btn_back.setOnClickListener(mOnClickListener);
-////        btn_back.setOnTouchListener(mOnTouchListener);
+        viewPager = (ViewPager) findViewById(R.id.pager_food);
+        dotsLayout = (LinearLayout) findViewById(R.id.layoutDots);
+
         ButtonUtil.setBackButtonClickListener(this);
+
+        String url = GoogleMapUtil.getDetailUrl(OneFeedActivity.this, place_id);
+        new GetPhotoTask(viewPager, dotsLayout).execute(OneFeedActivity.this, url);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        new OneFeedTask().execute();
+//        new OneFeedTask().execute();
     }
 
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
@@ -90,6 +89,7 @@ public class OneFeedActivity extends AppCompatActivity {
         }
     };
 
+/*
     public void addBottomDots(int currentPage) {
         dots = new TextView[layouts2.size()];
         Log.e("abc", "dots.length = " + dots.length);
@@ -110,7 +110,8 @@ public class OneFeedActivity extends AppCompatActivity {
         if (dots.length > 0)
             dots[currentPage].setTextColor(ContextCompat.getColor(this, R.color.dot_active));
     }
-
+*/
+/*
     ViewPager.OnPageChangeListener viewPagerPageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
         public void onPageSelected(int position) {
@@ -137,7 +138,8 @@ public class OneFeedActivity extends AppCompatActivity {
 
         }
     };
-
+    */
+/*
     public class ViewPagerAdapter extends PagerAdapter {
         private LayoutInflater layoutInflater;
 
@@ -178,6 +180,7 @@ public class OneFeedActivity extends AppCompatActivity {
             container.removeView(view);
         }
     }
+*/
 
     //피드 한 개 보기
     public class OneFeedTask extends AsyncTask<Void, Void, Void> {
@@ -254,9 +257,9 @@ public class OneFeedActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
 //            viewPagerAdapter = new ViewPagerAdapter();
             viewPager.setAdapter(viewPagerAdapter);
-            viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
+//            viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
 
-            addBottomDots(0);
+//            addBottomDots(0);
         }
     }
 
@@ -273,8 +276,8 @@ public class OneFeedActivity extends AppCompatActivity {
         protected Void doInBackground(Void... params) {
             FormBody body = new FormBody.Builder()
                     .add("opt", "poke")
-                    .add("my_id", "4")
-                    .add("reserv_id", reservId)
+                    .add("my_id", Statics.my_id)
+                    .add("feed_id", feed_id)
                     .build();
 
             Request request = new Request.Builder().url(Statics.opt_url).post(body).build();

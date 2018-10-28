@@ -1,13 +1,12 @@
 package honbab.pumkit.com.task;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import org.json.JSONObject;
 
-import honbab.pumkit.com.tete.MainActivity;
+import honbab.pumkit.com.tete.CommentTalkActivity;
 import honbab.pumkit.com.tete.Statics;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -17,12 +16,14 @@ public class DelCommentTask extends AsyncTask<String, Void, String> {
 
     private OkHttpClient httpClient;
     private Context mContext;
+    private int position;
 
     String feed_id;
 
-    public DelCommentTask(Context mContext, OkHttpClient httpClient) {
+    public DelCommentTask(Context mContext, OkHttpClient httpClient, int position) {
         this.mContext = mContext;
         this.httpClient = httpClient;
+        this.position = position;
     }
 
     @Override
@@ -69,10 +70,14 @@ public class DelCommentTask extends AsyncTask<String, Void, String> {
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
             if (result.equals("0")) {
-                Intent intent = new Intent(mContext, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.putExtra("position", 1);
-                mContext.startActivity(intent);
+//                ((CommentTalkActivity) mContext).recyclerView.removeItemDecorationAt(position);
+                ((CommentTalkActivity) mContext).mAdapter.notifyItemRemoved(position);
+                ((CommentTalkActivity) mContext).mAdapter.notifyDataSetChanged();
+
+//                Intent intent = new Intent(mContext, MainActivity.class);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                intent.putExtra("position", 1);
+//                mContext.startActivity(intent);
             }
 
     }

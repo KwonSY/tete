@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -61,11 +60,6 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
         String feed_id = listViewItemList.get(position).getFeed_id();
         ArrayList<UserData> usersList = listViewItemList.get(position).getUsersList();
 
-//        Context context = itemView.getContext();
-//        GridLayoutManager layoutManager = new GridLayoutManager(context, 2);
-//        holder.recyclerView = itemView.findViewById(R.id.recyclerView_req_feedee);
-//        holder.recyclerView.setLayoutManager(layoutManager);
-
         if (usersList.size() == 0) {
             holder.txt_no_req.setVisibility(View.VISIBLE);
         } else {
@@ -87,49 +81,22 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
             Log.e("abc", "acceptYn = " + acceptYn);
             if (acceptYn.equals("y")) {
                 holder.recyclerView_feedee.setVisibility(View.GONE);
-                holder.recyclerView_comment.setVisibility(View.VISIBLE);
+//                holder.recyclerView_comment.setVisibility(View.VISIBLE);
 
                 holder.txt_restName.setText(data.getRest_name() + " (" + acceptUserName + "님과의 식사)");
 
                 ArrayList<CommentData> commentsList = listViewItemList.get(position).getCommentsList();
                 Log.e("abc", "commentsList.size() = " + commentsList.size());
 
-                ReqCommentAdapter mAdapter = new ReqCommentAdapter(mContext, httpClient, feed_id, commentsList);
-                holder.recyclerView_comment.setAdapter(mAdapter);
+//                ReqCommentAdapter mAdapter = new ReqCommentAdapter(mContext, httpClient, feed_id, commentsList);
+//                holder.recyclerView_comment.setAdapter(mAdapter);
             } else {
-                holder.recyclerView_comment.setVisibility(View.GONE);
+//                holder.recyclerView_comment.setVisibility(View.GONE);
 
                 ReqFeedeeAdapter mAdapter = new ReqFeedeeAdapter(mContext, httpClient, feed_id, usersList);
                 holder.recyclerView_feedee.setAdapter(mAdapter);
             }
         }
-
-//        txt_no_req.setVisibility(View.VISIBLE);
-
-
-//        holder.recyclerView.setRecycledViewPool(viewPool);
-
-
-//        holder.btn_accept.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View view, MotionEvent motionEvent) {
-//                int action = motionEvent.getAction();
-//
-//                if (action == MotionEvent.ACTION_DOWN) {
-////                    holder.btn_accept.setBackgroundColor(mContext.getResources(R.color.darkgrey));
-//                    holder.btn_accept.setBackgroundColor(Color.GRAY);
-//                } else if (action == MotionEvent.ACTION_UP) {
-//                    holder.btn_accept.setBackgroundColor(Color.WHITE);
-//
-//                    new AcceptReservTask(mContext, httpClient, holder, data, feed_id, position)
-//                            .execute(feed_id, data.getUser_id());
-//
-//                    holder.btn_accept.setText("수락완료");
-//                }
-//
-//                return false;
-//            }
-//        });
     }
 
     @Override
@@ -140,7 +107,8 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView txt_no_req;
         TextView txt_restName;
-        RecyclerView recyclerView_feedee, recyclerView_comment;
+        RecyclerView recyclerView_feedee;
+//        recyclerView_comment;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -163,10 +131,10 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
 //            recyclerView_poke = itemView.findViewById(R.id.recyclerView_poke);
 //            recyclerView_poke.setLayoutManager(layoutManager3);
 
-            //수락해서 코멘트하기
-            LinearLayoutManager layoutManager2 = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
-            recyclerView_comment = itemView.findViewById(R.id.recyclerView_comment);
-            recyclerView_comment.setLayoutManager(layoutManager2);
+//            //수락해서 코멘트하기
+//            LinearLayoutManager layoutManager2 = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+//            recyclerView_comment = itemView.findViewById(R.id.recyclerView_comment);
+//            recyclerView_comment.setLayoutManager(layoutManager2);
         }
     }
 }

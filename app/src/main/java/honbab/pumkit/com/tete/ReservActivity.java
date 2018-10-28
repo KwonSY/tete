@@ -381,7 +381,7 @@ public class ReservActivity extends AppCompatActivity {
                             LatLng latLng = new LatLng(latitude, longitude);
 
 
-                            GetNearPlacesTaskForReserv getNearPlacesTask = new GetNearPlacesTaskForReserv();
+
 
                             String search = "음식점";
                             String url = getUrl(latitude, longitude, search);
@@ -392,7 +392,9 @@ public class ReservActivity extends AppCompatActivity {
                             Log.e("abc", "dataTransfer[0] = " + dataTransfer[0]);
                             Log.e("abc", "dataTransfer[1] = " + dataTransfer[1]);
 
-                            getNearPlacesTask.execute(dataTransfer);
+//                            GetNearPlacesTaskForReserv getNearPlacesTask = new GetNearPlacesTaskForReserv();
+//                            getNearPlacesTask.execute(dataTransfer);
+                            new GetNearPlacesTaskForReserv().execute(dataTransfer);
                         }
                     }
                 });

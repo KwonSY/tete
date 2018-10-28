@@ -18,16 +18,16 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/txt_no_req"
+        android:id="@+id/txt_no_comment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/txt_restName"
         android:layout_centerHorizontal="true"
         android:layout_margin="14dp"
-        android:text="아직 신청한 사람이 없어요." />
+        android:text="아직 코멘트가 없어요. 같이 식사할 사람과 코멘트를 나누어 보아요." />
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView_req_feedee"
+        android:id="@+id/recyclerView_comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/txt_restName" />

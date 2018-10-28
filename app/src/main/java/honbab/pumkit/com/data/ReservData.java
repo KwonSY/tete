@@ -8,7 +8,7 @@ public class ReservData implements Serializable {
 
     private String sid;
     private String user_id, user_name, user_img, user_age, user_gender;
-    private String rest_name, location, rest_img;
+    private String rest_name, location, place_id, rest_img;
     private String time;
     private transient LatLng latLng;
     private Double latitude, longtitue;
@@ -18,7 +18,7 @@ public class ReservData implements Serializable {
     }
 
     public ReservData(String sid, String user_id, String user_name, String user_img, String user_age, String user_gender,
-                      String rest_name, String location, LatLng latLng, String rest_img,
+                      String rest_name, String location, String place_id, LatLng latLng, String rest_img,
                       String time) {
         this.sid = sid;
 
@@ -30,6 +30,7 @@ public class ReservData implements Serializable {
 
         this.rest_name = rest_name;
         this.location = location;
+        this.place_id = place_id;
         this.latLng = latLng;
         this.latitude = latLng.latitude;
         this.longtitue = latLng.longitude;
@@ -99,6 +100,14 @@ public class ReservData implements Serializable {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getPlace_id() {
+        return place_id;
+    }
+
+    public void setPlace_id(String place_id) {
+        this.place_id = place_id;
     }
 
     public String getRest_img() {

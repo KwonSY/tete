@@ -15,6 +15,7 @@ import java.util.HashMap;
 
 import honbab.pumkit.com.adapter.ViewPagerAdapter;
 import honbab.pumkit.com.data.MapData;
+import honbab.pumkit.com.tete.OneFeedActivity;
 import honbab.pumkit.com.tete.OneRestaurantActivity;
 import honbab.pumkit.com.tete.R;
 import honbab.pumkit.com.utils.GoogleMapUtil;
@@ -83,8 +84,13 @@ public class GetPhotoTask extends AsyncTask<Object, String, String> {
 
             imgAllArr.add(GoogleMapUtil.getPlacePhoto(mContext, photosList.get(i).getRest_img()));
         }
-
+        Log.e("abc", "mContext = " + mContext);
+        Log.e("abc", "layouts2 = " + layouts2);
+        Log.e("abc", "img_arr = " + img_arr);
+        Log.e("abc", "imgAllArr = " + imgAllArr);
         mAdapter = new ViewPagerAdapter(mContext, layouts2, img_arr, imgAllArr);
+        Log.e("abc", "mAdapter = " + mAdapter);
+        Log.e("abc", "viewPager = " + viewPager);
         viewPager.setAdapter(mAdapter);
         viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
 
@@ -128,7 +134,17 @@ public class GetPhotoTask extends AsyncTask<Object, String, String> {
     };
 
     public void addBottomDots(int currentPage) {
-        TextView[] dots = ((OneRestaurantActivity) mContext).dots;
+//        TextView[] dots = ((OneRestaurantActivity) mContext).dots;
+        TextView[] dots;
+
+        String activityName = mContext.getClass().getSimpleName();
+        Log.e("abc", "xxxxxxxxxxxxxxxxx = " + activityName);
+        //vvvvvvvvvvvvvvv 다시 짜기
+        if (activityName.equals("OneRestaurantActivity")) {
+            dots = ((OneRestaurantActivity) mContext).dots;
+        } else {
+            dots = ((OneFeedActivity) mContext).dots;
+        }
 
         dots = new TextView[layouts2.size()];
         Log.e("abc", "dots.length = " + dots.length);

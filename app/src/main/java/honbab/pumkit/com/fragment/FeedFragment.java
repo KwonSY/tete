@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -28,7 +27,6 @@ import honbab.pumkit.com.tete.LoginActivity;
 import honbab.pumkit.com.tete.R;
 import honbab.pumkit.com.tete.ReservActivity;
 import honbab.pumkit.com.tete.Statics;
-import honbab.pumkit.com.widget.CircleTransform;
 import honbab.pumkit.com.widget.OkHttpClientSingleton;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -92,6 +90,7 @@ public class FeedFragment extends Fragment {
                 //음식점 정보
                 String rest_name = feedList.get(i).getRest_name();
                 String location = feedList.get(i).getLocation();
+                String place_id = feedList.get(i).getPlace_id();
                 Double db_lat = feedList.get(i).getLatitude();
                 Double db_lng = feedList.get(i).getLongtitue();
                 LatLng latLng = feedList.get(i).getLatLng();
@@ -100,7 +99,7 @@ public class FeedFragment extends Fragment {
                 String time = feedList.get(i).getTime();
 
                 mAdapter.addItem(sid, user_id, user_name, user_img, user_age, user_gender,
-                        rest_name, location, latLng, rest_img, time);
+                        rest_name, location, place_id, latLng, rest_img, time);
             }
 
             mAdapter.notifyDataSetChanged();
@@ -121,8 +120,6 @@ public class FeedFragment extends Fragment {
         Button btn_reserve;
         btn_reserve = (Button) getActivity().findViewById(R.id.btn_reserve_google);
         btn_reserve.setOnClickListener(mOnClickListener);
-
-        img_topbar_profile = (ImageView) getActivity().findViewById(R.id.img_topbar_profile);
     }
 
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
@@ -153,22 +150,25 @@ public class FeedFragment extends Fragment {
     };
 
     //피드리스트
-    ImageView img_topbar_profile;
     public class FeedListTask extends AsyncTask<Void, Void, Void> {
-        String my_img_url;
+        String my_id;
 
         @Override
         protected void onPreExecute() {
             feedList.clear();
             mAdapter.clearItemList();
-
-
+            Log.e("abc", "Statics.my_id = " + Statics.my_id);
+            if (Statics.my_id == null)
+                my_id = "0";
+            else
+                my_id = Statics.my_id;
         }
 
         @Override
         protected Void doInBackground(Void... params) {
             FormBody body = new FormBody.Builder()
                     .add("opt", "feed_list")
+                    .add("my_id", my_id)
                     .build();
 
             Request request = new Request.Builder().url(Statics.opt_url).post(body).build();
@@ -180,10 +180,6 @@ public class FeedFragment extends Fragment {
 
                     JSONObject obj = new JSONObject(bodyStr);
                     Log.e("abc", "FeeeeeeeeeedList : " + obj);
-
-                    //vvvvvvvvvvvvv 나중에 ProfileFragment에서 처리하도록
-                    JSONObject myObj = obj.getJSONObject("my");
-                    my_img_url = Statics.main_url + myObj.getString("img_url");
 
                     JSONArray hash_arr = obj.getJSONArray("feed_list");
                     for (int i = 0; i < hash_arr.length(); i++) {
@@ -204,7 +200,7 @@ public class FeedFragment extends Fragment {
                         String rest_id = rest_obj.getString("sid");
                         String rest_name = rest_obj.getString("name");
                         String location = rest_obj.getString("location");
-                        rest_obj.getString("location");
+                        String place_id = rest_obj.getString("place_id");
                         String lat = rest_obj.getString("lat");
                         String lng = rest_obj.getString("lng");
                         Double db_lat = Double.parseDouble(lat);
@@ -215,9 +211,9 @@ public class FeedFragment extends Fragment {
                         String time = obj2.getString("time");
 
                         mAdapter.addItem(sid, user_id, user_name, user_img, user_age, user_gender,
-                                rest_name, location, latLng, rest_img, time);
+                                rest_name, location, place_id, latLng, rest_img, time);
                         ReservData reservData = new ReservData(sid, user_id, user_name, user_img, user_age, user_gender,
-                                rest_name, location, latLng, rest_img,
+                                rest_name, location, place_id, latLng, rest_img,
                                 time);
                         feedList.add(reservData);
                     }
@@ -236,68 +232,6 @@ public class FeedFragment extends Fragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             mAdapter.notifyDataSetChanged();
-
-            Picasso.get().load(my_img_url)
-                    .placeholder(R.drawable.icon_noprofile_circle)
-                    .error(R.drawable.icon_noprofile_circle)
-                    .transform(new CircleTransform())
-                    .into(img_topbar_profile);
-//            if (Statics.my_id != null)
-//            new AccountTask().execute();
         }
     }
-
-//    public class AccountTask extends AsyncTask<Void, Void, Void> {
-//        ImageView img_topbar_profile;
-//        String user_profile;
-//
-//        @Override
-//        protected void onPreExecute() {
-//            img_topbar_profile = (ImageView) getActivity().findViewById(R.id.img_topbar_profile);
-//        }
-//
-//        @Override
-//        protected Void doInBackground(Void... params) {
-//            FormBody body = new FormBody.Builder()
-//                    .add("opt", "account")
-//                    .add("user_id", Statics.my_id)
-//                    .build();
-//
-//            Request request = new Request.Builder().url(Statics.opt_url).post(body).build();
-//
-//            try {
-//                okhttp3.Response response = httpClient.newCall(request).execute();
-//                if (response.isSuccessful()) {
-//                    String bodyStr = response.body().string();
-//
-//                    JSONObject obj = new JSONObject(bodyStr);
-//                    Log.e("abc", "AccountTask : " + obj);
-//
-//                    //등록자 정보
-//                    JSONObject user_obj = obj.getJSONObject("user");
-//                    String user_id = user_obj.getString("sid");
-//                    String user_name = user_obj.getString("name");
-//                    user_profile = user_obj.getString("img_url");
-//                    String user_age = user_obj.getString("age");
-//                    String user_gender = user_obj.getString("gender");
-//                } else {
-////                    Log.d(TAG, "Error : " + response.code() + ", " + response.message());
-//                }
-//
-//            } catch (Exception e) {
-//                Log.e("abc", "Error : " + e.getMessage());
-//                e.printStackTrace();
-//            }
-//            return null;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Void aVoid) {
-//            Log.e("abc", "user_profile = "+ user_profile);
-//            Picasso.get().load(Statics.main_url + user_profile)
-//                    .placeholder(R.drawable.icon_noprofile_circle)
-//                    .transform(new CircleTransform())
-//                    .into(img_topbar_profile);
-//        }
-//    }
 }

@@ -4,14 +4,13 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -21,10 +20,12 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import honbab.pumkit.com.adapter.MyFeedListAdapter;
 import honbab.pumkit.com.data.CommentData;
 import honbab.pumkit.com.data.FeedReqData;
 import honbab.pumkit.com.data.UserData;
+import honbab.pumkit.com.tete.CommentTalkActivity;
+import honbab.pumkit.com.tete.MyFeedListActivity;
+import honbab.pumkit.com.tete.PokeListActivity;
 import honbab.pumkit.com.tete.ProfileActivity;
 import honbab.pumkit.com.tete.R;
 import honbab.pumkit.com.tete.SettingActivity;
@@ -44,11 +45,12 @@ public class ProfileFragment extends Fragment {
     private ImageView image_myProfile;
     private TextView txt_my_name, txt_comment;
     private TextView title_reserve;
-    private TextView badge_poke_cnt;
-    public static RecyclerView recyclerView_myFeed;
-    private MyFeedListAdapter myFeedListAdapter;
+    private RelativeLayout layout_go_feedlist, layout_go_pokelist, layout_go_talk;
+    public TextView badge_feed_cnt, badge_poke_cnt, badge_comment_cnt;
+//    public static RecyclerView recyclerView_myFeed;
+//    private MyFeedListAdapter myFeedListAdapter;
 
-    int cnt_my = 0, cnt_yours = 0;
+    int cnt_my = 0, cnt_your = 0, cnt_comment = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -74,25 +76,35 @@ public class ProfileFragment extends Fragment {
     }
 
     private void initControls() {
+        //마이탭 프로필
         image_myProfile = (ImageView) getActivity().findViewById(R.id.image_myProfile);
         txt_my_name = (TextView) getActivity().findViewById(R.id.txt_my_name);
         txt_comment = (TextView) getActivity().findViewById(R.id.txt_comment);
 
-        title_reserve = (TextView) getActivity().findViewById(R.id.title_reserve);
+//        title_reserve = (TextView) getActivity().findViewById(R.id.title_reserve);
+        //3가지 버튼
+        layout_go_feedlist = (RelativeLayout) getActivity().findViewById(R.id.layout_go_feedlist);
+        layout_go_pokelist = (RelativeLayout) getActivity().findViewById(R.id.layout_go_pokelist);
+        layout_go_talk = (RelativeLayout) getActivity().findViewById(R.id.layout_go_talk);
+        layout_go_feedlist.setOnClickListener(mOnClickListener);
+        layout_go_pokelist.setOnClickListener(mOnClickListener);
+        layout_go_talk.setOnClickListener(mOnClickListener);
 
-        // My Feed List
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        recyclerView_myFeed = (RecyclerView) getActivity().findViewById(R.id.recyclerView_myFeed);
-        recyclerView_myFeed.setLayoutManager(layoutManager);
-        myFeedListAdapter = new MyFeedListAdapter();
-        recyclerView_myFeed.setAdapter(myFeedListAdapter);
+//        // My Feed List
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+//        recyclerView_myFeed = (RecyclerView) getActivity().findViewById(R.id.recyclerView_myFeed);
+//        recyclerView_myFeed.setLayoutManager(layoutManager);
+//        myFeedListAdapter = new MyFeedListAdapter();
+//        recyclerView_myFeed.setAdapter(myFeedListAdapter);
 
         image_myProfile.setOnClickListener(mOnClickListener);
 
         Button btn_setting = (Button) getActivity().findViewById(R.id.btn_setting);
         btn_setting.setOnClickListener(mOnClickListener);
 
+        badge_feed_cnt = (TextView) getActivity().findViewById(R.id.badge_feed_cnt);
         badge_poke_cnt = (TextView) getActivity().findViewById(R.id.badge_poke_cnt);
+        badge_comment_cnt = (TextView) getActivity().findViewById(R.id.badge_comment_cnt);
     }
 
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
@@ -111,6 +123,27 @@ public class ProfileFragment extends Fragment {
                     startActivity(intent2);
 
                     break;
+                case R.id.layout_go_feedlist:
+                    Intent intent3 = new Intent(getActivity(), MyFeedListActivity.class);
+                    intent3.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent3.putExtra("feedList", myFeedList);
+                    startActivity(intent3);
+
+                    break;
+                case R.id.layout_go_pokelist:
+                    Intent intent4 = new Intent(getActivity(), PokeListActivity.class);
+                    intent4.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent4.putExtra("feedList", pokeList);
+                    startActivity(intent4);
+
+                    break;
+                case R.id.layout_go_talk:
+                    Intent intent5 = new Intent(getActivity(), CommentTalkActivity.class);
+                    intent5.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                    intent5.putExtra("feedList", commentList);
+                    startActivity(intent5);
+
+                    break;
             }
         }
     };
@@ -119,12 +152,9 @@ public class ProfileFragment extends Fragment {
     public class MyAccountTask extends AsyncTask<Void, Void, Void> {
         String user_id, user_name, img_url, comment;
 
-        ImageView img_topbar_profile;
-
         @Override
         protected void onPreExecute() {
-//            ((FeedFragment.class) getActivity())
-            img_topbar_profile = (ImageView) getActivity().findViewById(R.id.img_topbar_profile);
+
         }
 
         @Override
@@ -142,11 +172,6 @@ public class ProfileFragment extends Fragment {
                     String bodyStr = response.body().string();
 
                     JSONObject obj = new JSONObject(bodyStr);
-                    Log.e("abc", "프로필어카운트 : " + obj);
-
-//                    JSONObject obj2 = obj.getJSONObject("reserv");
-//
-//                    String sid = obj2.getString("sid");
 
                     JSONObject user_obj = obj.getJSONObject("user");
                     user_id = user_obj.getString("sid");
@@ -175,27 +200,27 @@ public class ProfileFragment extends Fragment {
                     .transform(new CircleTransform())
                     .into(image_myProfile);
 
-            // in FeedFragment // topbar_profile 이미지 넣기   <-> FeedFragment myObj랑 바꾸기
-//            Picasso.get().load(img_url)
-//                    .placeholder(R.drawable.icon_noprofile_circle)
-//                    .error(R.drawable.icon_noprofile_circle)
-//                    .transform(new CircleTransform())
-//                    .into(img_topbar_profile);
-
             new MyFeedListTask().execute();
         }
     }
 
+    ArrayList<FeedReqData> myFeedList = new ArrayList<>();
+    ArrayList<FeedReqData> pokeList = new ArrayList<>();
+//    ArrayList<FeedReqData> commentList = new ArrayList<>();
     public class MyFeedListTask extends AsyncTask<Void, Void, ArrayList<FeedReqData>> {
         String result;
         String host;
         String rest_name;
 
-//        ArrayList<FeedReqData> feedReqList = new ArrayList<>();
-
         @Override
         protected void onPreExecute() {
-//            feedReqList.clear();
+            myFeedList.clear();
+            pokeList.clear();
+//            commentList.clear();
+
+            cnt_my = 0;
+            cnt_your = 0;
+            cnt_comment = 0;
         }
 
         @Override
@@ -215,8 +240,16 @@ public class ProfileFragment extends Fragment {
                     String bodyStr = response.body().string();
 
                     JSONObject obj = new JSONObject(bodyStr);
-//                    Log.e("abc", "마이피드리스트 : " + obj);
+                    Log.e("abc", "my_feed_list = " + obj);
+
                     result = obj.getString("result");
+
+                    String cnt_my_feed = obj.getString("cnt_my_feed");
+                    String cnt_poke = obj.getString("cnt_poke");
+                    String cnt_comm = obj.getString("cnt_comment");
+                    cnt_my = Integer.parseInt(cnt_my_feed);
+                    cnt_your = Integer.parseInt(cnt_poke);
+                    cnt_comment = Integer.parseInt(cnt_comm);
 
                     if (result.equals("0")) {
 //                        if (!obj.getJSONObject("host").isNull("") ) {
@@ -229,12 +262,13 @@ public class ProfileFragment extends Fragment {
                             JSONObject feedObj = feedArr.getJSONObject(i);
 
                             String feed_id = feedObj.getString("sid");
-
                             host = feedObj.getString("host");
-                            if (host.equals("my"))
-                                cnt_my++;
-                            else if (host.equals("your"))
-                                cnt_yours++;
+//                            if (host.equals("my"))
+//                                cnt_my++;
+//                            else if (host.equals("your"))
+//                                cnt_your++;
+//                            else if (host.equals("comment"))
+//                                cnt_comment++;
 
                             JSONObject restObj = feedObj.getJSONObject("rest");
                             String rest_id = restObj.getString("sid");
@@ -254,35 +288,48 @@ public class ProfileFragment extends Fragment {
                                     String user_img = Statics.main_url + userObj.getString("img_url");
                                     String age = userObj.getString("age");
                                     String gender = userObj.getString("gender");
-                                    String status = userObj.getString("status");
+                                    String user_status = userObj.getString("status");
                                     String time = userObj.getString("time");
 
-                                    UserData userData = new UserData(user_id, user_name, age, gender, user_img, status);
+                                    UserData userData = new UserData(user_id, user_name, age, gender, user_img, user_status);
                                     reqUsersList.add(userData);
                                 }
                             }
 
-                            if (feedObj.has("comments")) {
-                                JSONArray usersArr = feedObj.getJSONArray("comments");
-
-                                for (int k = 0; k < usersArr.length(); k++) {
-                                    JSONObject userObj = usersArr.getJSONObject(k);
-
-                                    String comment_id = userObj.getString("sid");
-                                    JSONObject c_user_obj = userObj.getJSONObject("user");
-                                    String c_user_id = c_user_obj.getString("sid");
-                                    String c_user_name = c_user_obj.getString("name");
-                                    String c_img_url = Statics.main_url + c_user_obj.getString("img_url");
-                                    String comment = userObj.getString("comment");
-                                    String comment_time = userObj.getString("time");
-
-                                    CommentData commentData = new CommentData(comment_id, c_user_id, c_user_name, c_img_url, comment, comment_time);
-                                    commentsList.add(commentData);
-                                }
-                            }
+//                            if (feedObj.has("comments")) {
+//                                JSONArray usersArr = feedObj.getJSONArray("comments");
+//
+//                                for (int k = 0; k < usersArr.length(); k++) {
+//                                    JSONObject userObj = usersArr.getJSONObject(k);
+//
+//                                    String comment_id = userObj.getString("sid");
+//                                    JSONObject c_user_obj = userObj.getJSONObject("user");
+//                                    String c_user_id = c_user_obj.getString("sid");
+//                                    String c_user_name = c_user_obj.getString("name");
+//                                    String c_img_url = Statics.main_url + c_user_obj.getString("img_url");
+//                                    String comment = userObj.getString("comment");
+//                                    String comment_time = userObj.getString("time");
+//
+//                                    CommentData commentData = new CommentData(comment_id, c_user_id, c_user_name, c_img_url, comment, comment_time);
+//                                    commentsList.add(commentData);
+//                                }
+//                            }
 
                             FeedReqData data = new FeedReqData(feed_id, rest_id, rest_name, rest_img, reqUsersList, commentsList);
                             feedReqList.add(data);
+
+                            if (host.equals("my"))
+                                myFeedList.add(data);
+                            else if (host.equals("your"))
+                                pokeList.add(data);
+
+                            String status = feedObj.getString("status");
+//                            if (status.equals("n")) {
+//
+//                                myFeedList.add(data);
+//                            } else if (status.equals("y")) {
+//                                pokeList.add(data);
+//                            }
                         }
                     }
 
@@ -302,18 +349,22 @@ public class ProfileFragment extends Fragment {
             super.onPostExecute(feedReqList);
 //            Log.e("abc", "onPostExecute feedReqList.size = " + feedReqList.size());
 
+            if (cnt_my==0)
+                badge_feed_cnt.setVisibility(View.GONE);
+            if (cnt_your==0)
+                badge_poke_cnt.setVisibility(View.GONE);
+            if (cnt_comment==0)
+                badge_comment_cnt.setVisibility(View.GONE);
+
+            badge_feed_cnt.setText(String.valueOf(cnt_my));
+            badge_poke_cnt.setText(String.valueOf(cnt_your));
+            badge_comment_cnt.setText(String.valueOf(cnt_comment));
+
             if (feedReqList.size() > 0) {
-                title_reserve.setVisibility(View.VISIBLE);
 
-                myFeedListAdapter = new MyFeedListAdapter(getActivity(), httpClient, feedReqList);
-                recyclerView_myFeed.setAdapter(myFeedListAdapter);
-                myFeedListAdapter.notifyDataSetChanged();
-
-                Log.e("abc", "xxxxxxxxxxx " + cnt_yours);
-                    badge_poke_cnt.setText(String.valueOf(cnt_yours));
             } else {
-                title_reserve.setVisibility(View.GONE);
-                recyclerView_myFeed.setVisibility(View.GONE);
+//                title_reserve.setVisibility(View.GONE);
+//                recyclerView_myFeed.setVisibility(View.GONE);
             }
 
         }

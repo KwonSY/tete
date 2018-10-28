@@ -70,7 +70,8 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
             public void onClick(View view) {
                 Intent intent = new Intent(context, OneFeedActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.putExtra("reservId", data.getSid());
+                intent.putExtra("feed_id", data.getSid());
+                intent.putExtra("place_id", data.getPlace_id());
                 context.startActivity(intent);
             }
         });
@@ -109,11 +110,11 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
     }
 
     public void addItem(String sid, String user_id, String user_name, String img_url, String user_age, String user_gender,
-                        String rest_name, String location, LatLng latLng, String rest_img,
+                        String rest_name, String location, String place_id, LatLng latLng, String rest_img,
                         String time) {
 
         ReservData item = new ReservData(sid, user_id, user_name, img_url, user_age, user_gender,
-                rest_name, location, latLng, rest_img,
+                rest_name, location, place_id, latLng, rest_img,
                 time);
 
         listViewItemList.add(item);

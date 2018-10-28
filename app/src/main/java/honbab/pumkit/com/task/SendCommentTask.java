@@ -1,13 +1,12 @@
 package honbab.pumkit.com.task;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import org.json.JSONObject;
 
-import honbab.pumkit.com.tete.MainActivity;
+import honbab.pumkit.com.tete.CommentTalkActivity;
 import honbab.pumkit.com.tete.Statics;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -16,20 +15,12 @@ import okhttp3.Request;
 public class SendCommentTask extends AsyncTask<String, Void, String> {
     private OkHttpClient httpClient;
     private Context mContext;
-//    ReqFeedeeAdapter.ViewHolder viewHolder;
-//    UserData data;
-    String feed_id;
-//    int position;
+    private int position;
 
-//    ActivityOptionsCompat optionsCompat;
-
-    public SendCommentTask(Context mContext, OkHttpClient httpClient) {
+    public SendCommentTask(Context mContext, OkHttpClient httpClient, int position) {
         this.mContext = mContext;
         this.httpClient = httpClient;
-//        this.viewHolder = viewHolder;
-//        this.data = userData;
-//        this.feed_id = feed_id;
-//        this.position = position;
+        this.position = position;
     }
 
     @Override
@@ -39,7 +30,6 @@ public class SendCommentTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... objects) {
-        Log.e("abc", "objects[0] = " + objects[0] + ", objects[1]" + objects[1]);
         String result = null;
 
         FormBody body = new FormBody.Builder()
@@ -76,10 +66,13 @@ public class SendCommentTask extends AsyncTask<String, Void, String> {
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
             if (result.equals("0")) {
-                Intent intent = new Intent(mContext, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.putExtra("position", 1);
-                mContext.startActivity(intent);
+//                ((CommentTalkActivity) mContext).recyclerView.removeItemDecorationAt(position);
+                ((CommentTalkActivity) mContext).mAdapter.notifyDataSetChanged();
+
+//                Intent intent = new Intent(mContext, CommentTalkActivity.class);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                intent.putExtra("feedList", 1);
+//                mContext.startActivity(intent);
             }
 
     }

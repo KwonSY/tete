@@ -14,6 +14,7 @@ import java.util.List;
 
 import honbab.pumkit.com.adapter.GridViewNearByAdapter;
 import honbab.pumkit.com.data.MapData;
+import honbab.pumkit.com.tete.OneFeedActivity;
 import honbab.pumkit.com.tete.R;
 import honbab.pumkit.com.tete.ReservActivity;
 
@@ -21,13 +22,13 @@ public class GetNearPlacesTaskForReserv extends AsyncTask<Object, String, String
 
     String googlePlacesData;
     String url;
-    public Context context;
+    public Context mContext;
 
     public static ArrayList<MapData> mMapList = new ArrayList<>();
 
     @Override
     protected String doInBackground(Object... objects) {
-        context = (Context) objects[0];
+        mContext = (Context) objects[0];
         url = (String) objects[1];
 
         DownloadUrl downloadUrl = new DownloadUrl();
@@ -76,20 +77,11 @@ public class GetNearPlacesTaskForReserv extends AsyncTask<Object, String, String
             String photo_reference = googlePlace.get("photo_reference");
             String place_id = googlePlace.get("place_id");
             String reference = googlePlace.get("reference");
+            Log.e("abc",  placeName+ "플레이스2 아이디는 = " + place_id);
 
             LatLng latLng = new LatLng(lat, lng);
-//            markerOptions.position(latLng);
-////            markerOptions.title(placeName + " : " + vicinity);
-//            markerOptions.title(placeName);
-//            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
-
-//            mMap.addMarker(markerOptions);
-//            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-//            mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
 
             MapData data = new MapData(place_id, placeName, latLng, reference, "");
-//            data.setRest_name(placeName);
-//            data.setLatLng(latLng);
             if(photo_reference != null && !photo_reference.isEmpty()) {
                 String photoUrl = getPlacePhoto(photo_reference);
 
@@ -97,27 +89,32 @@ public class GetNearPlacesTaskForReserv extends AsyncTask<Object, String, String
             } else {
                 data.setRest_img("");
             }
-//            data.setPlace_id(place_id);
-//            data.setReference(reference);
 
             mMapList.add(data);
         }
-//        Log.e("abc","on GetNearPlacesTaskForReserv mMapList = " + mMapList.size());
         //https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362
         // &radius=1500&type=restaurant
         // &keyword=cruise
         // &key=YOUR_API_KEY
+        if (mContext.getClass().equals(ReservActivity.class)) {
+            ReservActivity.mAdapter = new GridViewNearByAdapter(mContext, mMapList);
+            ReservActivity.recyclerView.setAdapter(ReservActivity.mAdapter);
+            ReservActivity.mAdapter.notifyDataSetChanged();
+        } else if (mContext.getClass().equals(OneFeedActivity.class)) {
+            Log.e("abc", "여기 액티비티는 = OneFeedActivity ," + OneFeedActivity.class);
+            ((OneFeedActivity) mContext).mMapList = mMapList;
 
-        ReservActivity.mAdapter = new GridViewNearByAdapter(context, mMapList);
-        ReservActivity.recyclerView.setAdapter(ReservActivity.mAdapter);
-        ReservActivity.mAdapter.notifyDataSetChanged();
+            String place_id = mMapList.get(0).getPlace_id();
+//            GoogleMapUtil.getDetailList(OneFeedActivity.this, place_id, viewPager, dotsLayout);
+        }
+
     }
 
     public String getPlacePhoto(String photoreference) {
         StringBuilder sb = new StringBuilder("https://maps.googleapis.com/maps/api/place/photo?");
         sb.append("maxwidth=" + "400");
         sb.append("&photoreference=" + photoreference);
-        sb.append("&key=" + context.getResources().getString(R.string.google_maps_api_key));
+        sb.append("&key=" + mContext.getResources().getString(R.string.google_maps_api_key));
 
         return sb.toString();
     }

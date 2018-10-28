@@ -8,14 +8,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import honbab.pumkit.com.adapter.ViewPagerAdapter;
 import honbab.pumkit.com.task.GetPhotoTask;
 import honbab.pumkit.com.utils.ButtonUtil;
+import honbab.pumkit.com.utils.GoogleMapUtil;
 import honbab.pumkit.com.widget.OkHttpClientSingleton;
 import okhttp3.OkHttpClient;
 
@@ -24,7 +25,7 @@ public class OneRestaurantActivity extends AppCompatActivity {
     private OkHttpClient httpClient;
 
     public ViewPager viewPager;
-    public ViewPagerAdapter viewPagerAdapter;
+//    public ViewPagerAdapter viewPagerAdapter;
     public TextView[] dots;
     public LinearLayout dotsLayout;
 
@@ -44,6 +45,8 @@ public class OneRestaurantActivity extends AppCompatActivity {
 
         LinearLayout layout_profile = (LinearLayout) findViewById(R.id.layout_profile);
         layout_profile.setVisibility(View.GONE);
+        Button btn_reserv = (Button) findViewById(R.id.btn_reserv);
+        btn_reserv.setVisibility(View.GONE);
 
         viewPager = (ViewPager) findViewById(R.id.pager_food);
 //        viewPagerAdapter = new ViewPagerAdapter(OneRestaurantActivity.this, layouts2, img_arr);
@@ -96,19 +99,23 @@ public class OneRestaurantActivity extends AppCompatActivity {
     }
 
     public void getPhotoList(String placeId) {
-        StringBuilder googlePlaceUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/details/json?");
-//        googlePlaceUrl.append("language=ko");
-        googlePlaceUrl.append("placeid=" + placeId);
-        googlePlaceUrl.append("&fields=" + "name,rating,formatted_phone_number,photo");
-        googlePlaceUrl.append("&key=" + getString(R.string.google_maps_api_key));
-        Log.e("abc", "detail = " + googlePlaceUrl);
+//        StringBuilder googlePlaceUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/details/json?");
+////        googlePlaceUrl.append("language=ko");
+//        googlePlaceUrl.append("placeid=" + placeId);
+//        googlePlaceUrl.append("&fields=" + "name,rating,formatted_phone_number,photo");
+//        googlePlaceUrl.append("&key=" + getString(R.string.google_maps_api_key));
+//        Log.e("abc", "detail = " + googlePlaceUrl);
+
+        String url = GoogleMapUtil.getDetailUrl(OneRestaurantActivity.this, placeId);
 
         Object dataTransfer[] = new Object[2];
         dataTransfer[0] = OneRestaurantActivity.this;
-        dataTransfer[1] = googlePlaceUrl.toString();
+//        dataTransfer[1] = googlePlaceUrl.toString();
+        dataTransfer[1] = url;
 
-        GetPhotoTask getPhotoTask = new GetPhotoTask(viewPager, dotsLayout);
-        getPhotoTask.execute(dataTransfer);
+//        GetPhotoTask getPhotoTask = new GetPhotoTask(viewPager, dotsLayout);
+//        getPhotoTask.execute(dataTransfer);
+        new GetPhotoTask(viewPager, dotsLayout).execute(dataTransfer);
     }
 
 }

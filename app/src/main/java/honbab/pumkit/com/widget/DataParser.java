@@ -14,7 +14,9 @@ public class DataParser {
 
     private HashMap<String, String> getPlace(JSONObject googlePlaceJson) {
         HashMap<String, String> googlePlacesMap = new HashMap<>();
+        String formatted_phone_number = "";
         String placeName = "-NA-";
+        String rating = "";
         String vicinity = "-NA-";
         String latitude = "";
         String longitude = "";
@@ -28,6 +30,9 @@ public class DataParser {
         String reference = "";
         Log.e("abc", "googlePlaceJson = " + googlePlaceJson);
         try {
+            if (!googlePlaceJson.isNull("formatted_phone_number")) {
+                formatted_phone_number = googlePlaceJson.getString("formatted_phone_number");
+            }
             if (!googlePlaceJson.isNull("name")) {
                 placeName = googlePlaceJson.getString("name");
             }
@@ -38,17 +43,24 @@ public class DataParser {
             longitude = googlePlaceJson.getJSONObject("geometry").getJSONObject("location").getString("lng");
 
             if (!googlePlaceJson.isNull("photos")) {
-                photo_height = googlePlaceJson.getJSONArray("photos").getJSONObject(0).getString("height");
-                photo_html_attributions = googlePlaceJson.getJSONArray("photos").getJSONObject(0).getString("html_attributions");
-                photo_reference = googlePlaceJson.getJSONArray("photos").getJSONObject(0).getString("photo_reference");
-                photo_width = googlePlaceJson.getJSONArray("photos").getJSONObject(0).getString("width");
+                JSONArray photosArray = googlePlaceJson.getJSONArray("photos");
+                photo_height = photosArray.getJSONObject(0).getString("height");
+                photo_html_attributions = photosArray.getJSONObject(0).getString("html_attributions");
+                photo_reference = photosArray.getJSONObject(0).getString("photo_reference");
+                photo_width = photosArray.getJSONObject(0).getString("width");
             }
+            if (!googlePlaceJson.isNull("rating")) {
+                rating = googlePlaceJson.getString("rating");
+            }
+
 
             place_id = googlePlaceJson.getString("place_id");
 
             reference = googlePlaceJson.getString("reference");
 
+            googlePlacesMap.put("formatted_phone_number", formatted_phone_number);
             googlePlacesMap.put("place_name", placeName);
+            googlePlacesMap.put("rating", rating);
             googlePlacesMap.put("vicinity", vicinity);
             googlePlacesMap.put("lat", latitude);
             googlePlacesMap.put("lag", longitude);
@@ -91,8 +103,17 @@ public class DataParser {
 
         try {
             jsonObject = new JSONObject(jsonData);
-            jsonArray = jsonObject.getJSONArray("results");
-
+            Log.e("abc", "DataParser jsonObject = " + jsonObject);
+            if (jsonObject.has("results")) {
+                Log.e("abc", "어딜통과하나1 = ");
+                jsonArray = jsonObject.getJSONArray("results");
+            } else {
+                JSONObject obj = jsonObject.getJSONObject("result");
+                Log.e("abc", "어딜통과하나2 = " + obj);
+//                jsonArray.p
+                jsonArray = new JSONArray();
+                jsonArray.put(obj);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

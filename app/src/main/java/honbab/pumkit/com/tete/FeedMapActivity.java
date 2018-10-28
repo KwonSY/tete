@@ -126,7 +126,7 @@ public class FeedMapActivity extends FragmentActivity implements OnMapReadyCallb
 //                    recyclerView.smoothScrollToPosition(currentPosition);
                     Intent intent = new Intent(FeedMapActivity.this, OneFeedActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.putExtra("reservId", feedList.get(currentPosition).getSid());
+                    intent.putExtra("feed_id", feedList.get(currentPosition).getSid());
                     startActivity(intent);
 
                     return true;

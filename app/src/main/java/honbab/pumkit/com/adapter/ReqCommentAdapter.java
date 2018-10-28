@@ -73,7 +73,7 @@ public class ReqCommentAdapter extends Adapter<ReqCommentAdapter.ViewHolder> {
                 public void onClick(View view) {
                     String str_comment = holder.edit_comment.getText().toString();
 
-                    new SendCommentTask(mContext, httpClient).execute(feed_id, str_comment);
+                    new SendCommentTask(mContext, httpClient, position).execute(feed_id, str_comment);
                 }
             });
         } else {
@@ -94,7 +94,7 @@ public class ReqCommentAdapter extends Adapter<ReqCommentAdapter.ViewHolder> {
                 public boolean onLongClick(View view) {
                     Log.e("abc", "코멘트 삭제");
                     if (Statics.my_id.equals(data.getUser_id())) {
-                        new DelCommentTask(mContext, httpClient).execute(feed_id, data.getSid());
+                        new DelCommentTask(mContext, httpClient, position).execute(feed_id, data.getSid());
                     }
 
                     return false;
