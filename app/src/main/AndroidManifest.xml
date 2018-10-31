@@ -33,7 +33,10 @@
         <activity android:name="honbab.pumkit.com.tete.SplashActivity"/>
 
         <activity android:name="honbab.pumkit.com.tete.LoginActivity"/>
-        <activity android:name="honbab.pumkit.com.tete.JoinActivity"/>
+        <activity android:name="honbab.pumkit.com.tete.JoinActivity"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity android:name="honbab.pumkit.com.tete.JoinActivity2"
+            android:windowSoftInputMode="adjustResize"/>
 
         <activity android:name="honbab.pumkit.com.tete.CommentTalkActivity"/>
         <activity android:name="honbab.pumkit.com.tete.FeedMapActivity"

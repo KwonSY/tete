@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.picasso.Picasso;
 
@@ -60,7 +61,7 @@ public class GridViewNearByAdapter extends RecyclerView.Adapter<GridViewNearByAd
                 Log.e("abc", "선택되었음");
                 Intent intent = new Intent(mContext, OneRestaurantActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.putExtra("placeId", listViewitemList.get(position).getPlace_id());
+                intent.putExtra("place_id", listViewitemList.get(position).getPlace_id());
                 mContext.startActivity(intent);
             }
         });
@@ -69,6 +70,18 @@ public class GridViewNearByAdapter extends RecyclerView.Adapter<GridViewNearByAd
             public void onClick(View view) {
 //                ReservActivity.txt_restName.setText(listViewitemList.get(position).getRest_name());
                 ((ReservActivity) mContext).txt_restName.setText(listViewitemList.get(position).getRest_name());
+
+                ReservActivity.rest_name = listViewitemList.get(position).getRest_name();
+                ReservActivity.place_id = listViewitemList.get(position).getPlace_id();
+                Log.e("abc", "pppppppplace id = " + ReservActivity.place_id);
+                ReservActivity.rest_img = listViewitemList.get(position).getRest_img();
+                LatLng latLng = listViewitemList.get(position).getLatLng();
+                Double d_lat = latLng.latitude;
+                Double d_lng = latLng.longitude;
+                String str_lat = d_lat.toString();
+                String str_lng = d_lng.toString();
+                ReservActivity.lat = str_lat;
+                ReservActivity.lng = str_lng;
 
                 ((ReservActivity) mContext).layout_slidingPanel.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
             }

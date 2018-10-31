@@ -20,6 +20,7 @@ public class DataParser {
         String vicinity = "-NA-";
         String latitude = "";
         String longitude = "";
+        String fullAddress = "";
 
         String photo_height = "";
         String photo_html_attributions = "";
@@ -41,6 +42,15 @@ public class DataParser {
             }
             latitude = googlePlaceJson.getJSONObject("geometry").getJSONObject("location").getString("lat");
             longitude = googlePlaceJson.getJSONObject("geometry").getJSONObject("location").getString("lng");
+
+            if (!googlePlaceJson.isNull("address_components")) {
+                JSONArray addressArray = googlePlaceJson.getJSONArray("address_components");
+                for (int i=0; i<addressArray.length(); i++) {
+                    JSONObject addObj = addressArray.getJSONObject(i);
+                    String long_name = addObj.getString("long_name");
+                    fullAddress += long_name;
+                }
+            }
 
             if (!googlePlaceJson.isNull("photos")) {
                 JSONArray photosArray = googlePlaceJson.getJSONArray("photos");
@@ -64,6 +74,7 @@ public class DataParser {
             googlePlacesMap.put("vicinity", vicinity);
             googlePlacesMap.put("lat", latitude);
             googlePlacesMap.put("lag", longitude);
+            googlePlacesMap.put("fullAddress", fullAddress);
 
             googlePlacesMap.put("photo_height", photo_height);
             googlePlacesMap.put("photo_html_attributions", photo_html_attributions);

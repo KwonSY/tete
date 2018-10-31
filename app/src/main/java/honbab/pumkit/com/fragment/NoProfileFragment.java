@@ -11,7 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import honbab.pumkit.com.task.LoginTask;
-import honbab.pumkit.com.tete.LoginActivity;
+import honbab.pumkit.com.tete.JoinActivity;
 import honbab.pumkit.com.tete.R;
 import honbab.pumkit.com.widget.OkHttpClientSingleton;
 import okhttp3.OkHttpClient;
@@ -60,7 +60,7 @@ public class NoProfileFragment extends Fragment {
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.btn_go_join:
-                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                    Intent intent = new Intent(getActivity(), JoinActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
 

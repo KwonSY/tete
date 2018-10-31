@@ -64,6 +64,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-places:15.0.1'
     implementation "com.github.hotchemi:permissionsdispatcher:$permissionDispatcherVersion"
     annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:$permissionDispatcherVersion"
+    //ByteStreams
+    implementation 'com.google.guava:guava:18.0'
     //okhttp
     implementation 'com.squareup.okhttp3:okhttp:3.9.0'
     //Picasso

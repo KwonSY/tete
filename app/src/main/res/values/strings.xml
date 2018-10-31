@@ -8,6 +8,13 @@
     <string name="waitlist">대기리스트</string>
     <string name="profile">프로필</string>
 
+    <!--StringFilter-->
+    <string name="pattern_alphanumeric2">[0-9|a-z|A-Z|ㄱ-ㅎ|ㅏ-ㅣ|가-힝]*</string>
+    <string name="pattern_alphanumeric">^[a-zA-Z0-9]+$</string>
+    <string name="pattern_hangul">[ㄱ-ㅎ|ㅏ-ㅣ|가-힝]*</string>
+    <string name="pattern_alphanumeric_hangul">^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ\u318D\u119E\u11A2\u2022\u2025a\u00B7\uFE55]+$</string>
+    <string name="input_error_alphanum">영문자와 숫자만 허용합니다.</string>
+    <string name="input_error_alphanumeric_hangul">영문자와 숫자, 한글만 허용합니다.</string>
 
     <!--Splash-->
     <string name="use_next_permission">다음 기능을 사용하고자 합니다.</string>

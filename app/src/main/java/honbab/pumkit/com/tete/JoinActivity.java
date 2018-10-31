@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 
+import honbab.pumkit.com.utils.StringFilter;
 import honbab.pumkit.com.widget.Encryption;
 import honbab.pumkit.com.widget.OkHttpClientSingleton;
 import honbab.pumkit.com.widget.SessionManager;
@@ -30,7 +32,7 @@ public class JoinActivity extends AppCompatActivity {
 
     private EditText edit_email, edit_name, edit_password;
 
-    private String user_name, email, password;
+//    private String user_name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,10 @@ public class JoinActivity extends AppCompatActivity {
         edit_email = (EditText) findViewById(R.id.edit_email);
         edit_name = (EditText) findViewById(R.id.edit_name);
         edit_password = (EditText) findViewById(R.id.edit_password);
+        StringFilter stringFilter = new StringFilter(this);
+        InputFilter[] allowAlphanumeric = new InputFilter[1];
+        allowAlphanumeric[0] = stringFilter.allowAlphanumeric;
+        edit_password.setFilters(allowAlphanumeric);
 
         ImageView btn_show_password = (ImageView) findViewById(R.id.btn_show_password);
         btn_show_password.setOnTouchListener(new View.OnTouchListener() {
@@ -52,9 +58,11 @@ public class JoinActivity extends AppCompatActivity {
                 switch (event.getAction() ) {
                     case MotionEvent.ACTION_DOWN:
                         edit_password.setInputType(InputType.TYPE_CLASS_TEXT);
+                        edit_password.setSelection(edit_password.getText().length());
                         break;
                     case MotionEvent.ACTION_UP:
                         edit_password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                        edit_password.setSelection(edit_password.getText().length());
                         break;
                 }
                 return true;
@@ -74,8 +82,19 @@ public class JoinActivity extends AppCompatActivity {
 
                     break;
                 case R.id.btn_join:
-                    String str_email = edit_email.getText().toString();
-                    if (isValidEmail(str_email)) {
+                    String user_name = edit_name.getText().toString().trim();
+                    String str_email = edit_email.getText().toString().trim();
+                    String password = edit_password.getText().toString().trim();
+                    Log.e("abc", "user_name = " + user_name);
+                    if (user_name.equals("") || user_name == null) {
+                        Toast.makeText(JoinActivity.this, "이름을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                    } else if (str_email.equals("") || str_email == null) {
+                        Toast.makeText(JoinActivity.this, "이메일을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                    } else if (password.equals("") || password == null) {
+                        Toast.makeText(JoinActivity.this, "비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                    } else if (password.length() < 8 || password.matches("[0-9|a-z|A-Z|ㄱ-ㅎ|ㅏ-ㅣ|가-힝]*")) {
+                        Toast.makeText(JoinActivity.this, "8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요.", Toast.LENGTH_SHORT).show();
+                    } else if (isValidEmail(str_email)) {
                         new JoinTask().execute();
                     } else {
                         Toast.makeText(JoinActivity.this.getApplicationContext(), "올바른 이메일 형식이 아닙니다.", Toast.LENGTH_SHORT).show();
@@ -88,6 +107,7 @@ public class JoinActivity extends AppCompatActivity {
 
     private class JoinTask extends AsyncTask<Void, Void, Void> {
 
+        String user_name, email, password;
         String result;
 
         @Override

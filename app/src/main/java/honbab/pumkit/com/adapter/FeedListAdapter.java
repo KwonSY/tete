@@ -16,7 +16,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import honbab.pumkit.com.data.ReservData;
-import honbab.pumkit.com.tete.OneFeedActivity;
+import honbab.pumkit.com.tete.OneRestaurantActivity;
 import honbab.pumkit.com.tete.R;
 import honbab.pumkit.com.tete.Statics;
 import honbab.pumkit.com.widget.CircleTransform;
@@ -68,10 +68,14 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, OneFeedActivity.class);
+                Intent intent = new Intent(context, OneRestaurantActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.putExtra("feed_id", data.getSid());
                 intent.putExtra("place_id", data.getPlace_id());
+                intent.putExtra("feeder_img", Statics.main_url + data.getUser_img());
+                intent.putExtra("feeder_name", data.getUser_name());
+//                intent.putExtra("feedee_status", data.getFeedee_status());
+                intent.putExtra("status", data.getStatus());
                 context.startActivity(intent);
             }
         });
@@ -90,7 +94,6 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
 //    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-//        LinearLayout layout_item_feed;
         ImageView img_user;
         ImageView img_rest;
         TextView txt_userName;
@@ -111,11 +114,11 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
 
     public void addItem(String sid, String user_id, String user_name, String img_url, String user_age, String user_gender,
                         String rest_name, String location, String place_id, LatLng latLng, String rest_img,
-                        String time) {
+                        String status, String time) {
 
         ReservData item = new ReservData(sid, user_id, user_name, img_url, user_age, user_gender,
                 rest_name, location, place_id, latLng, rest_img,
-                time);
+                status, time);
 
         listViewItemList.add(item);
     }

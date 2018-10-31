@@ -96,10 +96,12 @@ public class FeedFragment extends Fragment {
                 LatLng latLng = feedList.get(i).getLatLng();
                 String rest_img = feedList.get(i).getRest_img();
 
+                String status = feedList.get(i).getStatus();
                 String time = feedList.get(i).getTime();
 
                 mAdapter.addItem(sid, user_id, user_name, user_img, user_age, user_gender,
-                        rest_name, location, place_id, latLng, rest_img, time);
+                        rest_name, location, place_id, latLng, rest_img,
+                        status, time);
             }
 
             mAdapter.notifyDataSetChanged();
@@ -188,12 +190,12 @@ public class FeedFragment extends Fragment {
                         String sid = obj2.getString("sid");
 
                         //등록자 정보
-                        JSONObject user_obj = obj2.getJSONObject("user");
-                        String user_id = user_obj.getString("sid");
-                        String user_name = user_obj.getString("name");
-                        String user_img = user_obj.getString("img_url");
-                        String user_age = user_obj.getString("age");
-                        String user_gender = user_obj.getString("gender");
+                        JSONObject host_obj = obj2.getJSONObject("host");
+                        String user_id = host_obj.getString("sid");
+                        String user_name = host_obj.getString("name");
+                        String user_img = host_obj.getString("img_url");
+                        String user_age = host_obj.getString("age");
+                        String user_gender = host_obj.getString("gender");
 
                         //음식점 정보
                         JSONObject rest_obj = obj2.getJSONObject("rest");
@@ -208,13 +210,25 @@ public class FeedFragment extends Fragment {
                         LatLng latLng = new LatLng(db_lat, db_lng);
                         String rest_img = rest_obj.getString("img_url");
 
+//                        //feedee - 신청자
+//                        JSONArray feedee_arr = obj2.getJSONObject("feedee");
+//                        for (int j=0; j<feedee_arr.length(); j++) {
+//                            JSONObject feedee_obj = feedee_arr.getJSONObject(j);
+//                            String feedee_id = feedee_obj.getString("sid");
+//                            String feedee_status = feedee_obj.getString("status");
+////                            String feedee_img = feedee_obj.getString("img_url");
+//                            String feedee_time = feedee_obj.getString("time");
+//                        }
+
+                        String status = obj2.getString("status");
                         String time = obj2.getString("time");
 
                         mAdapter.addItem(sid, user_id, user_name, user_img, user_age, user_gender,
-                                rest_name, location, place_id, latLng, rest_img, time);
+                                rest_name, location, place_id, latLng, rest_img,
+                                status, time);
                         ReservData reservData = new ReservData(sid, user_id, user_name, user_img, user_age, user_gender,
                                 rest_name, location, place_id, latLng, rest_img,
-                                time);
+                                status, time);
                         feedList.add(reservData);
                     }
 

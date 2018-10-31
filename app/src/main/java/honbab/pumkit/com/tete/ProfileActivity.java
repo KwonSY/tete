@@ -1,5 +1,6 @@
 package honbab.pumkit.com.tete;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONObject;
 
 import honbab.pumkit.com.adapter.MyFeedListAdapter;
+import honbab.pumkit.com.widget.CircleTransform;
 import honbab.pumkit.com.widget.OkHttpClientSingleton;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -22,12 +24,14 @@ public class ProfileActivity extends AppCompatActivity {
 
     private OkHttpClient httpClient;
 
-    public String my_id = Statics.my_id;
+//    public String my_id = Statics.my_id;
 
-    ImageView image_myProfile;
+    ImageView img_user;
     TextView txt_my_name, txt_comment;
     ListView listView_myFeed;
     MyFeedListAdapter myFeedListAdapter;
+
+    String user_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +40,14 @@ public class ProfileActivity extends AppCompatActivity {
 
         httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
 
-        image_myProfile = (ImageView) findViewById(R.id.image_myProfile);
+        Intent intent = getIntent();
+        user_id = intent.getStringExtra("user_id");
+        if (user_id==null) {
+            user_id = Statics.my_id;
+        }
+        Log.e("abc", "user_id = " + user_id);
+
+        img_user = (ImageView) findViewById(R.id.img_user);
         txt_my_name = (TextView) findViewById(R.id.txt_my_name);
 
         txt_comment = (TextView) findViewById(R.id.txt_comment);
@@ -54,7 +65,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public class MyAccountTask extends AsyncTask<Void, Void, Void> {
-        String user_id, user_name, img_url, comment;
+        String user_name, user_img, comment;
 
         @Override
         protected void onPreExecute() {
@@ -65,7 +76,7 @@ public class ProfileActivity extends AppCompatActivity {
         protected Void doInBackground(Void... params) {
             FormBody body = new FormBody.Builder()
                     .add("opt", "account")
-                    .add("my_id", my_id)
+                    .add("user_id", user_id)
                     .build();
 
             Request request = new Request.Builder().url(Statics.opt_url).post(body).build();
@@ -78,18 +89,14 @@ public class ProfileActivity extends AppCompatActivity {
                     JSONObject obj = new JSONObject(bodyStr);
                     Log.e("abc", "어카운트 : " + obj);
 
-                    JSONObject obj2 = obj.getJSONObject("reserv");
-
-                    String sid = obj2.getString("sid");
-
-                    JSONObject user_obj = obj2.getJSONObject("user");
-                    user_id = user_obj.getString("sid");
-                    user_name = user_obj.getString("user_name");
-//                    String gender = user_obj.getString("gender");
-                    img_url = user_obj.getString("img_url");
+                    JSONObject user_obj = obj.getJSONObject("user");
+//                    user_id = user_obj.getString("sid");
+                    user_name = user_obj.getString("name");
+                    String email = user_obj.getString("email");
+                    String gender = user_obj.getString("gender");
+                    String age = user_obj.getString("age");
+                    user_img = Statics.main_url + user_obj.getString("img_url");
                     comment = user_obj.getString("comment");
-
-//                    myFeedListAdapter.addItem(user_id, user_name, img_url, comment);
                 } else {
 //                    Log.d(TAG, "Error : " + response.code() + ", " + response.message());
                 }
@@ -104,12 +111,14 @@ public class ProfileActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             txt_my_name.setText(user_name);
-            Picasso.get().load(img_url)
+            Picasso.get().load(user_img)
                     .resize(200,200)
                     .centerCrop()
                     .placeholder(R.drawable.icon_noprofile_circle)
                     .error(R.drawable.icon_noprofile_circle)
-                    .into(image_myProfile);
+                    .transform(new CircleTransform())
+                    .into(img_user);
+            txt_comment.setText(comment);
         }
     }
 }

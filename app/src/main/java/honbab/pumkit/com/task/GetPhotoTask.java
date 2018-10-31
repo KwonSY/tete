@@ -84,27 +84,21 @@ public class GetPhotoTask extends AsyncTask<Object, String, String> {
 
             imgAllArr.add(GoogleMapUtil.getPlacePhoto(mContext, photosList.get(i).getRest_img()));
         }
-        Log.e("abc", "mContext = " + mContext);
-        Log.e("abc", "layouts2 = " + layouts2);
-        Log.e("abc", "img_arr = " + img_arr);
-        Log.e("abc", "imgAllArr = " + imgAllArr);
+
         mAdapter = new ViewPagerAdapter(mContext, layouts2, img_arr, imgAllArr);
-        Log.e("abc", "mAdapter = " + mAdapter);
-        Log.e("abc", "viewPager = " + viewPager);
         viewPager.setAdapter(mAdapter);
         viewPager.addOnPageChangeListener(viewPagerPageChangeListener);
 
         addBottomDots(0);
-    }
 
-//    public String getPlacePhoto(String photoreference) {
-//        StringBuilder sb = new StringBuilder("https://maps.googleapis.com/maps/api/place/photo?");
-//        sb.append("maxwidth=" + "400");
-//        sb.append("&photoreference=" + photoreference);
-//        sb.append("&key=" + mContext.getResources().getString(R.string.google_maps_api_key));
-//
-//        return sb.toString();
-//    }
+        Log.e("abc", ")))))))))" + placeDetailList);
+        Log.e("abc", "formatted_phone_number)" + placeDetailList.get("formatted_phone_number").toString());
+        Log.e("abc", "fullAddress)" + placeDetailList.get("fullAddress").toString());
+        Log.e("abc", "rating)" + placeDetailList.get("rating").toString());
+        ((OneRestaurantActivity) mContext).txt_rest_phone.setText(placeDetailList.get("formatted_phone_number").toString());
+        ((OneRestaurantActivity) mContext).txt_rest_address.setText(placeDetailList.get("fullAddress").toString());
+        ((OneRestaurantActivity) mContext).txt_rating.setText("평점" + placeDetailList.get("rating").toString());
+    }
 
     ViewPager.OnPageChangeListener viewPagerPageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
@@ -138,7 +132,6 @@ public class GetPhotoTask extends AsyncTask<Object, String, String> {
         TextView[] dots;
 
         String activityName = mContext.getClass().getSimpleName();
-        Log.e("abc", "xxxxxxxxxxxxxxxxx = " + activityName);
         //vvvvvvvvvvvvvvv 다시 짜기
         if (activityName.equals("OneRestaurantActivity")) {
             dots = ((OneRestaurantActivity) mContext).dots;
@@ -147,7 +140,6 @@ public class GetPhotoTask extends AsyncTask<Object, String, String> {
         }
 
         dots = new TextView[layouts2.size()];
-        Log.e("abc", "dots.length = " + dots.length);
 
         int[] colorsActive = mContext.getResources().getIntArray(R.array.array_dot_active);
         int[] colorsInactive = mContext.getResources().getIntArray(R.array.array_dot_inactive);

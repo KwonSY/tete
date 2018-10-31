@@ -6,8 +6,15 @@
     android:layout_height="match_parent"
     tools:context="honbab.pumkit.com.tete.ProfileActivity">
 
+    <include
+        android:id="@+id/topbar"
+        layout="@layout/layout_topbar_backtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <ScrollView
         android:layout_width="match_parent"
+        android:layout_below="@id/topbar"
         android:layout_height="wrap_content">
 
         <LinearLayout
@@ -20,9 +27,9 @@
             android:paddingTop="50dp">
 
             <ImageView
-                android:id="@+id/image_myProfile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/img_user"
+                android:layout_width="@dimen/profile_xl"
+                android:layout_height="@dimen/profile_xl"
                 android:layout_gravity="center_horizontal"
                 android:src="@drawable/icon_noprofile_circle" />
 
@@ -30,7 +37,9 @@
                 android:id="@+id/txt_my_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="내 프로필 읽어오는 중..."/>
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="13dp"
+                android:text="내 프로필 읽어오는 중..." />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -50,27 +59,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="3"
+                    android:background="@drawable/border_circle_bk1"
                     android:text="내 소개 읽어오는 중..." />
             </LinearLayout>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:text="예약현황"
-                android:textStyle="bold" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <ListView
-                    android:id="@+id/listView_myFeed"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

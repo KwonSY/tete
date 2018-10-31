@@ -1,37 +1,45 @@
 package honbab.pumkit.com.tete;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import java.util.ArrayList;
+import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import honbab.pumkit.com.task.GetPhotoTask;
+import honbab.pumkit.com.task.PokeFeedTask;
 import honbab.pumkit.com.utils.ButtonUtil;
 import honbab.pumkit.com.utils.GoogleMapUtil;
+import honbab.pumkit.com.widget.CircleTransform;
 import honbab.pumkit.com.widget.OkHttpClientSingleton;
+import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 
 public class OneRestaurantActivity extends AppCompatActivity {
 
     private OkHttpClient httpClient;
 
     public ViewPager viewPager;
-//    public ViewPagerAdapter viewPagerAdapter;
     public TextView[] dots;
     public LinearLayout dotsLayout;
 
-    String placeId;
-    private ArrayList<Integer> layouts2 = new ArrayList<>();
-    private ArrayList<String> img_arr = new ArrayList<>();
+    public Button btn_poke;
+    public TextView txt_rest_phone, txt_rest_address, txt_rating;
+
+    private String feed_id, place_id, feeder_img, feeder_name, feedee_status = "n", status;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,81 +49,150 @@ public class OneRestaurantActivity extends AppCompatActivity {
         httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
 
         Intent intent = getIntent();
-        placeId = intent.getStringExtra("placeId");
+        feed_id = intent.getStringExtra("feed_id");
+        place_id = intent.getStringExtra("place_id");
+        feeder_img = intent.getStringExtra("feeder_img");
+        feeder_name = intent.getStringExtra("feeder_name");
+        status = intent.getStringExtra("status");
+        Log.e("abc", "status = " + status);
 
-        LinearLayout layout_profile = (LinearLayout) findViewById(R.id.layout_profile);
-        layout_profile.setVisibility(View.GONE);
-        Button btn_reserv = (Button) findViewById(R.id.btn_reserv);
-        btn_reserv.setVisibility(View.GONE);
+        btn_poke = (Button) findViewById(R.id.btn_poke);
+        btn_poke.setOnClickListener(mOnClickListener);
+        if (feed_id == null) {
+            //같이먹기 x //상단 제거
+            LinearLayout layout_profile = (LinearLayout) findViewById(R.id.layout_profile);
+            layout_profile.setVisibility(View.GONE);
+
+            btn_poke.setVisibility(View.GONE);
+        } else {
+            //같이먹기 o
+            ImageView img_feeder = (ImageView) findViewById(R.id.img_feeder);
+            Picasso.get().load(feeder_img)
+//                    .resize(100,100)
+//                    .centerCrop()
+                    .placeholder(R.drawable.icon_noprofile_circle)
+                    .error(R.drawable.icon_noprofile_circle)
+                    .transform(new CircleTransform())
+                    .into(img_feeder);
+
+            TextView txt_feeder_name = (TextView) findViewById(R.id.txt_feeder_name);
+            txt_feeder_name.setText(feeder_name);
+
+            if (status.equals("n")) {
+                //vvvvvvvvvv
+
+            } else {
+                btn_poke.setText("같먹 종료");
+            }
+        }
+
+        txt_rest_phone = (TextView) findViewById(R.id.txt_rest_phone);
+        txt_rest_address = (TextView) findViewById(R.id.txt_rest_address);
+        txt_rating = (TextView) findViewById(R.id.txt_rating);
+
 
         viewPager = (ViewPager) findViewById(R.id.pager_food);
-//        viewPagerAdapter = new ViewPagerAdapter(OneRestaurantActivity.this, layouts2, img_arr);
         dotsLayout = (LinearLayout) findViewById(R.id.layoutDots);
 
         ButtonUtil.setBackButtonClickListener(this);
 
-        Log.e("abc", "viewPager from OneRestaurant = " + viewPager);
-        getPhotoList(placeId);
+        //뷰페이저, 디테일도 세팅
+        String url = GoogleMapUtil.getDetailUrl(OneRestaurantActivity.this, place_id);
+        new GetPhotoTask(viewPager, dotsLayout).execute(OneRestaurantActivity.this, url);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-//        new OneRestTask().execute();
+        new CheckMyPokeTask().execute();
     }
 
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
-                case R.id.btn_back:
-                    onBackPressed();
+                case R.id.btn_poke:
+                    if (status.equals("n")) {
+                        new PokeFeedTask(OneRestaurantActivity.this, httpClient).execute(feed_id);
+
+                        if (feedee_status.equals("n")) {
+                            Toast.makeText(OneRestaurantActivity.this, "같이먹기를 신청하셨습니다.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(OneRestaurantActivity.this, "같이먹기가 취소되었습니다.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
 
                     break;
             }
         }
     };
 
-    public void addBottomDots(int currentPage) {
-        dots = new TextView[layouts2.size()];
-        Log.e("abc", "dots.length = " + dots.length);
+    public class CheckMyPokeTask extends AsyncTask<Void, Void, Void> {
+        String result;
 
-        int[] colorsActive = getResources().getIntArray(R.array.array_dot_active);
-        int[] colorsInactive = getResources().getIntArray(R.array.array_dot_inactive);
+        @Override
+        protected void onPreExecute() {
 
-        dotsLayout.removeAllViews();
-        for (int i = 0; i < dots.length; i++) {
-            dots[i] = new TextView(this);
-            dots[i].setText(Html.fromHtml("&#8226;"));
-            dots[i].setTextSize(35);
-//            dots[i].setTextColor(colorsInactive[currentPage]);
-            dots[i].setTextColor(ContextCompat.getColor(this, R.color.dot_inactive));
-            dotsLayout.addView(dots[i]);
         }
 
-        if (dots.length > 0)
-            dots[currentPage].setTextColor(ContextCompat.getColor(this, R.color.dot_active));
-    }
+        @Override
+        protected Void doInBackground(Void... params) {
+            FormBody body = new FormBody.Builder()
+                    .add("opt", "one_feed_feedeelist")
+                    .add("feed_id", feed_id)
+                    .build();
 
-    public void getPhotoList(String placeId) {
-//        StringBuilder googlePlaceUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/details/json?");
-////        googlePlaceUrl.append("language=ko");
-//        googlePlaceUrl.append("placeid=" + placeId);
-//        googlePlaceUrl.append("&fields=" + "name,rating,formatted_phone_number,photo");
-//        googlePlaceUrl.append("&key=" + getString(R.string.google_maps_api_key));
-//        Log.e("abc", "detail = " + googlePlaceUrl);
+            Request request = new Request.Builder().url(Statics.opt_url).post(body).build();
 
-        String url = GoogleMapUtil.getDetailUrl(OneRestaurantActivity.this, placeId);
+            try {
+                okhttp3.Response response = httpClient.newCall(request).execute();
+                if (response.isSuccessful()) {
+                    String bodyStr = response.body().string();
 
-        Object dataTransfer[] = new Object[2];
-        dataTransfer[0] = OneRestaurantActivity.this;
-//        dataTransfer[1] = googlePlaceUrl.toString();
-        dataTransfer[1] = url;
+                    JSONObject obj = new JSONObject(bodyStr);
+                    Log.e("abc", "one_feed_feedeelist json = " + obj);
 
-//        GetPhotoTask getPhotoTask = new GetPhotoTask(viewPager, dotsLayout);
-//        getPhotoTask.execute(dataTransfer);
-        new GetPhotoTask(viewPager, dotsLayout).execute(dataTransfer);
+                    result = obj.getString("result");
+
+                    if (!obj.isNull("users")) {
+                        JSONArray arr = obj.getJSONArray("users");
+                        for (int i = 0; i < arr.length(); i++) {
+                            JSONObject obj2 = arr.getJSONObject(i);
+                            JSONObject user_obj = obj2.getJSONObject("users");
+                            String user_id = user_obj.getString("sid");
+                            String status = obj2.getString("status");
+
+                            if (user_id.equals(Statics.my_id)) {
+                                if (status.equals("y"))
+                                    feedee_status = "y";
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+//            super.onPostExecute(feedReqList);
+            Log.e("abc", "r = " + result);
+            Log.e("abc", "s = " + status);
+            if (result.equals("0")) {
+                if (status.equals("n")) {
+                    if (feedee_status.equals("n")) {
+                        btn_poke.setText("같이먹기");
+                    } else {
+                        btn_poke.setText("예약완료");
+                    }
+                }
+            }
+        }
+
     }
 
 }

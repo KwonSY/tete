@@ -20,8 +20,9 @@
             android:id="@+id/image_myProfile"
             android:layout_width="@dimen/profile_l"
             android:layout_height="@dimen/profile_l"
+            android:layout_marginBottom="30dp"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/icon_noprofile_circle" />
+            android:src="@drawable/txt_logo_et" />
 
         <EditText
             android:id="@+id/edit_email"

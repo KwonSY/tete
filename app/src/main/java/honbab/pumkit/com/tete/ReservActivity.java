@@ -65,7 +65,7 @@ public class ReservActivity extends AppCompatActivity {
     int hourOfDay, minute;//Calender 에서 얻는 값
     int hour = 0, min = 0;//Task post로 넘길 값
 
-    String restName, img_url, lat, lng;
+    public static String rest_name, place_id, rest_img, lat, lng;
     //vvvvv GetNearPlacesTaskForReserv.mMapList -> ReservActivity.mMapList
 //    public static ArrayList<MapData> mMapList = new ArrayList<>();
 
@@ -428,13 +428,15 @@ public class ReservActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... params) {
+            Log.e("abc", "ppxxxxxxxxp = " + place_id);
             FormBody body = new FormBody.Builder()
                     .add("opt", "reservation")
                     .add("my_id", Statics.my_id)
-                    .add("rest_name", restName)
+                    .add("rest_name", rest_name)
+                    .add("place_id", place_id)
                     .add("lat", lat)
                     .add("lng", lng)
-                    .add("img_url", img_url)
+                    .add("img_url", rest_img)
                     .add("time_reserv", time_reserv)
                     .build();
 

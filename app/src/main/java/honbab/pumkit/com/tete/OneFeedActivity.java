@@ -78,13 +78,13 @@ public class OneFeedActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
-                case R.id.btn_reserv:
-                    if (chk==0) {
-                        chk++;
-                        new PokeFeedTask().execute();
-                    }
-
-                    break;
+//                case R.id.btn_reserv:
+//                    if (chk==0) {
+//                        chk++;
+//                        new PokeFeedTask().execute();
+//                    }
+//
+//                    break;
             }
         }
     };
@@ -263,51 +263,51 @@ public class OneFeedActivity extends AppCompatActivity {
         }
     }
 
-    //같이먹기 신청
-    public class PokeFeedTask extends AsyncTask<Void, Void, Void> {
-        String result;
-
-        @Override
-        protected void onPreExecute() {
-
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            FormBody body = new FormBody.Builder()
-                    .add("opt", "poke")
-                    .add("my_id", Statics.my_id)
-                    .add("feed_id", feed_id)
-                    .build();
-
-            Request request = new Request.Builder().url(Statics.opt_url).post(body).build();
-
-            try {
-                okhttp3.Response response = httpClient.newCall(request).execute();
-                if (response.isSuccessful()) {
-                    String bodyStr = response.body().string();
-
-                    JSONObject obj = new JSONObject(bodyStr);
-
-                    result = obj.getString("result");
-                } else {
-//                    Log.d(TAG, "Error : " + response.code() + ", " + response.message());
-                }
-
-            } catch (Exception e) {
-                Log.e("abc", "Error : " + e.getMessage());
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            if (result.equals("0")) {
-                Intent intent = new Intent(OneFeedActivity.this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-            }
-        }
-    }
+//    //같이먹기 신청
+//    public class PokeFeed2Task extends AsyncTask<Void, Void, Void> {
+//        String result;
+//
+//        @Override
+//        protected void onPreExecute() {
+//
+//        }
+//
+//        @Override
+//        protected Void doInBackground(Void... params) {
+//            FormBody body = new FormBody.Builder()
+//                    .add("opt", "poke")
+//                    .add("my_id", Statics.my_id)
+//                    .add("feed_id", feed_id)
+//                    .build();
+//
+//            Request request = new Request.Builder().url(Statics.opt_url).post(body).build();
+//
+//            try {
+//                okhttp3.Response response = httpClient.newCall(request).execute();
+//                if (response.isSuccessful()) {
+//                    String bodyStr = response.body().string();
+//
+//                    JSONObject obj = new JSONObject(bodyStr);
+//
+//                    result = obj.getString("result");
+//                } else {
+////                    Log.d(TAG, "Error : " + response.code() + ", " + response.message());
+//                }
+//
+//            } catch (Exception e) {
+//                Log.e("abc", "Error : " + e.getMessage());
+//                e.printStackTrace();
+//            }
+//            return null;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Void aVoid) {
+//            if (result.equals("0")) {
+//                Intent intent = new Intent(OneFeedActivity.this, MainActivity.class);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(intent);
+//            }
+//        }
+//    }
 }
