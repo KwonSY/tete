@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -31,7 +32,8 @@ public class MyFeedListActivity extends AppCompatActivity {
     private OkHttpClient httpClient;
     private SessionManager session;
 
-    private TextView title_reserve;
+    private TextView txt_no_feed;
+    private Button btn_go_reserv;
     private RecyclerView recyclerView_myFeed;
     private MyFeedListAdapter myFeedListAdapter;
 
@@ -49,19 +51,17 @@ public class MyFeedListActivity extends AppCompatActivity {
         httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
         session = new SessionManager(this.getApplicationContext());
 
-        title_reserve = (TextView) findViewById(R.id.title_reserve);
+        txt_no_feed = (TextView) findViewById(R.id.txt_no_feed);
+        btn_go_reserv = (Button) findViewById(R.id.btn_go_reserv);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView_myFeed = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView_myFeed.setLayoutManager(layoutManager);
         if (feedReqList.size() > 0) {
-            title_reserve.setVisibility(View.VISIBLE);
-
             myFeedListAdapter = new MyFeedListAdapter(MyFeedListActivity.this, httpClient, feedReqList);
             recyclerView_myFeed.setAdapter(myFeedListAdapter);
             myFeedListAdapter.notifyDataSetChanged();
         } else {
-            title_reserve.setVisibility(View.GONE);
             recyclerView_myFeed.setVisibility(View.GONE);
         }
 
@@ -72,7 +72,7 @@ public class MyFeedListActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-//        new MyFeedListTask().execute();
+        new MyFeedListTask().execute();
     }
 
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
@@ -116,6 +116,7 @@ public class MyFeedListActivity extends AppCompatActivity {
                     String bodyStr = response.body().string();
 
                     JSONObject obj = new JSONObject(bodyStr);
+                    Log.e("abc", "my_feed_list = " + obj);
 
                     result = obj.getString("result");
 
@@ -126,16 +127,12 @@ public class MyFeedListActivity extends AppCompatActivity {
                             ArrayList<UserData> reqUsersList = new ArrayList<>();
                             ArrayList<CommentData> commentsList = new ArrayList<>();
 
-
                             JSONObject feedObj = feedArr.getJSONObject(i);
 
                             String feed_id = feedObj.getString("sid");
 
-                            host = feedObj.getString("host");
-//                            if (host.equals("my"))
-//                                cnt_my++;
-//                            else if (host.equals("your"))
-//                                cnt_yours++;
+//                            JSONObject hostObj = feedObj.getJSONObject("host");
+//                            host = hostObj.getString("sid");
 
                             JSONObject restObj = feedObj.getJSONObject("rest");
                             String rest_id = restObj.getString("sid");
@@ -163,24 +160,24 @@ public class MyFeedListActivity extends AppCompatActivity {
                                 }
                             }
 
-                            if (feedObj.has("comments")) {
-                                JSONArray usersArr = feedObj.getJSONArray("comments");
-
-                                for (int k = 0; k < usersArr.length(); k++) {
-                                    JSONObject userObj = usersArr.getJSONObject(k);
-
-                                    String comment_id = userObj.getString("sid");
-                                    JSONObject c_user_obj = userObj.getJSONObject("user");
-                                    String c_user_id = c_user_obj.getString("sid");
-                                    String c_user_name = c_user_obj.getString("name");
-                                    String c_img_url = Statics.main_url + c_user_obj.getString("img_url");
-                                    String comment = userObj.getString("comment");
-                                    String comment_time = userObj.getString("time");
-
-                                    CommentData commentData = new CommentData(comment_id, c_user_id, c_user_name, c_img_url, comment, comment_time);
-                                    commentsList.add(commentData);
-                                }
-                            }
+//                            if (feedObj.has("comments")) {
+//                                JSONArray usersArr = feedObj.getJSONArray("comments");
+//
+//                                for (int k = 0; k < usersArr.length(); k++) {
+//                                    JSONObject userObj = usersArr.getJSONObject(k);
+//
+//                                    String comment_id = userObj.getString("sid");
+//                                    JSONObject c_user_obj = userObj.getJSONObject("user");
+//                                    String c_user_id = c_user_obj.getString("sid");
+//                                    String c_user_name = c_user_obj.getString("name");
+//                                    String c_img_url = Statics.main_url + c_user_obj.getString("img_url");
+//                                    String comment = userObj.getString("comment");
+//                                    String comment_time = userObj.getString("time");
+//
+//                                    CommentData commentData = new CommentData(comment_id, c_user_id, c_user_name, c_img_url, comment, comment_time);
+//                                    commentsList.add(commentData);
+//                                }
+//                            }
 
                             FeedReqData data = new FeedReqData(feed_id, rest_id, rest_name, rest_img, reqUsersList, commentsList);
                             feedReqList.add(data);
@@ -201,16 +198,19 @@ public class MyFeedListActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(ArrayList<FeedReqData> feedReqList) {
             super.onPostExecute(feedReqList);
-//            Log.e("abc", "onPostExecute feedReqList.size = " + feedReqList.size());
+            Log.e("abc", "onPostExecute feedReqList.size = " + feedReqList.size());
 
             if (feedReqList.size() > 0) {
-                title_reserve.setVisibility(View.VISIBLE);
+                txt_no_feed.setVisibility(View.GONE);
+                btn_go_reserv.setVisibility(View.GONE);
+                recyclerView_myFeed.setVisibility(View.VISIBLE);
 
                 myFeedListAdapter = new MyFeedListAdapter(MyFeedListActivity.this, httpClient, feedReqList);
                 recyclerView_myFeed.setAdapter(myFeedListAdapter);
                 myFeedListAdapter.notifyDataSetChanged();
             } else {
-                title_reserve.setVisibility(View.GONE);
+                txt_no_feed.setVisibility(View.VISIBLE);
+                btn_go_reserv.setVisibility(View.VISIBLE);
                 recyclerView_myFeed.setVisibility(View.GONE);
             }
 

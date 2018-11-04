@@ -6,9 +6,10 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -42,13 +43,12 @@ public class ProfileFragment extends Fragment {
 
     public String my_id = Statics.my_id;
 
+    private ImageButton btn_setting;
     private ImageView image_myProfile;
     private TextView txt_my_name, txt_comment;
     private TextView title_reserve;
     private RelativeLayout layout_go_feedlist, layout_go_pokelist, layout_go_talk;
     public TextView badge_feed_cnt, badge_poke_cnt, badge_comment_cnt;
-//    public static RecyclerView recyclerView_myFeed;
-//    private MyFeedListAdapter myFeedListAdapter;
 
     int cnt_my = 0, cnt_your = 0, cnt_comment = 0;
 
@@ -81,7 +81,12 @@ public class ProfileFragment extends Fragment {
         txt_my_name = (TextView) getActivity().findViewById(R.id.txt_my_name);
         txt_comment = (TextView) getActivity().findViewById(R.id.txt_comment);
 
-//        title_reserve = (TextView) getActivity().findViewById(R.id.title_reserve);
+        image_myProfile.setOnClickListener(mOnClickListener);
+
+        btn_setting = (ImageButton) getActivity().findViewById(R.id.btn_setting);
+        btn_setting.setOnClickListener(mOnClickListener);
+        btn_setting.setOnTouchListener(mOnTouchListener);
+
         //3가지 버튼
         layout_go_feedlist = (RelativeLayout) getActivity().findViewById(R.id.layout_go_feedlist);
         layout_go_pokelist = (RelativeLayout) getActivity().findViewById(R.id.layout_go_pokelist);
@@ -89,19 +94,6 @@ public class ProfileFragment extends Fragment {
         layout_go_feedlist.setOnClickListener(mOnClickListener);
         layout_go_pokelist.setOnClickListener(mOnClickListener);
         layout_go_talk.setOnClickListener(mOnClickListener);
-
-//        // My Feed List
-//        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-//        recyclerView_myFeed = (RecyclerView) getActivity().findViewById(R.id.recyclerView_myFeed);
-//        recyclerView_myFeed.setLayoutManager(layoutManager);
-//        myFeedListAdapter = new MyFeedListAdapter();
-//        recyclerView_myFeed.setAdapter(myFeedListAdapter);
-
-        image_myProfile.setOnClickListener(mOnClickListener);
-
-        Button btn_setting = (Button) getActivity().findViewById(R.id.btn_setting);
-        btn_setting.setOnClickListener(mOnClickListener);
-
         badge_feed_cnt = (TextView) getActivity().findViewById(R.id.badge_feed_cnt);
         badge_poke_cnt = (TextView) getActivity().findViewById(R.id.badge_poke_cnt);
         badge_comment_cnt = (TextView) getActivity().findViewById(R.id.badge_comment_cnt);
@@ -145,6 +137,23 @@ public class ProfileFragment extends Fragment {
 
                     break;
             }
+        }
+    };
+
+    private View.OnTouchListener mOnTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            switch (motionEvent.getAction() ) {
+                case MotionEvent.ACTION_DOWN:
+                    btn_setting.setImageAlpha(70);
+
+                    break;
+                case MotionEvent.ACTION_UP:
+                    btn_setting.setImageAlpha(255);
+
+                    break;
+            }
+            return false;
         }
     };
 
@@ -206,7 +215,6 @@ public class ProfileFragment extends Fragment {
 
     ArrayList<FeedReqData> myFeedList = new ArrayList<>();
     ArrayList<FeedReqData> pokeList = new ArrayList<>();
-//    ArrayList<FeedReqData> commentList = new ArrayList<>();
     public class MyFeedListTask extends AsyncTask<Void, Void, ArrayList<FeedReqData>> {
         String result;
         String host;
@@ -228,7 +236,7 @@ public class ProfileFragment extends Fragment {
             ArrayList<FeedReqData> feedReqList = new ArrayList<>();
 
             FormBody body = new FormBody.Builder()
-                    .add("opt", "my_feed_list")
+                    .add("opt", "my_totla_feed_cnt")
                     .add("my_id", my_id)
                     .build();
 
@@ -349,24 +357,16 @@ public class ProfileFragment extends Fragment {
             super.onPostExecute(feedReqList);
 //            Log.e("abc", "onPostExecute feedReqList.size = " + feedReqList.size());
 
+            badge_feed_cnt.setText(String.valueOf(cnt_my));
+            badge_poke_cnt.setText(String.valueOf(cnt_your));
+            badge_comment_cnt.setText(String.valueOf(cnt_comment));
+
             if (cnt_my==0)
                 badge_feed_cnt.setVisibility(View.GONE);
             if (cnt_your==0)
                 badge_poke_cnt.setVisibility(View.GONE);
             if (cnt_comment==0)
                 badge_comment_cnt.setVisibility(View.GONE);
-
-            badge_feed_cnt.setText(String.valueOf(cnt_my));
-            badge_poke_cnt.setText(String.valueOf(cnt_your));
-            badge_comment_cnt.setText(String.valueOf(cnt_comment));
-
-            if (feedReqList.size() > 0) {
-
-            } else {
-//                title_reserve.setVisibility(View.GONE);
-//                recyclerView_myFeed.setVisibility(View.GONE);
-            }
-
         }
 
     }

@@ -48,12 +48,10 @@ public class FeedFragment extends Fragment {
             my_id = "-1";
     }
 
-//    ListView listView_feed;
     RecyclerView gridView_feed;
     FeedListAdapter mAdapter;
 
     ArrayList<ReservData> feedList = new ArrayList<>();
-//    ArrayList<MapData> mapList = new ArrayList<MapData>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -73,37 +71,37 @@ public class FeedFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        Log.e("abc", "feedList.size() = " + feedList.size());
         if (feedList.size() == 0) {
             new FeedListTask().execute();
         } else {
-            for (int i=0; i<feedList.size(); i++) {
-                String sid = feedList.get(i).getSid();
-
-                //등록자 정보
-                String user_id = feedList.get(i).getUser_id();
-                String user_name = feedList.get(i).getUser_name();
-                String user_img = feedList.get(i).getUser_img();
-                String user_age = feedList.get(i).getUser_age();
-                String user_gender = feedList.get(i).getUser_gender();
-
-                //음식점 정보
-                String rest_name = feedList.get(i).getRest_name();
-                String location = feedList.get(i).getLocation();
-                String place_id = feedList.get(i).getPlace_id();
-                Double db_lat = feedList.get(i).getLatitude();
-                Double db_lng = feedList.get(i).getLongtitue();
-                LatLng latLng = feedList.get(i).getLatLng();
-                String rest_img = feedList.get(i).getRest_img();
-
-                String status = feedList.get(i).getStatus();
-                String time = feedList.get(i).getTime();
-
-                mAdapter.addItem(sid, user_id, user_name, user_img, user_age, user_gender,
-                        rest_name, location, place_id, latLng, rest_img,
-                        status, time);
-            }
-
+//            for (int i=0; i<feedList.size(); i++) {
+//                String sid = feedList.get(i).getSid();
+//
+//                //등록자 정보
+//                String user_id = feedList.get(i).getUser_id();
+//                String user_name = feedList.get(i).getUser_name();
+//                String user_img = feedList.get(i).getUser_img();
+//                String user_age = feedList.get(i).getUser_age();
+//                String user_gender = feedList.get(i).getUser_gender();
+//
+//                //음식점 정보
+//                String rest_name = feedList.get(i).getRest_name();
+//                String location = feedList.get(i).getLocation();
+//                String place_id = feedList.get(i).getPlace_id();
+//                Double db_lat = feedList.get(i).getLatitude();
+//                Double db_lng = feedList.get(i).getLongtitue();
+//                LatLng latLng = feedList.get(i).getLatLng();
+//                String rest_img = feedList.get(i).getRest_img();
+//
+//                String status = feedList.get(i).getStatus();
+//                String time = feedList.get(i).getTime();
+//
+////                mAdapter.addItem(sid, user_id, user_name, user_img, user_age, user_gender,
+////                        rest_name, location, place_id, latLng, rest_img,
+////                        status, time);
+//            }
+            mAdapter = new FeedListAdapter(getActivity(), feedList);
+            gridView_feed.setAdapter(mAdapter);
             mAdapter.notifyDataSetChanged();
         }
     }
@@ -112,7 +110,7 @@ public class FeedFragment extends Fragment {
         GridLayoutManager layoutManager = new GridLayoutManager(getActivity(), 2);
         gridView_feed = (RecyclerView) getActivity().findViewById(R.id.gridView_feed);
         gridView_feed.setLayoutManager(layoutManager);
-        mAdapter = new FeedListAdapter(getActivity());
+        mAdapter = new FeedListAdapter();
         gridView_feed.setAdapter(mAdapter);
 
         ImageView btn_go_map;
@@ -131,8 +129,6 @@ public class FeedFragment extends Fragment {
                 case R.id.btn_go_map:
                     Intent intent = new Intent(getActivity(), FeedMapActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                    Log.e("abc", "getLatLng = " + feedList.get(0).getLatLng());
-                    Log.e("abc", "FeedFragment mOnClickListener = " + feedList.size());
                     intent.putExtra("feedList", feedList);
                     startActivity(intent);
 
@@ -223,9 +219,9 @@ public class FeedFragment extends Fragment {
                         String status = obj2.getString("status");
                         String time = obj2.getString("time");
 
-                        mAdapter.addItem(sid, user_id, user_name, user_img, user_age, user_gender,
-                                rest_name, location, place_id, latLng, rest_img,
-                                status, time);
+//                        mAdapter.addItem(sid, user_id, user_name, user_img, user_age, user_gender,
+//                                rest_name, location, place_id, latLng, rest_img,
+//                                status, time);
                         ReservData reservData = new ReservData(sid, user_id, user_name, user_img, user_age, user_gender,
                                 rest_name, location, place_id, latLng, rest_img,
                                 status, time);
@@ -245,6 +241,8 @@ public class FeedFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Void aVoid) {
+            mAdapter = new FeedListAdapter(getActivity(), feedList);
+            gridView_feed.setAdapter(mAdapter);
             mAdapter.notifyDataSetChanged();
         }
     }

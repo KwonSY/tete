@@ -29,7 +29,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
 public class OneRestaurantActivity extends AppCompatActivity {
-
     private OkHttpClient httpClient;
 
     public ViewPager viewPager;
@@ -39,12 +38,12 @@ public class OneRestaurantActivity extends AppCompatActivity {
     public Button btn_poke;
     public TextView txt_rest_phone, txt_rest_address, txt_rating;
 
-    private String feed_id, place_id, feeder_img, feeder_name, feedee_status = "n", status;
+    private String feed_id, place_id, feeder_img, feeder_name, poke_yn = "n", status;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_one_feed);
+        setContentView(R.layout.activity_one_restaurant);
 
         httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
 
@@ -57,7 +56,7 @@ public class OneRestaurantActivity extends AppCompatActivity {
         Log.e("abc", "status = " + status);
 
         btn_poke = (Button) findViewById(R.id.btn_poke);
-        btn_poke.setOnClickListener(mOnClickListener);
+
         if (feed_id == null) {
             //같이먹기 x //상단 제거
             LinearLayout layout_profile = (LinearLayout) findViewById(R.id.layout_profile);
@@ -78,18 +77,18 @@ public class OneRestaurantActivity extends AppCompatActivity {
             TextView txt_feeder_name = (TextView) findViewById(R.id.txt_feeder_name);
             txt_feeder_name.setText(feeder_name);
 
-            if (status.equals("n")) {
-                //vvvvvvvvvv
-
+            if (status.equals("y")) {
+                btn_poke.setText(R.string.poke_compelete);
+                btn_poke.setBackgroundResource(R.drawable.border_circle_gr2);
+                btn_poke.setClickable(false);
             } else {
-                btn_poke.setText("같먹 종료");
+                btn_poke.setOnClickListener(mOnClickListener);
             }
         }
 
         txt_rest_phone = (TextView) findViewById(R.id.txt_rest_phone);
         txt_rest_address = (TextView) findViewById(R.id.txt_rest_address);
         txt_rating = (TextView) findViewById(R.id.txt_rating);
-
 
         viewPager = (ViewPager) findViewById(R.id.pager_food);
         dotsLayout = (LinearLayout) findViewById(R.id.layoutDots);
@@ -116,7 +115,7 @@ public class OneRestaurantActivity extends AppCompatActivity {
                     if (status.equals("n")) {
                         new PokeFeedTask(OneRestaurantActivity.this, httpClient).execute(feed_id);
 
-                        if (feedee_status.equals("n")) {
+                        if (poke_yn.equals("n")) {
                             Toast.makeText(OneRestaurantActivity.this, "같이먹기를 신청하셨습니다.", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(OneRestaurantActivity.this, "같이먹기가 취소되었습니다.", Toast.LENGTH_SHORT).show();
@@ -154,18 +153,19 @@ public class OneRestaurantActivity extends AppCompatActivity {
                     Log.e("abc", "one_feed_feedeelist json = " + obj);
 
                     result = obj.getString("result");
+                    status = obj.getString("status");
 
                     if (!obj.isNull("users")) {
                         JSONArray arr = obj.getJSONArray("users");
                         for (int i = 0; i < arr.length(); i++) {
                             JSONObject obj2 = arr.getJSONObject(i);
-                            JSONObject user_obj = obj2.getJSONObject("users");
-                            String user_id = user_obj.getString("sid");
-                            String status = obj2.getString("status");
 
+                            String user_id = obj2.getString("sid");
+                            String user_status = obj2.getString("status");
+
+                            Log.e("abc", "xxx my_id = " + Statics.my_id);
                             if (user_id.equals(Statics.my_id)) {
-                                if (status.equals("y"))
-                                    feedee_status = "y";
+                                poke_yn = "y";
                             }
                         }
                     }
@@ -182,13 +182,16 @@ public class OneRestaurantActivity extends AppCompatActivity {
 //            super.onPostExecute(feedReqList);
             Log.e("abc", "r = " + result);
             Log.e("abc", "s = " + status);
-            if (result.equals("0")) {
-                if (status.equals("n")) {
-                    if (feedee_status.equals("n")) {
-                        btn_poke.setText("같이먹기");
-                    } else {
-                        btn_poke.setText("예약완료");
-                    }
+            Log.e("abc", "poke_yn = " + poke_yn);
+
+            //미수락 상태에서, poke_yn check
+            if (status.equals("n")) {
+                if (poke_yn.equals("n")) {
+                    btn_poke.setText(R.string.poke_reserve);
+                    btn_poke.setBackgroundResource(R.drawable.border_circle_bk1);
+                } else {
+                    btn_poke.setText(R.string.poke_reserved);
+                    btn_poke.setBackgroundResource(R.drawable.border_circle_gr2);
                 }
             }
         }

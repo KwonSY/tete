@@ -26,8 +26,11 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
     Context context;
     public ArrayList<ReservData> listViewItemList = new ArrayList<ReservData>();
 
-    public FeedListAdapter(Context context) {
-        this.context = context;
+//    public FeedListAdapter(Context context) {
+//        this.context = context;
+//    }
+    public FeedListAdapter () {
+
     }
 
     public FeedListAdapter(Context context, ArrayList<ReservData> listViewItemList) {
@@ -62,9 +65,19 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
                 .error(R.drawable.icon_no_image)
                 .into(holder.img_rest);
 
-        holder.txt_userName.setText(data.getUser_name() + data.getUser_age() + data.getUser_gender());
-        holder.txt_restName.setText("#" + data.getLocation());
-        holder.txt_time.setText(data.getTime());
+        String str_gender = null;
+        if (data.getUser_gender().equals("m"))
+            str_gender = "남";
+        if (data.getUser_gender().equals("f"))
+            str_gender = "여";
+
+        holder.txt_userName.setText(data.getUser_name() + " " + data.getUser_age() + " " + str_gender);
+        holder.txt_restName.setText(data.getRest_name() + data.getLocation());
+
+        String[] time1 = data.getTime().split(" ");
+        String date[] = time1[0].split("-");
+        String time[] = time1[1].split(":");
+        holder.txt_time.setText(date[1] + "/" + date[2] + " " + time[0] + "시 " + time[1] + "분");
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

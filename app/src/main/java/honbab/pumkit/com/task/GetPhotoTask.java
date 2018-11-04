@@ -95,8 +95,8 @@ public class GetPhotoTask extends AsyncTask<Object, String, String> {
         Log.e("abc", "formatted_phone_number)" + placeDetailList.get("formatted_phone_number").toString());
         Log.e("abc", "fullAddress)" + placeDetailList.get("fullAddress").toString());
         Log.e("abc", "rating)" + placeDetailList.get("rating").toString());
-        ((OneRestaurantActivity) mContext).txt_rest_phone.setText(placeDetailList.get("formatted_phone_number").toString());
-        ((OneRestaurantActivity) mContext).txt_rest_address.setText(placeDetailList.get("fullAddress").toString());
+        ((OneRestaurantActivity) mContext).txt_rest_phone.setText("전화하기 " + placeDetailList.get("formatted_phone_number").toString());
+        ((OneRestaurantActivity) mContext).txt_rest_address.setText("주소 " + placeDetailList.get("fullAddress").toString());
         ((OneRestaurantActivity) mContext).txt_rating.setText("평점" + placeDetailList.get("rating").toString());
     }
 

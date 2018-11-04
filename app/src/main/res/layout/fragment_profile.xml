@@ -36,13 +36,17 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="12dp"
-                    android:text="내 프로필 읽어오는 중..." />
+                    android:text="내 프로필 읽어오는 중..."
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/txt_comment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="40dp"
+                    android:layout_marginRight="50dp"
+                    android:layout_marginLeft="50dp"
                     android:layout_marginTop="20dp"
                     android:background="@drawable/border_round_gr1"
                     android:padding="8dp"
@@ -55,7 +59,7 @@
 
                     <RelativeLayout
                         android:id="@+id/layout_go_feedlist"
-                        android:layout_width="wrap_content"
+                        android:layout_width="70dp"
                         android:layout_height="wrap_content"
                         android:orientation="vertical">
 
@@ -63,20 +67,22 @@
                             android:id="@+id/icon_feedlist"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/circle_green" />
+                            android:layout_centerHorizontal="true"
+                            android:src="@drawable/icon_feed" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/icon_feedlist"
                             android:layout_centerHorizontal="true"
+                            android:layout_marginTop="15dp"
                             android:text="먹기예약" />
 
                         <TextView
                             android:id="@+id/badge_feed_cnt"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignRight="@id/icon_feedlist"
+                            android:layout_alignParentRight="true"
                             android:background="@drawable/circle_red"
                             android:gravity="center"
                             android:text="0"
@@ -85,31 +91,33 @@
 
                     <RelativeLayout
                         android:id="@+id/layout_go_pokelist"
-                        android:layout_width="wrap_content"
+                        android:layout_width="70dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
                         android:layout_marginRight="20dp"
-                        android:gravity="center_horizontal"
                         android:orientation="vertical">
 
                         <ImageView
                             android:id="@+id/icon_pokelist"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/circle_green" />
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginLeft="3dp"
+                            android:src="@drawable/icon_poke" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/icon_pokelist"
                             android:layout_centerHorizontal="true"
+                            android:layout_marginTop="15dp"
                             android:text="내가콕찌른" />
 
                         <TextView
                             android:id="@+id/badge_poke_cnt"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignRight="@id/icon_pokelist"
+                            android:layout_alignParentRight="true"
                             android:background="@drawable/circle_red"
                             android:gravity="center"
                             android:text="0"
@@ -118,7 +126,7 @@
 
                     <RelativeLayout
                         android:id="@+id/layout_go_talk"
-                        android:layout_width="wrap_content"
+                        android:layout_width="70dp"
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
                         android:orientation="vertical">
@@ -127,20 +135,23 @@
                             android:id="@+id/icon_commenttalk"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:src="@drawable/circle_green" />
+                            android:layout_centerHorizontal="true"
+                            android:paddingTop="4dp"
+                            android:src="@drawable/icon_reserved" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@id/icon_commenttalk"
                             android:layout_centerHorizontal="true"
+                            android:layout_marginTop="15dp"
                             android:text="같먹톡" />
 
                         <TextView
                             android:id="@+id/badge_comment_cnt"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignRight="@id/icon_commenttalk"
+                            android:layout_alignParentRight="true"
                             android:background="@drawable/circle_red"
                             android:gravity="center"
                             android:text="0"
@@ -149,13 +160,15 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <Button
+            <ImageButton
                 android:id="@+id/btn_setting"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_margin="10dp"
-                android:text="설정" />
+                android:layout_marginRight="17dp"
+                android:layout_marginTop="14dp"
+                android:background="#00000000"
+                android:src="@drawable/icon_settting" />
         </RelativeLayout>
     </ScrollView>
 </RelativeLayout>

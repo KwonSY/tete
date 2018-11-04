@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_item_myfeed"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/layout_rest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#efefef">
+
+        <TextView
+            android:id="@+id/txt_restName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="음식점"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/txt_no_req"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layout_rest"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="14dp"
+        android:text="아직 신청한 사람이 없어요." />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layout_rest"
+        android:paddingLeft="17dp"
+        android:paddingRight="17dp">
+
+        <ImageView
+            android:id="@+id/host_img"
+            android:layout_width="@dimen/profile_s"
+            android:layout_height="@dimen/profile_s"
+            android:layout_margin="10dp"
+            android:src="@drawable/icon_noprofile_circle" />
+
+        <Button
+            android:id="@+id/btn_cancle_poke"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/btn_circle_bk1"
+            android:text="같먹취소" />
+    </RelativeLayout>
+</RelativeLayout>

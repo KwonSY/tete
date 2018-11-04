@@ -4,9 +4,15 @@
     <string name="accept">수락</string>
     <string name="acceptComplete">수락완료</string>
     <string name="applicant">신청자</string>
+    <string name="cancle">취소하기</string>
+    <string name="my">마이</string>
+    <string name="poke_reserve">예약하기</string>
+    <string name="poke_re_reserve">예약하기</string>
+    <string name="poke_reserved">신청 대기중</string>
+    <string name="poke_compelete">같먹 종료</string>
+    <string name="profile">프로필</string>
     <string name="reservation">예약</string>
     <string name="waitlist">대기리스트</string>
-    <string name="profile">프로필</string>
 
     <!--StringFilter-->
     <string name="pattern_alphanumeric2">[0-9|a-z|A-Z|ㄱ-ㅎ|ㅏ-ㅣ|가-힝]*</string>

@@ -44,7 +44,7 @@ public class OneFeedActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_one_feed);
+        setContentView(R.layout.activity_one_restaurant);
 
         httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
 

@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import honbab.pumkit.com.data.CommentData;
 import honbab.pumkit.com.data.FeedReqData;
 import honbab.pumkit.com.data.UserData;
 import honbab.pumkit.com.tete.R;
@@ -28,8 +27,8 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
 
     }
 
-    public MyFeedListAdapter(Context context, OkHttpClient httpClient, ArrayList<FeedReqData> listViewItemList) {
-        this.mContext = context;
+    public MyFeedListAdapter(Context mContext, OkHttpClient httpClient, ArrayList<FeedReqData> listViewItemList) {
+        this.mContext = mContext;
         this.httpClient = httpClient;
         this.listViewItemList = listViewItemList;
     }
@@ -47,17 +46,13 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         final FeedReqData data = listViewItemList.get(position);
 //        final UserData data = listViewItemList.get(position);
-//        Log.e("abc", "data getImg_url = " + data.getImg_url());
+        Log.e("abc", "data.getRest_name() = " + data.getRest_name());
 
-//        Picasso.get().load(data.getImg_url())
-//                .placeholder(R.drawable.icon_noprofile_circle)
-//                .error(R.drawable.icon_noprofile_circle)
-//                .transform(new CircleTransform())
-//                .into(holder.image_feedee);
         holder.txt_restName.setText(data.getRest_name());
 
 
         String feed_id = listViewItemList.get(position).getFeed_id();
+        Log.e("abc", "feed_id = " + feed_id);
         ArrayList<UserData> usersList = listViewItemList.get(position).getUsersList();
 
         if (usersList.size() == 0) {
@@ -65,37 +60,40 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
         } else {
             holder.txt_no_req.setVisibility(View.GONE);
 
-            String acceptYn = "n";
-            String acceptUserName = null;
+            ReqFeedeeAdapter mAdapter = new ReqFeedeeAdapter(mContext, httpClient, feed_id, usersList);
+            holder.recyclerView_feedee.setAdapter(mAdapter);
 
-            for (int i=0; i<usersList.size(); i++) {
-                String status = usersList.get(i).getStatus();
+//            String acceptYn = "n";
+//            String acceptUserName = null;
 
+//            for (int i=0; i<usersList.size(); i++) {
+//                String status = usersList.get(i).getStatus();
+//
+//
+//                if (status.equals("y")) {
+//                    acceptYn = "y";
+//                    acceptUserName = usersList.get(i).getUser_name();
+//                }
+//            }
 
-                if (status.equals("y")) {
-                    acceptYn = "y";
-                    acceptUserName = usersList.get(i).getUser_name();
-                }
-            }
-
-            Log.e("abc", "acceptYn = " + acceptYn);
-            if (acceptYn.equals("y")) {
-                holder.recyclerView_feedee.setVisibility(View.GONE);
-//                holder.recyclerView_comment.setVisibility(View.VISIBLE);
-
-                holder.txt_restName.setText(data.getRest_name() + " (" + acceptUserName + "님과의 식사)");
-
-                ArrayList<CommentData> commentsList = listViewItemList.get(position).getCommentsList();
-                Log.e("abc", "commentsList.size() = " + commentsList.size());
-
-//                ReqCommentAdapter mAdapter = new ReqCommentAdapter(mContext, httpClient, feed_id, commentsList);
-//                holder.recyclerView_comment.setAdapter(mAdapter);
-            } else {
-//                holder.recyclerView_comment.setVisibility(View.GONE);
-
-                ReqFeedeeAdapter mAdapter = new ReqFeedeeAdapter(mContext, httpClient, feed_id, usersList);
-                holder.recyclerView_feedee.setAdapter(mAdapter);
-            }
+//            Log.e("abc", "acceptYn = " + acceptYn);
+//            if (acceptYn.equals("y")) {
+//                holder.recyclerView_feedee.setVisibility(View.GONE);
+////                holder.recyclerView_comment.setVisibility(View.VISIBLE);
+//
+//                holder.txt_restName.setText(data.getRest_name() + " (" + acceptUserName + "님과의 식사)");
+//
+//                ArrayList<CommentData> commentsList = listViewItemList.get(position).getCommentsList();
+//                Log.e("abc", "commentsList.size() = " + commentsList.size());
+//
+////                ReqCommentAdapter mAdapter = new ReqCommentAdapter(mContext, httpClient, feed_id, commentsList);
+////                holder.recyclerView_comment.setAdapter(mAdapter);
+//            } else {
+////                holder.recyclerView_comment.setVisibility(View.GONE);
+//
+//                ReqFeedeeAdapter mAdapter = new ReqFeedeeAdapter(mContext, httpClient, feed_id, usersList);
+//                holder.recyclerView_feedee.setAdapter(mAdapter);
+//            }
         }
     }
 

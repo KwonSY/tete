@@ -14,6 +14,14 @@ public class FeedReqData implements Serializable {
 
     }
 
+    public FeedReqData(String feed_id, String rest_id, String rest_name, String rest_img, ArrayList<UserData> usersList) {
+        this.feed_id = feed_id;
+        this.rest_id = rest_id;
+        this.rest_name = rest_name;
+        this.rest_img = rest_img;
+        this.usersList = usersList;
+    }
+
     public FeedReqData(String feed_id,
                        String rest_id, String rest_name, String rest_img,
                        ArrayList<UserData> usersList, ArrayList<CommentData> commentsList) {

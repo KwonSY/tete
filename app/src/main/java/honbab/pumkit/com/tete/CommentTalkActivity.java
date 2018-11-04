@@ -31,6 +31,7 @@ public class CommentTalkActivity extends AppCompatActivity {
     private SessionManager session;
 
     private TextView title_reserve;
+    private TextView txt_no_comment;
     public RecyclerView recyclerView;
     public MyFeedCommentAdapter mAdapter;
 
@@ -48,6 +49,9 @@ public class CommentTalkActivity extends AppCompatActivity {
         session = new SessionManager(this.getApplicationContext());
 
         title_reserve = (TextView) findViewById(R.id.title_reserve);
+
+
+        txt_no_comment = (TextView) findViewById(R.id.txt_no_comment);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
@@ -79,7 +83,6 @@ public class CommentTalkActivity extends AppCompatActivity {
 
     public class MyFeedCommentTask extends AsyncTask<Void, Void, ArrayList<FeedReqData>> {
         String result;
-//        String host;
         String rest_name;
 
         @Override
@@ -179,8 +182,9 @@ public class CommentTalkActivity extends AppCompatActivity {
                 recyclerView.setAdapter(mAdapter);
                 mAdapter.notifyDataSetChanged();
             } else {
-                title_reserve.setVisibility(View.GONE);
+//                title_reserve.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.GONE);
+                txt_no_comment.setVisibility(View.VISIBLE);
             }
 
         }

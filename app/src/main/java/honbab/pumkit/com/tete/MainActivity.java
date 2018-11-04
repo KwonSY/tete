@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.reservation)));
 //        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.waitlist)));
-        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.profile)));
+        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.my)));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         viewPager = (ViewPager) findViewById(R.id.viewPager);
