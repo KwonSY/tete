@@ -7,7 +7,7 @@
     <string name="cancle">취소하기</string>
     <string name="my">마이</string>
     <string name="poke_reserve">예약하기</string>
-    <string name="poke_re_reserve">예약하기</string>
+    <string name="poke_re_reserve">다시 예약하기</string>
     <string name="poke_reserved">신청 대기중</string>
     <string name="poke_compelete">같먹 종료</string>
     <string name="profile">프로필</string>

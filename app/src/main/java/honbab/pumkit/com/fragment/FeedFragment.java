@@ -1,9 +1,11 @@
 package honbab.pumkit.com.fragment;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -24,6 +27,7 @@ import honbab.pumkit.com.adapter.FeedListAdapter;
 import honbab.pumkit.com.data.ReservData;
 import honbab.pumkit.com.tete.FeedMapActivity;
 import honbab.pumkit.com.tete.LoginActivity;
+import honbab.pumkit.com.tete.MyFeedListActivity;
 import honbab.pumkit.com.tete.R;
 import honbab.pumkit.com.tete.ReservActivity;
 import honbab.pumkit.com.tete.Statics;
@@ -135,12 +139,14 @@ public class FeedFragment extends Fragment {
                     break;
                 case R.id.btn_reserve_google:
                     Intent intent2;
-                    if (Statics.my_id == null)
+                    if (Statics.my_id == null) {
                         intent2 = new Intent(getActivity(), LoginActivity.class);
-                    else
-                        intent2 = new Intent(getActivity(), ReservActivity.class);
-                    intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent2);
+                        intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent2);
+                    } else {
+                        new CheckReservTask().execute();
+                    }
+//                        intent2 = new Intent(getActivity(), ReservActivity.class);
 
                     break;
             }
@@ -246,4 +252,82 @@ public class FeedFragment extends Fragment {
             mAdapter.notifyDataSetChanged();
         }
     }
+
+    public class CheckReservTask extends AsyncTask<Void, Void, Void> {
+        private String result;
+
+        @Override
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            FormBody body = new FormBody.Builder()
+                    .add("opt", "check_reserv")
+                    .add("my_id", Statics.my_id)
+                    .build();
+
+            Request request = new Request.Builder().url(Statics.opt_url).post(body).build();
+
+            try {
+                okhttp3.Response response = httpClient.newCall(request).execute();
+
+                if (response.isSuccessful()) {
+                    String bodyStr = response.body().string();
+                    Log.e("abc", "CheckReserv : " + bodyStr);
+
+                    JSONObject obj = new JSONObject(bodyStr);
+
+                    result = obj.getString("result");
+                } else {
+                    Log.d("abc", "Error : " + response.code() + ", " + response.message());
+                }
+
+            } catch (Exception e) {
+                Log.e("abc", "Error : " + e.getMessage());
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            if (result.equals("0")) {
+                Intent intent2 = new Intent(getActivity(), ReservActivity.class);
+                intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent2);
+            } else {
+//                Toast.makeText(getActivity(), "이미 예약하신 같먹이 있습니다.", Toast.LENGTH_SHORT).show();
+                alertShow();
+            }
+        }
+    }
+
+    public void alertShow() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//        builder.setTitle("AlertDialog Title");
+        builder.setMessage("이미 예약한 식사약속이 있습니다. 리스트를 보시겠습니까?");
+        builder.setPositiveButton("예",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+//                        Toast.makeText(getActivity().getApplicationContext(), "예를 선택했습니다.", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(getActivity(), MyFeedListActivity.class);
+//                        intent.putExtra("feedList", xxxxxxxx);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        getActivity().startActivity(intent);
+                    }
+                });
+        builder.setNegativeButton("새로운 같먹예약",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(getActivity().getApplicationContext(), "아니오를 선택했습니다.", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(getActivity(), ReservActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        getActivity().startActivity(intent);
+                    }
+                });
+        builder.show();
+    }
+
 }

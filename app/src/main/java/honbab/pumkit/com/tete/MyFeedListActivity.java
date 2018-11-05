@@ -1,6 +1,5 @@
 package honbab.pumkit.com.tete;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -45,8 +44,8 @@ public class MyFeedListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_myfeedlist);
 
-        Intent intent = getIntent();
-        feedReqList = (ArrayList<FeedReqData>) intent.getSerializableExtra("feedList");
+//        Intent intent = getIntent();
+//        feedReqList = (ArrayList<FeedReqData>) intent.getSerializableExtra("feedList");
 
         httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
         session = new SessionManager(this.getApplicationContext());
@@ -57,13 +56,15 @@ public class MyFeedListActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView_myFeed = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView_myFeed.setLayoutManager(layoutManager);
-        if (feedReqList.size() > 0) {
-            myFeedListAdapter = new MyFeedListAdapter(MyFeedListActivity.this, httpClient, feedReqList);
-            recyclerView_myFeed.setAdapter(myFeedListAdapter);
-            myFeedListAdapter.notifyDataSetChanged();
-        } else {
-            recyclerView_myFeed.setVisibility(View.GONE);
-        }
+        myFeedListAdapter = new MyFeedListAdapter();
+        recyclerView_myFeed.setAdapter(myFeedListAdapter);
+//        if (feedReqList.size() > 0) {
+//            myFeedListAdapter = new MyFeedListAdapter(MyFeedListActivity.this, httpClient, feedReqList);
+//            recyclerView_myFeed.setAdapter(myFeedListAdapter);
+//            myFeedListAdapter.notifyDataSetChanged();
+//        } else {
+//            recyclerView_myFeed.setVisibility(View.GONE);
+//        }
 
         ButtonUtil.setBackButtonClickListener(this);
     }

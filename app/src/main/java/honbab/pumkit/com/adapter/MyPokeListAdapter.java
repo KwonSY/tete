@@ -59,7 +59,7 @@ public class MyPokeListAdapter extends RecyclerView.Adapter<MyPokeListAdapter.Vi
             public void onClick(View view) {
                 if (data.getUsersList().get(0).getStatus().equals("n")) {
                     // n -> d  지우기
-                    holder.btn_cancle_poke.setText("다시 " + R.string.poke_reserve);
+                    holder.btn_cancle_poke.setText(R.string.poke_re_reserve);
                     data.getUsersList().get(0).setStatus("d");
 
                     //vvvvvvvvvvvvvv new PokeTask(),execute();

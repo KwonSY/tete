@@ -118,7 +118,7 @@ public class ProfileFragment extends Fragment {
                 case R.id.layout_go_feedlist:
                     Intent intent3 = new Intent(getActivity(), MyFeedListActivity.class);
                     intent3.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent3.putExtra("feedList", myFeedList);
+//                    intent3.putExtra("feedList", myFeedList);
                     startActivity(intent3);
 
                     break;
@@ -224,7 +224,6 @@ public class ProfileFragment extends Fragment {
         protected void onPreExecute() {
             myFeedList.clear();
             pokeList.clear();
-//            commentList.clear();
 
             cnt_my = 0;
             cnt_your = 0;
@@ -332,12 +331,6 @@ public class ProfileFragment extends Fragment {
                                 pokeList.add(data);
 
                             String status = feedObj.getString("status");
-//                            if (status.equals("n")) {
-//
-//                                myFeedList.add(data);
-//                            } else if (status.equals("y")) {
-//                                pokeList.add(data);
-//                            }
                         }
                     }
 
