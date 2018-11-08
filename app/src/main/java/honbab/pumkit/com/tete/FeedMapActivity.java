@@ -45,7 +45,7 @@ import java.util.List;
 import honbab.pumkit.com.adapter.RecyclerViewRestAdapter;
 import honbab.pumkit.com.data.MapData;
 import honbab.pumkit.com.data.ReservData;
-import honbab.pumkit.com.widget.GetNearPlacesTaskForMap;
+import honbab.pumkit.com.task.GetNearPlacesTaskForMap;
 import honbab.pumkit.com.widget.SnapHelper;
 
 public class FeedMapActivity extends FragmentActivity implements OnMapReadyCallback,
@@ -88,9 +88,7 @@ public class FeedMapActivity extends FragmentActivity implements OnMapReadyCallb
         }
 
         Intent intent = getIntent();
-        Log.e("abc", "getIntent()");
         feedList = (ArrayList<ReservData>) intent.getSerializableExtra("feedList");
-        Log.e("abc", "feedMap feedList size = " + feedList.size());
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);

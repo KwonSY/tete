@@ -57,14 +57,15 @@ public class OneRestaurantActivity extends AppCompatActivity {
 
         btn_poke = (Button) findViewById(R.id.btn_poke);
 
-        if (feed_id == null) {
-            //같이먹기 x //상단 제거
+        if (feed_id == null || feed_id.equals("")) {
+            // 단순 음식정 정보
+            // 같이먹기 x //상단 제거
             LinearLayout layout_profile = (LinearLayout) findViewById(R.id.layout_profile);
             layout_profile.setVisibility(View.GONE);
 
             btn_poke.setVisibility(View.GONE);
         } else {
-            //같이먹기 o
+            // 같이먹기 o
             ImageView img_feeder = (ImageView) findViewById(R.id.img_feeder);
             Picasso.get().load(feeder_img)
 //                    .resize(100,100)

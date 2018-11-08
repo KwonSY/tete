@@ -45,6 +45,17 @@ public class MapData implements Serializable {
         this.place_id = place_id;
     }
 
+//    private void writeObject(ObjectOutputStream out) throws IOException {
+//        out.defaultWriteObject();
+//        out.writeDouble(latLng.latitude);
+//        out.writeDouble(latLng.longitude);
+//    }
+//
+//    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+//        in.defaultReadObject();
+//        latLng = new LatLng(in.readDouble(), in.readDouble());
+//    }
+
     public String getSid() {
         return sid;
     }

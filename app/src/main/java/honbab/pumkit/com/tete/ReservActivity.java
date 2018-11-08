@@ -40,8 +40,9 @@ import java.util.GregorianCalendar;
 
 import honbab.pumkit.com.adapter.GridViewNearByAdapter;
 import honbab.pumkit.com.utils.ButtonUtil;
+import honbab.pumkit.com.utils.GoogleMapUtil;
 import honbab.pumkit.com.widget.CustomTimePickerDialog;
-import honbab.pumkit.com.widget.GetNearPlacesTaskForReserv;
+import honbab.pumkit.com.task.GetNearPlacesTaskForReserv;
 import honbab.pumkit.com.widget.OkHttpClientSingleton;
 import honbab.pumkit.com.widget.SnapHelper;
 import okhttp3.FormBody;
@@ -57,7 +58,7 @@ public class ReservActivity extends AppCompatActivity {
     public SlidingUpPanelLayout layout_slidingPanel;
     public static RecyclerView recyclerView;
     public static GridViewNearByAdapter mAdapter;
-    private TextView textClock;
+    private TextView txt_clock;
     public TextView txt_restName;
 
     public int REQUEST_LOCATION_CODE = 99;
@@ -180,7 +181,7 @@ public class ReservActivity extends AppCompatActivity {
         minute = calendar.get(Calendar.MINUTE);
         Log.e("abc", "현재시간 = " + hourOfDay + minute);
 
-        textClock = (TextView) findViewById(R.id.txt_clock);
+        txt_clock = (TextView) findViewById(R.id.txt_clock);
         String timeString;
         if (hourOfDay < 12) {
             hour = 12;
@@ -204,8 +205,8 @@ public class ReservActivity extends AppCompatActivity {
                 }
             }
         }
-        textClock.setText(timeString);
-        textClock.setOnClickListener(mOnClickListener);
+        txt_clock.setText(timeString);
+        txt_clock.setOnClickListener(mOnClickListener);
 
         ImageView btn_go_map = (ImageView) findViewById(R.id.btn_go_map);
         btn_go_map.setOnClickListener(mOnClickListener);
@@ -242,8 +243,12 @@ public class ReservActivity extends AppCompatActivity {
 
                     break;
                 case R.id.btn_go_map:
+//                    Log.e("abc", "mMapList size = " + GetNearPlacesTaskForReserv.mMapList.size());
                     Intent intent = new Intent(ReservActivity.this, MapsActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                    intent.putExtra("mMapList", GetNearPlacesTaskForReserv.mMapList);
+                    intent.putExtra("hour", hour);
+                    intent.putExtra("min", min);
                     startActivity(intent);
 
                     break;
@@ -308,7 +313,7 @@ public class ReservActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private TimePickerDialog.OnTimeSetListener timeSetListener = new TimePickerDialog.OnTimeSetListener() {
+    public TimePickerDialog.OnTimeSetListener timeSetListener = new TimePickerDialog.OnTimeSetListener() {
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             // 설정버튼 눌렀을 때
@@ -330,7 +335,7 @@ public class ReservActivity extends AppCompatActivity {
 
                 timeString = "오후 " + hourOfDay + "시 " + minute + "분";
             }
-            textClock.setText(timeString);
+            txt_clock.setText(timeString);
         }
     };
 
@@ -384,10 +389,10 @@ public class ReservActivity extends AppCompatActivity {
 
 
                             String search = "음식점";
-                            String url = getUrl(latitude, longitude, search);
+//                            String url = getUrl(latitude, longitude, search);
                             Object dataTransfer[] = new Object[2];
                             dataTransfer[0] = ReservActivity.this;
-                            dataTransfer[1] = url;
+                            dataTransfer[1] = GoogleMapUtil.getNearBySearch(ReservActivity.this, latitude, longitude, search, 0);
 //                            dataTransfer[2] = this;
                             Log.e("abc", "dataTransfer[0] = " + dataTransfer[0]);
                             Log.e("abc", "dataTransfer[1] = " + dataTransfer[1]);
@@ -401,18 +406,18 @@ public class ReservActivity extends AppCompatActivity {
 //        }
     }
 
-    private String getUrl(double latitude, double longitude, String nearbyPlace) {
-        StringBuilder googlePlaceUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
-        googlePlaceUrl.append("language=ko");
-        googlePlaceUrl.append("&location=" + latitude + "," + longitude);
-        googlePlaceUrl.append("&radius=" + PROXIMITY_RADIUS);
-        googlePlaceUrl.append("&type=" + nearbyPlace);
-        googlePlaceUrl.append("&keyword=" + nearbyPlace);
-        googlePlaceUrl.append("&sensor=true");
-        googlePlaceUrl.append("&key=" + getString(R.string.google_maps_api_key));
-
-        return googlePlaceUrl.toString();
-    }
+//    private String getUrl(double latitude, double longitude, String nearbyPlace) {
+//        StringBuilder googlePlaceUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
+//        googlePlaceUrl.append("language=ko");
+//        googlePlaceUrl.append("&location=" + latitude + "," + longitude);
+//        googlePlaceUrl.append("&radius=" + PROXIMITY_RADIUS);
+//        googlePlaceUrl.append("&type=" + nearbyPlace);
+//        googlePlaceUrl.append("&keyword=" + nearbyPlace);
+//        googlePlaceUrl.append("&sensor=true");
+//        googlePlaceUrl.append("&key=" + getString(R.string.google_maps_api_key));
+//
+//        return googlePlaceUrl.toString();
+//    }
 
     public class ReservTask extends AsyncTask<Void, Void, Void> {
         String result;

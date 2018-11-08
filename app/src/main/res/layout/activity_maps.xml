@@ -45,6 +45,10 @@
         android:layout_below="@+id/TF_location"
         android:layout_centerHorizontal="true"
         android:onClick="onClick"
+        android:layout_marginTop="8dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:background="@drawable/btn_circle_bk1"
         android:text="이 지역에서 검색" />
 
     <android.support.v7.widget.RecyclerView

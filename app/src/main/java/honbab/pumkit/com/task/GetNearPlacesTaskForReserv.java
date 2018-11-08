@@ -1,4 +1,4 @@
-package honbab.pumkit.com.widget;
+package honbab.pumkit.com.task;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -8,15 +8,17 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import honbab.pumkit.com.adapter.GridViewNearByAdapter;
 import honbab.pumkit.com.data.MapData;
+import honbab.pumkit.com.tete.MapsActivity;
 import honbab.pumkit.com.tete.OneFeedActivity;
 import honbab.pumkit.com.tete.R;
 import honbab.pumkit.com.tete.ReservActivity;
+import honbab.pumkit.com.widget.DataParser;
+import honbab.pumkit.com.widget.DownloadUrl;
 
 public class GetNearPlacesTaskForReserv extends AsyncTask<Object, String, String> {
 
@@ -24,7 +26,8 @@ public class GetNearPlacesTaskForReserv extends AsyncTask<Object, String, String
     String url;
     public Context mContext;
 
-    public static ArrayList<MapData> mMapList = new ArrayList<>();
+//    public static ArrayList<MapData> mMapList = new ArrayList<>();
+//    public ArrayList<MapData> mMapList = MapsActivity.mMapList;
 
     @Override
     protected String doInBackground(Object... objects) {
@@ -53,7 +56,8 @@ public class GetNearPlacesTaskForReserv extends AsyncTask<Object, String, String
     }
 
     private void showNearbyPlaces(List<HashMap<String, String>> nearbyPlaceList) {
-        mMapList.clear();
+//        mMapList.clear();
+        MapsActivity.mMapList.clear();
 
         for (int i=0; i<nearbyPlaceList.size(); i++) {
             MarkerOptions markerOptions = new MarkerOptions();
@@ -77,9 +81,9 @@ public class GetNearPlacesTaskForReserv extends AsyncTask<Object, String, String
             String photo_reference = googlePlace.get("photo_reference");
             String place_id = googlePlace.get("place_id");
             String reference = googlePlace.get("reference");
-            Log.e("abc",  placeName+ "플레이스2 아이디는 = " + place_id);
 
             LatLng latLng = new LatLng(lat, lng);
+            Log.e("abc",  placeName+ "플레이스2 latLng = " + latLng);
 
             MapData data = new MapData(place_id, placeName, latLng, reference, "");
             if(photo_reference != null && !photo_reference.isEmpty()) {
@@ -90,22 +94,22 @@ public class GetNearPlacesTaskForReserv extends AsyncTask<Object, String, String
                 data.setRest_img("");
             }
 
-            mMapList.add(data);
+//            mMapList.add(data);
+            MapsActivity.mMapList.add(data);
         }
         //https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362
         // &radius=1500&type=restaurant
         // &keyword=cruise
         // &key=YOUR_API_KEY
         if (mContext.getClass().equals(ReservActivity.class)) {
-            ReservActivity.mAdapter = new GridViewNearByAdapter(mContext, mMapList);
+            ReservActivity.mAdapter = new GridViewNearByAdapter(mContext, MapsActivity.mMapList);
             ReservActivity.recyclerView.setAdapter(ReservActivity.mAdapter);
             ReservActivity.mAdapter.notifyDataSetChanged();
         } else if (mContext.getClass().equals(OneFeedActivity.class)) {
             Log.e("abc", "여기 액티비티는 = OneFeedActivity ," + OneFeedActivity.class);
-            ((OneFeedActivity) mContext).mMapList = mMapList;
+            ((OneFeedActivity) mContext).mMapList = MapsActivity.mMapList;
 
-            String place_id = mMapList.get(0).getPlace_id();
-//            GoogleMapUtil.getDetailList(OneFeedActivity.this, place_id, viewPager, dotsLayout);
+            String place_id = MapsActivity.mMapList.get(0).getPlace_id();
         }
 
     }

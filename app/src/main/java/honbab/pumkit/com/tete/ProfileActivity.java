@@ -14,6 +14,7 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONObject;
 
 import honbab.pumkit.com.adapter.MyFeedListAdapter;
+import honbab.pumkit.com.utils.ButtonUtil;
 import honbab.pumkit.com.widget.CircleTransform;
 import honbab.pumkit.com.widget.OkHttpClientSingleton;
 import okhttp3.FormBody;
@@ -55,6 +56,7 @@ public class ProfileActivity extends AppCompatActivity {
 //        listView_myFeed = (ListView) findViewById(R.id.listView_myFeed);
 //        myFeedListAdapter = new MyFeedListAdapter();
 //        listView_myFeed.setAdapter(myFeedListAdapter);
+        ButtonUtil.setBackButtonClickListener(this);
     }
 
     @Override
