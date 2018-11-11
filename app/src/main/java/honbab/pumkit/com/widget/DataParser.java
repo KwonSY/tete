@@ -29,7 +29,7 @@ public class DataParser {
 
         String place_id = "";
         String reference = "";
-        Log.e("abc", "googlePlaceJson = " + googlePlaceJson);
+//        Log.e("abc", "googlePlaceJson = " + googlePlaceJson);
         try {
             if (!googlePlaceJson.isNull("formatted_phone_number")) {
                 formatted_phone_number = googlePlaceJson.getString("formatted_phone_number");

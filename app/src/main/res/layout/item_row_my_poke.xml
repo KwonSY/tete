@@ -13,12 +13,33 @@
 
         <TextView
             android:id="@+id/txt_restName"
-            android:layout_width="match_parent"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:padding="10dp"
+            android:layout_marginLeft="15dp"
+            android:ellipsize="end"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
             android:text="음식점"
             android:textSize="14sp"
             android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txt_hostName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:text="호스트" />
+
+        <ImageView
+            android:id="@+id/img_host"
+            android:layout_width="@dimen/profile_s"
+            android:layout_height="@dimen/profile_s"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="7dp"
+            android:layout_toLeftOf="@id/txt_hostName"
+            android:src="@drawable/icon_noprofile_circle" />
     </RelativeLayout>
 
     <TextView
@@ -37,20 +58,18 @@
         android:paddingLeft="17dp"
         android:paddingRight="17dp">
 
-        <ImageView
-            android:id="@+id/host_img"
-            android:layout_width="@dimen/profile_s"
-            android:layout_height="@dimen/profile_s"
-            android:layout_margin="10dp"
-            android:src="@drawable/icon_noprofile_circle" />
-
         <Button
             android:id="@+id/btn_cancle_poke"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:padding="4dp"
             android:background="@drawable/btn_circle_bk1_s"
+            android:padding="4dp"
             android:text="같먹취소" />
     </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView_req_feedee"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 </RelativeLayout>

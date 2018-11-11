@@ -62,38 +62,6 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
 
             ReqFeedeeAdapter mAdapter = new ReqFeedeeAdapter(mContext, httpClient, feed_id, usersList);
             holder.recyclerView_feedee.setAdapter(mAdapter);
-
-//            String acceptYn = "n";
-//            String acceptUserName = null;
-
-//            for (int i=0; i<usersList.size(); i++) {
-//                String status = usersList.get(i).getStatus();
-//
-//
-//                if (status.equals("y")) {
-//                    acceptYn = "y";
-//                    acceptUserName = usersList.get(i).getUser_name();
-//                }
-//            }
-
-//            Log.e("abc", "acceptYn = " + acceptYn);
-//            if (acceptYn.equals("y")) {
-//                holder.recyclerView_feedee.setVisibility(View.GONE);
-////                holder.recyclerView_comment.setVisibility(View.VISIBLE);
-//
-//                holder.txt_restName.setText(data.getRest_name() + " (" + acceptUserName + "님과의 식사)");
-//
-//                ArrayList<CommentData> commentsList = listViewItemList.get(position).getCommentsList();
-//                Log.e("abc", "commentsList.size() = " + commentsList.size());
-//
-////                ReqCommentAdapter mAdapter = new ReqCommentAdapter(mContext, httpClient, feed_id, commentsList);
-////                holder.recyclerView_comment.setAdapter(mAdapter);
-//            } else {
-////                holder.recyclerView_comment.setVisibility(View.GONE);
-//
-//                ReqFeedeeAdapter mAdapter = new ReqFeedeeAdapter(mContext, httpClient, feed_id, usersList);
-//                holder.recyclerView_feedee.setAdapter(mAdapter);
-//            }
         }
     }
 

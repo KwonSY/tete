@@ -28,8 +28,8 @@ public class PokeListActivity extends AppCompatActivity {
     private OkHttpClient httpClient;
     private SessionManager session;
 
-    private RecyclerView recyclerView;
-    private MyPokeListAdapter mAdapter;
+    public RecyclerView recyclerView;
+    public MyPokeListAdapter mAdapter;
 
     ArrayList<FeedReqData> feedReqList = new ArrayList<>();
 //    int cnt_my = 0, cnt_yours = 0;
@@ -84,7 +84,7 @@ public class PokeListActivity extends AppCompatActivity {
     public class MyPokeListTask extends AsyncTask<Void, Void, ArrayList<FeedReqData>> {
         String result;
         String rest_name;
-        String my_status;
+//        String my_status;
 
         @Override
         protected void onPreExecute() {
@@ -123,11 +123,12 @@ public class PokeListActivity extends AppCompatActivity {
                             JSONObject feedObj = feedArr.getJSONObject(i);
 
                             String feed_id = feedObj.getString("sid");
+                            String status = feedObj.getString("status");
 
                             JSONObject hostObj = feedObj.getJSONObject("host");
                             String host_id = hostObj.getString("sid");
                             String host_name = hostObj.getString("name");
-                            String host_img = hostObj.getString("img_url");
+                            String host_img = Statics.main_url + hostObj.getString("img_url");
 
                             JSONObject restObj = feedObj.getJSONObject("rest");
                             String rest_id = restObj.getString("sid");
@@ -136,13 +137,18 @@ public class PokeListActivity extends AppCompatActivity {
                             Double lng = Double.parseDouble(restObj.getString("lng"));
                             String rest_img = restObj.getString("img_url");
 
-                            my_status = feedObj.getString("my_status");
+                            JSONArray usersArr = feedObj.getJSONArray("users");
+                            for (int j=0; j<usersArr.length(); j++) {
+                                String user_id = hostObj.getString("sid");
+                                String user_name = hostObj.getString("name");
+                                String user_img = Statics.main_url + hostObj.getString("img_url");
 
-                            UserData userData = new UserData();
-                            userData.setStatus(my_status);
-                            reqUsersList.add(userData);
+                                UserData userData = new UserData(user_id, user_name, null, null, user_img, "n");
+                                reqUsersList.add(userData);
+                            }
 
-                            FeedReqData data = new FeedReqData(feed_id, rest_id, rest_name, rest_img, reqUsersList);
+                            FeedReqData data = new FeedReqData(feed_id, status, host_id, host_name, host_img,
+                                    rest_id, rest_name, rest_img, reqUsersList);
                             feedReqList.add(data);
                         }
                     }

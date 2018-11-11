@@ -23,7 +23,7 @@ import honbab.pumkit.com.widget.CircleTransform;
 
 public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHolder> {
 
-    Context context;
+    Context mContext;
     public ArrayList<ReservData> listViewItemList = new ArrayList<ReservData>();
 
 //    public FeedListAdapter(Context context) {
@@ -33,8 +33,8 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
 
     }
 
-    public FeedListAdapter(Context context, ArrayList<ReservData> listViewItemList) {
-        this.context = context;
+    public FeedListAdapter(Context mContext, ArrayList<ReservData> listViewItemList) {
+        this.mContext = mContext;
         this.listViewItemList = listViewItemList;
     }
 
@@ -81,7 +81,7 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, OneRestaurantActivity.class);
+                Intent intent = new Intent(mContext, OneRestaurantActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.putExtra("feed_id", data.getSid());
                 intent.putExtra("place_id", data.getPlace_id());
@@ -89,7 +89,7 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
                 intent.putExtra("feeder_name", data.getUser_name());
 //                intent.putExtra("feedee_status", data.getFeedee_status());
                 intent.putExtra("status", data.getStatus());
-                context.startActivity(intent);
+                mContext.startActivity(intent);
             }
         });
     }
@@ -101,7 +101,7 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
 
 //    @Override
 //    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//        Intent intent = new Intent(view.getContext(), OneFeedActivity.class);
+//        Intent intent = new Intent(view.getContext(), OneRestaurantActivity.class);
 //        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 //        adapterView.startActivity();
 //    }

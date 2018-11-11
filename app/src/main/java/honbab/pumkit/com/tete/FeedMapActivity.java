@@ -46,6 +46,8 @@ import honbab.pumkit.com.adapter.RecyclerViewRestAdapter;
 import honbab.pumkit.com.data.MapData;
 import honbab.pumkit.com.data.ReservData;
 import honbab.pumkit.com.task.GetNearPlacesTaskForMap;
+import honbab.pumkit.com.utils.ButtonUtil;
+import honbab.pumkit.com.utils.GoogleMapUtil;
 import honbab.pumkit.com.widget.SnapHelper;
 
 public class FeedMapActivity extends FragmentActivity implements OnMapReadyCallback,
@@ -89,6 +91,7 @@ public class FeedMapActivity extends FragmentActivity implements OnMapReadyCallb
 
         Intent intent = getIntent();
         feedList = (ArrayList<ReservData>) intent.getSerializableExtra("feedList");
+        Log.e("abc", "FeedMapAct feed_id = " + feedList.get(0).getSid());
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -111,37 +114,35 @@ public class FeedMapActivity extends FragmentActivity implements OnMapReadyCallb
                 return true;
             }
         });
-        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-            @Override
-            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-                View childView = rv.findChildViewUnder(e.getX(),e.getY());
-
-                if(childView != null && gestureDetector.onTouchEvent(e)){
-                    int currentPosition = rv.getChildAdapterPosition(childView);
-                    Log.e("abc", "currentPosition = " + currentPosition);
-
-//                    mMap.moveCamera(CameraUpdateFactory.newLatLng(GetNearPlacesTaskForMap.mMapRestList.get(currentPosition).getLatLng()));
-//                    recyclerView.smoothScrollToPosition(currentPosition);
-                    Intent intent = new Intent(FeedMapActivity.this, OneFeedActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.putExtra("feed_id", feedList.get(currentPosition).getSid());
-                    startActivity(intent);
-
-                    return true;
-                }
-                return false;
-            }
-
-            @Override
-            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-
-            }
-
-            @Override
-            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-            }
-        });
+//        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+//            @Override
+//            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+//                View childView = rv.findChildViewUnder(e.getX(),e.getY());
+//
+//                if(childView != null && gestureDetector.onTouchEvent(e)){
+//                    int currentPosition = rv.getChildAdapterPosition(childView);
+//                    Log.e("abc", "currentPosition = " + currentPosition);
+//
+//                    Intent intent = new Intent(FeedMapActivity.this, OneRestaurantActivity.class);
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                    intent.putExtra("feed_id", feedList.get(currentPosition).getSid());
+//                    startActivity(intent);
+//
+//                    return true;
+//                }
+//                return false;
+//            }
+//
+//            @Override
+//            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+//
+//            }
+//
+//            @Override
+//            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+//
+//            }
+//        });
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -153,17 +154,16 @@ public class FeedMapActivity extends FragmentActivity implements OnMapReadyCallb
                     Toast.makeText(FeedMapActivity.this, "Last Position", Toast.LENGTH_SHORT).show();
                 }
 
-                Log.e("abc", "lastVisibleItemPosition = " + lastVisibleItemPosition);
                 if (lastVisibleItemPosition >= 0) {
                     Marker marker = mMarkersList.get(lastVisibleItemPosition);
                     marker.showInfoWindow();
 
-//                    mMap.animateCamera(CameraUpdateFactory.newLatLng(GetNearPlacesTaskForMap.mMapRestList.get(lastVisibleItemPosition).getLatLng()));
                     mMap.animateCamera(CameraUpdateFactory.newLatLng(mMarkersList.get(lastVisibleItemPosition).getPosition()));
                 }
             }
         });
 
+        ButtonUtil.setBackButtonClickListener(this);
     }
 
 
@@ -243,10 +243,12 @@ public class FeedMapActivity extends FragmentActivity implements OnMapReadyCallb
 
             //ReservData -> MapData 데이터 변환
             MapData mapData = new MapData();
+            mapData.setSid(reservData.getSid());
+            mapData.setPlace_id(reservData.getPlace_id());
             mapData.setRest_name(reservData.getRest_name());
             mapData.setRest_img(reservData.getRest_img());
-            Log.e("abc", "reservData.getLatLng() = " + reservData.getLatLng());
             mapData.setLatLng(reservData.getLatLng());
+            mapData.setStatus(reservData.getStatus());
             mapList.add(mapData);
 
             //마커 추가
@@ -420,9 +422,6 @@ public class FeedMapActivity extends FragmentActivity implements OnMapReadyCallb
     }
 
     public void onClick(View v) {
-        Object dataTransfer[] = new Object[3];
-        GetNearPlacesTaskForMap getNearbyPlacesData = new GetNearPlacesTaskForMap();
-
         switch (v.getId()) {
             case R.id.btn_search_word:
                 EditText tf_location = findViewById(R.id.TF_location);
@@ -454,38 +453,22 @@ public class FeedMapActivity extends FragmentActivity implements OnMapReadyCallb
                 break;
             case R.id.btn_search_near:
                 mMap.clear();
+
                 String search = "음식점";
-                Log.e("abc", "restuarant lat,lon = (" + latitude + "," + longitude + ") , " + search);
-                String url = getUrl(latitude, longitude, search);
+                float zoomLevel = mMap.getCameraPosition().zoom;
+                String url = GoogleMapUtil.getNearBySearch(FeedMapActivity.this, latitude, longitude, search, zoomLevel);
+
+                Object dataTransfer[] = new Object[3];
                 dataTransfer[0] = mMap;
                 dataTransfer[1] = url;
                 dataTransfer[2] = this;
 
-                getNearbyPlacesData.execute(dataTransfer);
+                new GetNearPlacesTaskForMap().execute(dataTransfer);
 
-
-                Toast.makeText(FeedMapActivity.this, "주변 음식점 검색", Toast.LENGTH_SHORT).show();
+                Toast.makeText(FeedMapActivity.this, R.string.search_near_rest, Toast.LENGTH_SHORT).show();
 
                 break;
         }
-    }
-
-
-    private String getUrl(double latitude, double longitude, String nearbyPlace) {
-        StringBuilder googlePlaceUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
-        googlePlaceUrl.append("language=ko");
-        googlePlaceUrl.append("&location=" + latitude + "," + longitude);
-//        googlePlaceUrl.append("&rankby=" + "distance");
-        googlePlaceUrl.append("&radius=" + PROXIMITY_RADIUS);
-        googlePlaceUrl.append("&type=" + nearbyPlace);
-        googlePlaceUrl.append("&keyword=" + nearbyPlace);
-//        googlePlaceUrl.append("&fields=" + "photos,formatted_address,name,opening_hours,rating");
-        googlePlaceUrl.append("&sensor=true");
-//        googlePlaceUrl.append("&locationbias=circle:2000@" + latitude + "," + longitude);
-        googlePlaceUrl.append("&key=" + getString(R.string.google_maps_api_key));
-        Log.e("abc", "url = " + googlePlaceUrl.toString());
-
-        return googlePlaceUrl.toString();
     }
 
     @Override

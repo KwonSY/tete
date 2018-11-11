@@ -1,6 +1,7 @@
 package honbab.pumkit.com.tete;
 
 import android.Manifest;
+import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -21,6 +22,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -55,16 +58,18 @@ public class ReservActivity extends AppCompatActivity {
 
     GestureDetector gestureDetector;
 
-    public SlidingUpPanelLayout layout_slidingPanel;
     public static RecyclerView recyclerView;
     public static GridViewNearByAdapter mAdapter;
-    private TextView txt_clock;
+
+    public SlidingUpPanelLayout layout_slidingPanel;
     public TextView txt_restName;
+    private TextView txt_date, txt_clock;
+    private EditText edit_comment;
 
     public int REQUEST_LOCATION_CODE = 99;
     int PROXIMITY_RADIUS = 700;
-    int hourOfDay, minute;//Calender 에서 얻는 값
-    int hour = 0, min = 0;//Task post로 넘길 값
+    int year, month, day, hourOfDay, minute;// Calender 에서 얻는 값
+    int hour = 0, min = 0;// Task post로 넘길 값
 
     public static String rest_name, place_id, rest_img, lat, lng;
     //vvvvv GetNearPlacesTaskForReserv.mMapList -> ReservActivity.mMapList
@@ -116,7 +121,7 @@ public class ReservActivity extends AppCompatActivity {
             }
         });
 
-        txt_restName = (TextView) findViewById(R.id.txt_restName);
+
 
         GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView_rest);
@@ -174,39 +179,59 @@ public class ReservActivity extends AppCompatActivity {
 //            }
 //        });
 
+        //layout_slidingPanel
+        txt_restName = (TextView) findViewById(R.id.txt_restName);
+
+        //날짜
+        txt_date = (TextView) findViewById(R.id.txt_date);
+        txt_clock = (TextView) findViewById(R.id.txt_clock);
+
         Date currentTime = new Date();
         Calendar calendar = GregorianCalendar.getInstance();
         calendar.setTime(currentTime);
+        year = calendar.get(Calendar.YEAR);
+        month = calendar.get(Calendar.MONTH) + 1;
+        day = calendar.get(Calendar.DAY_OF_MONTH);
+//        mon = month;
+//        da = day;
         hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
         minute = calendar.get(Calendar.MINUTE);
-        Log.e("abc", "현재시간 = " + hourOfDay + minute);
 
-        txt_clock = (TextView) findViewById(R.id.txt_clock);
-        String timeString;
+        String str_date, str_time;
         if (hourOfDay < 12) {
             hour = 12;
             min = 0;
-            timeString = "오후 " + 12 + "시 " + "00분";
+            str_time = "오후 " + 12 + "시 " + "00분";
         } else {
             if (hourOfDay < 18) {
                 hour = 19;
                 min = 0;
-                timeString = "오후 " + 7 + "시 " + "00분";
+                str_time = "오후 " + 7 + "시 " + "00분";
             } else {
-                hour = hourOfDay + 1 - 12;
-                timeString = "오후 " + hour + "시 ";
+                if (hourOfDay > 22 && minute >= 30)
+                    day = day + 1;
+
+                hour = hourOfDay + 1;
+                str_time = "오후 " + (hour-12) + "시 ";
 
                 if (minute < 30) {
                     min = 30;
-                    timeString += "30분";
+                    str_time += "30분";
                 } else {
                     min = 0;
-                    timeString += "00분";
+                    str_time += "00분";
                 }
             }
         }
-        txt_clock.setText(timeString);
+        str_date = String.valueOf(month) + "/" + String.valueOf(day);
+        txt_date.setText(str_date);
+        txt_date.setOnClickListener(mOnClickListener);
+        txt_clock.setText(str_time);
         txt_clock.setOnClickListener(mOnClickListener);
+        Log.e("abc", "현재날짜 = " + month + day);
+        Log.e("abc", "현재시간 = " + hourOfDay + minute);
+
+        edit_comment = (EditText) findViewById(R.id.edit_comment);
 
         ImageView btn_go_map = (ImageView) findViewById(R.id.btn_go_map);
         btn_go_map.setOnClickListener(mOnClickListener);
@@ -214,8 +239,6 @@ public class ReservActivity extends AppCompatActivity {
         Button btn_reserv = (Button) findViewById(R.id.btn_reserv);
         btn_reserv.setOnClickListener(mOnClickListener);
 
-//        ImageButton btn_back = (ImageButton) findViewById(R.id.btn_back);
-//        btn_back.setOnClickListener(mOnClickListener);
         ButtonUtil.setBackButtonClickListener(this);
     }
 
@@ -236,10 +259,15 @@ public class ReservActivity extends AppCompatActivity {
                     onBackPressed();
 
                     break;
-                case R.id.txt_clock:
-                    CustomTimePickerDialog dialog = new CustomTimePickerDialog(ReservActivity.this, timeSetListener, hourOfDay, minute, false);
-//                dialog.updateTime();
+                case R.id.txt_date:
+                    DatePickerDialog dialog = new DatePickerDialog(ReservActivity.this, dateSetListener, year, month-1, day);
                     dialog.show();
+
+                    break;
+                case R.id.txt_clock:
+                    CustomTimePickerDialog dialog2 = new CustomTimePickerDialog(ReservActivity.this, timeSetListener, hourOfDay, minute, false);
+//                dialog.updateTime();
+                    dialog2.show();
 
                     break;
                 case R.id.btn_go_map:
@@ -313,18 +341,35 @@ public class ReservActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+            String str_date;
+
+            Log.e("abc", i+ "년" + i1 + "월" + i2+ "일");
+
+            year = i;
+            month = i1 + 1;
+            day = i2;
+
+            txt_date.setText(month + "/" + i2);
+
+//            if ()
+        }
+    };
+
     public TimePickerDialog.OnTimeSetListener timeSetListener = new TimePickerDialog.OnTimeSetListener() {
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             // 설정버튼 눌렀을 때
-//            Log.e("abc", "hourOfDay = " + hourOfDay);
-            String timeString;
+            Log.e("abc", "hourOfDay = " + hourOfDay + minute);
+            String str_time;
 
             hour = hourOfDay;
             min = minute;
 
             if (hourOfDay < 12) {
-                timeString = "오전 " + hourOfDay + "시 " + minute + "분";
+                str_time = "오전 " + hourOfDay + "시 " + minute + "분";
             } else {
                 if (hourOfDay == 12) {
 
@@ -333,9 +378,9 @@ public class ReservActivity extends AppCompatActivity {
 //                    hour = hourOfDay - 12;
                 }
 
-                timeString = "오후 " + hourOfDay + "시 " + minute + "분";
+                str_time = "오후 " + hourOfDay + "시 " + minute + "분";
             }
-            txt_clock.setText(timeString);
+            txt_clock.setText(str_time);
         }
     };
 
@@ -406,34 +451,28 @@ public class ReservActivity extends AppCompatActivity {
 //        }
     }
 
-//    private String getUrl(double latitude, double longitude, String nearbyPlace) {
-//        StringBuilder googlePlaceUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
-//        googlePlaceUrl.append("language=ko");
-//        googlePlaceUrl.append("&location=" + latitude + "," + longitude);
-//        googlePlaceUrl.append("&radius=" + PROXIMITY_RADIUS);
-//        googlePlaceUrl.append("&type=" + nearbyPlace);
-//        googlePlaceUrl.append("&keyword=" + nearbyPlace);
-//        googlePlaceUrl.append("&sensor=true");
-//        googlePlaceUrl.append("&key=" + getString(R.string.google_maps_api_key));
-//
-//        return googlePlaceUrl.toString();
-//    }
-
     public class ReservTask extends AsyncTask<Void, Void, Void> {
         String result;
-        String time_reserv;
+        String date_reserv;
+        String comment;
 
         @Override
         protected void onPreExecute() {
+            String str_year = String.valueOf(year);
+            String str_mon = String.valueOf(month);
+            String str_da = String.valueOf(day);
             String str_hour = String.valueOf(hour);
             String str_min = String.valueOf(min);
-            // vvvvvvvvvvv 날짜를 추가해야한다
-            time_reserv = str_hour + ":" + str_min;
+            date_reserv = str_year + "-" + str_mon + "-" + str_da + " " + str_hour + ":" + str_min;
+
+            comment = edit_comment.getText().toString();
+
+            Log.e("abc", "date_reserv = " + date_reserv);
+            Log.e("abc", "comment = " + comment);
         }
 
         @Override
         protected Void doInBackground(Void... params) {
-            Log.e("abc", "ppxxxxxxxxp = " + place_id);
             FormBody body = new FormBody.Builder()
                     .add("opt", "reservation")
                     .add("my_id", Statics.my_id)
@@ -442,7 +481,8 @@ public class ReservActivity extends AppCompatActivity {
                     .add("lat", lat)
                     .add("lng", lng)
                     .add("img_url", rest_img)
-                    .add("time_reserv", time_reserv)
+                    .add("date_reserv", date_reserv)
+                    .add("comment", comment)
                     .build();
 
             Request request = new Request.Builder().url(Statics.opt_url).post(body).build();

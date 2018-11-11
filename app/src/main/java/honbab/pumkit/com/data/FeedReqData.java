@@ -5,7 +5,8 @@ import java.util.ArrayList;
 
 public class FeedReqData implements Serializable {
 
-    private String feed_id;
+    private String feed_id, status;
+    private String host_id, host_name, host_img;
     private String rest_id, rest_name, rest_img;
     private ArrayList<UserData> usersList;
     private ArrayList<CommentData> commentsList;
@@ -14,18 +15,29 @@ public class FeedReqData implements Serializable {
 
     }
 
-    public FeedReqData(String feed_id, String rest_id, String rest_name, String rest_img, ArrayList<UserData> usersList) {
+    public FeedReqData(String feed_id, String status,
+                       String host_id, String host_name, String host_img,
+                       String rest_id, String rest_name, String rest_img,
+                       ArrayList<UserData> usersList) {
         this.feed_id = feed_id;
+        this.status = status;
+
+        this.host_id = host_id;
+        this.host_name = host_name;
+        this.host_img = host_img;
+
         this.rest_id = rest_id;
         this.rest_name = rest_name;
         this.rest_img = rest_img;
+
         this.usersList = usersList;
     }
 
-    public FeedReqData(String feed_id,
+    public FeedReqData(String feed_id, String status,
                        String rest_id, String rest_name, String rest_img,
                        ArrayList<UserData> usersList, ArrayList<CommentData> commentsList) {
         this.feed_id = feed_id;
+        this.status = status;
         this.rest_id = rest_id;
         this.rest_name = rest_name;
         this.rest_img = rest_img;
@@ -39,6 +51,38 @@ public class FeedReqData implements Serializable {
 
     public void setFeed_id(String feed_id) {
         this.feed_id = feed_id;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getHost_id() {
+        return host_id;
+    }
+
+    public void setHost_id(String host_id) {
+        this.host_id = host_id;
+    }
+
+    public String getHost_name() {
+        return host_name;
+    }
+
+    public void setHost_name(String host_name) {
+        this.host_name = host_name;
+    }
+
+    public String getHost_img() {
+        return host_img;
+    }
+
+    public void setHost_img(String host_img) {
+        this.host_img = host_img;
     }
 
     public String getRest_id() {

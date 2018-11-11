@@ -7,6 +7,7 @@ import android.util.Log;
 import org.json.JSONObject;
 
 import honbab.pumkit.com.tete.OneRestaurantActivity;
+import honbab.pumkit.com.tete.PokeListActivity;
 import honbab.pumkit.com.tete.R;
 import honbab.pumkit.com.tete.Statics;
 import okhttp3.FormBody;
@@ -18,7 +19,7 @@ public class PokeFeedTask extends AsyncTask<String, Void, String> {
     private Context mContext;
     private OkHttpClient httpClient;
 
-    String result;
+//    String result;
     String process;
 
     public PokeFeedTask(Context mContext, OkHttpClient httpClient) {
@@ -33,6 +34,8 @@ public class PokeFeedTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... objects) {
+        String result = "1";
+
         FormBody body = new FormBody.Builder()
                 .add("opt", "poke")
                 .add("my_id", Statics.my_id)
@@ -64,18 +67,28 @@ public class PokeFeedTask extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
-        if (result.equals("0")) {
-            ((OneRestaurantActivity) mContext).btn_poke.setClickable(true);
 
-            if (process.equals("insert")) {
-                ((OneRestaurantActivity) mContext).btn_poke.setText(R.string.poke_reserved);
-                ((OneRestaurantActivity) mContext).btn_poke.setBackgroundResource(R.drawable.border_circle_gr2);
-            } else if (process.equals("delete")) {
-                ((OneRestaurantActivity) mContext).btn_poke.setText(R.string.poke_reserve);
-                ((OneRestaurantActivity) mContext).btn_poke.setBackgroundResource(R.drawable.border_circle_bk1);
+        Log.e("abc", "PokeFeed = " + mContext.getClass());
+        if (mContext.getClass().equals(OneRestaurantActivity.class)) {
+            if (result.equals("0")) {
+                ((OneRestaurantActivity) mContext).btn_poke.setClickable(true);
+
+                if (process.equals("insert")) {
+                    ((OneRestaurantActivity) mContext).btn_poke.setText(R.string.poke_reserved);
+                    ((OneRestaurantActivity) mContext).btn_poke.setBackgroundResource(R.drawable.border_circle_gr2);
+                } else if (process.equals("delete")) {
+                    ((OneRestaurantActivity) mContext).btn_poke.setText(R.string.poke_reserve);
+                    ((OneRestaurantActivity) mContext).btn_poke.setBackgroundResource(R.drawable.border_circle_bk1);
+                }
+            } else {
+                ((OneRestaurantActivity) mContext).btn_poke.setClickable(false);
             }
-        } else {
-            ((OneRestaurantActivity) mContext).btn_poke.setClickable(false);
+        } else if (mContext.getClass().equals(PokeListActivity.class)) {
+            if (result.equals("0")) {
+
+            } else {
+
+            }
         }
     }
 

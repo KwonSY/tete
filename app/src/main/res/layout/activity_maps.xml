@@ -6,10 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".MapsActivity">
 
+    <include
+        android:id="@+id/layout_topbar"
+        layout="@layout/layout_topbar_backtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <EditText
         android:id="@+id/TF_location"
-        android:layout_width="290dp"
+        android:layout_width="230dp"
         android:layout_height="45dp"
+        android:layout_marginLeft="45dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:ems="10"
@@ -21,10 +28,10 @@
         android:layout_width="100dp"
         android:layout_height="45dp"
         android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
         android:layout_toEndOf="@+id/TF_location"
         android:onClick="onClick"
         android:text="검색" />
-
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:map="http://schemas.android.com/apk/res-auto"
@@ -35,7 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@id/btn_search_word"
+        android:layout_below="@id/layout_topbar"
         tools:context="com.example.priyanka.mapsdemo.MapsActivity" />
 
     <Button

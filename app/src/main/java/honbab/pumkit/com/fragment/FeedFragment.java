@@ -134,6 +134,7 @@ public class FeedFragment extends Fragment {
                     Intent intent = new Intent(getActivity(), FeedMapActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.putExtra("feedList", feedList);
+                    Log.e("abc", "FeedFragment -> OneRest feed_id = " + feedList.get(0).getSid());
                     startActivity(intent);
 
                     break;
@@ -307,21 +308,19 @@ public class FeedFragment extends Fragment {
     public void alertShow() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 //        builder.setTitle("AlertDialog Title");
-        builder.setMessage("이미 예약한 식사약속이 있습니다. 리스트를 보시겠습니까?");
-        builder.setPositiveButton("예",
+        builder.setMessage(R.string.already_reserved_godmuk);
+        builder.setPositiveButton(R.string.yes,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-//                        Toast.makeText(getActivity().getApplicationContext(), "예를 선택했습니다.", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(getActivity(), MyFeedListActivity.class);
-//                        intent.putExtra("feedList", xxxxxxxx);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         getActivity().startActivity(intent);
                     }
                 });
-        builder.setNegativeButton("새로운 같먹예약",
+        builder.setNegativeButton(R.string.reserve_new_godmuk,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getActivity().getApplicationContext(), "아니오를 선택했습니다.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity().getApplicationContext(), R.string.make_new_godmuk, Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(getActivity(), ReservActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         getActivity().startActivity(intent);

@@ -15,7 +15,6 @@ import java.util.HashMap;
 
 import honbab.pumkit.com.adapter.ViewPagerAdapter;
 import honbab.pumkit.com.data.MapData;
-import honbab.pumkit.com.tete.OneFeedActivity;
 import honbab.pumkit.com.tete.OneRestaurantActivity;
 import honbab.pumkit.com.tete.R;
 import honbab.pumkit.com.utils.GoogleMapUtil;
@@ -63,6 +62,7 @@ public class GetPhotoTask extends AsyncTask<Object, String, String> {
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
+        Log.e("abc", "s = " + s);
 
         HashMap<String, Object> placeDetailList = null;
         PhotoParser parser = new PhotoParser();
@@ -136,7 +136,7 @@ public class GetPhotoTask extends AsyncTask<Object, String, String> {
         if (activityName.equals("OneRestaurantActivity")) {
             dots = ((OneRestaurantActivity) mContext).dots;
         } else {
-            dots = ((OneFeedActivity) mContext).dots;
+//            dots = ((OneRestaurantActivity) mContext).dots;
         }
 
         dots = new TextView[layouts2.size()];

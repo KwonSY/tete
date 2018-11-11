@@ -14,7 +14,7 @@ import java.util.List;
 import honbab.pumkit.com.adapter.GridViewNearByAdapter;
 import honbab.pumkit.com.data.MapData;
 import honbab.pumkit.com.tete.MapsActivity;
-import honbab.pumkit.com.tete.OneFeedActivity;
+import honbab.pumkit.com.tete.OneRestaurantActivity;
 import honbab.pumkit.com.tete.R;
 import honbab.pumkit.com.tete.ReservActivity;
 import honbab.pumkit.com.widget.DataParser;
@@ -83,7 +83,6 @@ public class GetNearPlacesTaskForReserv extends AsyncTask<Object, String, String
             String reference = googlePlace.get("reference");
 
             LatLng latLng = new LatLng(lat, lng);
-            Log.e("abc",  placeName+ "플레이스2 latLng = " + latLng);
 
             MapData data = new MapData(place_id, placeName, latLng, reference, "");
             if(photo_reference != null && !photo_reference.isEmpty()) {
@@ -105,11 +104,11 @@ public class GetNearPlacesTaskForReserv extends AsyncTask<Object, String, String
             ReservActivity.mAdapter = new GridViewNearByAdapter(mContext, MapsActivity.mMapList);
             ReservActivity.recyclerView.setAdapter(ReservActivity.mAdapter);
             ReservActivity.mAdapter.notifyDataSetChanged();
-        } else if (mContext.getClass().equals(OneFeedActivity.class)) {
-            Log.e("abc", "여기 액티비티는 = OneFeedActivity ," + OneFeedActivity.class);
-            ((OneFeedActivity) mContext).mMapList = MapsActivity.mMapList;
-
-            String place_id = MapsActivity.mMapList.get(0).getPlace_id();
+        } else if (mContext.getClass().equals(OneRestaurantActivity.class)) {
+            Log.e("abc", "여기 액티비티는 = OneFeedActivity ," + OneRestaurantActivity.class);
+//            ((OneRestaurantActivity) mContext).mMapList = MapsActivity.mMapList;
+//
+//            String place_id = MapsActivity.mMapList.get(0).getPlace_id();
         }
 
     }

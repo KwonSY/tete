@@ -30,8 +30,7 @@ public class ReqFeedeeAdapter extends Adapter<ReqFeedeeAdapter.ViewHolder> {
 
     Context mContext;
     OkHttpClient httpClient;
-    public ArrayList<UserData> listViewItemList = new ArrayList<>() ;
-//    private RecycledViewPool viewPool;
+    public ArrayList<UserData> listViewItemList = new ArrayList<>();
 
     String feed_id;
 
@@ -45,7 +44,6 @@ public class ReqFeedeeAdapter extends Adapter<ReqFeedeeAdapter.ViewHolder> {
 
         this.feed_id = feed_id;
         this.listViewItemList = usersItemList;
-//        viewPool = new RecycledViewPool();
     }
 
     @NonNull
@@ -66,8 +64,8 @@ public class ReqFeedeeAdapter extends Adapter<ReqFeedeeAdapter.ViewHolder> {
                 .placeholder(R.drawable.icon_noprofile_circle)
                 .error(R.drawable.icon_noprofile_circle)
                 .transform(new CircleTransform())
-                .into(holder.image_feedee);
-        holder.txt_userName.setText(data.getUser_name());
+                .into(holder.img_feedee);
+        holder.txt_feedee_name.setText(data.getUser_name());
 
         holder.btn_accept.setOnTouchListener(new OnTouchListener() {
             @Override
@@ -89,6 +87,30 @@ public class ReqFeedeeAdapter extends Adapter<ReqFeedeeAdapter.ViewHolder> {
                 return false;
             }
         });
+
+        //vvvvvvvvvv accept 버튼 바꿔야 함
+//        //d - 지웠다. //n - 수락전
+//        if (data.getUsersList().get(0).getStatus().equals("n")) {
+//            holder.btn_cancle_poke.setText(R.string.cancle);
+//        } else {
+//            holder.btn_cancle_poke.setText(R.string.poke_reserve);
+//        }
+//        holder.btn_cancle_poke.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if (data.getUsersList().get(0).getStatus().equals("n")) {
+//                    // n -> d  지우기
+//                    holder.btn_cancle_poke.setText(R.string.repoke);
+//                    data.getUsersList().get(0).setStatus("d");
+//                } else {
+//                    // d -> n 예약하기
+//                    holder.btn_cancle_poke.setText(R.string.cancle);
+//                    data.getUsersList().get(0).setStatus("n");
+//                }
+//
+//                new PokeFeedTask(mContext, httpClient).execute(data.getFeed_id());
+//            }
+//        });
     }
 
     @Override
@@ -97,14 +119,15 @@ public class ReqFeedeeAdapter extends Adapter<ReqFeedeeAdapter.ViewHolder> {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView image_feedee;
-        TextView txt_userName;
+        ImageView img_feedee;
+        TextView txt_feedee_name;
         Button btn_accept;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            image_feedee = itemView.findViewById(R.id.image_feedee);
-            txt_userName = itemView.findViewById(R.id.txt_userName);
+
+            img_feedee = itemView.findViewById(R.id.img_feedee);
+            txt_feedee_name = itemView.findViewById(R.id.txt_feedee_name);
             btn_accept = itemView.findViewById(R.id.btn_accept);
         }
     }

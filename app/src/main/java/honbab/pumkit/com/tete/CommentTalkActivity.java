@@ -121,6 +121,7 @@ public class CommentTalkActivity extends AppCompatActivity {
                             JSONObject feedObj = feedArr.getJSONObject(i);
 
                             String feed_id = feedObj.getString("sid");
+                            String status = feedObj.getString("status");
 
                             JSONObject hostObj = feedObj.getJSONObject("host");
                             String host_id = hostObj.getString("sid");
@@ -154,7 +155,7 @@ public class CommentTalkActivity extends AppCompatActivity {
                                 }
                             }
 
-                            FeedReqData data = new FeedReqData(feed_id, rest_id, rest_name, rest_img, reqUsersList, commentsList);
+                            FeedReqData data = new FeedReqData(feed_id, status, rest_id, rest_name, rest_img, reqUsersList, commentsList);
                             feedReqList.add(data);
                         }
                     }

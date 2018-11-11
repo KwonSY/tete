@@ -153,34 +153,17 @@ public class MyFeedListActivity extends AppCompatActivity {
                                     String user_img = Statics.main_url + userObj.getString("img_url");
                                     String age = userObj.getString("age");
                                     String gender = userObj.getString("gender");
-                                    String status = userObj.getString("status");
+//                                    String status = userObj.getString("status");
                                     String time = userObj.getString("time");
 
-                                    UserData userData = new UserData(user_id, user_name, age, gender, user_img, status);
+                                    UserData userData = new UserData(user_id, user_name, age, gender, user_img, null);
                                     reqUsersList.add(userData);
                                 }
                             }
 
-//                            if (feedObj.has("comments")) {
-//                                JSONArray usersArr = feedObj.getJSONArray("comments");
-//
-//                                for (int k = 0; k < usersArr.length(); k++) {
-//                                    JSONObject userObj = usersArr.getJSONObject(k);
-//
-//                                    String comment_id = userObj.getString("sid");
-//                                    JSONObject c_user_obj = userObj.getJSONObject("user");
-//                                    String c_user_id = c_user_obj.getString("sid");
-//                                    String c_user_name = c_user_obj.getString("name");
-//                                    String c_img_url = Statics.main_url + c_user_obj.getString("img_url");
-//                                    String comment = userObj.getString("comment");
-//                                    String comment_time = userObj.getString("time");
-//
-//                                    CommentData commentData = new CommentData(comment_id, c_user_id, c_user_name, c_img_url, comment, comment_time);
-//                                    commentsList.add(commentData);
-//                                }
-//                            }
+                            String status = feedObj.getString("status");
 
-                            FeedReqData data = new FeedReqData(feed_id, rest_id, rest_name, rest_img, reqUsersList, commentsList);
+                            FeedReqData data = new FeedReqData(feed_id, status, rest_id, rest_name, rest_img, reqUsersList, commentsList);
                             feedReqList.add(data);
                         }
                     }

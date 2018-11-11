@@ -201,7 +201,7 @@ public class OneFeedActivity extends AppCompatActivity {
         protected Void doInBackground(Void... params) {
             FormBody body = new FormBody.Builder()
                     .add("opt", "one_feed")
-                    .add("reserv_id", "1")
+                    .add("feed_id", "1")
                     .build();
 
             Request request = new Request.Builder().url(Statics.opt_url).post(body).build();

@@ -76,7 +76,7 @@
                             android:layout_below="@id/icon_feedlist"
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="15dp"
-                            android:text="먹기예약" />
+                            android:text="@string/require_godmuk" />
 
                         <TextView
                             android:id="@+id/badge_feed_cnt"

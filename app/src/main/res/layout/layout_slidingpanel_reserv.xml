@@ -56,8 +56,10 @@
                 android:paddingTop="7dp">
 
                 <TextView
+                    android:id="@+id/txt_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
                     android:text="11/8 " />
 
                 <TextView
@@ -129,6 +131,7 @@
                 android:textStyle="bold" />
 
             <EditText
+                android:id="@+id/edit_comment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="상대방에게 남기고 싶은 메시지"

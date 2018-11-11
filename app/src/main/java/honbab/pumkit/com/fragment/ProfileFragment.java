@@ -215,7 +215,7 @@ public class ProfileFragment extends Fragment {
 
     ArrayList<FeedReqData> myFeedList = new ArrayList<>();
     ArrayList<FeedReqData> pokeList = new ArrayList<>();
-    public class MyFeedListTask extends AsyncTask<Void, Void, ArrayList<FeedReqData>> {
+    public class MyFeedListTask extends AsyncTask<Void, Void, Void> {
         String result;
         String host;
         String rest_name;
@@ -231,8 +231,8 @@ public class ProfileFragment extends Fragment {
         }
 
         @Override
-        protected ArrayList<FeedReqData> doInBackground(Void... params) {
-            ArrayList<FeedReqData> feedReqList = new ArrayList<>();
+        protected Void doInBackground(Void... params) {
+//            ArrayList<FeedReqData> feedReqList = new ArrayList<>();
 
             FormBody body = new FormBody.Builder()
                     .add("opt", "my_totla_feed_cnt")
@@ -303,32 +303,13 @@ public class ProfileFragment extends Fragment {
                                 }
                             }
 
-//                            if (feedObj.has("comments")) {
-//                                JSONArray usersArr = feedObj.getJSONArray("comments");
-//
-//                                for (int k = 0; k < usersArr.length(); k++) {
-//                                    JSONObject userObj = usersArr.getJSONObject(k);
-//
-//                                    String comment_id = userObj.getString("sid");
-//                                    JSONObject c_user_obj = userObj.getJSONObject("user");
-//                                    String c_user_id = c_user_obj.getString("sid");
-//                                    String c_user_name = c_user_obj.getString("name");
-//                                    String c_img_url = Statics.main_url + c_user_obj.getString("img_url");
-//                                    String comment = userObj.getString("comment");
-//                                    String comment_time = userObj.getString("time");
-//
-//                                    CommentData commentData = new CommentData(comment_id, c_user_id, c_user_name, c_img_url, comment, comment_time);
-//                                    commentsList.add(commentData);
-//                                }
-//                            }
+//                            FeedReqData data = new FeedReqData(feed_id, rest_id, rest_name, rest_img, reqUsersList, commentsList);
+//                            feedReqList.add(data);
 
-                            FeedReqData data = new FeedReqData(feed_id, rest_id, rest_name, rest_img, reqUsersList, commentsList);
-                            feedReqList.add(data);
-
-                            if (host.equals("my"))
-                                myFeedList.add(data);
-                            else if (host.equals("your"))
-                                pokeList.add(data);
+//                            if (host.equals("my"))
+//                                myFeedList.add(data);
+//                            else if (host.equals("your"))
+//                                pokeList.add(data);
 
                             String status = feedObj.getString("status");
                         }
@@ -342,12 +323,13 @@ public class ProfileFragment extends Fragment {
                 Log.e("abc", "Error : " + e.getMessage());
                 e.printStackTrace();
             }
-            return feedReqList;
+
+            return null;
         }
 
         @Override
-        protected void onPostExecute(ArrayList<FeedReqData> feedReqList) {
-            super.onPostExecute(feedReqList);
+        protected void onPostExecute(Void aVoid) {
+//            super.onPostExecute(feedReqList);
 //            Log.e("abc", "onPostExecute feedReqList.size = " + feedReqList.size());
 
             badge_feed_cnt.setText(String.valueOf(cnt_my));

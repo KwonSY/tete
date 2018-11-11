@@ -50,7 +50,6 @@
         <activity android:name="honbab.pumkit.com.tete.PokeListActivity"/>
 
 
-        <activity android:name="honbab.pumkit.com.tete.OneFeedActivity"/>
         <activity android:name="honbab.pumkit.com.tete.OneImageActivity"/>
         <activity android:name="honbab.pumkit.com.tete.OneRestaurantActivity"/>
 

@@ -36,7 +36,7 @@ public class OneRestaurantActivity extends AppCompatActivity {
     public LinearLayout dotsLayout;
 
     public Button btn_poke;
-    public TextView txt_rest_phone, txt_rest_address, txt_rating;
+    public TextView txt_comment, txt_rest_phone, txt_rest_address, txt_rating;
 
     private String feed_id, place_id, feeder_img, feeder_name, poke_yn = "n", status;
 
@@ -53,6 +53,8 @@ public class OneRestaurantActivity extends AppCompatActivity {
         feeder_img = intent.getStringExtra("feeder_img");
         feeder_name = intent.getStringExtra("feeder_name");
         status = intent.getStringExtra("status");
+        Log.e("abc", "feed_id = " + feed_id);
+        Log.e("abc", "place_id = " + place_id);
         Log.e("abc", "status = " + status);
 
         btn_poke = (Button) findViewById(R.id.btn_poke);
@@ -87,6 +89,7 @@ public class OneRestaurantActivity extends AppCompatActivity {
             }
         }
 
+        txt_comment = (TextView) findViewById(R.id.txt_comment);
         txt_rest_phone = (TextView) findViewById(R.id.txt_rest_phone);
         txt_rest_address = (TextView) findViewById(R.id.txt_rest_address);
         txt_rating = (TextView) findViewById(R.id.txt_rating);
@@ -105,7 +108,11 @@ public class OneRestaurantActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        new CheckMyPokeTask().execute();
+        if (feed_id == null || feed_id.equals("")) {
+
+        } else {
+            new CheckMyPokeTask().execute();
+        }
     }
 
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
@@ -130,6 +137,7 @@ public class OneRestaurantActivity extends AppCompatActivity {
 
     public class CheckMyPokeTask extends AsyncTask<Void, Void, Void> {
         String result;
+        String comment;
 
         @Override
         protected void onPreExecute() {
@@ -155,6 +163,7 @@ public class OneRestaurantActivity extends AppCompatActivity {
 
                     result = obj.getString("result");
                     status = obj.getString("status");
+                    comment = obj.getString("comment");
 
                     if (!obj.isNull("users")) {
                         JSONArray arr = obj.getJSONArray("users");
@@ -184,6 +193,14 @@ public class OneRestaurantActivity extends AppCompatActivity {
             Log.e("abc", "r = " + result);
             Log.e("abc", "s = " + status);
             Log.e("abc", "poke_yn = " + poke_yn);
+            Log.e("abc", "comment.length() = " + comment.length());
+
+            if (comment.equals("null")) {
+                txt_comment.setVisibility(View.GONE);
+            } else {
+                txt_comment.setVisibility(View.VISIBLE);
+                txt_comment.setText(comment);
+            }
 
             //미수락 상태에서, poke_yn check
             if (status.equals("n")) {

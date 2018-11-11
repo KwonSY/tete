@@ -12,6 +12,7 @@ public class MapData implements Serializable {
     private LatLng latLng;
     private String place_id, reference;
     private int height, width;
+    private String status;//vvvvvvvvvvv check 필요
 
     public MapData() {
 
@@ -176,5 +177,13 @@ public class MapData implements Serializable {
 
     public void setWidth(int width) {
         this.width = width;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

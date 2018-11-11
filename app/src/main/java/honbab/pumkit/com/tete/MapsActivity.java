@@ -49,6 +49,7 @@ import java.util.List;
 import honbab.pumkit.com.adapter.RecyclerViewRestAdapter;
 import honbab.pumkit.com.data.MapData;
 import honbab.pumkit.com.task.GetNearPlacesTaskForMap;
+import honbab.pumkit.com.utils.ButtonUtil;
 import honbab.pumkit.com.utils.GoogleMapUtil;
 import honbab.pumkit.com.widget.CustomTimePickerDialog;
 import honbab.pumkit.com.widget.SnapHelper;
@@ -190,6 +191,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             }
         });
+
+        ButtonUtil.setBackButtonClickListener(this);
     }
 
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
@@ -490,7 +493,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 new GetNearPlacesTaskForMap().execute(dataTransfer);
 
-                Toast.makeText(MapsActivity.this, "주변 음식점 검색", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MapsActivity.this, R.string.search_near_rest, Toast.LENGTH_SHORT).show();
 
                 break;
         }
