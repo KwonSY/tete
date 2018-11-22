@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="43dp"
+    android:background="@color/mainColor"
+    tools:context="honbab.pumkit.com.tete.MainActivity">
+
+    <View
+        android:id="@+id/line_maincolor"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#ff0000" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="22dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="15dp"
+        android:scaleType="fitStart"
+        android:src="@drawable/logo_oneline_wh"
+        android:textColor="@color/white" />
+</RelativeLayout>

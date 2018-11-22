@@ -38,7 +38,7 @@ public class OneRestaurantActivity extends AppCompatActivity {
     public Button btn_poke;
     public TextView txt_comment, txt_rest_phone, txt_rest_address, txt_rating;
 
-    private String feed_id, place_id, feeder_img, feeder_name, poke_yn = "n", status;
+    private String feed_id, feed_rest_name, place_id, feeder_img, feeder_name, poke_yn = "n", status;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,13 +49,15 @@ public class OneRestaurantActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         feed_id = intent.getStringExtra("feed_id");
+        feed_rest_name = intent.getStringExtra("feed_rest_name");
         place_id = intent.getStringExtra("place_id");
         feeder_img = intent.getStringExtra("feeder_img");
         feeder_name = intent.getStringExtra("feeder_name");
         status = intent.getStringExtra("status");
-        Log.e("abc", "feed_id = " + feed_id);
-        Log.e("abc", "place_id = " + place_id);
-        Log.e("abc", "status = " + status);
+
+        TextView title_topbar;
+        title_topbar = (TextView) findViewById(R.id.title_topbar);
+        title_topbar.setText(feed_rest_name);
 
         btn_poke = (Button) findViewById(R.id.btn_poke);
 
@@ -121,12 +123,18 @@ public class OneRestaurantActivity extends AppCompatActivity {
             switch (view.getId()) {
                 case R.id.btn_poke:
                     if (status.equals("n")) {
-                        new PokeFeedTask(OneRestaurantActivity.this, httpClient).execute(feed_id);
-
-                        if (poke_yn.equals("n")) {
-                            Toast.makeText(OneRestaurantActivity.this, "같이먹기를 신청하셨습니다.", Toast.LENGTH_SHORT).show();
+                        if (Statics.my_id == null) {
+                            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
                         } else {
-                            Toast.makeText(OneRestaurantActivity.this, "같이먹기가 취소되었습니다.", Toast.LENGTH_SHORT).show();
+                            new PokeFeedTask(OneRestaurantActivity.this, httpClient).execute(feed_id);
+
+                            if (poke_yn.equals("n")) {
+                                Toast.makeText(OneRestaurantActivity.this, "같이먹기를 신청하셨습니다.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(OneRestaurantActivity.this, "같이먹기가 취소되었습니다.", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }
 

@@ -44,7 +44,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/btn_go_main"
+        android:id="@+id/btn_go_comment"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -52,5 +52,5 @@
         android:layout_marginRight="12dp"
         android:layout_marginBottom="14dp"
         android:layout_marginTop="50dp"
-        android:text="피드로 돌아가기" />
+        android:text="코멘트 달러가기" />
 </RelativeLayout>

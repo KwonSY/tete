@@ -3,15 +3,20 @@
 
     <string name="accept">수락</string>
     <string name="acceptComplete">수락완료</string>
-    <string name="already_reserved_godmuk">오늘 이미 예약한 식사약속이 있습니다. 예약한 같먹을 보시겠습니까?</string>
+    <string name="already_reserved_godmuk">오늘 이미 예약 중인 식사약속이 있습니다. 예약한 같먹을 보시겠습니까?</string>
     <string name="applicant">신청자</string>
+    <string name="ask_cancle_godmuk">같먹을 취소하시겠습니까?</string>
     <string name="cancle">취소하기</string>
+    <string name="explain_reserve_godmuk">같이 먹기 예약이 없습니다. 같먹을 예약해주시겠습니까?</string>
+    <string name="go_to_reserve_godmuk">같먹 예약하러 가기</string>
     <string name="make_new_godmuk">새로운 같먹을 만들어보세요.</string>
     <string name="my">마이</string>
-    <string name="poke_reserve">예약하기</string>
+    <string name="no">아니오</string>
+    <string name="poke_reserve">같이먹기</string>
     <string name="poke_reserved">신청 대기중</string>
     <string name="poke_compelete">같먹 종료</string>
-    <string name="require_godmuk">요청 온 같먹</string>
+    <string name="require_godmuk">만든 같먹</string>
+    <string name="pokelist">신청한 예약</string>
     <string name="profile">프로필</string>
     <string name="repoke">다시 콕찌르기</string>
     <string name="reservation">예약</string>

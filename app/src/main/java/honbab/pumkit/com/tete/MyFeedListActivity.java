@@ -1,5 +1,6 @@
 package honbab.pumkit.com.tete;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +20,7 @@ import honbab.pumkit.com.adapter.MyFeedListAdapter;
 import honbab.pumkit.com.data.CommentData;
 import honbab.pumkit.com.data.FeedReqData;
 import honbab.pumkit.com.data.UserData;
+import honbab.pumkit.com.task.MyFeedListTask;
 import honbab.pumkit.com.utils.ButtonUtil;
 import honbab.pumkit.com.widget.OkHttpClientSingleton;
 import honbab.pumkit.com.widget.SessionManager;
@@ -31,40 +33,30 @@ public class MyFeedListActivity extends AppCompatActivity {
     private OkHttpClient httpClient;
     private SessionManager session;
 
-    private TextView txt_no_feed;
-    private Button btn_go_reserv;
-    private RecyclerView recyclerView_myFeed;
-    private MyFeedListAdapter myFeedListAdapter;
+    public TextView txt_no_feed;
+    public Button btn_go_reserv;
+    public RecyclerView recyclerView_myFeed;
+    public MyFeedListAdapter myFeedListAdapter;
 
-    ArrayList<FeedReqData> feedReqList = new ArrayList<>();
-//    int cnt_my = 0, cnt_yours = 0;
+    private ArrayList<FeedReqData> feedReqList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_myfeedlist);
 
-//        Intent intent = getIntent();
-//        feedReqList = (ArrayList<FeedReqData>) intent.getSerializableExtra("feedList");
-
         httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
         session = new SessionManager(this.getApplicationContext());
 
         txt_no_feed = (TextView) findViewById(R.id.txt_no_feed);
         btn_go_reserv = (Button) findViewById(R.id.btn_go_reserv);
+        btn_go_reserv.setOnClickListener(mOnClickListener);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView_myFeed = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView_myFeed.setLayoutManager(layoutManager);
         myFeedListAdapter = new MyFeedListAdapter();
         recyclerView_myFeed.setAdapter(myFeedListAdapter);
-//        if (feedReqList.size() > 0) {
-//            myFeedListAdapter = new MyFeedListAdapter(MyFeedListActivity.this, httpClient, feedReqList);
-//            recyclerView_myFeed.setAdapter(myFeedListAdapter);
-//            myFeedListAdapter.notifyDataSetChanged();
-//        } else {
-//            recyclerView_myFeed.setVisibility(View.GONE);
-//        }
 
         ButtonUtil.setBackButtonClickListener(this);
     }
@@ -73,7 +65,7 @@ public class MyFeedListActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        new MyFeedListTask().execute();
+        new MyFeedListTask(MyFeedListActivity.this, httpClient).execute();
     }
 
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
@@ -84,16 +76,19 @@ public class MyFeedListActivity extends AppCompatActivity {
                     onBackPressed();
 
                     break;
+                case R.id.btn_go_reserv:
+                    Intent intent = new Intent(MyFeedListActivity.this, ReservActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+
+                    break;
             }
         }
     };
 
-    public class MyFeedListTask extends AsyncTask<Void, Void, ArrayList<FeedReqData>> {
+    public class MyFeedListTaskxxx extends AsyncTask<Void, Void, ArrayList<FeedReqData>> {
         String result;
-        String host;
         String rest_name;
-
-//        ArrayList<FeedReqData> feedReqList = new ArrayList<>();
 
         @Override
         protected void onPreExecute() {
@@ -131,9 +126,6 @@ public class MyFeedListActivity extends AppCompatActivity {
                             JSONObject feedObj = feedArr.getJSONObject(i);
 
                             String feed_id = feedObj.getString("sid");
-
-//                            JSONObject hostObj = feedObj.getJSONObject("host");
-//                            host = hostObj.getString("sid");
 
                             JSONObject restObj = feedObj.getJSONObject("rest");
                             String rest_id = restObj.getString("sid");

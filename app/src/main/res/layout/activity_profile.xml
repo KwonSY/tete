@@ -14,8 +14,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_below="@id/topbar"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@id/topbar">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -46,14 +46,25 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp">
 
+                <TextView
+                    android:id="@+id/title_comment"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="내 소개" />
+
                 <EditText
                     android:id="@+id/edit_comment"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="10dp"
+                    android:layout_toRightOf="@id/title_comment"
                     android:layout_weight="3"
                     android:background="@drawable/border_round_gr1"
-                    android:text="내 소개 읽어오는 중..." />
+                    android:padding="10dp"
+                    android:textColorHint="#afafaf"
+                    android:textColor="#afafaf"
+                    android:text="내 소개 읽어오는 중..."
+                    android:textSize="12sp" />
 
                 <Button
                     android:id="@+id/btn_edit_comment"
@@ -62,14 +73,14 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="7dp"
                     android:background="@drawable/btn_circle_bk1"
-                    android:text="편집"/>
+                    android:text="편집" />
             </RelativeLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="나이를 수정하시려면 본인 인증을 하셔야 합니다."/>
+                android:text="나이를 수정하시려면 본인 인증을 하셔야 합니다." />
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

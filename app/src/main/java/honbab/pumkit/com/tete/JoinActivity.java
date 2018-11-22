@@ -7,16 +7,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONObject;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import honbab.pumkit.com.utils.ButtonUtil;
 import honbab.pumkit.com.utils.StringFilter;
 import honbab.pumkit.com.widget.Encryption;
 import honbab.pumkit.com.widget.OkHttpClientSingleton;
@@ -42,6 +48,20 @@ public class JoinActivity extends AppCompatActivity {
         httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
         session = new SessionManager(getApplicationContext());
 
+        TextView link_privacy = (TextView) findViewById(R.id.link_privacy);
+        TextView link_personal = (TextView) findViewById(R.id.link_personal);
+        Linkify.TransformFilter mTransform = new Linkify.TransformFilter() {
+            @Override
+            public String transformUrl(Matcher match, String url) {
+                return "";
+            }
+        };
+        Pattern pattern1 = Pattern.compile("");
+        Pattern pattern2 = Pattern.compile("");
+        Linkify.addLinks(link_privacy, pattern1, Statics.main_url + "law/privacy/", null, mTransform);
+        Linkify.addLinks(link_personal, pattern2, Statics.main_url + "law/personal/", null, mTransform);
+//        Linkify.addLinks(link_privacy, Linkify.WEB_URLS);
+//        link_privacy.setMovementMethod(LinkMovementMethod.getInstance());
 
         edit_email = (EditText) findViewById(R.id.edit_email);
         edit_name = (EditText) findViewById(R.id.edit_name);
@@ -55,7 +75,7 @@ public class JoinActivity extends AppCompatActivity {
         btn_show_password.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
-                switch (event.getAction() ) {
+                switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         edit_password.setInputType(InputType.TYPE_CLASS_TEXT);
                         edit_password.setSelection(edit_password.getText().length());
@@ -71,6 +91,8 @@ public class JoinActivity extends AppCompatActivity {
 
         Button btn_join = (Button) findViewById(R.id.btn_join);
         btn_join.setOnClickListener(mOnClickListener);
+
+        ButtonUtil.setBackButtonClickListener(this);
     }
 
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {

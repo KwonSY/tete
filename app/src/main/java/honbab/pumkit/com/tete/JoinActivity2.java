@@ -40,6 +40,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import honbab.pumkit.com.utils.ButtonUtil;
 import honbab.pumkit.com.widget.CircleTransform;
 import honbab.pumkit.com.widget.OkHttpClientSingleton;
 import honbab.pumkit.com.widget.RealPathUtil;
@@ -129,6 +130,8 @@ public class JoinActivity2 extends AppCompatActivity {
 
         Button btn_start = (Button) findViewById(R.id.btn_start);
         btn_start.setOnClickListener(mOnClickListener);
+
+        ButtonUtil.setBackButtonClickListener(this);
     }
 
     //selectImage(view);

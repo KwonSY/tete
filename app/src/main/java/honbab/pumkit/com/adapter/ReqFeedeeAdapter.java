@@ -132,17 +132,8 @@ public class ReqFeedeeAdapter extends Adapter<ReqFeedeeAdapter.ViewHolder> {
         }
     }
 
-//    public void addItem(String user_id, String user_name, String phone, String email, String gender, String img_url, String comment) {
-//        FeedReqData item = new UserData(user_id, user_name, phone, email, gender, img_url, comment);
-//
-//        listViewItemList.add(item);
-//    }
-
     public int findViewHolderforLayoutPosition(final ViewHolder holder, int position) {
-//        final FeedReqData data = listViewItemList.get(position);
         int layoutPosition = holder.getLayoutPosition();
-//        Log.e("abc", "layoutPosition = " + layoutPosition);
-//        View view = mContext.
 
         return layoutPosition;
     }

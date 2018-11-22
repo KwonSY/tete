@@ -84,6 +84,7 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
                 Intent intent = new Intent(mContext, OneRestaurantActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.putExtra("feed_id", data.getSid());
+                intent.putExtra("feed_rest_name", data.getRest_name());
                 intent.putExtra("place_id", data.getPlace_id());
                 intent.putExtra("feeder_img", Statics.main_url + data.getUser_img());
                 intent.putExtra("feeder_name", data.getUser_name());

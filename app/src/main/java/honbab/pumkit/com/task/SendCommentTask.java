@@ -6,7 +6,6 @@ import android.util.Log;
 
 import org.json.JSONObject;
 
-import honbab.pumkit.com.tete.CommentTalkActivity;
 import honbab.pumkit.com.tete.Statics;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -25,7 +24,7 @@ public class SendCommentTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPreExecute() {
-//        Log.e("abc", "xxxxviewHolderxxxx1  viewHolder = " + viewHolder);
+
     }
 
     @Override
@@ -45,7 +44,6 @@ public class SendCommentTask extends AsyncTask<String, Void, String> {
             okhttp3.Response response = httpClient.newCall(request).execute();
             if (response.isSuccessful()) {
                 String bodyStr = response.body().string();
-                Log.e("abc", "bodyStr = " + bodyStr);
 
                 JSONObject obj = new JSONObject(bodyStr);
 
@@ -66,13 +64,8 @@ public class SendCommentTask extends AsyncTask<String, Void, String> {
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
             if (result.equals("0")) {
-//                ((CommentTalkActivity) mContext).recyclerView.removeItemDecorationAt(position);
-                ((CommentTalkActivity) mContext).mAdapter.notifyDataSetChanged();
-
-//                Intent intent = new Intent(mContext, CommentTalkActivity.class);
-//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                intent.putExtra("feedList", 1);
-//                mContext.startActivity(intent);
+                //추후 코멘트만 추가 되게 수정할 것 vvvvvvvvvvvvvv
+                new MyFeedCommentTask(mContext, httpClient).execute();
             }
 
     }

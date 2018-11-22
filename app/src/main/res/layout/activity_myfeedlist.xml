@@ -50,7 +50,7 @@
                 android:visibility="invisible"
                 android:layout_below="@id/txt_no_feed"
                 android:layout_centerHorizontal="true"
-                android:text="같먹 예약하러 가기" />
+                android:text="@string/go_to_reserve_godmuk" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerView"

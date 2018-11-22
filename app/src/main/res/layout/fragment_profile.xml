@@ -45,8 +45,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="40dp"
-                    android:layout_marginRight="50dp"
                     android:layout_marginLeft="50dp"
+                    android:layout_marginRight="50dp"
                     android:layout_marginTop="20dp"
                     android:background="@drawable/border_round_gr1"
                     android:padding="8dp"
@@ -111,7 +111,7 @@
                             android:layout_below="@id/icon_pokelist"
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="15dp"
-                            android:text="내가콕찌른" />
+                            android:text="@string/pokelist" />
 
                         <TextView
                             android:id="@+id/badge_poke_cnt"
@@ -145,7 +145,7 @@
                             android:layout_below="@id/icon_commenttalk"
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="15dp"
-                            android:text="같먹톡" />
+                            android:text="결정된 예약" />
 
                         <TextView
                             android:id="@+id/badge_comment_cnt"

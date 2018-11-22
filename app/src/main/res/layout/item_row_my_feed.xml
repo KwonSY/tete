@@ -39,5 +39,5 @@
         android:layout_alignParentRight="true"
         android:background="@drawable/btn_circle_bk1"
         android:padding="7dp"
-        android:text="취소하기" />
+        android:text="@string/cancle" />
 </RelativeLayout>

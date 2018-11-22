@@ -29,11 +29,8 @@ public class AcceptReservTask extends AsyncTask<String, Void, String> {
     String feed_id;
     int position;
 
-//    ActivityOptionsCompat optionsCompat;
-
     public AcceptReservTask(Context mContext, OkHttpClient httpClient, ReqFeedeeAdapter.ViewHolder viewHolder,
-                            UserData userData, String feed_id,
-                            int position) {
+                            UserData userData, String feed_id, int position) {
         this.mContext = mContext;
         this.httpClient = httpClient;
         this.viewHolder = viewHolder;
@@ -88,14 +85,6 @@ public class AcceptReservTask extends AsyncTask<String, Void, String> {
                 JSONObject obj = new JSONObject(bodyStr);
 
                 result = obj.getString("result");
-
-//                reqArr = obj.getJSONArray("req");
-//                for (int i=0; i<reqArr.length(); i++) {
-//                    JSONObject reqUserObj = reqArr.getJSONObject(i);
-//                    String sid = reqUserObj.getString("sid");
-//                    String name = reqUserObj.getString("name");
-//                    String img_url = reqUserObj.getString("img_url");
-//                }
             } else {
                     Log.d("abc", "Error : " + response.code() + ", " + response.message());
             }
@@ -119,31 +108,28 @@ public class AcceptReservTask extends AsyncTask<String, Void, String> {
 //                Log.e("abc", "xxxxviewHolderxxxx2  itemView = " + viewHolder.itemView);
 //                View view2 = (View) ((ViewGroup) v.getParent().getParent()).getChildAt(1);
 //                int fragment_id = view2.getId();
+                Log.e("abc", "mContext = " + mContext);
+                Log.e("abc", "data.getUser_name() = " + data.getUser_name());
+                Log.e("abc", "data.getImg_url() = " + data.getImg_url());
 
-//                View rootView = ((MainActivity)mContext).getWindow().getDecorView().findViewById(R.id.layout_item_myfeed);
                 View rootView = viewHolder.itemView;
 
-                Pair<View, String> pair1 = Pair.create(rootView.findViewById(R.id.image_feedee), "img_user");
-                Pair<View, String> pair2 = Pair.create(rootView.findViewById(R.id.txt_userName), "txt_userName");
+                Pair<View, String> pair1 = Pair.create(rootView.findViewById(R.id.img_feedee), "img_user");
+                Pair<View, String> pair2 = Pair.create(rootView.findViewById(R.id.txt_feedee_name), "txt_userName");
 
                 ActivityOptionsCompat optionsCompat;
                 optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity)mContext, pair1, pair2);
+//                optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation((MyFeedListActivity) mContext, pair1, pair2);
 
                 Intent intent = new Intent(mContext, DelayHandlerActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                String user_name = null;
-//                String user_img = null;
-//                try {
-//                    JSONObject obj = reqArr.getJSONObject(position);
-//                    JSONObject userObj = obj.getJSONObject("user");
-//                    user_name = userObj.getString("name");
-//                    user_img = userObj.getString("img_url");
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
                 intent.putExtra("user_name", data.getUser_name());
                 intent.putExtra("user_img", data.getImg_url());
                 mContext.startActivity(intent, optionsCompat.toBundle());
+
+
+//                ((MyFeedListActivity) mContext).myFeedListAdapter.notifyDataSetChanged();
+
             }
 
     }

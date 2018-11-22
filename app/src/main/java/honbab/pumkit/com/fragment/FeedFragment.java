@@ -1,5 +1,6 @@
 package honbab.pumkit.com.fragment;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 
 import honbab.pumkit.com.adapter.FeedListAdapter;
 import honbab.pumkit.com.data.ReservData;
+import honbab.pumkit.com.tete.CommentTalkActivity;
 import honbab.pumkit.com.tete.FeedMapActivity;
 import honbab.pumkit.com.tete.LoginActivity;
 import honbab.pumkit.com.tete.MyFeedListActivity;
@@ -256,6 +258,7 @@ public class FeedFragment extends Fragment {
 
     public class CheckReservTask extends AsyncTask<Void, Void, Void> {
         private String result;
+        private String status;
 
         @Override
         protected void onPreExecute() {
@@ -281,6 +284,9 @@ public class FeedFragment extends Fragment {
                     JSONObject obj = new JSONObject(bodyStr);
 
                     result = obj.getString("result");
+
+                    JSONObject feedObj = obj.getJSONObject("feed");
+                    status = feedObj.getString("status");
                 } else {
                     Log.d("abc", "Error : " + response.code() + ", " + response.message());
                 }
@@ -295,24 +301,35 @@ public class FeedFragment extends Fragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             if (result.equals("0")) {
+                //예약없다
                 Intent intent2 = new Intent(getActivity(), ReservActivity.class);
                 intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent2);
             } else {
-//                Toast.makeText(getActivity(), "이미 예약하신 같먹이 있습니다.", Toast.LENGTH_SHORT).show();
-                alertShow();
+                //예약있다
+                //이미 예약하신 같먹이 있습니다. dialog
+                if (status.equals("n")) {
+//                    Activity mActivity = ((Activity) MyFeedListActivity.class);
+                    MyFeedListActivity mActivity = new MyFeedListActivity();
+                    alertShow(mActivity);
+                } else if (status.equals("y")) {
+                    CommentTalkActivity mActivity = new CommentTalkActivity();
+                    alertShow(mActivity);
+                }
+
             }
         }
     }
 
-    public void alertShow() {
+    public void alertShow(final Activity mActivity) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 //        builder.setTitle("AlertDialog Title");
         builder.setMessage(R.string.already_reserved_godmuk);
         builder.setPositiveButton(R.string.yes,
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(getActivity(), MyFeedListActivity.class);
+//                        Intent intent = new Intent(getActivity(), MyFeedListActivity.class);
+                        Intent intent = new Intent(getActivity(), mActivity.getClass());
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         getActivity().startActivity(intent);
                     }

@@ -45,6 +45,7 @@ public class ReqCommentAdapter extends Adapter<ReqCommentAdapter.ViewHolder> {
         this.feed_id = feed_id;
         this.listViewItemList = commentsList;
         this.TYPE_FOOTER = commentsList.size();
+        Log.e("abc", "commentsList.size() = " + commentsList.size());
     }
 
 //    @NonNull

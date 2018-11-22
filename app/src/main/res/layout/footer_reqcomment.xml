@@ -14,7 +14,7 @@
         android:id="@+id/btn_send_comment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/grey"
+        android:background="@drawable/btn_circle_bk1"
         android:padding="10dp"
         android:layout_alignParentRight="true"
         android:text="전송" />

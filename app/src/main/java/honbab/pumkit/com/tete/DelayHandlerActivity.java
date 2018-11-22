@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -36,14 +38,25 @@ public class DelayHandlerActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                // Do something after 5s = 5000ms
-//                buttons[inew][jnew].setBackgroundColor(Color.BLACK);
-                Intent intent2 = new Intent(DelayHandlerActivity.this, MainActivity.class);
+                finish();
+                Intent intent2 = new Intent(DelayHandlerActivity.this, CommentTalkActivity.class);
                 intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent2.putExtra("position", 1);
                 startActivity(intent2);
             }
-        }, 3000);
+        }, 3500);
+
+        Button btn_go_comment = (Button) findViewById(R.id.btn_go_comment);
+        btn_go_comment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+                Intent intent2 = new Intent(DelayHandlerActivity.this, CommentTalkActivity.class);
+                intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent2.putExtra("position", 1);
+                startActivity(intent2);
+            }
+        });
     }
 
 }

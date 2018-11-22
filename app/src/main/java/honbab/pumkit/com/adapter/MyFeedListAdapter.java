@@ -9,12 +9,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import honbab.pumkit.com.data.FeedReqData;
 import honbab.pumkit.com.data.UserData;
+import honbab.pumkit.com.task.FeedCancleTask;
 import honbab.pumkit.com.tete.R;
 import okhttp3.OkHttpClient;
 
@@ -45,13 +47,11 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         final FeedReqData data = listViewItemList.get(position);
-//        final UserData data = listViewItemList.get(position);
-        Log.e("abc", "data.getRest_name() = " + data.getRest_name());
 
         holder.txt_restName.setText(data.getRest_name());
 
 
-        String feed_id = listViewItemList.get(position).getFeed_id();
+        final String feed_id = listViewItemList.get(position).getFeed_id();
         Log.e("abc", "feed_id = " + feed_id);
         ArrayList<UserData> usersList = listViewItemList.get(position).getUsersList();
 
@@ -63,6 +63,13 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
             ReqFeedeeAdapter mAdapter = new ReqFeedeeAdapter(mContext, httpClient, feed_id, usersList);
             holder.recyclerView_feedee.setAdapter(mAdapter);
         }
+
+        holder.btn_cancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new FeedCancleTask(mContext, httpClient, feed_id).execute();
+            }
+        });
     }
 
     @Override
@@ -73,6 +80,7 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView txt_no_req;
         TextView txt_restName;
+        Button btn_cancle;
         RecyclerView recyclerView_feedee;
 //        recyclerView_comment;
 
@@ -82,6 +90,7 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
             txt_no_req = itemView.findViewById(R.id.txt_no_req);
             txt_no_req.setVisibility(View.VISIBLE);
             txt_restName = itemView.findViewById(R.id.txt_restName);
+            btn_cancle = itemView.findViewById(R.id.btn_cancle);
 
             Context context = itemView.getContext();
 
