@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -13,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -28,6 +31,8 @@ import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
+import static com.sothree.slidinguppanel.SlidingUpPanelLayout.*;
+
 public class OneRestaurantActivity extends AppCompatActivity {
     private OkHttpClient httpClient;
 
@@ -35,6 +40,9 @@ public class OneRestaurantActivity extends AppCompatActivity {
     public TextView[] dots;
     public LinearLayout dotsLayout;
 
+    public SlidingUpPanelLayout layout_slidingPanel;
+
+    public ImageView btn_reserv;
     public Button btn_poke;
     public TextView txt_comment, txt_rest_phone, txt_rest_address, txt_rating;
 
@@ -58,6 +66,18 @@ public class OneRestaurantActivity extends AppCompatActivity {
         TextView title_topbar;
         title_topbar = (TextView) findViewById(R.id.title_topbar);
         title_topbar.setText(feed_rest_name);
+
+        layout_slidingPanel = (SlidingUpPanelLayout) findViewById(R.id.layout_slidingPanel);
+        layout_slidingPanel.setFadeOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.e("abc", "setFadeOnClickListener" + view.getContext());
+                layout_slidingPanel.setPanelState(PanelState.COLLAPSED);
+            }
+        });
+        ImageView btn_reserv;
+        btn_reserv = (ImageView) findViewById(R.id.btn_reserv);
+        btn_reserv.setOnClickListener(mOnClickListener);
 
         btn_poke = (Button) findViewById(R.id.btn_poke);
 
@@ -139,9 +159,66 @@ public class OneRestaurantActivity extends AppCompatActivity {
                     }
 
                     break;
+                case R.id.btn_reserv:
+                    layout_slidingPanel.setPanelState(PanelState.ANCHORED);
+
+                    break;
             }
         }
     };
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.demo, menu);
+        MenuItem item = menu.findItem(R.id.action_toggle);
+        if (layout_slidingPanel != null) {
+            if (layout_slidingPanel.getPanelState() == PanelState.HIDDEN) {
+                item.setTitle(R.string.action_show);
+            } else {
+                item.setTitle(R.string.action_hide);
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.action_toggle: {
+                if (layout_slidingPanel != null) {
+                    if (layout_slidingPanel.getPanelState() != PanelState.HIDDEN) {
+                        layout_slidingPanel.setPanelState(PanelState.HIDDEN);
+                        item.setTitle(R.string.action_show);
+                    } else {
+                        layout_slidingPanel.setPanelState(PanelState.COLLAPSED);
+                        item.setTitle(R.string.action_hide);
+                    }
+                }
+                return true;
+            }
+            case R.id.action_anchor: {
+                if (layout_slidingPanel != null) {
+                    if (layout_slidingPanel.getAnchorPoint() == 1.0f) {
+                        layout_slidingPanel.setAnchorPoint(0.7f);
+                        layout_slidingPanel.setPanelState(PanelState.ANCHORED);
+                        item.setTitle(R.string.action_anchor_disable);
+                    } else {
+                        layout_slidingPanel.setAnchorPoint(1.0f);
+                        layout_slidingPanel.setPanelState(PanelState.COLLAPSED);
+                        item.setTitle(R.string.action_anchor_enable);
+                    }
+                }
+                return true;
+            }
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     public class CheckMyPokeTask extends AsyncTask<Void, Void, Void> {
         String result;
