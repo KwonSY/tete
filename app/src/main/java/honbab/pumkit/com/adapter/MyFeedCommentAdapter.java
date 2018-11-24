@@ -13,7 +13,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import honbab.pumkit.com.data.CommentData;
 import honbab.pumkit.com.data.FeedReqData;
@@ -27,6 +30,8 @@ public class MyFeedCommentAdapter extends RecyclerView.Adapter<MyFeedCommentAdap
     Context mContext;
     OkHttpClient httpClient;
     public ArrayList<FeedReqData> listViewItemList = new ArrayList<>();
+
+    public ReqCommentAdapter mAdapter;
 
     public MyFeedCommentAdapter() {
 
@@ -56,6 +61,13 @@ public class MyFeedCommentAdapter extends RecyclerView.Adapter<MyFeedCommentAdap
 
 
         holder.txt_restName.setText(data.getRest_name());
+        try {
+            Date tmp_time = new SimpleDateFormat("yyyyy-MM-dd HH:mm:ss").parse(data.getFeed_time());
+            String feed_time = new SimpleDateFormat("MM/dd a hh:mm").format(tmp_time);
+            holder.txt_feedTime.setText(feed_time);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         if (commentsList.size() > 0) {
             holder.txt_no_comment.setVisibility(View.GONE);
@@ -63,13 +75,12 @@ public class MyFeedCommentAdapter extends RecyclerView.Adapter<MyFeedCommentAdap
             holder.txt_no_comment.setVisibility(View.VISIBLE);
         }
 
-        ReqCommentAdapter mAdapter = new ReqCommentAdapter(mContext, httpClient, feed_id, commentsList);
+        mAdapter = new ReqCommentAdapter(mContext, httpClient, feed_id, commentsList);
         holder.recyclerView_comment.setAdapter(mAdapter);
 
         holder.btn_feed_cancle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                new FeedCancleTask(mContext, httpClient, feed_id).execute();
                 alertShow(feed_id);
             }
         });
@@ -82,7 +93,7 @@ public class MyFeedCommentAdapter extends RecyclerView.Adapter<MyFeedCommentAdap
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView txt_no_comment;
-        TextView txt_restName;
+        TextView txt_restName, txt_feedTime;
         Button btn_feed_cancle;
         RecyclerView recyclerView_comment;
 
@@ -92,6 +103,7 @@ public class MyFeedCommentAdapter extends RecyclerView.Adapter<MyFeedCommentAdap
             txt_no_comment = itemView.findViewById(R.id.txt_no_comment);
             txt_no_comment.setVisibility(View.VISIBLE);
             txt_restName = itemView.findViewById(R.id.txt_restName);
+            txt_feedTime = itemView.findViewById(R.id.txt_feedTime);
 
             btn_feed_cancle = itemView.findViewById(R.id.btn_feed_cancle);
 

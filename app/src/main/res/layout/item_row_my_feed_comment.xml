@@ -7,23 +7,39 @@
     android:orientation="horizontal"
     android:paddingBottom="15dp">
 
-    <TextView
-        android:id="@+id/txt_restName"
+    <RelativeLayout
+        android:id="@+id/layout_rest"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#efefef"
-        android:padding="10dp"
-        android:text="음식점"
-        android:textSize="14sp"
-        android:textStyle="bold" />
+        android:background="#efefef">
+
+        <TextView
+            android:id="@+id/txt_restName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="음식점"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txt_feedTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/txt_restName"
+            android:padding="10dp"
+            android:text="12/26 오후 7시"
+            android:textSize="12sp" />
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/txt_no_comment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/txt_restName"
+        android:layout_below="@id/layout_rest"
         android:layout_centerHorizontal="true"
         android:layout_margin="14dp"
+        android:visibility="gone"
         android:text="아직 코멘트가 없어요. 같이 식사할 사람과 코멘트를 나누어 보아요." />
 
     <android.support.v7.widget.RecyclerView

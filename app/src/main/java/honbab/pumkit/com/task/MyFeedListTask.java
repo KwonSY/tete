@@ -24,19 +24,17 @@ public class MyFeedListTask extends AsyncTask<Void, Void, ArrayList<FeedReqData>
     private Context mContext;
     private OkHttpClient httpClient;
 
-//    String feed_id;
     String result;
     String rest_name;
 
     public MyFeedListTask(Context mContext, OkHttpClient httpClient) {
         this.mContext = mContext;
         this.httpClient = httpClient;
-//        this.feed_id = feed_id;
     }
 
     @Override
     protected void onPreExecute() {
-//            feedReqList.clear();
+
     }
 
     @Override
@@ -69,6 +67,7 @@ public class MyFeedListTask extends AsyncTask<Void, Void, ArrayList<FeedReqData>
                         JSONObject feedObj = feedArr.getJSONObject(i);
 
                         String feed_id = feedObj.getString("sid");
+                        String feed_time = feedObj.getString("time");
 
                         JSONObject restObj = feedObj.getJSONObject("rest");
                         String rest_id = restObj.getString("sid");
@@ -98,7 +97,7 @@ public class MyFeedListTask extends AsyncTask<Void, Void, ArrayList<FeedReqData>
 
                         String status = feedObj.getString("status");
 
-                        FeedReqData data = new FeedReqData(feed_id, status, rest_id, rest_name, rest_img, reqUsersList, commentsList);
+                        FeedReqData data = new FeedReqData(feed_id, status, feed_time, rest_id, rest_name, rest_img, reqUsersList, commentsList);
                         feedReqList.add(data);
                     }
                 }

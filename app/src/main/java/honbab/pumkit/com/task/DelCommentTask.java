@@ -18,8 +18,6 @@ public class DelCommentTask extends AsyncTask<String, Void, String> {
     private Context mContext;
     private int position;
 
-    String feed_id;
-
     public DelCommentTask(Context mContext, OkHttpClient httpClient, int position) {
         this.mContext = mContext;
         this.httpClient = httpClient;
@@ -28,12 +26,11 @@ public class DelCommentTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPreExecute() {
-//        Log.e("abc", "xxxxviewHolderxxxx1  viewHolder = " + viewHolder);
+
     }
 
     @Override
     protected String doInBackground(String... objects) {
-        Log.e("abc", "objects[0] = " + objects[0]);
         String result = null;
 
         FormBody body = new FormBody.Builder()
@@ -70,9 +67,14 @@ public class DelCommentTask extends AsyncTask<String, Void, String> {
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
             if (result.equals("0")) {
+                //vvvvvvvvvvvvvv 댓글삭제
 //                ((CommentTalkActivity) mContext).recyclerView.removeItemDecorationAt(position);
-                ((CommentTalkActivity) mContext).mAdapter.notifyItemRemoved(position);
-                ((CommentTalkActivity) mContext).mAdapter.notifyDataSetChanged();
+//                ((CommentTalkActivity) mContext).mAdapter.ViewHolder
+                ((CommentTalkActivity) mContext).mAdapter.mAdapter.notifyItemRemoved(position);
+                ((CommentTalkActivity) mContext).mAdapter.mAdapter.notifyDataSetChanged();
+
+//                ((CommentTalkActivity) mContext).mAdapter.notifyItemRemoved(position);
+//                ((CommentTalkActivity) mContext).mAdapter.notifyDataSetChanged();
 
 //                Intent intent = new Intent(mContext, MainActivity.class);
 //                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

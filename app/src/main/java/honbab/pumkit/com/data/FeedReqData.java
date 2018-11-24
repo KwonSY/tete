@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class FeedReqData implements Serializable {
 
-    private String feed_id, status;
+    private String feed_id, status, feed_time;
     private String host_id, host_name, host_img;
     private String rest_id, rest_name, rest_img;
     private ArrayList<UserData> usersList;
@@ -15,12 +15,13 @@ public class FeedReqData implements Serializable {
 
     }
 
-    public FeedReqData(String feed_id, String status,
+    public FeedReqData(String feed_id, String status, String feed_time,
                        String host_id, String host_name, String host_img,
                        String rest_id, String rest_name, String rest_img,
                        ArrayList<UserData> usersList) {
         this.feed_id = feed_id;
         this.status = status;
+        this.feed_time = feed_time;
 
         this.host_id = host_id;
         this.host_name = host_name;
@@ -33,11 +34,12 @@ public class FeedReqData implements Serializable {
         this.usersList = usersList;
     }
 
-    public FeedReqData(String feed_id, String status,
+    public FeedReqData(String feed_id, String status, String feed_time,
                        String rest_id, String rest_name, String rest_img,
                        ArrayList<UserData> usersList, ArrayList<CommentData> commentsList) {
         this.feed_id = feed_id;
         this.status = status;
+        this.feed_time = feed_time;
         this.rest_id = rest_id;
         this.rest_name = rest_name;
         this.rest_img = rest_img;
@@ -59,6 +61,14 @@ public class FeedReqData implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getFeed_time() {
+        return feed_time;
+    }
+
+    public void setFeed_time(String feed_time) {
+        this.feed_time = feed_time;
     }
 
     public String getHost_id() {

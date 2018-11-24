@@ -39,9 +39,6 @@ public class PokeListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pokelist);
 
-//        Intent intent = getIntent();
-//        feedReqList = (ArrayList<FeedReqData>) intent.getSerializableExtra("feedList");
-
         httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
         session = new SessionManager(this.getApplicationContext());
 
@@ -124,6 +121,7 @@ public class PokeListActivity extends AppCompatActivity {
 
                             String feed_id = feedObj.getString("sid");
                             String status = feedObj.getString("status");
+                            String feed_time = feedObj.getString("time");
 
                             JSONObject hostObj = feedObj.getJSONObject("host");
                             String host_id = hostObj.getString("sid");
@@ -147,7 +145,7 @@ public class PokeListActivity extends AppCompatActivity {
                                 reqUsersList.add(userData);
                             }
 
-                            FeedReqData data = new FeedReqData(feed_id, status, host_id, host_name, host_img,
+                            FeedReqData data = new FeedReqData(feed_id, status, feed_time, host_id, host_name, host_img,
                                     rest_id, rest_name, rest_img, reqUsersList);
                             feedReqList.add(data);
                         }

@@ -74,6 +74,7 @@ public class ReqCommentAdapter extends Adapter<ReqCommentAdapter.ViewHolder> {
                 public void onClick(View view) {
                     String str_comment = holder.edit_comment.getText().toString();
 
+                    if (!str_comment.trim().equals(""))
                     new SendCommentTask(mContext, httpClient, position).execute(feed_id, str_comment);
                 }
             });

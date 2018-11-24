@@ -118,6 +118,7 @@
         </RelativeLayout>
         -->
 
+        <!--
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -138,7 +139,7 @@
                 android:inputType="text"
                 android:maxLines="1" />
         </RelativeLayout>
-
+-->
         <Button
             android:id="@+id/btn_reserv"
             android:layout_width="match_parent"

@@ -98,14 +98,37 @@ public class ReservActivity extends AppCompatActivity {
 
             @Override
             public void onPanelStateChanged(View panel, PanelState previousState, PanelState newState) {
-                Log.e("abc", "onPanelStateChanged");
+                Log.e("abc", "onPanelStateChanged previousState = " + previousState + ", newState = " + newState);
+
+                if (previousState.toString().equals("DRAGGING") && newState.toString().equals("COLLAPSED")) {
+                    Log.e("abc", "다시 원복");
+//                    ImageView tmp = recyclerView.findContainingItemView(findViewById(R.id.btn_one_reserv));
+//                    ImageView tmp = recyclerView.findContainingItemView().findViewById(R.id.btn_one_reserv);
+//                    mAdapter.getItemCount()
+                    Log.e("abc", "getItemCount = " + mAdapter.getItemCount());
+                    for (int i=0; i<mAdapter.getItemCount(); i++) {
+                        Log.e("abc", "111 getChildAt(i) = " + recyclerView.getChildAt(i));
+//                        ImageView tmp = recyclerView.getChildViewHolder(recyclerView.getChildAt(i)).findViewById(R.id.btn_one_reserv);
+//                        recyclerView.
+//                        Log.e("abc", "222 = " + recyclerView.findContainingItemView(recyclerView.getChildAt(i)));
+                        if (recyclerView.getChildAt(i) != null) {
+                            ImageView tmp = (ImageView) recyclerView.findContainingItemView(recyclerView.getChildAt(i)).findViewById(R.id.btn_one_reserv);
+                            tmp.setBackgroundResource(R.drawable.icon_check_n);
+                        }
+                    }
+                }
             }
         });
         layout_slidingPanel.setFadeOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.e("abc", "setFadeOnClickListener");
+                Log.e("abc", "setFadeOnClickListener" + view.getContext());
                 layout_slidingPanel.setPanelState(PanelState.COLLAPSED);
+
+//                ((GridViewNearByAdapter) this).ViewHolder.
+//                GridViewNearByAdapter.ViewHolder xxx = new ViewHolder;
+//                xxx.
+//                GridViewNearByAdapter.ViewHolder.btn_one_reserv.setBackgroundResource(R.drawable.icon_check_n);
             }
         });
 
@@ -353,8 +376,6 @@ public class ReservActivity extends AppCompatActivity {
             day = i2;
 
             txt_date.setText(month + "/" + i2);
-
-//            if ()
         }
     };
 
@@ -466,9 +487,6 @@ public class ReservActivity extends AppCompatActivity {
             date_reserv = str_year + "-" + str_mon + "-" + str_da + " " + str_hour + ":" + str_min;
 
             comment = edit_comment.getText().toString();
-
-            Log.e("abc", "date_reserv = " + date_reserv);
-            Log.e("abc", "comment = " + comment);
         }
 
         @Override

@@ -12,7 +12,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import honbab.pumkit.com.data.FeedReqData;
 import honbab.pumkit.com.data.UserData;
@@ -50,6 +53,14 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
 
         holder.txt_restName.setText(data.getRest_name());
 
+        try {
+            Date tmp_time = new SimpleDateFormat("yyyyy-MM-dd HH:mm:ss").parse(data.getFeed_time());
+            String feed_time = new SimpleDateFormat("MM/dd a hh:mm").format(tmp_time);
+            holder.txt_feedTime.setText(feed_time);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
 
         final String feed_id = listViewItemList.get(position).getFeed_id();
         Log.e("abc", "feed_id = " + feed_id);
@@ -79,7 +90,7 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView txt_no_req;
-        TextView txt_restName;
+        TextView txt_restName, txt_feedTime;
         Button btn_cancle;
         RecyclerView recyclerView_feedee;
 //        recyclerView_comment;
@@ -89,7 +100,9 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
 
             txt_no_req = itemView.findViewById(R.id.txt_no_req);
             txt_no_req.setVisibility(View.VISIBLE);
+
             txt_restName = itemView.findViewById(R.id.txt_restName);
+            txt_feedTime = itemView.findViewById(R.id.txt_feedTime);
             btn_cancle = itemView.findViewById(R.id.btn_cancle);
 
             Context context = itemView.getContext();

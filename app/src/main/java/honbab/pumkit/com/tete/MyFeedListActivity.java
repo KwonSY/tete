@@ -126,6 +126,8 @@ public class MyFeedListActivity extends AppCompatActivity {
                             JSONObject feedObj = feedArr.getJSONObject(i);
 
                             String feed_id = feedObj.getString("sid");
+                            String status = feedObj.getString("status");
+                            String feed_time = feedObj.getString("time");
 
                             JSONObject restObj = feedObj.getJSONObject("rest");
                             String rest_id = restObj.getString("sid");
@@ -153,9 +155,7 @@ public class MyFeedListActivity extends AppCompatActivity {
                                 }
                             }
 
-                            String status = feedObj.getString("status");
-
-                            FeedReqData data = new FeedReqData(feed_id, status, rest_id, rest_name, rest_img, reqUsersList, commentsList);
+                            FeedReqData data = new FeedReqData(feed_id, status, feed_time, rest_id, rest_name, rest_img, reqUsersList, commentsList);
                             feedReqList.add(data);
                         }
                     }

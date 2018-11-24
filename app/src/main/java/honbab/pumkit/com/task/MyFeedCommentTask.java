@@ -69,6 +69,7 @@ public class MyFeedCommentTask extends AsyncTask<Void, Void, ArrayList<FeedReqDa
 
                         String feed_id = feedObj.getString("sid");
                         String status = feedObj.getString("status");
+                        String feed_time = feedObj.getString("time");
 
                         JSONObject hostObj = feedObj.getJSONObject("host");
                         String host_id = hostObj.getString("sid");
@@ -102,7 +103,7 @@ public class MyFeedCommentTask extends AsyncTask<Void, Void, ArrayList<FeedReqDa
                             }
                         }
 
-                        FeedReqData data = new FeedReqData(feed_id, status, rest_id, rest_name, rest_img, reqUsersList, commentsList);
+                        FeedReqData data = new FeedReqData(feed_id, status, feed_time, rest_id, rest_name, rest_img, reqUsersList, commentsList);
                         feedReqList.add(data);
                     }
                 }
