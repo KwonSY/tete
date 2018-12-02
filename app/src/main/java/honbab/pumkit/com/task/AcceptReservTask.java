@@ -121,6 +121,7 @@ public class AcceptReservTask extends AsyncTask<String, Void, String> {
                 optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation((Activity)mContext, pair1, pair2);
 //                optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation((MyFeedListActivity) mContext, pair1, pair2);
 
+                ((Activity) mContext).finish();
                 Intent intent = new Intent(mContext, DelayHandlerActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.putExtra("user_name", data.getUser_name());

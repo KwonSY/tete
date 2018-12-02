@@ -22,15 +22,16 @@ import honbab.pumkit.com.tete.FeedMapActivity;
 import honbab.pumkit.com.tete.MapsActivity;
 import honbab.pumkit.com.tete.OneRestaurantActivity;
 import honbab.pumkit.com.tete.R;
+import honbab.pumkit.com.tete.Statics;
 
-public class RecyclerViewRestAdapter extends RecyclerView.Adapter<RecyclerViewRestAdapter.ViewHolder> {
+public class FeedMapHorzRestAdapter extends RecyclerView.Adapter<FeedMapHorzRestAdapter.ViewHolder> {
 
 //    private ArrayList<String> mNames = new ArrayList<>();
 //    private ArrayList<String> mImages = new ArrayList<>();
     private ArrayList<MapData> mMapRestList = new ArrayList<>();
     private Context mContext;
 
-    public RecyclerViewRestAdapter(Context context, ArrayList<MapData> mMapRestList) {
+    public FeedMapHorzRestAdapter(Context context, ArrayList<MapData> mMapRestList) {
         this.mContext = context;
         this.mMapRestList = mMapRestList;
     }
@@ -68,7 +69,12 @@ public class RecyclerViewRestAdapter extends RecyclerView.Adapter<RecyclerViewRe
                 Intent intent = new Intent(mContext, OneRestaurantActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.putExtra("feed_id", data.getSid());//vvvvvvvvvvvvvv check 필요
+                intent.putExtra("feed_rest_name", data.getRest_name());
                 intent.putExtra("place_id", data.getPlace_id());
+                intent.putExtra("latLng", data.getLatLng());
+                intent.putExtra("feeder_id", data.getUser_id());
+                intent.putExtra("feeder_name", data.getUser_name());
+                intent.putExtra("feeder_img", Statics.main_url + data.getUser_img());
                 intent.putExtra("status", data.getStatus());
                 mContext.startActivity(intent);
             }

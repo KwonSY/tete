@@ -34,6 +34,11 @@ public class DelayHandlerActivity extends AppCompatActivity {
         TextView txt_userName = (TextView) findViewById(R.id.txt_userName);
         txt_userName.setText(user_name);
 
+        TextView txt_text= (TextView) findViewById(R.id.txt_text);
+//        Resources res = mContext.getResources();
+        String text = String.format(getResources().getString(R.string.complete_reserv_with), user_name);
+        txt_text.setText(text);
+
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override

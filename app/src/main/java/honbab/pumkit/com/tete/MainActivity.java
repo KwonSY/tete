@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
         Statics.my_id = user.get("my_id");
         Statics.my_gender = user.get("mygender");
 
+        Log.e("abc", "Statics.i_splash = " + Statics.i_splash);
         if (Statics.i_splash == 0) {
             Statics.i_splash++;
 
@@ -45,64 +46,64 @@ public class MainActivity extends AppCompatActivity {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();
-        }
+        } else {
 
-        try {
-            PackageInfo info = getPackageManager().getPackageInfo("honbab.pumkit.com.tete", PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.e("abc", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+            try {
+                PackageInfo info = getPackageManager().getPackageInfo("honbab.pumkit.com.tete", PackageManager.GET_SIGNATURES);
+                for (Signature signature : info.signatures) {
+                    MessageDigest md = MessageDigest.getInstance("SHA");
+                    md.update(signature.toByteArray());
+                    Log.e("abc", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+                }
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
             }
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
 
 
+            // Adding Toolbar to the activity
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
 
-
-        // Adding Toolbar to the activity
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.reservation)));
+            TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+            tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.reservation)));
 //        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.waitlist)));
-        tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.my)));
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+            tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.my)));
+            tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        viewPager = (ViewPager) findViewById(R.id.viewPager);
-        pagerAdapter = new TabPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
-        viewPager.setAdapter(pagerAdapter);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
+            viewPager = (ViewPager) findViewById(R.id.viewPager);
+            pagerAdapter = new TabPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+            viewPager.setAdapter(pagerAdapter);
+            viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+            tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+                    viewPager.setCurrentItem(tab.getPosition());
 
 //                if (tab.getPosition() == 2) {
 //                    FeedFragment feedFragment = new FeedFragment();
 ////                    feedFragment.FeedListTask;
 ////                    new FeedFragment.FeedListTask.execute();
 //                }
-            }
+                }
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {
 
-            }
+                }
 
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
 
-            }
-        });
+                }
+            });
 
-        Intent intent = getIntent();
-        int position = intent.getIntExtra("position", 0);
-        viewPager.setCurrentItem(position);
+            Intent intent = getIntent();
+            int position = intent.getIntExtra("position", 0);
+            viewPager.setCurrentItem(position);
+        }
+
     }
 
 //    @Override

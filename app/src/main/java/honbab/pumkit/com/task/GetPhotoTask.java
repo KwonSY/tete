@@ -74,10 +74,14 @@ public class GetPhotoTask extends AsyncTask<Object, String, String> {
         layouts2.clear();
         img_arr.clear();
 
+
         ArrayList<MapData> photosList = (ArrayList<MapData>) placeDetailList.get("photos");
 
         for (int i = 0; i < photosList.size(); i++) {
             if (i<4) {
+                if(i==0)
+                    ((OneRestaurantActivity) mContext).rest_img = GoogleMapUtil.getPlacePhoto(mContext, photosList.get(i).getRest_img());
+
                 img_arr.add(GoogleMapUtil.getPlacePhoto(mContext, photosList.get(i).getRest_img()));
                 layouts2.add(R.layout.slide_food_image);
             }
@@ -91,13 +95,15 @@ public class GetPhotoTask extends AsyncTask<Object, String, String> {
 
         addBottomDots(0);
 
-        Log.e("abc", ")))))))))" + placeDetailList);
+        Log.e("abc", "placeDetailList === " + placeDetailList);
         Log.e("abc", "formatted_phone_number)" + placeDetailList.get("formatted_phone_number").toString());
         Log.e("abc", "fullAddress)" + placeDetailList.get("fullAddress").toString());
-        Log.e("abc", "rating)" + placeDetailList.get("rating").toString());
+        Log.e("abc", "adr_address)" + placeDetailList.get("adr_address").toString());
+//        Log.e("abc", "rating)" + placeDetailList.get("rating").toString());
         ((OneRestaurantActivity) mContext).txt_rest_phone.setText("전화하기 " + placeDetailList.get("formatted_phone_number").toString());
-        ((OneRestaurantActivity) mContext).txt_rest_address.setText("주소 " + placeDetailList.get("fullAddress").toString());
-        ((OneRestaurantActivity) mContext).txt_rating.setText("평점" + placeDetailList.get("rating").toString());
+//        ((OneRestaurantActivity) mContext).txt_rest_address.setText("주소 " + placeDetailList.get("fullAddress").toString());
+        ((OneRestaurantActivity) mContext).txt_rest_address.setText(Html.fromHtml(placeDetailList.get("adr_address").toString()));
+        ((OneRestaurantActivity) mContext).txt_rating.setText("평점 " + placeDetailList.get("rating").toString());
     }
 
     ViewPager.OnPageChangeListener viewPagerPageChangeListener = new ViewPager.OnPageChangeListener() {

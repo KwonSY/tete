@@ -78,7 +78,7 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
         holder.btn_cancle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new FeedCancleTask(mContext, httpClient, feed_id).execute();
+                new FeedCancleTask(mContext, httpClient, feed_id, listViewItemList.get(position).getRest_name()).execute();
             }
         });
     }

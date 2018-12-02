@@ -1,13 +1,18 @@
 package honbab.pumkit.com.task;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.res.Resources;
 import android.os.AsyncTask;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONObject;
 
-import honbab.pumkit.com.tete.CommentTalkActivity;
 import honbab.pumkit.com.tete.MyFeedListActivity;
+import honbab.pumkit.com.tete.R;
 import honbab.pumkit.com.tete.Statics;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -18,12 +23,14 @@ public class FeedCancleTask extends AsyncTask<Void, Void, Void> {
     private OkHttpClient httpClient;
 
     private String feed_id;
+    private String rest_name;
     private String result;
 
-    public FeedCancleTask(Context mContext, OkHttpClient httpClient, String feed_id) {
+    public FeedCancleTask(Context mContext, OkHttpClient httpClient, String feed_id, String rest_name) {
         this.mContext = mContext;
         this.httpClient = httpClient;
         this.feed_id = feed_id;
+        this.rest_name = rest_name;
     }
 
     @Override
@@ -65,16 +72,44 @@ public class FeedCancleTask extends AsyncTask<Void, Void, Void> {
     protected void onPostExecute(Void aVoid) {
 //        super.onPostExecute(result);
         Log.e("abc", "onPostE = " + result);
+        Log.e("abc", "mContext = " + mContext);
 
         if (result.equals("0")) {
-            if (mContext.equals(MyFeedListActivity.class)) {
-                new MyFeedListTask(mContext, httpClient).execute();
-//                ((MyFeedListActivity) mContext).recyclerView_myFeed.setAdapter(user_name);
-//                ((MyFeedListActivity) mContext).myFeedListAdapter.notifyDataSetChanged();
-            } else if (mContext.equals(CommentTalkActivity.class)) {
+            String activityName = mContext.getClass().getSimpleName();
+
+            if (activityName.equals("MyFeedListActivity")) {
+//                MyFeedListActivity mActivity = new MyFeedListActivity();
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setMessage(R.string.ask_cancle_godmuk);
+                builder.setPositiveButton(R.string.yes,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                Resources res = mContext.getResources();
+                                String text = String.format(res.getString(R.string.cancle_godmuk), rest_name);
+                                Toast.makeText(mContext.getApplicationContext(), text, Toast.LENGTH_LONG).show();
+
+                                Intent intent = new Intent(mContext, MyFeedListActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                mContext.startActivity(intent);
+//                                new MyFeedListTask(mContext, httpClient).execute();
+                            }
+                        });
+                builder.setNegativeButton(R.string.no,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+
+//                                Intent intent = new Intent(mContext, ReservActivity.class);
+//                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                                mContext.startActivity(intent);
+                            }
+                        });
+                builder.show();
+
+//                new MyFeedListTask(mContext, httpClient).execute();
+            } else if (activityName.equals("CommentTalkActivity")) {
                 new MyFeedCommentTask(mContext, httpClient).execute();
 //                ((CommentTalkActivity) mContext).mAdapter = new MyFeedCommentAdapter(mContext, httpClient, feedReqList);
-//
 //                ((CommentTalkActivity) mContext).recyclerView.setAdapter(user_name);
 //                ((CommentTalkActivity) mContext).mAdapter.notifyDataSetChanged();
             }

@@ -1,5 +1,7 @@
 package honbab.pumkit.com.tete;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -8,30 +10,42 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 import honbab.pumkit.com.task.GetPhotoTask;
 import honbab.pumkit.com.task.PokeFeedTask;
+import honbab.pumkit.com.task.ReservFeedTask;
 import honbab.pumkit.com.utils.ButtonUtil;
 import honbab.pumkit.com.utils.GoogleMapUtil;
 import honbab.pumkit.com.widget.CircleTransform;
+import honbab.pumkit.com.widget.CustomTimePickerDialog;
 import honbab.pumkit.com.widget.OkHttpClientSingleton;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
-import static com.sothree.slidinguppanel.SlidingUpPanelLayout.*;
+import static com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 
 public class OneRestaurantActivity extends AppCompatActivity {
     private OkHttpClient httpClient;
@@ -41,12 +55,17 @@ public class OneRestaurantActivity extends AppCompatActivity {
     public LinearLayout dotsLayout;
 
     public SlidingUpPanelLayout layout_slidingPanel;
+    public EditText edit_comment;
+    private Button btn_reserv;
 
-    public ImageView btn_reserv;
+    public ImageView btn_show_sliding;
     public Button btn_poke;
     public TextView txt_comment, txt_rest_phone, txt_rest_address, txt_rating;
+    private TextView txt_date, txt_clock;
 
-    private String feed_id, feed_rest_name, place_id, feeder_img, feeder_name, poke_yn = "n", status;
+    private String feed_id, feed_rest_name, place_id, feeder_id, feeder_img, feeder_name, poke_yn = "n", status;
+//    int hour, min;
+    public String lat, lng, rest_img;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,12 +78,20 @@ public class OneRestaurantActivity extends AppCompatActivity {
         feed_id = intent.getStringExtra("feed_id");
         feed_rest_name = intent.getStringExtra("feed_rest_name");
         place_id = intent.getStringExtra("place_id");
+        LatLng latLng = intent.getParcelableExtra("latLng");
+        if (latLng!=null) {
+            Double d_lat = latLng.latitude;
+            Double d_lng = latLng.longitude;
+            lat = d_lat.toString();
+            lng = d_lng.toString();
+            Log.e("abc", "lat,lng = (" + lat + "," + lng);
+        }
+        feeder_id = intent.getStringExtra("feeder_id");
         feeder_img = intent.getStringExtra("feeder_img");
         feeder_name = intent.getStringExtra("feeder_name");
         status = intent.getStringExtra("status");
 
-        TextView title_topbar;
-        title_topbar = (TextView) findViewById(R.id.title_topbar);
+        TextView title_topbar = (TextView) findViewById(R.id.title_topbar);
         title_topbar.setText(feed_rest_name);
 
         layout_slidingPanel = (SlidingUpPanelLayout) findViewById(R.id.layout_slidingPanel);
@@ -75,9 +102,13 @@ public class OneRestaurantActivity extends AppCompatActivity {
                 layout_slidingPanel.setPanelState(PanelState.COLLAPSED);
             }
         });
-        ImageView btn_reserv;
-        btn_reserv = (ImageView) findViewById(R.id.btn_reserv);
+        edit_comment = (EditText) findViewById(R.id.edit_comment);
+        btn_reserv = (Button) findViewById(R.id.btn_reserv);
         btn_reserv.setOnClickListener(mOnClickListener);
+
+        btn_show_sliding = (ImageView) findViewById(R.id.btn_show_sliding);
+        btn_show_sliding.setOnClickListener(mOnClickListener);
+        btn_show_sliding.setOnTouchListener(mOnTouchListener);
 
         btn_poke = (Button) findViewById(R.id.btn_poke);
 
@@ -89,6 +120,15 @@ public class OneRestaurantActivity extends AppCompatActivity {
 
             btn_poke.setVisibility(View.GONE);
         } else {
+            Log.e("abc", "Statics.my_id = " + Statics.my_id);
+            LinearLayout layout_show_sliding = (LinearLayout) findViewById(R.id.layout_show_sliding_reserv);
+            layout_show_sliding.setVisibility(View.GONE);
+
+            if (Statics.my_id == null || Statics.my_id.equals(feeder_id)) {
+
+                btn_poke.setVisibility(View.GONE);
+            }
+
             // 같이먹기 o
             ImageView img_feeder = (ImageView) findViewById(R.id.img_feeder);
             Picasso.get().load(feeder_img)
@@ -119,11 +159,65 @@ public class OneRestaurantActivity extends AppCompatActivity {
         viewPager = (ViewPager) findViewById(R.id.pager_food);
         dotsLayout = (LinearLayout) findViewById(R.id.layoutDots);
 
+        setDateTime();
+
+
         ButtonUtil.setBackButtonClickListener(this);
 
         //뷰페이저, 디테일도 세팅
         String url = GoogleMapUtil.getDetailUrl(OneRestaurantActivity.this, place_id);
+        Log.e("abc", "원레스토랑 url = " + url);
         new GetPhotoTask(viewPager, dotsLayout).execute(OneRestaurantActivity.this, url);
+    }
+
+    int year, month, day, hourOfDay, minute;
+    int hour = 0, min = 0;// Task post로 넘길 값
+    private void setDateTime() {
+        txt_date = (TextView) findViewById(R.id.txt_date);
+        txt_clock = (TextView) findViewById(R.id.txt_clock);
+
+        Date currentTime = new Date();
+        Calendar calendar = GregorianCalendar.getInstance();
+        calendar.setTime(currentTime);
+        year = calendar.get(Calendar.YEAR);
+        month = calendar.get(Calendar.MONTH) + 1;
+        day = calendar.get(Calendar.DAY_OF_MONTH);
+        hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
+        minute = calendar.get(Calendar.MINUTE);
+
+        String str_date, str_time;
+        if (hourOfDay < 12) {
+            hour = 12;
+            min = 0;
+            str_time = "오후 " + 12 + "시 " + "00분";
+        } else {
+            if (hourOfDay < 18) {
+                hour = 19;
+                min = 0;
+                str_time = "오후 " + 7 + "시 " + "00분";
+            } else {
+                if (hourOfDay > 22 && minute >= 30)
+                    day = day + 1;
+
+                hour = hourOfDay + 1;
+                str_time = "오후 " + (hour-12) + "시 ";
+
+                if (minute < 30) {
+                    min = 30;
+                    str_time += "30분";
+                } else {
+                    min = 0;
+                    str_time += "00분";
+                }
+            }
+        }
+        str_date = String.valueOf(month) + "/" + String.valueOf(day);
+        txt_date.setText(str_date);
+        txt_date.setOnClickListener(mOnClickListener);
+
+        txt_clock = (TextView) findViewById(R.id.txt_clock);
+        txt_clock.setText(str_time);
+        txt_clock.setOnClickListener(mOnClickListener);
     }
 
     @Override
@@ -159,13 +253,91 @@ public class OneRestaurantActivity extends AppCompatActivity {
                     }
 
                     break;
-                case R.id.btn_reserv:
+                case R.id.btn_show_sliding:
                     layout_slidingPanel.setPanelState(PanelState.ANCHORED);
+
+                    break;
+                case R.id.txt_date:
+                    DatePickerDialog dialog = new DatePickerDialog(OneRestaurantActivity.this, dateSetListener, year, month-1, day);
+                    dialog.show();
+
+                    break;
+                case R.id.txt_clock:
+                    CustomTimePickerDialog dialog2 = new CustomTimePickerDialog(OneRestaurantActivity.this, timeSetListener, hourOfDay, minute, false);
+                    dialog2.show();
+
+                    break;
+                case R.id.btn_reserv:
+                    String[] date = {String.valueOf(year), String.valueOf(month), String.valueOf(day), String.valueOf(hour), String.valueOf(min)};
+                    Log.e("abc", "date" + Arrays.deepToString(date));
+                    String[] rest = {feed_rest_name, place_id, lat, lng, rest_img};
+                    Log.e("abc", "rest" + Arrays.deepToString(rest));
+
+                    new ReservFeedTask(OneRestaurantActivity.this, httpClient, date, rest).execute();
 
                     break;
             }
         }
     };
+
+    private View.OnTouchListener mOnTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            switch (motionEvent.getAction() ) {
+                case MotionEvent.ACTION_DOWN:
+                    btn_show_sliding.setBackgroundResource(R.drawable.icon_check_y);
+
+                    break;
+                case MotionEvent.ACTION_UP:
+                    btn_show_sliding.setBackgroundResource(R.drawable.icon_check_y);
+
+                    break;
+            }
+            return false;
+        }
+    };
+
+    public DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+            String str_date;
+
+            Log.e("abc", i+ "년" + i1 + "월" + i2+ "일");
+
+            year = i;
+            month = i1 + 1;
+            day = i2;
+
+            txt_date.setText(month + "/" + i2);
+        }
+    };
+
+    public TimePickerDialog.OnTimeSetListener timeSetListener = new TimePickerDialog.OnTimeSetListener() {
+        @Override
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            // 설정버튼 눌렀을 때
+//            Log.e("abc", "hourOfDay = " + hourOfDay);
+            String str_time;
+
+            hour = hourOfDay;
+            min = minute;
+
+            if (hourOfDay < 12) {
+                str_time = "오전 " + hourOfDay + "시 " + minute + "분";
+            } else {
+                if (hourOfDay == 12) {
+
+                } else {
+                    hourOfDay = hourOfDay - 12;
+//                    hour = hourOfDay - 12;
+                }
+
+                str_time = "오후 " + hourOfDay + "시 " + minute + "분";
+            }
+            txt_clock.setText(str_time);
+        }
+    };
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

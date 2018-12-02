@@ -79,6 +79,8 @@ public class AccountTask extends AsyncTask<Void, Void, Void> {
         super.onPostExecute(result);
 
         if (seq == 0) {
+            ((ProfileActivity) mContext).title_topbar.setText(user_name + mContext.getResources().getString(R.string.whose_profile));
+
             Picasso.get().load(user_img)
 //                    .resize(200,200)
 //                    .centerCrop()

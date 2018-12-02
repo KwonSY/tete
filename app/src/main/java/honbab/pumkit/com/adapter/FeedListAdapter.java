@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 import honbab.pumkit.com.data.ReservData;
 import honbab.pumkit.com.tete.OneRestaurantActivity;
+import honbab.pumkit.com.tete.ProfileActivity;
 import honbab.pumkit.com.tete.R;
 import honbab.pumkit.com.tete.Statics;
 import honbab.pumkit.com.widget.CircleTransform;
@@ -57,6 +58,15 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
                 .error(R.drawable.icon_noprofile_circle)
                 .transform(new CircleTransform())
                 .into(holder.img_user);
+        holder.img_user.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext, ProfileActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("user_id", data.getUser_id());
+                mContext.startActivity(intent);
+            }
+        });
 
         Picasso.get().load(data.getRest_img())
                 .resize(400,400)
@@ -86,9 +96,10 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
                 intent.putExtra("feed_id", data.getSid());
                 intent.putExtra("feed_rest_name", data.getRest_name());
                 intent.putExtra("place_id", data.getPlace_id());
+                intent.putExtra("latLng", data.getLatLng());
+                intent.putExtra("feeder_id", data.getUser_id());
                 intent.putExtra("feeder_img", Statics.main_url + data.getUser_img());
                 intent.putExtra("feeder_name", data.getUser_name());
-//                intent.putExtra("feedee_status", data.getFeedee_status());
                 intent.putExtra("status", data.getStatus());
                 mContext.startActivity(intent);
             }

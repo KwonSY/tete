@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
-import honbab.pumkit.com.adapter.RecyclerViewRestAdapter;
+import honbab.pumkit.com.adapter.FeedMapHorzRestAdapter;
 import honbab.pumkit.com.data.MapData;
 import honbab.pumkit.com.tete.MapsActivity;
 import honbab.pumkit.com.utils.GoogleMapUtil;
@@ -108,9 +108,9 @@ public class GetNearPlacesTaskForMap extends AsyncTask<Object, String, String> {
             MapsActivity.mMarkersList.add(marker);
         }
 
-        MapsActivity.recyclerViewRestAdapter = new RecyclerViewRestAdapter(mContext, MapsActivity.mMapList);
-        MapsActivity.recyclerView.setAdapter(MapsActivity.recyclerViewRestAdapter);
-        MapsActivity.recyclerViewRestAdapter.notifyDataSetChanged();
+        MapsActivity.feedMapHorzRestAdapter = new FeedMapHorzRestAdapter(mContext, MapsActivity.mMapList);
+        MapsActivity.recyclerView.setAdapter(MapsActivity.feedMapHorzRestAdapter);
+        MapsActivity.feedMapHorzRestAdapter.notifyDataSetChanged();
     }
 
 }

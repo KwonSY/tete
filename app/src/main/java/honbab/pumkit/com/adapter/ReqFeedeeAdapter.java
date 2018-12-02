@@ -2,6 +2,7 @@ package honbab.pumkit.com.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 
 import honbab.pumkit.com.data.UserData;
 import honbab.pumkit.com.task.AcceptReservTask;
+import honbab.pumkit.com.tete.ProfileActivity;
 import honbab.pumkit.com.tete.R;
 import honbab.pumkit.com.widget.CircleTransform;
 import okhttp3.OkHttpClient;
@@ -66,6 +68,16 @@ public class ReqFeedeeAdapter extends Adapter<ReqFeedeeAdapter.ViewHolder> {
                 .transform(new CircleTransform())
                 .into(holder.img_feedee);
         holder.txt_feedee_name.setText(data.getUser_name());
+
+        holder.img_feedee.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext, ProfileActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("user_id", data.getUser_id());
+                mContext.startActivity(intent);
+            }
+        });
 
         holder.btn_accept.setOnTouchListener(new OnTouchListener() {
             @Override

@@ -32,7 +32,7 @@
                 android:src="@drawable/img_gradient_bk_trans" />
 
             <LinearLayout
-                android:id="@+id/layout_reserv_feed"
+                android:id="@+id/layout_show_sliding_reserv"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:layout_alignParentRight="true"
@@ -48,7 +48,7 @@
                     android:textColor="@color/white" />
 
                 <ImageView
-                    android:id="@+id/btn_reserv"
+                    android:id="@+id/btn_show_sliding"
                     android:layout_width="18dp"
                     android:layout_height="18dp"
                     android:layout_marginLeft="10dp"

@@ -1,12 +1,14 @@
 <resources>
-    <string name="app_name">tete</string>
+    <string name="app_name">같이먹어요</string>
 
     <string name="accept">수락</string>
     <string name="acceptComplete">수락완료</string>
     <string name="already_reserved_godmuk">오늘 이미 예약 중인 식사약속이 있습니다. 예약한 같먹을 보시겠습니까?</string>
     <string name="applicant">신청자</string>
     <string name="ask_cancle_godmuk">같먹을 취소하시겠습니까?</string>
+    <string name="cancle_godmuk">%s 같먹을 취소하였습니다.</string>
     <string name="cancle">취소하기</string>
+    <string name="complete_reserv_with">%s님과 예약이 완료되었습니다.</string>
     <string name="explain_reserve_godmuk">같이 먹기 예약이 없습니다. 같먹을 예약해주시겠습니까?</string>
     <string name="go_to_reserve_godmuk">같먹 예약하러 가기</string>
     <string name="make_new_godmuk">새로운 같먹을 만들어보세요.</string>
@@ -24,6 +26,7 @@
     <string name="search_near_rest">주변 음식점 검색</string>
     <string name="upload_profile_complete">프로필 사진이 업로드 되었습니다.</string>
     <string name="waitlist">대기리스트</string>
+    <string name="whose_profile">님의 프로필</string>
     <string name="yes">예</string>
 
     <!--StringFilter-->

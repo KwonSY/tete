@@ -9,6 +9,7 @@ public class GoogleMapUtil {
     public static String getDetailUrl(Context mContext, String placeId) {
         StringBuilder googlePlaceUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/details/json?");
         googlePlaceUrl.append("placeid=" + placeId);
+        googlePlaceUrl.append("&language=" + "ko");
         googlePlaceUrl.append("&fields=" + "name,rating,formatted_phone_number,address_component,adr_address,photo");
         googlePlaceUrl.append("&key=" + mContext.getString(R.string.google_maps_api_key));
 

@@ -46,7 +46,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import honbab.pumkit.com.adapter.RecyclerViewRestAdapter;
+import honbab.pumkit.com.adapter.FeedMapHorzRestAdapter;
 import honbab.pumkit.com.data.MapData;
 import honbab.pumkit.com.task.GetNearPlacesTaskForMap;
 import honbab.pumkit.com.utils.ButtonUtil;
@@ -84,7 +84,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public SlidingUpPanelLayout layout_slidingPanel;
     public TextView txt_restName, txt_clock;
     public static RecyclerView recyclerView;
-    public static RecyclerViewRestAdapter recyclerViewRestAdapter;
+    public static FeedMapHorzRestAdapter feedMapHorzRestAdapter;
 
     public static ArrayList<String> mNames = new ArrayList<>();
     public static ArrayList<MapData> mMapList = new ArrayList<>();
@@ -350,9 +350,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mNames.add(mMapList.get(i).getRest_name());
         }
 
-        recyclerViewRestAdapter = new RecyclerViewRestAdapter(MapsActivity.this, mMapList);
-        recyclerView.setAdapter(recyclerViewRestAdapter);
-        recyclerViewRestAdapter.notifyDataSetChanged();
+        feedMapHorzRestAdapter = new FeedMapHorzRestAdapter(MapsActivity.this, mMapList);
+        recyclerView.setAdapter(feedMapHorzRestAdapter);
+        feedMapHorzRestAdapter.notifyDataSetChanged();
 
         Toast.makeText(MapsActivity.this, "주변 음식점 검색", Toast.LENGTH_SHORT).show();
     }

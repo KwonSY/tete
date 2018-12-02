@@ -14,32 +14,42 @@ public class PhotoParser {
 
     private HashMap<String, Object> getPlace(JSONObject googlePlaceJson) {
         HashMap<String, Object> googlePlacesMap = new HashMap<>();
-        String formatted_phone_number = "";
+
         String placeName = "-NA-";
         String vicinity = "-NA-";
+        String adr_address = "";
         String fullAddress = "";
+        String formatted_phone_number = "";
+        String name = "";
         String rating = "";
 
-        String name = "";
         ArrayList<MapData> photos = new ArrayList<>();
 
 //        Log.e("abc", "googlePlaceJson = " + googlePlaceJson);
         try {
+            if (!googlePlaceJson.isNull("address_components")) {
+                JSONArray addressArray = googlePlaceJson.getJSONArray("address_components");
+                for (int i=0; i<addressArray.length(); i++) {
+                    JSONObject addObj = addressArray.getJSONObject(i);
+                    String long_name = addObj.getString("long_name");
+
+                    if (i>0)
+                        fullAddress += " ";
+
+                    fullAddress = fullAddress + long_name;
+                }
+            }
+
+            if (!googlePlaceJson.isNull("adr_address")) {
+                adr_address = googlePlaceJson.getString("adr_address");
+            }
+
             if (!googlePlaceJson.isNull("formatted_phone_number")) {
                 formatted_phone_number = googlePlaceJson.getString("formatted_phone_number");
             }
 
             if (!googlePlaceJson.isNull("name")) {
                 name = googlePlaceJson.getString("name");
-            }
-
-            if (!googlePlaceJson.isNull("address_components")) {
-                JSONArray addressArray = googlePlaceJson.getJSONArray("address_components");
-                for (int i=0; i<addressArray.length(); i++) {
-                    JSONObject addObj = addressArray.getJSONObject(i);
-                    String long_name = addObj.getString("long_name");
-                    fullAddress = fullAddress + long_name;
-                }
             }
 
             if (!googlePlaceJson.isNull("rating")) {
@@ -64,11 +74,13 @@ public class PhotoParser {
                     photos.add(mapData);
                 }
             }
-            googlePlacesMap.put("name", name);
+
+            googlePlacesMap.put("adr_address", adr_address);
             googlePlacesMap.put("formatted_phone_number", formatted_phone_number);
             googlePlacesMap.put("fullAddress", fullAddress);
-            googlePlacesMap.put("rating", rating);
+            googlePlacesMap.put("name", name);
             googlePlacesMap.put("photos", photos);
+            googlePlacesMap.put("rating", rating);
 
         } catch (JSONException e) {
             e.printStackTrace();

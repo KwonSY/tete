@@ -40,6 +40,7 @@ public class ProfileActivity extends AppCompatActivity {
     private OkHttpClient httpClient;
     private RequestQueue mQueue;
 
+    public TextView title_topbar;
     public ImageView img_user;
     public TextView txt_my_name;
     public EditText edit_comment;
@@ -63,6 +64,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
         Log.e("abc", "user_id = " + user_id);
 
+        title_topbar = (TextView) findViewById(R.id.title_topbar);
         img_user = (ImageView) findViewById(R.id.img_user);
         img_user.setOnClickListener(mOnClickListener);
         txt_my_name = (TextView) findViewById(R.id.txt_my_name);
@@ -71,6 +73,8 @@ public class ProfileActivity extends AppCompatActivity {
         edit_comment.setEnabled(false);
         btn_edit_comment = (Button) findViewById(R.id.btn_edit_comment);
         btn_edit_comment.setOnClickListener(mOnClickListener);
+        if (!user_id.equals(Statics.my_id))
+            btn_edit_comment.setVisibility(View.GONE);
 
         ButtonUtil.setBackButtonClickListener(this);
     }
@@ -79,7 +83,6 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-//        new MyAccountTask().execute();
         new AccountTask(ProfileActivity.this, httpClient, user_id, seq).execute();
     }
 

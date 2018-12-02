@@ -1,6 +1,9 @@
 package honbab.pumkit.com.tete;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.ContentProviderOperation;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -11,9 +14,13 @@ import android.provider.ContactsContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -35,14 +42,17 @@ public class SplashActivity extends AppCompatActivity {
 //            permissionsNeeded.add("READ_CONTACTS");
         if (!addPermission(permissionsList, android.Manifest.permission.READ_EXTERNAL_STORAGE))
             permissionsNeeded.add("READ_EXTERNAL_STORAGE");
-//        if (!addPermission(permissionsList, android.Manifest.permission.READ_PHONE_STATE))
-//            permissionsNeeded.add("READ_PHONE_STATE");
+        if (!addPermission(permissionsList, android.Manifest.permission.ACCESS_FINE_LOCATION))
+            permissionsNeeded.add("ACCESS_FINE_LOCATION");
+        Log.e("abc", "permissionsList.size() = " + permissionsList.size());
+        Log.e("abc", "permissionsNeeded.size() = " + permissionsNeeded.size());
 
         if (permissionsList.size() > 0) {
             if (permissionsNeeded.size() > 0) {
                 // Need Rationale
                 String message = getResources().getString(R.string.use_next_permission) + "\n" + permissionsNeeded.get(0);
-                for (int i = 1; i < permissionsNeeded.size(); i++)
+
+                for (int i=1; i < permissionsNeeded.size(); i++)
                     message = message + ", " + permissionsNeeded.get(i);
                 showMessageOKCancel(message,
                         new DialogInterface.OnClickListener() {
@@ -50,15 +60,19 @@ public class SplashActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 ActivityCompat.requestPermissions(SplashActivity.this, permissionsList.toArray(new String[permissionsList.size()]),
                                         REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
+                                Log.e("abc", "DialogInterface.OnClickListener() Running");
+//                                insertDummyContact();
                             }
                         });
                 return;
             }
+
             ActivityCompat.requestPermissions(this, permissionsList.toArray(new String[permissionsList.size()]),
                     REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS);
             return;
         }
 
+//        Log.e("abc", "insertDummyContact Running");
         insertDummyContact();
     }
 
@@ -83,6 +97,38 @@ public class SplashActivity extends AppCompatActivity {
                 .show();
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS: {
+                Map<String, Integer> perms = new HashMap<String, Integer>();
+                // Initial
+//                perms.put(android.Manifest.permission.READ_CONTACTS, PackageManager.PERMISSION_GRANTED);
+                perms.put(android.Manifest.permission.READ_EXTERNAL_STORAGE, PackageManager.PERMISSION_GRANTED);
+                perms.put(android.Manifest.permission.ACCESS_FINE_LOCATION, PackageManager.PERMISSION_GRANTED);
+                // Fill with results
+                for (int i = 0; i < permissions.length; i++)
+                    perms.put(permissions[i], grantResults[i]);
+                // Check for ACCESS_FINE_LOCATION
+                if (perms.get(android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                        && perms.get(android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    // All Permissions Granted
+                    insertDummyContact();
+                } else {
+                    // Permission Denied
+                    Toast.makeText(SplashActivity.this, "권한이 거절되었습니다. 앱을 재실행합니다.", Toast.LENGTH_LONG)
+                            .show();
+
+                    Handler hd = new Handler();
+                    hd.postDelayed(new Restarthandler(), 4000);
+                }
+            }
+            break;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
     private void insertDummyContact() {
         // Two operations are needed to insert a new contact.
         ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>(2);
@@ -103,14 +149,35 @@ public class SplashActivity extends AppCompatActivity {
                         "__DUMMY CONTACT from runtime permissions sample");
         operations.add(op.build());
 
+        Log.e("abc", "operations = " + operations.size());
         Handler hd = new Handler();
-        hd.postDelayed(new splashhandler(), 3000); // 3초 후에 hd Handler 실행
+        hd.postDelayed(new splashhandler(operations), 3000); // 3초 후에 hd Handler 실행
     }
 
     private class splashhandler implements Runnable {
+        ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>(2);
+
+        public splashhandler(ArrayList<ContentProviderOperation> operations) {
+            this.operations = operations;
+        }
+
         public void run() {
-            startActivity(new Intent(getApplication(), MainActivity.class)); // 로딩이 끝난후 이동할 Activity
-            SplashActivity.this.finish(); // 로딩페이지 Activity Stack에서 제거
+//            Log.e("abc", "splashhandler Running = " + operations.size());
+//            if (operations.size() == 0) {
+                startActivity(new Intent(getApplication(), MainActivity.class)); // 로딩이 끝난후 이동할 Activity
+                SplashActivity.this.finish(); // 로딩페이지 Activity Stack에서 제거
+//            }
+        }
+    }
+
+    private class Restarthandler implements Runnable {
+        public void run() {
+            Intent mStartActivity = new Intent(SplashActivity.this, MainActivity.class);
+            int mPendingIntentId = 123456;
+            PendingIntent mPendingIntent = PendingIntent.getActivity(SplashActivity.this, mPendingIntentId, mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
+            AlarmManager mgr = (AlarmManager) SplashActivity.this.getSystemService(Context.ALARM_SERVICE);
+            mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
+            System.exit(0);
         }
     }
 }

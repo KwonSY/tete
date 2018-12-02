@@ -59,6 +59,7 @@ public class GridViewNearByAdapter extends RecyclerView.Adapter<GridViewNearByAd
         holder.image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.e("abc", "OneRestaurantActivity로 가기");
                 Intent intent = new Intent(mContext, OneRestaurantActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.putExtra("place_id", listViewitemList.get(position).getPlace_id());

@@ -42,7 +42,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import honbab.pumkit.com.adapter.RecyclerViewRestAdapter;
+import honbab.pumkit.com.adapter.FeedMapHorzRestAdapter;
 import honbab.pumkit.com.data.MapData;
 import honbab.pumkit.com.data.ReservData;
 import honbab.pumkit.com.task.GetNearPlacesTaskForMap;
@@ -77,7 +77,7 @@ public class FeedMapActivity extends FragmentActivity implements OnMapReadyCallb
     ArrayList<Marker> mMarkersList = new ArrayList<>();
 
     public static RecyclerView recyclerView;
-    public static RecyclerViewRestAdapter recyclerViewRestAdapter;
+    public static FeedMapHorzRestAdapter feedMapHorzRestAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -247,6 +247,9 @@ public class FeedMapActivity extends FragmentActivity implements OnMapReadyCallb
             mapData.setPlace_id(reservData.getPlace_id());
             mapData.setRest_name(reservData.getRest_name());
             mapData.setRest_img(reservData.getRest_img());
+            mapData.setUser_id(reservData.getUser_id());
+            mapData.setUser_name(reservData.getUser_name());
+            mapData.setUser_img(reservData.getUser_img());
             mapData.setLatLng(reservData.getLatLng());
             mapData.setStatus(reservData.getStatus());
             mapList.add(mapData);
@@ -262,9 +265,9 @@ public class FeedMapActivity extends FragmentActivity implements OnMapReadyCallb
 
             mNames.add(reservData.getRest_name());
         }
-        recyclerViewRestAdapter = new RecyclerViewRestAdapter(FeedMapActivity.this, mapList);
-        recyclerView.setAdapter(recyclerViewRestAdapter);
-        recyclerViewRestAdapter.notifyDataSetChanged();
+        feedMapHorzRestAdapter = new FeedMapHorzRestAdapter(FeedMapActivity.this, mapList);
+        recyclerView.setAdapter(feedMapHorzRestAdapter);
+        feedMapHorzRestAdapter.notifyDataSetChanged();
 
         if (feedList.size() > 0) {
             mMap.moveCamera(CameraUpdateFactory.newLatLng(first_latLng));
