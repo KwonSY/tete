@@ -2,6 +2,7 @@ package honbab.pumkit.com.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,10 +18,9 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import honbab.pumkit.com.data.CommentData;
-import honbab.pumkit.com.task.DelCommentTask;
 import honbab.pumkit.com.task.SendCommentTask;
+import honbab.pumkit.com.tete.ProfileActivity;
 import honbab.pumkit.com.tete.R;
-import honbab.pumkit.com.tete.Statics;
 import honbab.pumkit.com.widget.CircleTransform;
 import okhttp3.OkHttpClient;
 
@@ -87,21 +87,30 @@ public class ReqCommentAdapter extends Adapter<ReqCommentAdapter.ViewHolder> {
                     .error(R.drawable.icon_noprofile_circle)
                     .transform(new CircleTransform())
                     .into(holder.image_feedee);
+            holder.image_feedee.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(mContext, ProfileActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.putExtra("user_id", data.getUser_id());
+                    mContext.startActivity(intent);
+                }
+            });
             holder.txt_feedeeName.setText(data.getUser_name());
             holder.txt_comment.setText(data.getComment());
 
-            //코멘트 삭제
-            holder.txt_comment.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    Log.e("abc", "코멘트 삭제");
-                    if (Statics.my_id.equals(data.getUser_id())) {
-                        new DelCommentTask(mContext, httpClient, position).execute(feed_id, data.getSid());
-                    }
-
-                    return false;
-                }
-            });
+            //코멘트 삭제 vvvvvvvv 나중에
+//            holder.txt_comment.setOnLongClickListener(new View.OnLongClickListener() {
+//                @Override
+//                public boolean onLongClick(View view) {
+//                    Log.e("abc", "코멘트 삭제");
+//                    if (Statics.my_id.equals(data.getUser_id())) {
+//                        new DelCommentTask(mContext, httpClient, position).execute(feed_id, data.getSid());
+//                    }
+//
+//                    return false;
+//                }
+//            });
         }
 
     }

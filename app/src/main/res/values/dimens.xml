@@ -3,7 +3,7 @@
 
     <dimen name="profile_xl">120dp</dimen>
     <dimen name="profile_l">85dp</dimen>
-    <dimen name="profile_m">54dp</dimen>
+    <dimen name="profile_m">41dp</dimen>
     <dimen name="profile_s">24dp</dimen>
 
 </resources>

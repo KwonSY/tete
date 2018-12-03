@@ -38,7 +38,8 @@
         <activity android:name="honbab.pumkit.com.tete.JoinActivity2"
             android:windowSoftInputMode="adjustResize"/>
 
-        <activity android:name="honbab.pumkit.com.tete.CommentTalkActivity"/>
+        <activity android:name="honbab.pumkit.com.tete.CommentTalkActivity"
+            android:windowSoftInputMode="adjustResize"/>
         <activity android:name="honbab.pumkit.com.tete.FeedMapActivity"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity android:name="honbab.pumkit.com.tete.DelayHandlerActivity"/>

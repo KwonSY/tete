@@ -67,5 +67,9 @@
         android:id="@+id/recyclerView_comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/txt_no_comment" />
+        android:layout_below="@id/txt_no_comment"
+        android:paddingBottom="10dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:paddingTop="10dp" />
 </RelativeLayout>
