@@ -5,7 +5,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +49,8 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         final FeedReqData data = listViewItemList.get(position);
+        final String feed_id = listViewItemList.get(position).getFeed_id();
+        ArrayList<UserData> usersList = listViewItemList.get(position).getUsersList();
 
         holder.txt_restName.setText(data.getRest_name());
 
@@ -61,11 +62,6 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
             e.printStackTrace();
         }
 
-
-        final String feed_id = listViewItemList.get(position).getFeed_id();
-        Log.e("abc", "feed_id = " + feed_id);
-        ArrayList<UserData> usersList = listViewItemList.get(position).getUsersList();
-
         if (usersList.size() == 0) {
             holder.txt_no_req.setVisibility(View.VISIBLE);
         } else {
@@ -75,7 +71,7 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
             holder.recyclerView_feedee.setAdapter(mAdapter);
         }
 
-        holder.btn_cancle.setOnClickListener(new View.OnClickListener() {
+        holder.btn_feed_cancle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 new FeedCancleTask(mContext, httpClient, feed_id, listViewItemList.get(position).getRest_name()).execute();
@@ -91,9 +87,8 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView txt_no_req;
         TextView txt_restName, txt_feedTime;
-        Button btn_cancle;
+        Button btn_feed_cancle;
         RecyclerView recyclerView_feedee;
-//        recyclerView_comment;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -103,7 +98,7 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
 
             txt_restName = itemView.findViewById(R.id.txt_restName);
             txt_feedTime = itemView.findViewById(R.id.txt_feedTime);
-            btn_cancle = itemView.findViewById(R.id.btn_cancle);
+            btn_feed_cancle = itemView.findViewById(R.id.btn_feed_cancle);
 
             Context context = itemView.getContext();
 
@@ -111,18 +106,6 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
             GridLayoutManager layoutManager = new GridLayoutManager(context, 2);
             recyclerView_feedee = itemView.findViewById(R.id.recyclerView_req_feedee);
             recyclerView_feedee.setLayoutManager(layoutManager);
-//            mAdapter = new ReqFeedeeAdapter(context, httpClient, feed_id, usersList);
-//            recyclerView.setAdapter(mAdapter);
-
-//            //내가 찌른 피드 리스트
-//            LinearLayoutManager layoutManager3 = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
-//            recyclerView_poke = itemView.findViewById(R.id.recyclerView_poke);
-//            recyclerView_poke.setLayoutManager(layoutManager3);
-
-//            //수락해서 코멘트하기
-//            LinearLayoutManager layoutManager2 = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
-//            recyclerView_comment = itemView.findViewById(R.id.recyclerView_comment);
-//            recyclerView_comment.setLayoutManager(layoutManager2);
         }
     }
 }

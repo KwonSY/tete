@@ -44,7 +44,7 @@ public class ProfileActivity extends AppCompatActivity {
     public ImageView img_user;
     public TextView txt_my_name;
     public EditText edit_comment;
-    private Button btn_edit_comment;
+    public Button btn_edit_comment;
 
     public int seq = 0;
     String user_id;
@@ -96,20 +96,30 @@ public class ProfileActivity extends AppCompatActivity {
 
                     break;
                 case R.id.btn_edit_comment:
+                    Log.e("abc","bool_edityn = " + bool_edityn);
                     if (bool_edityn) {
                         String comment = edit_comment.getText().toString();
                         //수정중
                         bool_edityn = false;
                         edit_comment.setEnabled(false);
-                        edit_comment.setSelection(comment.length());
-                        btn_edit_comment.setText("편집");
+//                        edit_comment.setSelection(comment.length());
+                        edit_comment.setTextColor(getResources().getColor(R.color.grey));
+                        edit_comment.setBackgroundResource(R.drawable.border_round_gr1);
+                        btn_edit_comment.setText(R.string.edit);
 
                         new EditCommentTask(ProfileActivity.this, httpClient, comment, seq).execute();
                     } else {
                         //default only showing
+                        String comment = edit_comment.getText().toString();
+
                         bool_edityn = true;
                         edit_comment.setEnabled(true);
-                        btn_edit_comment.setText("저장");
+                        edit_comment.setSelection(comment.length());
+                        edit_comment.setTextColor(getResources().getColor(R.color.black));
+                        edit_comment.setBackgroundResource(R.drawable.border_round_bk1);
+                        btn_edit_comment.setText(R.string.save);
+
+                        new EditCommentTask(ProfileActivity.this, httpClient, comment, seq).execute();
                     }
 
                     break;

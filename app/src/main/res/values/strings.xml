@@ -9,6 +9,7 @@
     <string name="cancle_godmuk">%s 같먹을 취소하였습니다.</string>
     <string name="cancle">취소하기</string>
     <string name="complete_reserv_with">%s님과 예약이 완료되었습니다.</string>
+    <string name="edit">편집</string>
     <string name="explain_reserve_godmuk">같이 먹기 예약이 없습니다. 같먹을 예약해주시겠습니까?</string>
     <string name="go_to_reserve_godmuk">같먹 예약하러 가기</string>
     <string name="make_new_godmuk">새로운 같먹을 만들어보세요.</string>
@@ -23,6 +24,7 @@
     <string name="repoke">다시 콕찌르기</string>
     <string name="reservation">예약</string>
     <string name="reserve_new_godmuk">"새로운 같먹예약"</string>
+    <string name="save">저장</string>
     <string name="search_near_rest">주변 음식점 검색</string>
     <string name="upload_profile_complete">프로필 사진이 업로드 되었습니다.</string>
     <string name="waitlist">대기리스트</string>

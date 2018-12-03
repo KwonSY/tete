@@ -91,6 +91,12 @@ public class AccountTask extends AsyncTask<Void, Void, Void> {
 
             ((ProfileActivity) mContext).txt_my_name.setText(user_name);
             ((ProfileActivity) mContext).edit_comment.setText(comment);
+            if (comment.length() == 0) {
+                ((ProfileActivity) mContext).edit_comment.setEnabled(true);
+                ((ProfileActivity) mContext).edit_comment.setBackgroundResource(R.drawable.border_round_bk1);
+                ((ProfileActivity) mContext).edit_comment.setTextColor(mContext.getResources().getColor(R.color.black));
+                ((ProfileActivity) mContext).btn_edit_comment.setText(R.string.save);
+            }
         }
 
         ((ProfileActivity) mContext).seq++;

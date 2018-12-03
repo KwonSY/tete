@@ -2,7 +2,6 @@ package honbab.pumkit.com.task;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
@@ -11,7 +10,6 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 
-import honbab.pumkit.com.tete.MyFeedListActivity;
 import honbab.pumkit.com.tete.R;
 import honbab.pumkit.com.tete.Statics;
 import okhttp3.FormBody;
@@ -71,15 +69,10 @@ public class FeedCancleTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
 //        super.onPostExecute(result);
-        Log.e("abc", "onPostE = " + result);
-        Log.e("abc", "mContext = " + mContext);
-
         if (result.equals("0")) {
             String activityName = mContext.getClass().getSimpleName();
 
             if (activityName.equals("MyFeedListActivity")) {
-//                MyFeedListActivity mActivity = new MyFeedListActivity();
-
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setMessage(R.string.ask_cancle_godmuk);
                 builder.setPositiveButton(R.string.yes,
@@ -89,33 +82,45 @@ public class FeedCancleTask extends AsyncTask<Void, Void, Void> {
                                 String text = String.format(res.getString(R.string.cancle_godmuk), rest_name);
                                 Toast.makeText(mContext.getApplicationContext(), text, Toast.LENGTH_LONG).show();
 
-                                Intent intent = new Intent(mContext, MyFeedListActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                mContext.startActivity(intent);
-//                                new MyFeedListTask(mContext, httpClient).execute();
+                                new MyFeedListTask(mContext, httpClient).execute();
                             }
                         });
                 builder.setNegativeButton(R.string.no,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
 
-//                                Intent intent = new Intent(mContext, ReservActivity.class);
-//                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                                mContext.startActivity(intent);
+                            }
+                        });
+                builder.show();
+            } else if (activityName.equals("CommentTalkActivity")) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setMessage(R.string.ask_cancle_godmuk);
+                builder.setPositiveButton(R.string.yes,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                Resources res = mContext.getResources();
+                                String text = String.format(res.getString(R.string.cancle_godmuk), rest_name);
+                                Toast.makeText(mContext.getApplicationContext(), text, Toast.LENGTH_LONG).show();
+
+//                                new MyFeedListTask(mContext, httpClient).execute();
+                                new MyFeedCommentTask(mContext, httpClient).execute();
+                            }
+                        });
+                builder.setNegativeButton(R.string.no,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+
                             }
                         });
                 builder.show();
 
-//                new MyFeedListTask(mContext, httpClient).execute();
-            } else if (activityName.equals("CommentTalkActivity")) {
-                new MyFeedCommentTask(mContext, httpClient).execute();
+//                alertDialog(rest_name);
+
 //                ((CommentTalkActivity) mContext).mAdapter = new MyFeedCommentAdapter(mContext, httpClient, feedReqList);
 //                ((CommentTalkActivity) mContext).recyclerView.setAdapter(user_name);
 //                ((CommentTalkActivity) mContext).mAdapter.notifyDataSetChanged();
             }
-//            new MyFeedListTask(mContext, httpClient, feed_id).execute();
 
         }
     }
-
 }

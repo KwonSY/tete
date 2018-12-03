@@ -118,7 +118,6 @@ public class MyFeedCommentAdapter extends RecyclerView.Adapter<MyFeedCommentAdap
 
     public void alertShow(final String feed_id, final String rest_name) {
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-//        builder.setTitle("AlertDialog Title");
         builder.setMessage(R.string.ask_cancle_godmuk);
         builder.setPositiveButton(R.string.yes,
                 new DialogInterface.OnClickListener() {
