@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -15,6 +16,17 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <service android:name="honbab.pumkit.com.firebase.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+        <service android:name="honbab.pumkit.com.firebase.FirebaseIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -29,7 +41,6 @@
         </activity>
 
 
-
         <activity android:name="honbab.pumkit.com.tete.SplashActivity"/>
 
         <activity android:name="honbab.pumkit.com.tete.LoginActivity"/>
@@ -38,6 +49,8 @@
         <activity android:name="honbab.pumkit.com.tete.JoinActivity2"
             android:windowSoftInputMode="adjustResize"/>
 
+        <activity android:name="honbab.pumkit.com.tete.ChatActivity"
+            android:windowSoftInputMode="adjustResize"/>
         <activity android:name="honbab.pumkit.com.tete.CommentTalkActivity"
             android:windowSoftInputMode="adjustResize"/>
         <activity android:name="honbab.pumkit.com.tete.FeedMapActivity"
@@ -63,5 +76,8 @@
             android:value="7e146f9c98e75bf4dde5b028ccd06aa4"/>
 
     </application>
+
+
+
 
 </manifest>

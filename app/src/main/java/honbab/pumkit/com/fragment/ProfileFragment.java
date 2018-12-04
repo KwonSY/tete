@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import honbab.pumkit.com.data.CommentData;
 import honbab.pumkit.com.data.FeedReqData;
 import honbab.pumkit.com.data.UserData;
-import honbab.pumkit.com.tete.CommentTalkActivity;
+import honbab.pumkit.com.tete.ChatActivity;
 import honbab.pumkit.com.tete.MyFeedListActivity;
 import honbab.pumkit.com.tete.PokeListActivity;
 import honbab.pumkit.com.tete.ProfileActivity;
@@ -130,9 +130,9 @@ public class ProfileFragment extends Fragment {
 
                     break;
                 case R.id.layout_go_talk:
-                    Intent intent5 = new Intent(getActivity(), CommentTalkActivity.class);
+                    Intent intent5 = new Intent(getActivity(), ChatActivity.class);
+//                    Intent intent5 = new Intent(getActivity(), CommentTalkActivity.class);
                     intent5.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                    intent5.putExtra("feedList", commentList);
                     startActivity(intent5);
 
                     break;
