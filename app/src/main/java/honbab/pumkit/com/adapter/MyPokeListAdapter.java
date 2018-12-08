@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,14 +69,10 @@ public class MyPokeListAdapter extends RecyclerView.Adapter<MyPokeListAdapter.Vi
 
         if (data.getUsersList().size() > 0) {
             holder.txt_reqNums.setText("신청자 " + data.getUsersList().size() + "명");
-//            ReqFeedeeAdapter mAdapter = new ReqFeedeeAdapter(mContext, httpClient, data.getFeed_id(), data.getUsersList());
-//            holder.recyclerView.setAdapter(mAdapter);
         } else {
 
         }
 
-        //vvvvvvvvvvvvvv MyPokeListAdapter -> ReqFeedeeAdapter 로 이동해야함
-        Log.e("abc", "status = " + data.getUsersList().get(0).getStatus());
         //d - 지웠다. //n - 수락전
         if (data.getUsersList().get(0).getStatus().equals("n")) {
             holder.btn_cancle_poke.setText(R.string.cancle);
@@ -116,7 +111,6 @@ public class MyPokeListAdapter extends RecyclerView.Adapter<MyPokeListAdapter.Vi
 
         Button btn_cancle_poke;
         TextView txt_reqNums;
-//        RecyclerView recyclerView;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -130,7 +124,6 @@ public class MyPokeListAdapter extends RecyclerView.Adapter<MyPokeListAdapter.Vi
             txt_hostName = itemView.findViewById(R.id.txt_hostName);
 
             txt_reqNums = itemView.findViewById(R.id.txt_reqNums);
-//            recyclerView = itemView.findViewById(R.id.recyclerView_req_feedee);
             btn_cancle_poke = itemView.findViewById(R.id.btn_cancle_poke);
 
             if (listViewItemList.size() > 0)

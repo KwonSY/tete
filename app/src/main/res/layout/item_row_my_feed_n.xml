@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_item_myfeed"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingBottom="1dp">
+
+    <RelativeLayout
+        android:id="@+id/layout_rest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#efefef"
+        android:paddingRight="10dp">
+
+        <ImageView
+            android:id="@+id/img_rest"
+            android:layout_width="89dp"
+            android:layout_height="89dp"
+            android:src="@drawable/icon_no_image" />
+
+        <TextView
+            android:id="@+id/txt_restName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/img_rest"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="음식점"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txt_feedTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/txt_restName"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@id/txt_restName"
+            android:text="오후 2시"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/txt_no_req"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txt_restName"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="10dp"
+            android:text="아직 신청한 사람이 없어요." />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView_req_feedee"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txt_restName"
+            android:layout_toRightOf="@id/img_rest"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp" />
+
+        <Button
+            android:id="@+id/btn_feed_cancle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/btn_circle_bk1_s"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:paddingBottom="6dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="6dp"
+            android:text="@string/cancle"
+            android:textColor="@color/grey"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/btn_choose_feeder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@id/btn_feed_cancle"
+            android:layout_below="@id/btn_feed_cancle"
+            android:layout_marginTop="17dp"
+            android:background="@drawable/btn_circle_bk1_s"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:paddingBottom="6dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="6dp"
+            android:text="@string/accept"
+            android:textColor="@color/grey"
+            android:textSize="12sp" />
+        <!--
+                <Button
+                    android:id="@+id/btn_choose_cancle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignRight="@id/btn_choose_feeder"
+                    android:layout_below="@id/btn_choose_feeder"
+                    android:layout_marginTop="4dp"
+                    android:background="@drawable/btn_circle_bk1_s"
+                    android:minHeight="0dp"
+                    android:minWidth="0dp"
+                    android:paddingBottom="6dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="6dp"
+                    android:text="@string/cancellation"
+                    android:textColor="@color/grey"
+                    android:textSize="12sp" />
+                -->
+    </RelativeLayout>
+</RelativeLayout>

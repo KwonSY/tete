@@ -44,7 +44,7 @@ public class DelayHandlerActivity extends AppCompatActivity {
             @Override
             public void run() {
                 finish();
-                Intent intent2 = new Intent(DelayHandlerActivity.this, CommentTalkActivity.class);
+                Intent intent2 = new Intent(DelayHandlerActivity.this, MainActivity.class);
                 intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent2.putExtra("position", 1);
                 startActivity(intent2);
@@ -56,7 +56,7 @@ public class DelayHandlerActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 finish();
-                Intent intent2 = new Intent(DelayHandlerActivity.this, CommentTalkActivity.class);
+                Intent intent2 = new Intent(DelayHandlerActivity.this, MainActivity.class);
                 intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent2.putExtra("position", 1);
                 startActivity(intent2);

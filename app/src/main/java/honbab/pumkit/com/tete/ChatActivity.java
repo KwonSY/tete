@@ -1,12 +1,12 @@
 package honbab.pumkit.com.tete;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -39,14 +39,14 @@ public class ChatActivity extends AppCompatActivity {
     LinearLayoutManager layoutManager;
 
     public TextView title_topbar;
-//    public TextView txt_no_comment;
+    //    public TextView txt_no_comment;
     public RecyclerView recyclerView;
     public ChatAdapter mAdapter;
-//    private FirebaseRecyclerAdapter<ChatData, ChatViewHolder> mAdapter;
+    //    private FirebaseRecyclerAdapter<ChatData, ChatViewHolder> mAdapter;
     private EditText edit_chat;
 
     private ArrayList<Message> messages;
-    private String fromId = Statics.my_id, toId = "5", toUserName = "상대방이름홍길동", toUserImg;
+    private String fromId = Statics.my_id, toId = "5", toUserName = "상대방", toUserImg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,12 +57,16 @@ public class ChatActivity extends AppCompatActivity {
         session = new SessionManager(this.getApplicationContext());
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-
+        Intent intent = getIntent();
+        fromId = intent.getStringExtra("fromId");
+        toId = intent.getStringExtra("toId");
+        toUserName = intent.getStringExtra("toUserName");
+        toUserImg = intent.getStringExtra("toUserImg");
 
         title_topbar = (TextView) findViewById(R.id.title_topbar);
 //        txt_no_comment = (TextView) findViewById(R.id.txt_no_comment);
 
-        layoutManager = new LinearLayoutManager(ChatActivity.this, LinearLayoutManager.VERTICAL,false);
+        layoutManager = new LinearLayoutManager(ChatActivity.this, LinearLayoutManager.VERTICAL, false);
         layoutManager.setStackFromEnd(true);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 //        recyclerView.setHasFixedSize(true);
@@ -71,62 +75,15 @@ public class ChatActivity extends AppCompatActivity {
 //        mAdapter = FirebaseRecyclerAdapter();
         recyclerView.setAdapter(mAdapter);
 
-        //Initializing message arraylist
         messages = new ArrayList<>();
 
 
         edit_chat = (EditText) findViewById(R.id.edit_chat);
 
-        TextView btn_send;
-        btn_send = (TextView) findViewById(R.id.btn_send_chat);
+        TextView btn_send = (TextView) findViewById(R.id.btn_send_chat);
         btn_send.setOnClickListener(mOnClickListener);
 
         ButtonUtil.setBackButtonClickListener(this);
-
-
-        // Load Chat from Firebase
-//        loadFirebaseDatabase();
-//
-//        mDatabase.child("messages").addChildEventListener(new ChildEventListener() {
-//            @Override
-//            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-//                Log.e("abc", "onChildAdded s = " + s);
-//                ChatData chatData = dataSnapshot.getValue(ChatData.class);
-//                chatData.setToUserName(toUserName);
-//
-//                if (chatData.getFromId().equals(fromId) && chatData.getToId().equals(toId)) {
-//                    Log.e("abc", "PASSSSING");
-//                    mAdapter.addItem(chatData.getFromId(), chatData.getToId(), chatData.getToUserName(), chatData.getText(), chatData.getTimestampLong(), chatData.getImageUrl(), chatData.getImageWidth(), chatData.getImageHeight(), pic1);
-//                    recyclerView.setAdapter(mAdapter);
-//                } else if (chatData.getFromId().equals(toId) && chatData.getToId().equals(fromId)) {
-//                    Log.e("abc", "어랏???");
-//                    mAdapter.addItem(chatData.getFromId(), chatData.getToId(), chatData.getToUserName(), chatData.getText(), chatData.getTimestampLong(), chatData.getImageUrl(), chatData.getImageWidth(), chatData.getImageHeight(), pic1);
-//                    recyclerView.setAdapter(mAdapter);
-//                } else {
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-//
-//            }
-//
-//            @Override
-//            public void onChildRemoved(DataSnapshot dataSnapshot) {
-//
-//            }
-//
-//            @Override
-//            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
     }
 
     @Override
@@ -151,31 +108,26 @@ public class ChatActivity extends AppCompatActivity {
 
     ChatData chatData;
     ArrayList<ChatData> arrayList = new ArrayList<>();
-    private void loadFirebaseDatabase() {
 
+    private void loadFirebaseDatabase() {
         mDatabase.child("user-messages").child(fromId).child(toId).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//                HashMap<String, Object> map = (HashMap<String,Object>) dataSnapshot.getValue();
-                Log.e("abc", "xxx0 = " + dataSnapshot.getKey());
-//                Log.e("abc", "xxx0 = " + map.keySet() + dataSnapshot.getKey());
-
                 mDatabase.child("messages").child(dataSnapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         chatData = dataSnapshot.getValue(ChatData.class);
-                        Log.e("abc", "xxx5 = " + toUserName);
-                            chatData.setToUserName(toUserName);
-
+                        chatData.setToUserName(toUserName);
+                        chatData.setPic1(toUserImg);
                         arrayList.add(chatData);
 
                         recyclerView.setLayoutManager(layoutManager);
                         mAdapter = new ChatAdapter(ChatActivity.this, httpClient, arrayList);
-                        mAdapter.addItem(chatData.getFromId(), chatData.getToId(), chatData.getToUserName(),
-                                chatData.getText(), chatData.getTimestampLong(),
-                                chatData.getImageUrl(), chatData.getImageWidth(), chatData.getImageHeight(), toUserImg);
+//                        mAdapter.addItem(chatData.getFromId(), chatData.getToId(), chatData.getToUserName(),
+//                                chatData.getText(), chatData.getTimestampLong(),
+//                                chatData.getImageUrl(), chatData.getImageWidth(), chatData.getImageHeight(), toUserImg);
                         recyclerView.setAdapter(mAdapter);
-
+                        mAdapter.notifyDataSetChanged();
                     }
 
                     @Override
@@ -216,9 +168,7 @@ public class ChatActivity extends AppCompatActivity {
             ChatData chatData = new ChatData(fromId, toId, message, timestamp);
 
             DatabaseReference id_message = mDatabase.child("messages").push();
-            Log.e("abc", "xxxxxxx1 = " + id_message);
             mDatabase.child("messages").child(id_message.getKey()).setValue(chatData);
-            Log.e("abc", "xxxxxxx5 = ");
 
             Map<String, Object> taskMap = new HashMap<String, Object>();
             taskMap.put(id_message.getKey(), 1);
@@ -226,9 +176,10 @@ public class ChatActivity extends AppCompatActivity {
             mDatabase.child("user-messages").child(fromId).child(toId).updateChildren(taskMap);
             mDatabase.child("user-messages").child(toId).child(fromId).updateChildren(taskMap);
 
-            String toUserName = "상대방이름";
+//            String toUserName = "상대방이름";
             chatData.setToUserName(toUserName);
 
+            recyclerView.setLayoutManager(layoutManager);
             mAdapter.notifyDataSetChanged();
             edit_chat.setText("");
         }

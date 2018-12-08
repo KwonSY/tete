@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -21,11 +23,11 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+import honbab.pumkit.com.adapter.MyFeedListAdapter;
 import honbab.pumkit.com.data.CommentData;
 import honbab.pumkit.com.data.FeedReqData;
 import honbab.pumkit.com.data.UserData;
-import honbab.pumkit.com.tete.ChatActivity;
-import honbab.pumkit.com.tete.MyFeedListActivity;
+import honbab.pumkit.com.task.MyFeedListTask;
 import honbab.pumkit.com.tete.PokeListActivity;
 import honbab.pumkit.com.tete.ProfileActivity;
 import honbab.pumkit.com.tete.R;
@@ -33,6 +35,7 @@ import honbab.pumkit.com.tete.SettingActivity;
 import honbab.pumkit.com.tete.Statics;
 import honbab.pumkit.com.widget.CircleTransform;
 import honbab.pumkit.com.widget.OkHttpClientSingleton;
+import honbab.pumkit.com.widget.VerticalItemDecoration;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -42,21 +45,56 @@ public class ProfileFragment extends Fragment {
     private OkHttpClient httpClient;
 
     public String my_id = Statics.my_id;
+    private static final String ARG_PARAM1 = "param1";
+
+    private ArrayList<FeedReqData> mParam1;
 
     private ImageButton btn_setting;
     private ImageView image_myProfile;
     private TextView txt_my_name, txt_comment;
     private TextView title_reserve;
     private RelativeLayout layout_go_feedlist, layout_go_pokelist, layout_go_talk;
-    public TextView badge_feed_cnt, badge_poke_cnt, badge_comment_cnt;
+    public static TextView badge_poke_cnt;
+    public static RecyclerView recyclerView_myFeed;
+    public static MyFeedListAdapter myFeedListAdapter;
 
     int cnt_my = 0, cnt_your = 0, cnt_comment = 0;
+
+    public ProfileFragment() {
+
+    }
+
+    public static ProfileFragment newInstance(ArrayList<FeedReqData> param1) {
+        ProfileFragment fragment = new ProfileFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(ARG_PARAM1, param1);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mParam1 = (ArrayList<FeedReqData>) getArguments().getSerializable(ARG_PARAM1);
+            Log.e("abc", "0 mParam1 = " + mParam1);
+//            mParam2 = getArguments().getString(ARG_PARAM2);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_profile, container, false);
 
         httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
+
+        if (getArguments() != null) {
+            mParam1 = (ArrayList<FeedReqData>) getArguments().getSerializable(ARG_PARAM1);
+            Log.e("abc", "1 mParam1 = " + mParam1);
+
+            MyFeedListAdapter mAdapter= new MyFeedListAdapter(getActivity(), httpClient, mParam1);
+            recyclerView_myFeed.setAdapter(mAdapter);
+            mAdapter.notifyDataSetChanged();
+        }
 
         return rootView;
     }
@@ -88,15 +126,22 @@ public class ProfileFragment extends Fragment {
         btn_setting.setOnTouchListener(mOnTouchListener);
 
         //3가지 버튼
-        layout_go_feedlist = (RelativeLayout) getActivity().findViewById(R.id.layout_go_feedlist);
+//        layout_go_feedlist = (RelativeLayout) getActivity().findViewById(R.id.layout_go_feedlist);
         layout_go_pokelist = (RelativeLayout) getActivity().findViewById(R.id.layout_go_pokelist);
-        layout_go_talk = (RelativeLayout) getActivity().findViewById(R.id.layout_go_talk);
-        layout_go_feedlist.setOnClickListener(mOnClickListener);
+//        layout_go_talk = (RelativeLayout) getActivity().findViewById(R.id.layout_go_talk);
+//        layout_go_feedlist.setOnClickListener(mOnClickListener);
         layout_go_pokelist.setOnClickListener(mOnClickListener);
-        layout_go_talk.setOnClickListener(mOnClickListener);
-        badge_feed_cnt = (TextView) getActivity().findViewById(R.id.badge_feed_cnt);
+//        layout_go_talk.setOnClickListener(mOnClickListener);
+//        badge_feed_cnt = (TextView) getActivity().findViewById(R.id.badge_feed_cnt);
         badge_poke_cnt = (TextView) getActivity().findViewById(R.id.badge_poke_cnt);
-        badge_comment_cnt = (TextView) getActivity().findViewById(R.id.badge_comment_cnt);
+//        badge_comment_cnt = (TextView) getActivity().findViewById(R.id.badge_comment_cnt);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
+        recyclerView_myFeed = (RecyclerView) getActivity().findViewById(R.id.recyclerView_myFeed);
+        recyclerView_myFeed.setLayoutManager(layoutManager);
+        recyclerView_myFeed.addItemDecoration(new VerticalItemDecoration(20, false));
+        myFeedListAdapter = new MyFeedListAdapter();
+        recyclerView_myFeed.setAdapter(myFeedListAdapter);
     }
 
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
@@ -115,13 +160,13 @@ public class ProfileFragment extends Fragment {
                     startActivity(intent2);
 
                     break;
-                case R.id.layout_go_feedlist:
-                    Intent intent3 = new Intent(getActivity(), MyFeedListActivity.class);
-                    intent3.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                    intent3.putExtra("feedList", myFeedList);
-                    startActivity(intent3);
-
-                    break;
+//                case R.id.layout_go_feedlist:
+//                    Intent intent3 = new Intent(getActivity(), MyFeedListActivity.class);
+//                    intent3.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+////                    intent3.putExtra("feedList", myFeedList);
+//                    startActivity(intent3);
+//
+//                    break;
                 case R.id.layout_go_pokelist:
                     Intent intent4 = new Intent(getActivity(), PokeListActivity.class);
                     intent4.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -129,13 +174,13 @@ public class ProfileFragment extends Fragment {
                     startActivity(intent4);
 
                     break;
-                case R.id.layout_go_talk:
-                    Intent intent5 = new Intent(getActivity(), ChatActivity.class);
-//                    Intent intent5 = new Intent(getActivity(), CommentTalkActivity.class);
-                    intent5.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent5);
-
-                    break;
+//                case R.id.layout_go_talk:
+//                    Intent intent5 = new Intent(getActivity(), ChatActivity.class);
+////                    Intent intent5 = new Intent(getActivity(), CommentTalkActivity.class);
+//                    intent5.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                    startActivity(intent5);
+//
+//                    break;
             }
         }
     };
@@ -209,13 +254,14 @@ public class ProfileFragment extends Fragment {
                     .transform(new CircleTransform())
                     .into(image_myProfile);
 
-            new MyFeedListTask().execute();
+//            new MyTotalFeedListTask().execute();
+            new MyFeedListTask(getActivity(), httpClient).execute();
         }
     }
 
     ArrayList<FeedReqData> myFeedList = new ArrayList<>();
     ArrayList<FeedReqData> pokeList = new ArrayList<>();
-    public class MyFeedListTask extends AsyncTask<Void, Void, Void> {
+    public class MyTotalFeedListTask extends AsyncTask<Void, Void, Void> {
         String result;
         String host;
         String rest_name;
@@ -247,7 +293,7 @@ public class ProfileFragment extends Fragment {
                     String bodyStr = response.body().string();
 
                     JSONObject obj = new JSONObject(bodyStr);
-                    Log.e("abc", "my_feed_list = " + obj);
+                    Log.e("abc", "my_totla_feed_cnt = " + obj);
 
                     result = obj.getString("result");
 
@@ -329,19 +375,16 @@ public class ProfileFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-//            super.onPostExecute(feedReqList);
-//            Log.e("abc", "onPostExecute feedReqList.size = " + feedReqList.size());
-
-            badge_feed_cnt.setText(String.valueOf(cnt_my));
+//            badge_feed_cnt.setText(String.valueOf(cnt_my));
             badge_poke_cnt.setText(String.valueOf(cnt_your));
-            badge_comment_cnt.setText(String.valueOf(cnt_comment));
+//            badge_comment_cnt.setText(String.valueOf(cnt_comment));
 
-            if (cnt_my==0)
-                badge_feed_cnt.setVisibility(View.GONE);
+//            if (cnt_my==0)
+//                badge_feed_cnt.setVisibility(View.GONE);
             if (cnt_your==0)
                 badge_poke_cnt.setVisibility(View.GONE);
-            if (cnt_comment==0)
-                badge_comment_cnt.setVisibility(View.GONE);
+//            if (cnt_comment==0)
+//                badge_comment_cnt.setVisibility(View.GONE);
         }
 
     }

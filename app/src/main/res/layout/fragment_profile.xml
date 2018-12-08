@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_fragment_profile"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="honbab.pumkit.com.tete.MainActivity">
@@ -15,10 +16,11 @@
             android:layout_height="match_parent">
 
             <LinearLayout
+                android:id="@+id/layout_profile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingBottom="30dp"
+                android:paddingBottom="10dp"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
                 android:paddingTop="50dp">
@@ -51,113 +53,6 @@
                     android:background="@drawable/border_round_gr1"
                     android:padding="8dp"
                     android:text="내 소개 읽어오는 중..." />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal">
-
-                    <RelativeLayout
-                        android:id="@+id/layout_go_feedlist"
-                        android:layout_width="70dp"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:id="@+id/icon_feedlist"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
-                            android:src="@drawable/icon_feed" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/icon_feedlist"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginTop="15dp"
-                            android:text="@string/require_godmuk" />
-
-                        <TextView
-                            android:id="@+id/badge_feed_cnt"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:background="@drawable/circle_red"
-                            android:gravity="center"
-                            android:text="0"
-                            android:textColor="@android:color/white" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/layout_go_pokelist"
-                        android:layout_width="70dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:id="@+id/icon_pokelist"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginLeft="3dp"
-                            android:src="@drawable/icon_poke" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/icon_pokelist"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginTop="15dp"
-                            android:text="@string/pokelist" />
-
-                        <TextView
-                            android:id="@+id/badge_poke_cnt"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:background="@drawable/circle_red"
-                            android:gravity="center"
-                            android:text="0"
-                            android:textColor="@android:color/white" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/layout_go_talk"
-                        android:layout_width="70dp"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_horizontal"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:id="@+id/icon_commenttalk"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
-                            android:paddingTop="4dp"
-                            android:src="@drawable/icon_reserved" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/icon_commenttalk"
-                            android:layout_centerHorizontal="true"
-                            android:layout_marginTop="15dp"
-                            android:text="결정된 예약" />
-
-                        <TextView
-                            android:id="@+id/badge_comment_cnt"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:background="@drawable/circle_red"
-                            android:gravity="center"
-                            android:text="0"
-                            android:textColor="@android:color/white" />
-                    </RelativeLayout>
-                </LinearLayout>
             </LinearLayout>
 
             <ImageButton
@@ -169,6 +64,49 @@
                 android:layout_marginTop="14dp"
                 android:background="#00000000"
                 android:src="@drawable/icon_settting" />
+
+            <RelativeLayout
+                android:id="@+id/layout_go_pokelist"
+                android:layout_width="37dp"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@id/btn_setting"
+                android:layout_below="@id/btn_setting"
+                android:layout_marginTop="20dp">
+
+                <ImageView
+                    android:id="@+id/icon_pokelist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="27dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="3dp"
+                    android:src="@drawable/icon_poke" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/icon_pokelist"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="6dp"
+                    android:text="@string/pokelist"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/badge_poke_cnt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/circle_red"
+                    android:gravity="center"
+                    android:textSize="10sp"
+                    android:text="0"
+                    android:textColor="@android:color/white" />
+            </RelativeLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView_myFeed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/layout_profile" />
         </RelativeLayout>
     </ScrollView>
 </RelativeLayout>

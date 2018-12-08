@@ -55,7 +55,7 @@ public class MyFeedCommentTask extends AsyncTask<Void, Void, ArrayList<FeedReqDa
                 String bodyStr = response.body().string();
 
                 JSONObject obj = new JSONObject(bodyStr);
-                Log.e("abc", "my_feed_list = " + obj);
+                Log.e("abc", "my_feed_comment_list = " + obj);
 
                 result = obj.getString("result");
 

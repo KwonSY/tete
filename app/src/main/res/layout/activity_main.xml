@@ -21,5 +21,4 @@
         android:layout_below="@id/viewPager"
         android:text="This is Tab 1"
         android:textAppearance="?android:attr/textAppearanceLarge" />
-
 </LinearLayout>

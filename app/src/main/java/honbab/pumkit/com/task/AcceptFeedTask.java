@@ -20,7 +20,7 @@ import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
-public class AcceptReservTask extends AsyncTask<String, Void, String> {
+public class AcceptFeedTask extends AsyncTask<String, Void, String> {
     private OkHttpClient httpClient;
     private Context mContext;
 
@@ -29,8 +29,8 @@ public class AcceptReservTask extends AsyncTask<String, Void, String> {
     String feed_id;
     int position;
 
-    public AcceptReservTask(Context mContext, OkHttpClient httpClient, ReqFeedeeAdapter.ViewHolder viewHolder,
-                            UserData userData, String feed_id, int position) {
+    public AcceptFeedTask(Context mContext, OkHttpClient httpClient, ReqFeedeeAdapter.ViewHolder viewHolder,
+                          UserData userData, String feed_id, int position) {
         this.mContext = mContext;
         this.httpClient = httpClient;
         this.viewHolder = viewHolder;

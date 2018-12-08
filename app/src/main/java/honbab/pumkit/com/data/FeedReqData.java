@@ -47,6 +47,23 @@ public class FeedReqData implements Serializable {
         this.commentsList = commentsList;
     }
 
+    public FeedReqData(String feed_id, String status, String feed_time,
+                       String host_id, String host_name, String host_img,
+                       String rest_id, String rest_name, String rest_img,
+                       ArrayList<UserData> usersList, ArrayList<CommentData> commentsList) {
+        this.feed_id = feed_id;
+        this.status = status;
+        this.feed_time = feed_time;
+        this.host_id = host_id;
+        this.host_name = host_name;
+        this.host_img = host_img;
+        this.rest_id = rest_id;
+        this.rest_name = rest_name;
+        this.rest_img = rest_img;
+        this.usersList = usersList;
+        this.commentsList = commentsList;
+    }
+
     public String getFeed_id() {
         return feed_id;
     }

@@ -1,13 +1,17 @@
 <resources>
     <string name="app_name">같이먹어요</string>
 
-    <string name="accept">수락</string>
+    <string name="accept">수락하기</string>
+    <string name="acceptance">수락</string>
     <string name="acceptComplete">수락완료</string>
     <string name="already_reserved_godmuk">오늘 이미 예약 중인 식사약속이 있습니다. 예약한 같먹을 보시겠습니까?</string>
     <string name="applicant">신청자</string>
+    <string name="ask_godmuk_with">%s님과 같이 식사를 하시겠습니까?</string>
     <string name="ask_cancle_godmuk">같먹을 취소하시겠습니까?</string>
     <string name="cancle_godmuk">%s 같먹을 취소하였습니다.</string>
     <string name="cancle">취소하기</string>
+    <string name="cancellation">취소</string>
+    <string name="chat">대화하기</string>
     <string name="complete_reserv_with">%s님과 예약이 완료되었습니다.</string>
     <string name="edit">편집</string>
     <string name="explain_reserve_godmuk">같이 먹기 예약이 없습니다. 같먹을 예약해주시겠습니까?</string>

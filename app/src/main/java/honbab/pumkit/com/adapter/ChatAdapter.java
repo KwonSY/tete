@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -23,6 +25,7 @@ import java.util.TreeSet;
 import honbab.pumkit.com.data.ChatData;
 import honbab.pumkit.com.tete.R;
 import honbab.pumkit.com.tete.Statics;
+import honbab.pumkit.com.widget.CircleTransform;
 import okhttp3.OkHttpClient;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
@@ -53,16 +56,17 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
-        final ChatData data = newList.get(position);
-        Log.e("abc", "xxx text = " + data.getText());
+//        final ChatData data = newList.get(position);
+        final ChatData data = listViewItemList.get(position);
 
         holder.bindToPost(data);
     }
 
     @Override
     public int getItemCount() {
-        Log.e("abc", "xxx newList.size() = " + newList.size());
-        return newList.size();
+//        Log.e("abc", "xxx newList.size() = " + newList.size());
+//        return newList.size();
+        return listViewItemList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -114,14 +118,20 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
                 chatTime_right.setVisibility(View.VISIBLE);
                 chatTime_left.setVisibility(View.GONE);
-                Log.e("chat", "LEFT , ");
+
+                Picasso.get().load(data.getPic1())
+                        .placeholder(R.drawable.icon_noprofile_circle)
+                        .error(R.drawable.icon_noprofile_circle)
+                        .transform(new CircleTransform())
+                        .into(img_user);
+                Log.e("chat", "LEFT , " + data.getPic1());
             }
         }
     }
 
     public void addItem(String fromId, String toId, String ToUserName,
                         String message, Long milliSeconds, String imageUrl,
-                        int imageWidth, int imageHeight, String pic1) {
+                        int imageWidth, int imageHeight, String toUserImg) {
 
         ChatData item = new ChatData();
 
@@ -133,7 +143,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         item.setImageUrl(imageUrl);
         item.setImageWidth(imageWidth);
         item.setImageHeight(imageHeight);
-        item.setPic1(pic1);
+        item.setPic1(toUserImg);
 
 //        ChatData item = new ChatData(fromId, toId, message, milliSeconds);
 

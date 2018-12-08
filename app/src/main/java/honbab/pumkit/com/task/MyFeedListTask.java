@@ -14,6 +14,7 @@ import honbab.pumkit.com.adapter.MyFeedListAdapter;
 import honbab.pumkit.com.data.CommentData;
 import honbab.pumkit.com.data.FeedReqData;
 import honbab.pumkit.com.data.UserData;
+import honbab.pumkit.com.fragment.ProfileFragment;
 import honbab.pumkit.com.tete.MyFeedListActivity;
 import honbab.pumkit.com.tete.Statics;
 import okhttp3.FormBody;
@@ -23,6 +24,8 @@ import okhttp3.Request;
 public class MyFeedListTask extends AsyncTask<Void, Void, ArrayList<FeedReqData>> {
     private Context mContext;
     private OkHttpClient httpClient;
+
+    int cnt_poke = 0;
 
     String result;
     String rest_name;
@@ -34,7 +37,7 @@ public class MyFeedListTask extends AsyncTask<Void, Void, ArrayList<FeedReqData>
 
     @Override
     protected void onPreExecute() {
-
+        cnt_poke = 0;
     }
 
     @Override
@@ -59,6 +62,8 @@ public class MyFeedListTask extends AsyncTask<Void, Void, ArrayList<FeedReqData>
                 result = obj.getString("result");
 
                 if (result.equals("0")) {
+                    cnt_poke = Integer.parseInt(obj.getString("cnt_poke"));
+
                     JSONArray feedArr = obj.getJSONArray("feed");
                     for (int i = 0; i < feedArr.length(); i++) {
                         ArrayList<UserData> reqUsersList = new ArrayList<>();
@@ -67,7 +72,13 @@ public class MyFeedListTask extends AsyncTask<Void, Void, ArrayList<FeedReqData>
                         JSONObject feedObj = feedArr.getJSONObject(i);
 
                         String feed_id = feedObj.getString("sid");
+                        String feed_status = feedObj.getString("status");
                         String feed_time = feedObj.getString("time");
+
+                        JSONObject hostObj = feedObj.getJSONObject("host");
+                        String host_id = hostObj.getString("sid");
+                        String host_name = hostObj.getString("name");
+                        String host_img = Statics.main_url + hostObj.getString("img_url");
 
                         JSONObject restObj = feedObj.getJSONObject("rest");
                         String rest_id = restObj.getString("sid");
@@ -87,17 +98,17 @@ public class MyFeedListTask extends AsyncTask<Void, Void, ArrayList<FeedReqData>
                                 String user_img = Statics.main_url + userObj.getString("img_url");
                                 String age = userObj.getString("age");
                                 String gender = userObj.getString("gender");
-//                                    String status = userObj.getString("status");
+                                String status = userObj.getString("status");
                                 String time = userObj.getString("time");
 
-                                UserData userData = new UserData(user_id, user_name, age, gender, user_img, null);
+                                UserData userData = new UserData(user_id, user_name, age, gender, user_img, status);
                                 reqUsersList.add(userData);
                             }
                         }
 
-                        String status = feedObj.getString("status");
-
-                        FeedReqData data = new FeedReqData(feed_id, status, feed_time, rest_id, rest_name, rest_img, reqUsersList, commentsList);
+                        FeedReqData data = new FeedReqData(feed_id, feed_status, feed_time,
+                                host_id, host_name, host_img,
+                                rest_id, rest_name, rest_img, reqUsersList, commentsList);
                         feedReqList.add(data);
                     }
                 }
@@ -117,20 +128,50 @@ public class MyFeedListTask extends AsyncTask<Void, Void, ArrayList<FeedReqData>
     protected void onPostExecute(final ArrayList<FeedReqData> feedReqList) {
         super.onPostExecute(feedReqList);
         Log.e("abc", "onPostExecute feedReqList.size = " + feedReqList.size());
+        Log.e("abc", "mContext = " + mContext);
+        String activityName = mContext.getClass().getSimpleName();
 
-        if (feedReqList.size() > 0) {
-            ((MyFeedListActivity) mContext).txt_no_feed.setVisibility(View.GONE);
-            ((MyFeedListActivity) mContext).btn_go_reserv.setVisibility(View.GONE);
-            ((MyFeedListActivity) mContext).recyclerView_myFeed.setVisibility(View.VISIBLE);
+        if (activityName.equals("MainActivity")) {
+            //vvvvvvvvvvvvvv static ->
+            ProfileFragment.badge_poke_cnt.setText(String.valueOf(cnt_poke));
 
-            ((MyFeedListActivity) mContext).myFeedListAdapter = new MyFeedListAdapter(mContext, httpClient, feedReqList);
-            ((MyFeedListActivity) mContext).recyclerView_myFeed.setAdapter(((MyFeedListActivity) mContext).myFeedListAdapter);
-            ((MyFeedListActivity) mContext).myFeedListAdapter.notifyDataSetChanged();
-        } else {
-            ((MyFeedListActivity) mContext).txt_no_feed.setVisibility(View.VISIBLE);
-            ((MyFeedListActivity) mContext).btn_go_reserv.setVisibility(View.VISIBLE);
-            ((MyFeedListActivity) mContext).recyclerView_myFeed.setVisibility(View.GONE);
-        }
+            if (cnt_poke==0)
+                ProfileFragment.badge_poke_cnt.setVisibility(View.GONE);
+
+            if (feedReqList.size() > 0) {
+//                ((MainActivity) mContext).txt_no_feed.setVisibility(View.GONE);
+//                ((MyFeedListActivity) mContext).btn_go_reserv.setVisibility(View.GONE);
+//                ((MyFeedListActivity) mContext).recyclerView_myFeed.setVisibility(View.VISIBLE);
+
+//                Fragment fragment = ((MainActivity) mContext).pagerAdapter.getItem(1);
+//                ProfileFragment.newInstance(feedReqList);
+//                ((MainActivity) mContext).getSupportFragmentManager().beginTransaction().replace(R.id.layout_fragment_profile, fragment).commit();
+
+                //vvvvvvvvvvvvvvv static 처리되어있음
+                ProfileFragment.myFeedListAdapter = new MyFeedListAdapter(mContext, httpClient, feedReqList);
+                ProfileFragment.recyclerView_myFeed.setAdapter(ProfileFragment.myFeedListAdapter);
+                ProfileFragment.myFeedListAdapter.notifyDataSetChanged();
+            } else {
+//                ((MyFeedListActivity) mContext).txt_no_feed.setVisibility(View.VISIBLE);
+//                ((MyFeedListActivity) mContext).btn_go_reserv.setVisibility(View.VISIBLE);
+//                ProfileFragment.recyclerView_myFeed.setVisibility(View.GONE);
+            }
+
+        } else if (activityName.equals("MyFeedListActivity")) {
+
+            if (feedReqList.size() > 0) {
+                ((MyFeedListActivity) mContext).txt_no_feed.setVisibility(View.GONE);
+                ((MyFeedListActivity) mContext).btn_go_reserv.setVisibility(View.GONE);
+                ((MyFeedListActivity) mContext).recyclerView_myFeed.setVisibility(View.VISIBLE);
+
+                ((MyFeedListActivity) mContext).myFeedListAdapter = new MyFeedListAdapter(mContext, httpClient, feedReqList);
+                ((MyFeedListActivity) mContext).recyclerView_myFeed.setAdapter(((MyFeedListActivity) mContext).myFeedListAdapter);
+                ((MyFeedListActivity) mContext).myFeedListAdapter.notifyDataSetChanged();
+            } else {
+                ((MyFeedListActivity) mContext).txt_no_feed.setVisibility(View.VISIBLE);
+                ((MyFeedListActivity) mContext).btn_go_reserv.setVisibility(View.VISIBLE);
+                ((MyFeedListActivity) mContext).recyclerView_myFeed.setVisibility(View.GONE);
+            }
 
 //        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 ////        builder.setTitle("AlertDialog Title");
@@ -168,6 +209,7 @@ public class MyFeedListTask extends AsyncTask<Void, Void, ArrayList<FeedReqData>
 //                    }
 //                });
 //        builder.show();
+        }
     }
 
 }

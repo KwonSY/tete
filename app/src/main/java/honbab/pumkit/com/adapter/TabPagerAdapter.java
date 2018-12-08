@@ -21,17 +21,11 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-
         // Returning the current tabs
         switch (position) {
             case 0:
                 FeedFragment tabFragment1 = new FeedFragment();
                 return tabFragment1;
-//            case 1:
-////                ReservFragment tabFragment2 = new ReservFragment();
-////                return tabFragment2;
-////                return ReservFragment.newInstance();
-//                return ReservMapFragment.newInstance();
             case 1:
                 if (Statics.my_id == null) {
                     NoProfileFragment tabFragment2 = new NoProfileFragment();
