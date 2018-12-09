@@ -12,137 +12,143 @@
         android:layout_height="2dp"
         android:background="@color/mainColor" />
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/topbar"
-        android:layout_marginTop="15dp"
-        android:orientation="vertical"
-        android:paddingLeft="25dp"
-        android:paddingRight="25dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="40dp"
-            android:gravity="center_horizontal"
-            android:text="이제 같이 먹어요!&#10;밥 걱정없이 밥친구를 만들어요."
-            android:textSize="16sp" />
-
-        <ImageView
-            android:id="@+id/img_user"
-            android:layout_width="@dimen/profile_xl"
-            android:layout_height="@dimen/profile_xl"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/icon_noprofile_circle"/>
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal">
+            android:layout_below="@id/topbar"
+            android:orientation="vertical"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp">
 
             <TextView
-                android:layout_width="58dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="성별"
-                android:textSize="14sp" />
-
-            <RadioGroup
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/radio_male"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="3dp"
-                    android:buttonTint="#F1594A"
-                    android:text="남자"
-                    android:textSize="14sp" />
-
-                <RadioButton
-                    android:id="@+id/radio_female"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:buttonTint="#F1594A"
-                    android:text="여자"
-                    android:textSize="14sp" />
-            </RadioGroup>
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="2dp"
-            android:layout_marginLeft="58dp"
-            android:text="※주의! 잘못된 성별을 입력하시면, 서비스 제한을 받게 됩니다."
-            android:textSize="9sp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="58dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="나이"
-                android:textSize="14sp" />
-
-            <NumberPicker
-                android:id="@+id/picker_age"
-                android:layout_marginLeft="13dp"
-                android:layout_width="140dp"
-                android:layout_height="120dp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="58dp"
-                android:layout_height="wrap_content"
-                android:text="내 소개"
-                android:textSize="14sp" />
-
-            <EditText
-                android:id="@+id/edit_comment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/border_round_gr1"
-                android:hint="상대방에게 보여줄 내 소개를 한 문장으로 적어보아요."
-                android:inputType="text|textMultiLine|textCapSentences"
-                android:maxLength="140"
-                android:maxLines="9"
-                android:padding="10dp"
-                android:textSize="14sp" />
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="40dp"
+                android:layout_marginTop="15dp"
+                android:gravity="center_horizontal"
+                android:text="이제 같이 먹어요!&#10;밥 걱정없이 밥친구를 만들어요."
+                android:textSize="16sp" />
 
             <ImageView
-                android:id="@+id/btn_show_password"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
+                android:id="@+id/img_user"
+                android:layout_width="@dimen/profile_xl"
+                android:layout_height="@dimen/profile_xl"
+                android:layout_gravity="center_horizontal"
                 android:src="@drawable/icon_noprofile_circle" />
-        </LinearLayout>
-    </LinearLayout>
 
-    <Button
-        android:id="@+id/btn_start"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginLeft="25dp"
-        android:layout_marginRight="25dp"
-        android:background="@drawable/btn_circle_bk1"
-        android:text="시작하기" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="58dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="성별"
+                    android:textSize="14sp" />
+
+                <RadioGroup
+                    android:id="@+id/radio_group"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/radio_male"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="3dp"
+                        android:buttonTint="#F1594A"
+                        android:text="남자"
+                        android:textSize="14sp" />
+
+                    <RadioButton
+                        android:id="@+id/radio_female"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:buttonTint="#F1594A"
+                        android:text="여자"
+                        android:textSize="14sp" />
+                </RadioGroup>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="58dp"
+                android:layout_marginTop="2dp"
+                android:text="※주의! 잘못된 성별을 입력하시면, 서비스 제한을 받게 됩니다."
+                android:textSize="9sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="58dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="나이"
+                    android:textSize="14sp" />
+
+                <NumberPicker
+                    android:id="@+id/picker_age"
+                    android:layout_width="140dp"
+                    android:layout_height="120dp"
+                    android:layout_marginLeft="13dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="58dp"
+                    android:layout_height="wrap_content"
+                    android:text="내 소개"
+                    android:textSize="14sp" />
+
+                <EditText
+                    android:id="@+id/edit_comment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/border_round_gr1"
+                    android:hint="상대방에게 보여줄 내 소개를 한 문장으로 적어보아요."
+                    android:inputType="text|textMultiLine|textCapSentences"
+                    android:maxLength="140"
+                    android:maxLines="9"
+                    android:padding="10dp"
+                    android:textSize="14sp" />
+
+                <ImageView
+                    android:id="@+id/btn_show_password"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:src="@drawable/icon_noprofile_circle" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_start"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="15dp"
+                android:background="@drawable/btn_circle_bk1"
+                android:text="시작하기" />
+        </LinearLayout>
+    </ScrollView>
+
 </RelativeLayout>

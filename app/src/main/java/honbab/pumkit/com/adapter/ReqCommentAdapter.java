@@ -132,8 +132,6 @@ public class ReqCommentAdapter extends Adapter<ReqCommentAdapter.ViewHolder> {
         }
     }
 
-
-
     @Override
     public int getItemCount() {
         return listViewItemList.size() + 1;

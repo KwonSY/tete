@@ -53,18 +53,15 @@
 
         <Button
             android:id="@+id/btn_feed_cancle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="6dp"
-            android:background="@drawable/btn_circle_bk1_s"
+            android:layout_marginRight="4dp"
+            android:layout_marginTop="13dp"
+            android:background="@drawable/icon_x_gr_m"
             android:minHeight="0dp"
             android:minWidth="0dp"
-            android:paddingBottom="6dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="6dp"
-            android:text="@string/cancle"
+            android:text=""
             android:textColor="@color/grey"
             android:textSize="12sp" />
 

@@ -37,6 +37,8 @@ public class ReqFeedeeAdapter extends Adapter<ReqFeedeeAdapter.ViewHolder> {
     OkHttpClient httpClient;
     public ArrayList<UserData> listViewItemList = new ArrayList<>();
 
+    int TYPE_FOOTER = 2;
+
     String feed_id;
 
     public ReqFeedeeAdapter() {
@@ -46,122 +48,153 @@ public class ReqFeedeeAdapter extends Adapter<ReqFeedeeAdapter.ViewHolder> {
     public ReqFeedeeAdapter(Context context, OkHttpClient httpClient, String feed_id, ArrayList<UserData> usersItemList) {
         this.mContext = context;
         this.httpClient = httpClient;
-
         this.feed_id = feed_id;
         this.listViewItemList = usersItemList;
+        this.TYPE_FOOTER = listViewItemList.size();
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_row_reqfeedee, parent, false);
+        View view;
 
-        return new ViewHolder(view);
+        if (viewType == TYPE_FOOTER) {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_row_stub, parent, false);
+        } else {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_row_reqfeedee, parent, false);
+        }
+
+        return new ViewHolder(view, viewType);
     }
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
-        final UserData data = listViewItemList.get(position);
-        Log.e("abc", "data getImg_url = " + data.getImg_url());
 
-        Picasso.get().load(data.getImg_url())
-                .placeholder(R.drawable.icon_noprofile_circle)
-                .error(R.drawable.icon_noprofile_circle)
-                .transform(new CircleTransform())
-                .into(holder.img_feedee);
-        holder.txt_feedee_name.setText(data.getUser_name());
+        if (holder.holderId != TYPE_FOOTER) {
+            Log.e("abc", "holder.holderId = " + holder.holderId);
+            final UserData data = listViewItemList.get(position);
 
-        holder.img_feedee.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //vvvvvvvvvvvvvvv
-                Intent intent = new Intent(mContext, ProfileActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.putExtra("user_id", data.getUser_id());
-                mContext.startActivity(intent);
-            }
-        });
-        holder.btn_check_feedee.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String message = String.format(mContext.getResources().getString(R.string.ask_godmuk_with), data.getUser_name());
+            Picasso.get().load(data.getImg_url())
+                    .placeholder(R.drawable.icon_noprofile_circle)
+                    .error(R.drawable.icon_noprofile_circle)
+                    .transform(new CircleTransform())
+                    .into(holder.img_feedee);
+            holder.txt_feedee_name.setText(data.getUser_name());
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                builder.setMessage(message);
-                builder.setPositiveButton(R.string.yes,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                new AcceptFeedTask(mContext, httpClient, holder, data, feed_id, position)
-                                        .execute(feed_id, data.getUser_id());
-                            }
-                        });
-                builder.setNegativeButton(R.string.no,
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
+            holder.img_feedee.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //vvvvvvvvvvvvvvv
+                    Intent intent = new Intent(mContext, ProfileActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.putExtra("user_id", data.getUser_id());
+                    mContext.startActivity(intent);
+                }
+            });
+            holder.btn_check_feedee.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String message = String.format(mContext.getResources().getString(R.string.ask_godmuk_with), data.getUser_name());
 
-                            }
-                        });
-                builder.show();
-            }
-        });
-        holder.btn_check_feedee.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                int action = motionEvent.getAction();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                    builder.setMessage(message);
+                    builder.setPositiveButton(R.string.yes,
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    new AcceptFeedTask(mContext, httpClient, holder, data, feed_id, position)
+                                            .execute(feed_id, data.getUser_id());
+                                }
+                            });
+                    builder.setNegativeButton(R.string.no,
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
 
-                if (action == MotionEvent.ACTION_DOWN) {
-                    holder.btn_check_feedee.setBackgroundResource(R.drawable.icon_check_y);
-                } else if (action == MotionEvent.ACTION_UP) {
-                    holder.btn_check_feedee.setBackgroundResource(R.drawable.icon_check_y);
+                                }
+                            });
+                    builder.show();
+                }
+            });
+            holder.btn_check_feedee.setOnTouchListener(new OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    int action = motionEvent.getAction();
+
+                    if (action == MotionEvent.ACTION_DOWN) {
+                        holder.btn_check_feedee.setBackgroundResource(R.drawable.icon_check_y);
+                    } else if (action == MotionEvent.ACTION_UP) {
+                        holder.btn_check_feedee.setBackgroundResource(R.drawable.icon_check_y);
 
 //                    holder.btn_accept.setText(R.string.acceptComplete);
+                    }
+
+                    return false;
                 }
+            });
 
-                return false;
-            }
-        });
+            holder.btn_accept.setOnTouchListener(new OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    int action = motionEvent.getAction();
 
-        holder.btn_accept.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                int action = motionEvent.getAction();
-
-                if (action == MotionEvent.ACTION_DOWN) {
+                    if (action == MotionEvent.ACTION_DOWN) {
 //                    holder.btn_accept.setBackgroundColor(mContext.getResources(R.color.darkgrey));
 //                    holder.btn_accept.setBackgroundColor(Color.GRAY);
-                } else if (action == MotionEvent.ACTION_UP) {
+                    } else if (action == MotionEvent.ACTION_UP) {
 //                    holder.btn_accept.setBackgroundColor(Color.WHITE);
 
-                    new AcceptReservTask(mContext, httpClient, holder, data, feed_id, position)
-                            .execute(feed_id, data.getUser_id());
+                        new AcceptReservTask(mContext, httpClient, holder, data, feed_id, position)
+                                .execute(feed_id, data.getUser_id());
 
-                    holder.btn_accept.setText(R.string.acceptComplete);
+                        holder.btn_accept.setText(R.string.acceptComplete);
+                    }
+
+                    return false;
                 }
+            });
+        }
+    }
 
-                return false;
-            }
-        });
+    private boolean isPositionFooter(int position) {
+        return position == TYPE_FOOTER;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (isPositionFooter(position)) {
+            return TYPE_FOOTER;
+        } else {
+            int type = position;
+            return type;
+        }
     }
 
     @Override
     public int getItemCount() {
-        return listViewItemList.size();
+        return listViewItemList.size() + 1;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        int holderId;
+
         ImageView img_feedee;
         public ImageView btn_check_feedee;
         TextView txt_feedee_name;
         Button btn_accept;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(View itemView, int viewType) {
             super(itemView);
 
-            img_feedee = itemView.findViewById(R.id.img_feedee);
-            btn_check_feedee = itemView.findViewById(R.id.btn_check_feedee);
-            txt_feedee_name = itemView.findViewById(R.id.txt_feedee_name);
-            btn_accept = itemView.findViewById(R.id.btn_accept);
+            if (viewType == TYPE_FOOTER) {
+                holderId = TYPE_FOOTER;
+            } else {
+                holderId = 10000;
+
+                img_feedee = itemView.findViewById(R.id.img_feedee);
+                btn_check_feedee = itemView.findViewById(R.id.btn_check_feedee);
+                txt_feedee_name = itemView.findViewById(R.id.txt_feedee_name);
+                btn_accept = itemView.findViewById(R.id.btn_accept);
+            }
         }
     }
 

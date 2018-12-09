@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -37,8 +38,7 @@ public class JoinActivity extends AppCompatActivity {
     private SessionManager session;
 
     private EditText edit_email, edit_name, edit_password;
-
-//    private String user_name;
+    private CheckBox chk_privacy, chk_personal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,12 +56,9 @@ public class JoinActivity extends AppCompatActivity {
                 return "";
             }
         };
-        Pattern pattern1 = Pattern.compile("");
-        Pattern pattern2 = Pattern.compile("");
-        Linkify.addLinks(link_privacy, pattern1, Statics.main_url + "law/privacy/", null, mTransform);
-        Linkify.addLinks(link_personal, pattern2, Statics.main_url + "law/personal/", null, mTransform);
-//        Linkify.addLinks(link_privacy, Linkify.WEB_URLS);
-//        link_privacy.setMovementMethod(LinkMovementMethod.getInstance());
+        Pattern pattern = Pattern.compile("");
+        Linkify.addLinks(link_privacy, pattern, Statics.main_url + "law/privacy/", null, mTransform);
+        Linkify.addLinks(link_personal, pattern, Statics.main_url + "law/personal/", null, mTransform);
 
         edit_email = (EditText) findViewById(R.id.edit_email);
         edit_name = (EditText) findViewById(R.id.edit_name);
@@ -89,6 +86,9 @@ public class JoinActivity extends AppCompatActivity {
             }
         });
 
+        chk_privacy = (CheckBox) findViewById(R.id.chk_privacy);
+        chk_personal = (CheckBox) findViewById(R.id.chk_personal);
+
         Button btn_join = (Button) findViewById(R.id.btn_join);
         btn_join.setOnClickListener(mOnClickListener);
 
@@ -99,27 +99,27 @@ public class JoinActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
-                case R.id.btn_back:
-                    onBackPressed();
-
-                    break;
                 case R.id.btn_join:
                     String user_name = edit_name.getText().toString().trim();
                     String str_email = edit_email.getText().toString().trim();
                     String password = edit_password.getText().toString().trim();
-                    Log.e("abc", "user_name = " + user_name);
+                    Log.e("abc", "chk_privacy.isChecked() = " + chk_privacy.isChecked());
                     if (user_name.equals("") || user_name == null) {
-                        Toast.makeText(JoinActivity.this, "이름을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(JoinActivity.this, R.string.enter_name, Toast.LENGTH_SHORT).show();
                     } else if (str_email.equals("") || str_email == null) {
-                        Toast.makeText(JoinActivity.this, "이메일을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(JoinActivity.this, R.string.enter_email, Toast.LENGTH_SHORT).show();
                     } else if (password.equals("") || password == null) {
-                        Toast.makeText(JoinActivity.this, "비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(JoinActivity.this, R.string.enter_password, Toast.LENGTH_SHORT).show();
                     } else if (password.length() < 8 || password.matches("[0-9|a-z|A-Z|ㄱ-ㅎ|ㅏ-ㅣ|가-힝]*")) {
-                        Toast.makeText(JoinActivity.this, "8~16자 영문 대 소문자, 숫자, 특수문자를 사용하세요.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(JoinActivity.this, R.string.enter_at_least_8, Toast.LENGTH_SHORT).show();
+                    } else if (!chk_privacy.isChecked()) {
+                        Toast.makeText(JoinActivity.this, R.string.agree_privacy, Toast.LENGTH_SHORT).show();
+                    } else if (!chk_personal.isChecked()) {
+                        Toast.makeText(JoinActivity.this, R.string.agree_personal, Toast.LENGTH_SHORT).show();
                     } else if (isValidEmail(str_email)) {
                         new JoinTask().execute();
                     } else {
-                        Toast.makeText(JoinActivity.this.getApplicationContext(), "올바른 이메일 형식이 아닙니다.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(JoinActivity.this.getApplicationContext(), R.string.not_a_valid_email_format_, Toast.LENGTH_SHORT).show();
                     }
 
                     break;
@@ -128,7 +128,6 @@ public class JoinActivity extends AppCompatActivity {
     };
 
     private class JoinTask extends AsyncTask<Void, Void, Void> {
-
         String user_name, email, password;
         String result;
 

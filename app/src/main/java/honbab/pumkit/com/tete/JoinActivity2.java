@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -40,7 +41,6 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import honbab.pumkit.com.utils.ButtonUtil;
 import honbab.pumkit.com.widget.CircleTransform;
 import honbab.pumkit.com.widget.OkHttpClientSingleton;
 import honbab.pumkit.com.widget.RealPathUtil;
@@ -56,6 +56,9 @@ public class JoinActivity2 extends AppCompatActivity {
     private RequestQueue mQueue;
 
     private ImageView img_user;
+    private RadioGroup radio_group;
+    private RadioButton radio_male, radio_female;
+    private NumberPicker numberPicker;
 
     String gender = "m", age = "24", comment = "";
 
@@ -77,8 +80,9 @@ public class JoinActivity2 extends AppCompatActivity {
         img_user = (ImageView) findViewById(R.id.img_user);
         img_user.setOnClickListener(mOnClickListener);
 
-        RadioButton radio_male = (RadioButton) findViewById(R.id.radio_male);
-        RadioButton radio_female = (RadioButton) findViewById(R.id.radio_female);
+        radio_group = (RadioGroup) findViewById(R.id.radio_group);
+        radio_male = (RadioButton) findViewById(R.id.radio_male);
+        radio_female = (RadioButton) findViewById(R.id.radio_female);
         radio_male.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,7 +97,7 @@ public class JoinActivity2 extends AppCompatActivity {
         });
         radio_male.setChecked(true);
 
-        NumberPicker numberPicker = (NumberPicker) findViewById(R.id.picker_age);
+        numberPicker = (NumberPicker) findViewById(R.id.picker_age);
         numberPicker.setMinValue(8);
         numberPicker.setMaxValue(99);
         numberPicker.setValue(24);
@@ -130,8 +134,6 @@ public class JoinActivity2 extends AppCompatActivity {
 
         Button btn_start = (Button) findViewById(R.id.btn_start);
         btn_start.setOnClickListener(mOnClickListener);
-
-        ButtonUtil.setBackButtonClickListener(this);
     }
 
     //selectImage(view);
@@ -144,7 +146,17 @@ public class JoinActivity2 extends AppCompatActivity {
 
                     break;
                 case R.id.btn_start:
-                    new UpdateProfileTask().execute();
+                    Log.e("abc", "numberPicker = " + radio_group.getCheckedRadioButtonId());
+
+                    if (mImageUri == null) {
+                        Toast.makeText(JoinActivity2.this, R.string.upload_profile_image, Toast.LENGTH_SHORT).show();
+                    } else if (numberPicker.getValue() == 0) {
+                        Toast.makeText(JoinActivity2.this, R.string.enter_age, Toast.LENGTH_SHORT).show();
+                    } else if (radio_group.getCheckedRadioButtonId() == -1) {
+                        Toast.makeText(JoinActivity2.this, R.string.enter_gender, Toast.LENGTH_SHORT).show();
+                    } else {
+                        new UpdateProfileTask().execute();
+                    }
 
                     break;
             }

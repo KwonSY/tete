@@ -18,15 +18,12 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 import honbab.pumkit.com.adapter.MyFeedListAdapter;
-import honbab.pumkit.com.data.CommentData;
 import honbab.pumkit.com.data.FeedReqData;
-import honbab.pumkit.com.data.UserData;
 import honbab.pumkit.com.task.MyFeedListTask;
 import honbab.pumkit.com.tete.PokeListActivity;
 import honbab.pumkit.com.tete.ProfileActivity;
@@ -58,7 +55,8 @@ public class ProfileFragment extends Fragment {
     public static RecyclerView recyclerView_myFeed;
     public static MyFeedListAdapter myFeedListAdapter;
 
-    int cnt_my = 0, cnt_your = 0, cnt_comment = 0;
+//    int cnt_my = 0, cnt_your = 0, cnt_comment = 0;
+    private ArrayList<FeedReqData> pokeList = new ArrayList<>();
 
     public ProfileFragment() {
 
@@ -139,6 +137,7 @@ public class ProfileFragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView_myFeed = (RecyclerView) getActivity().findViewById(R.id.recyclerView_myFeed);
         recyclerView_myFeed.setLayoutManager(layoutManager);
+        if (recyclerView_myFeed.getItemDecorationCount() == 0)
         recyclerView_myFeed.addItemDecoration(new VerticalItemDecoration(20, false));
         myFeedListAdapter = new MyFeedListAdapter();
         recyclerView_myFeed.setAdapter(myFeedListAdapter);
@@ -259,134 +258,133 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    ArrayList<FeedReqData> myFeedList = new ArrayList<>();
-    ArrayList<FeedReqData> pokeList = new ArrayList<>();
-    public class MyTotalFeedListTask extends AsyncTask<Void, Void, Void> {
-        String result;
-        String host;
-        String rest_name;
-
-        @Override
-        protected void onPreExecute() {
-            myFeedList.clear();
-            pokeList.clear();
-
-            cnt_my = 0;
-            cnt_your = 0;
-            cnt_comment = 0;
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-//            ArrayList<FeedReqData> feedReqList = new ArrayList<>();
-
-            FormBody body = new FormBody.Builder()
-                    .add("opt", "my_totla_feed_cnt")
-                    .add("my_id", my_id)
-                    .build();
-
-            Request request = new Request.Builder().url(Statics.opt_url).post(body).build();
-
-            try {
-                okhttp3.Response response = httpClient.newCall(request).execute();
-                if (response.isSuccessful()) {
-                    String bodyStr = response.body().string();
-
-                    JSONObject obj = new JSONObject(bodyStr);
-                    Log.e("abc", "my_totla_feed_cnt = " + obj);
-
-                    result = obj.getString("result");
-
-                    String cnt_my_feed = obj.getString("cnt_my_feed");
-                    String cnt_poke = obj.getString("cnt_poke");
-                    String cnt_comm = obj.getString("cnt_comment");
-                    cnt_my = Integer.parseInt(cnt_my_feed);
-                    cnt_your = Integer.parseInt(cnt_poke);
-                    cnt_comment = Integer.parseInt(cnt_comm);
-
-                    if (result.equals("0")) {
-//                        if (!obj.getJSONObject("host").isNull("") ) {
-                        JSONArray feedArr = obj.getJSONArray("feed");
-                        for (int i = 0; i < feedArr.length(); i++) {
-                            ArrayList<UserData> reqUsersList = new ArrayList<>();
-                            ArrayList<CommentData> commentsList = new ArrayList<>();
-
-
-                            JSONObject feedObj = feedArr.getJSONObject(i);
-
-                            String feed_id = feedObj.getString("sid");
-                            host = feedObj.getString("host");
-//                            if (host.equals("my"))
-//                                cnt_my++;
-//                            else if (host.equals("your"))
-//                                cnt_your++;
-//                            else if (host.equals("comment"))
-//                                cnt_comment++;
-
-                            JSONObject restObj = feedObj.getJSONObject("rest");
-                            String rest_id = restObj.getString("sid");
-                            rest_name = restObj.getString("name");
-                            Double lat = Double.parseDouble(restObj.getString("lat"));
-                            Double lng = Double.parseDouble(restObj.getString("lng"));
-                            String rest_img = restObj.getString("img_url");
-
-                            if (feedObj.has("users")) {
-                                JSONArray usersArr = feedObj.getJSONArray("users");
-
-                                for (int j = 0; j < usersArr.length(); j++) {
-                                    JSONObject userObj = usersArr.getJSONObject(j);
-
-                                    String user_id = userObj.getString("sid");
-                                    String user_name = userObj.getString("name");
-                                    String user_img = Statics.main_url + userObj.getString("img_url");
-                                    String age = userObj.getString("age");
-                                    String gender = userObj.getString("gender");
-                                    String user_status = userObj.getString("status");
-                                    String time = userObj.getString("time");
-
-                                    UserData userData = new UserData(user_id, user_name, age, gender, user_img, user_status);
-                                    reqUsersList.add(userData);
-                                }
-                            }
-
-//                            FeedReqData data = new FeedReqData(feed_id, rest_id, rest_name, rest_img, reqUsersList, commentsList);
-//                            feedReqList.add(data);
-
-//                            if (host.equals("my"))
-//                                myFeedList.add(data);
-//                            else if (host.equals("your"))
-//                                pokeList.add(data);
-
-                            String status = feedObj.getString("status");
-                        }
-                    }
-
-                } else {
-//                    Log.d(TAG, "Error : " + response.code() + ", " + response.message());
-                }
-
-            } catch (Exception e) {
-                Log.e("abc", "Error : " + e.getMessage());
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-//            badge_feed_cnt.setText(String.valueOf(cnt_my));
-            badge_poke_cnt.setText(String.valueOf(cnt_your));
-//            badge_comment_cnt.setText(String.valueOf(cnt_comment));
-
-//            if (cnt_my==0)
-//                badge_feed_cnt.setVisibility(View.GONE);
-            if (cnt_your==0)
-                badge_poke_cnt.setVisibility(View.GONE);
-//            if (cnt_comment==0)
-//                badge_comment_cnt.setVisibility(View.GONE);
-        }
-
-    }
-
+//    ArrayList<FeedReqData> myFeedList = new ArrayList<>();
+//    ArrayList<FeedReqData> pokeList = new ArrayList<>();
+//    public class MyTotalFeedListTaskxxxxx extends AsyncTask<Void, Void, Void> {
+//        String result;
+//        String host;
+//        String rest_name;
+//
+//        @Override
+//        protected void onPreExecute() {
+//            myFeedList.clear();
+//            pokeList.clear();
+//
+//            cnt_my = 0;
+//            cnt_your = 0;
+//            cnt_comment = 0;
+//        }
+//
+//        @Override
+//        protected Void doInBackground(Void... params) {
+////            ArrayList<FeedReqData> feedReqList = new ArrayList<>();
+//
+//            FormBody body = new FormBody.Builder()
+//                    .add("opt", "my_totla_feed_cnt")
+//                    .add("my_id", my_id)
+//                    .build();
+//
+//            Request request = new Request.Builder().url(Statics.opt_url).post(body).build();
+//
+//            try {
+//                okhttp3.Response response = httpClient.newCall(request).execute();
+//                if (response.isSuccessful()) {
+//                    String bodyStr = response.body().string();
+//
+//                    JSONObject obj = new JSONObject(bodyStr);
+//                    Log.e("abc", "my_totla_feed_cnt = " + obj);
+//
+//                    result = obj.getString("result");
+//
+//                    String cnt_my_feed = obj.getString("cnt_my_feed");
+//                    String cnt_poke = obj.getString("cnt_poke");
+//                    String cnt_comm = obj.getString("cnt_comment");
+//                    cnt_my = Integer.parseInt(cnt_my_feed);
+//                    cnt_your = Integer.parseInt(cnt_poke);
+//                    cnt_comment = Integer.parseInt(cnt_comm);
+//
+//                    if (result.equals("0")) {
+////                        if (!obj.getJSONObject("host").isNull("") ) {
+//                        JSONArray feedArr = obj.getJSONArray("feed");
+//                        for (int i = 0; i < feedArr.length(); i++) {
+//                            ArrayList<UserData> reqUsersList = new ArrayList<>();
+//                            ArrayList<CommentData> commentsList = new ArrayList<>();
+//
+//
+//                            JSONObject feedObj = feedArr.getJSONObject(i);
+//
+//                            String feed_id = feedObj.getString("sid");
+//                            host = feedObj.getString("host");
+////                            if (host.equals("my"))
+////                                cnt_my++;
+////                            else if (host.equals("your"))
+////                                cnt_your++;
+////                            else if (host.equals("comment"))
+////                                cnt_comment++;
+//
+//                            JSONObject restObj = feedObj.getJSONObject("rest");
+//                            String rest_id = restObj.getString("sid");
+//                            rest_name = restObj.getString("name");
+//                            Double lat = Double.parseDouble(restObj.getString("lat"));
+//                            Double lng = Double.parseDouble(restObj.getString("lng"));
+//                            String rest_img = restObj.getString("img_url");
+//
+//                            if (feedObj.has("users")) {
+//                                JSONArray usersArr = feedObj.getJSONArray("users");
+//
+//                                for (int j = 0; j < usersArr.length(); j++) {
+//                                    JSONObject userObj = usersArr.getJSONObject(j);
+//
+//                                    String user_id = userObj.getString("sid");
+//                                    String user_name = userObj.getString("name");
+//                                    String user_img = Statics.main_url + userObj.getString("img_url");
+//                                    String age = userObj.getString("age");
+//                                    String gender = userObj.getString("gender");
+//                                    String user_status = userObj.getString("status");
+//                                    String time = userObj.getString("time");
+//
+//                                    UserData userData = new UserData(user_id, user_name, age, gender, user_img, user_status);
+//                                    reqUsersList.add(userData);
+//                                }
+//                            }
+//
+////                            FeedReqData data = new FeedReqData(feed_id, rest_id, rest_name, rest_img, reqUsersList, commentsList);
+////                            feedReqList.add(data);
+//
+////                            if (host.equals("my"))
+////                                myFeedList.add(data);
+////                            else if (host.equals("your"))
+////                                pokeList.add(data);
+//
+//                            String status = feedObj.getString("status");
+//                        }
+//                    }
+//
+//                } else {
+////                    Log.d(TAG, "Error : " + response.code() + ", " + response.message());
+//                }
+//
+//            } catch (Exception e) {
+//                Log.e("abc", "Error : " + e.getMessage());
+//                e.printStackTrace();
+//            }
+//
+//            return null;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Void aVoid) {
+////            badge_feed_cnt.setText(String.valueOf(cnt_my));
+//            badge_poke_cnt.setText(String.valueOf(cnt_your));
+////            badge_comment_cnt.setText(String.valueOf(cnt_comment));
+//
+////            if (cnt_my==0)
+////                badge_feed_cnt.setVisibility(View.GONE);
+//            if (cnt_your==0)
+//                badge_poke_cnt.setVisibility(View.GONE);
+////            if (cnt_comment==0)
+////                badge_comment_cnt.setVisibility(View.GONE);
+//        }
+//
+//    }
 }

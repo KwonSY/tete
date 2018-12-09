@@ -2,8 +2,10 @@ package honbab.pumkit.com.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -63,6 +65,7 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         final FeedReqData data = listViewItemList.get(position);
         ArrayList<UserData> usersList = data.getUsersList();
+        final String feed_id = data.getFeed_id();
 
         Picasso.get().load(data.getRest_img())
                 .resize(70, 70).centerCrop()
@@ -78,10 +81,29 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
             e.printStackTrace();
         }
 
+        holder.btn_feed_cancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setMessage(R.string.ask_cancle_godmuk);
+                builder.setPositiveButton(R.string.yes,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                new FeedCancleTask(mContext, httpClient, feed_id, listViewItemList.get(position).getRest_name()).execute();
+                            }
+                        });
+                builder.setNegativeButton(R.string.no,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        });
+                builder.show();
+            }
+        });
 
         if (holder.holderId == TYPE_STATUS_N) {
             //TYPE_STATUS_N
-            final String feed_id = data.getFeed_id();
             final ReqFeedeeAdapter mAdapter = new ReqFeedeeAdapter(mContext, httpClient, feed_id, usersList);
 
             if (usersList.size() == 0) {
@@ -94,12 +116,7 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
                 holder.recyclerView_feedee.setAdapter(mAdapter);
             }
 
-            holder.btn_feed_cancle.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    new FeedCancleTask(mContext, httpClient, feed_id, listViewItemList.get(position).getRest_name()).execute();
-                }
-            });
+
 
             holder.btn_choose_feeder.setOnClickListener(new View.OnClickListener() {
                 @Override
