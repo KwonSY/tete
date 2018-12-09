@@ -145,7 +145,7 @@
             android:background="@drawable/btn_circle_bk1"
             android:minHeight="0dp"
             android:minWidth="0dp"
-            android:padding="11dp"
+            android:padding="13dp"
             android:text="동의하고 시작하기" />
     </LinearLayout>
 </RelativeLayout>

@@ -28,7 +28,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="40dp"
+                android:layout_marginBottom="22dp"
                 android:layout_marginTop="15dp"
                 android:gravity="center_horizontal"
                 android:text="이제 같이 먹어요!&#10;밥 걱정없이 밥친구를 만들어요."
@@ -142,12 +142,19 @@
 
             <Button
                 android:id="@+id/btn_start"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_gravity="right"
                 android:layout_marginBottom="15dp"
+                android:layout_marginTop="20dp"
                 android:background="@drawable/btn_circle_bk1"
-                android:text="시작하기" />
+                android:minHeight="0dp"
+                android:minWidth="0dp"
+                android:paddingBottom="13dp"
+                android:paddingLeft="19dp"
+                android:paddingRight="19dp"
+                android:paddingTop="13dp"
+                android:text="같이먹어요 시작하기" />
         </LinearLayout>
     </ScrollView>
 
