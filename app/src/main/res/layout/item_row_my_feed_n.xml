@@ -58,7 +58,7 @@
             android:layout_below="@id/txt_restName"
             android:layout_toRightOf="@id/img_rest"
             android:paddingLeft="15dp"
-            android:paddingRight="15dp" />
+            android:paddingRight="75dp" />
 
         <Button
             android:id="@+id/btn_feed_cancle"

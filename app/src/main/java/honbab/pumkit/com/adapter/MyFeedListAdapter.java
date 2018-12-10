@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import honbab.pumkit.com.data.FeedReqData;
 import honbab.pumkit.com.data.UserData;
 import honbab.pumkit.com.task.FeedCancleTask;
 import honbab.pumkit.com.tete.ChatActivity;
+import honbab.pumkit.com.tete.ProfileActivity;
 import honbab.pumkit.com.tete.R;
 import okhttp3.OkHttpClient;
 
@@ -116,30 +118,15 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
                 holder.recyclerView_feedee.setAdapter(mAdapter);
             }
 
-
-
             holder.btn_choose_feeder.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    mAdapter.activateButtons(holder.bool_choose);
+                    Log.e("abc", "holder.bool_choose = " + holder.bool_choose);
                     if (holder.bool_choose) {
-                        for (int i = 0; i < mAdapter.getItemCount(); i++) {
-                            ImageView tmp = (ImageView) holder.recyclerView_feedee
-                                    .findContainingItemView(holder.recyclerView_feedee.getChildAt(i))
-                                    .findViewById(R.id.btn_check_feedee);
-                            tmp.setVisibility(View.VISIBLE);
-                        }
-
                         holder.btn_choose_feeder.setText(R.string.cancellation);
                         holder.bool_choose = false;
                     } else {
-//                        new AcceptReservTask(mContext, httpClient).execute();
-                        for (int i = 0; i < mAdapter.getItemCount(); i++) {
-                            ImageView tmp = (ImageView) holder.recyclerView_feedee
-                                    .findContainingItemView(holder.recyclerView_feedee.getChildAt(i))
-                                    .findViewById(R.id.btn_check_feedee);
-                            tmp.setVisibility(View.GONE);
-                        }
-
                         holder.btn_choose_feeder.setText(R.string.accept);
                         holder.bool_choose = true;
                     }
@@ -149,8 +136,6 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
             //TYPE_STATUS_Y
 //            holder.txt_no_req.setVisibility(View.GONE);
 //            holder.txt_restName.setText(data.getRest_name());
-
-
             for (int i=0; i<usersList.size(); i++) {
                 if (usersList.get(i).getStatus().equals("y")) {
                     holder.toId = String.valueOf(usersList.get(i).getUser_id());
@@ -158,6 +143,20 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
                     holder.toImg = String.valueOf(usersList.get(i).getImg_url());
                 }
             }
+            Log.e("abc", "holder.toImg = " + holder.toImg);
+            Picasso.get().load(holder.toImg)
+                    .resize(90, 90).centerCrop()
+                    .placeholder(R.drawable.icon_no_image).error(R.drawable.icon_no_image)
+                    .into(holder.img_feeder);
+            holder.img_feeder.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(mContext, ProfileActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.putExtra("user_id", holder.toId);
+                    mContext.startActivity(intent);
+                }
+            });
 
             holder.btn_chat.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -175,7 +174,6 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
 
     @Override
     public int getItemViewType(int position) {
-
         String status = listViewItemList.get(position).getStatus();
 
         if (status.equals("n")) {

@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -37,8 +36,7 @@ public class ReqFeedeeAdapter extends Adapter<ReqFeedeeAdapter.ViewHolder> {
     OkHttpClient httpClient;
     public ArrayList<UserData> listViewItemList = new ArrayList<>();
 
-    int TYPE_FOOTER = 2;
-
+    public boolean activate;
     String feed_id;
 
     public ReqFeedeeAdapter() {
@@ -50,29 +48,19 @@ public class ReqFeedeeAdapter extends Adapter<ReqFeedeeAdapter.ViewHolder> {
         this.httpClient = httpClient;
         this.feed_id = feed_id;
         this.listViewItemList = usersItemList;
-        this.TYPE_FOOTER = listViewItemList.size();
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view;
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_row_reqfeedee, parent, false);
 
-        if (viewType == TYPE_FOOTER) {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_row_stub, parent, false);
-        } else {
-            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_row_reqfeedee, parent, false);
-        }
-
-        return new ViewHolder(view, viewType);
+        return new ViewHolder(view);
     }
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
-
-        if (holder.holderId != TYPE_FOOTER) {
-            Log.e("abc", "holder.holderId = " + holder.holderId);
             final UserData data = listViewItemList.get(position);
 
             Picasso.get().load(data.getImg_url())
@@ -85,13 +73,18 @@ public class ReqFeedeeAdapter extends Adapter<ReqFeedeeAdapter.ViewHolder> {
             holder.img_feedee.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //vvvvvvvvvvvvvvv
                     Intent intent = new Intent(mContext, ProfileActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.putExtra("user_id", data.getUser_id());
                     mContext.startActivity(intent);
                 }
             });
+
+            if (activate) {
+                holder.btn_check_feedee.setVisibility(View.VISIBLE);
+            } else {
+                holder.btn_check_feedee.setVisibility(View.GONE);
+            }
             holder.btn_check_feedee.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -109,7 +102,7 @@ public class ReqFeedeeAdapter extends Adapter<ReqFeedeeAdapter.ViewHolder> {
                     builder.setNegativeButton(R.string.no,
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-
+                                    holder.btn_check_feedee.setBackgroundResource(R.drawable.icon_check_n);
                                 }
                             });
                     builder.show();
@@ -124,8 +117,6 @@ public class ReqFeedeeAdapter extends Adapter<ReqFeedeeAdapter.ViewHolder> {
                         holder.btn_check_feedee.setBackgroundResource(R.drawable.icon_check_y);
                     } else if (action == MotionEvent.ACTION_UP) {
                         holder.btn_check_feedee.setBackgroundResource(R.drawable.icon_check_y);
-
-//                    holder.btn_accept.setText(R.string.acceptComplete);
                     }
 
                     return false;
@@ -138,11 +129,8 @@ public class ReqFeedeeAdapter extends Adapter<ReqFeedeeAdapter.ViewHolder> {
                     int action = motionEvent.getAction();
 
                     if (action == MotionEvent.ACTION_DOWN) {
-//                    holder.btn_accept.setBackgroundColor(mContext.getResources(R.color.darkgrey));
-//                    holder.btn_accept.setBackgroundColor(Color.GRAY);
-                    } else if (action == MotionEvent.ACTION_UP) {
-//                    holder.btn_accept.setBackgroundColor(Color.WHITE);
 
+                    } else if (action == MotionEvent.ACTION_UP) {
                         new AcceptReservTask(mContext, httpClient, holder, data, feed_id, position)
                                 .execute(feed_id, data.getUser_id());
 
@@ -152,49 +140,28 @@ public class ReqFeedeeAdapter extends Adapter<ReqFeedeeAdapter.ViewHolder> {
                     return false;
                 }
             });
-        }
-    }
-
-    private boolean isPositionFooter(int position) {
-        return position == TYPE_FOOTER;
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        if (isPositionFooter(position)) {
-            return TYPE_FOOTER;
-        } else {
-            int type = position;
-            return type;
-        }
+//        }
     }
 
     @Override
     public int getItemCount() {
-        return listViewItemList.size() + 1;
+        return listViewItemList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        int holderId;
-
         ImageView img_feedee;
         public ImageView btn_check_feedee;
         TextView txt_feedee_name;
         Button btn_accept;
 
-        public ViewHolder(View itemView, int viewType) {
+        public ViewHolder(View itemView) {
             super(itemView);
-
-            if (viewType == TYPE_FOOTER) {
-                holderId = TYPE_FOOTER;
-            } else {
-                holderId = 10000;
 
                 img_feedee = itemView.findViewById(R.id.img_feedee);
                 btn_check_feedee = itemView.findViewById(R.id.btn_check_feedee);
                 txt_feedee_name = itemView.findViewById(R.id.txt_feedee_name);
                 btn_accept = itemView.findViewById(R.id.btn_accept);
-            }
+//            }
         }
     }
 
@@ -204,11 +171,8 @@ public class ReqFeedeeAdapter extends Adapter<ReqFeedeeAdapter.ViewHolder> {
         return layoutPosition;
     }
 
-    public void showBtnCheckFeedee(@NonNull ViewHolder holder) {
-        //vvvvvvvvvvvvvvv
-//        mAdapter.
-//        ViewHolder holder = get
-        holder.btn_check_feedee.setVisibility(View.VISIBLE);
-//        holder.btn_check_feedee.setVisibility(View.VISIBLE);
+    public void activateButtons(boolean activate) {
+        this.activate = activate;
+        notifyDataSetChanged();
     }
 }
