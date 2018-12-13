@@ -8,7 +8,7 @@
     android:gravity="bottom"
     app:umanoPanelHeight="20dp"
     app:umanoShadowHeight="0dp"
-    tools:context="honbab.pumkit.com.tete.OneRestaurantActivity">
+    tools:context="honbab.voltage.com.tete.OneRestaurantActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"

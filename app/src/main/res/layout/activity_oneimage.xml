@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000"
-    tools:context="honbab.pumkit.com.tete.OneImageActivity">
+    tools:context="honbab.voltage.com.tete.OneImageActivity">
 
     <uk.co.senab.photoview.PhotoView
         android:id="@+id/photoView"

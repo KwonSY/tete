@@ -5,7 +5,7 @@
     android:id="@+id/layout_fragment_feed"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="honbab.pumkit.com.tete.MainActivity">
+    tools:context="honbab.voltage.com.tete.MainActivity">
 
     <include
         android:id="@+id/layout_topbar"

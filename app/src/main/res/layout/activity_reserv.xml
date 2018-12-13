@@ -8,7 +8,7 @@
     android:gravity="bottom"
     app:umanoPanelHeight="20dp"
     app:umanoShadowHeight="0dp"
-    tools:context="honbab.pumkit.com.tete.ReservActivity">
+    tools:context="honbab.voltage.com.tete.ReservActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"

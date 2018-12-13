@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="43dp"
     android:background="@color/mainColor"
-    tools:context="honbab.pumkit.com.tete.MainActivity">
+    tools:context="honbab.voltage.com.tete.MainActivity">
 
     <View
         android:id="@+id/line_maincolor"

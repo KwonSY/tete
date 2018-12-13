@@ -8,7 +8,7 @@
     android:gravity="bottom"
     app:umanoPanelHeight="20dp"
     app:umanoShadowHeight="0dp"
-    tools:context="honbab.pumkit.com.tete.MapsActivity">
+    tools:context="honbab.voltage.com.tete.MapsActivity">
 
     <include
         layout="@layout/activity_maps"

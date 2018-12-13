@@ -5,7 +5,7 @@
     android:id="@+id/layout_fragment_profile"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="honbab.pumkit.com.tete.MainActivity">
+    tools:context="honbab.voltage.com.tete.MainActivity">
 
     <ScrollView
         android:layout_width="match_parent"

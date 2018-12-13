@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="15dp"
-    tools:context="honbab.pumkit.com.tete.JoinActivity">
+    tools:context="honbab.voltage.com.tete.JoinActivity">
 
     <include
         android:id="@+id/topbar"
