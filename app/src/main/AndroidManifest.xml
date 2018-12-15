@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="honbab.voltage.com.tete">
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -19,12 +19,12 @@
 
         <service android:name="honbab.voltage.com.firebase.MyFirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
         <service android:name="honbab.voltage.com.firebase.FirebaseIDService">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
@@ -32,7 +32,9 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyB57cM_1hIxkWNU8qN60QHfqzEleqKDE0Y" />
 
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -41,43 +43,47 @@
         </activity>
 
 
-        <activity android:name="honbab.voltage.com.tete.SplashActivity"/>
+        <activity android:name="honbab.voltage.com.tete.SplashActivity" />
 
-        <activity android:name="honbab.voltage.com.tete.LoginActivity"/>
-        <activity android:name="honbab.voltage.com.tete.JoinActivity"
-            android:windowSoftInputMode="adjustResize"/>
-        <activity android:name="honbab.voltage.com.tete.JoinActivity2"
-            android:windowSoftInputMode="adjustResize"/>
+        <activity android:name="honbab.voltage.com.tete.LoginActivity" />
+        <activity
+            android:name="honbab.voltage.com.tete.JoinActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="honbab.voltage.com.tete.JoinActivity2"
+            android:windowSoftInputMode="adjustResize" />
 
-        <activity android:name="honbab.voltage.com.tete.ChatActivity"
-            android:windowSoftInputMode="adjustResize"/>
-        <activity android:name="honbab.voltage.com.tete.CommentTalkActivity"
-            android:windowSoftInputMode="adjustResize"/>
-        <activity android:name="honbab.voltage.com.tete.FeedMapActivity"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
-        <activity android:name="honbab.voltage.com.tete.DelayHandlerActivity"/>
-        <activity android:name="honbab.voltage.com.tete.GridViewActivity"/>
-        <activity android:name="honbab.voltage.com.tete.MapsActivity"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
-        <activity android:name="honbab.voltage.com.tete.MyFeedListActivity"/>
-        <activity android:name="honbab.voltage.com.tete.ReservActivity"/>
-        <activity android:name="honbab.voltage.com.tete.PokeListActivity"/>
+        <activity
+            android:name="honbab.voltage.com.tete.ChatActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="honbab.voltage.com.tete.CommentTalkActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="honbab.voltage.com.tete.FeedMapActivity"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity android:name="honbab.voltage.com.tete.DelayHandlerActivity" />
+        <activity android:name="honbab.voltage.com.tete.GridViewActivity" />
+        <activity
+            android:name="honbab.voltage.com.tete.MapsActivity"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity android:name="honbab.voltage.com.tete.MyFeedListActivity" />
+        <activity android:name="honbab.voltage.com.tete.ReservActivity" />
+        <activity android:name="honbab.voltage.com.tete.PokeListActivity" />
 
 
-        <activity android:name="honbab.voltage.com.tete.OneImageActivity"/>
-        <activity android:name="honbab.voltage.com.tete.OneRestaurantActivity"/>
+        <activity android:name="honbab.voltage.com.tete.OneImageActivity" />
+        <activity android:name="honbab.voltage.com.tete.OneRestaurantActivity" />
 
-        <activity android:name="honbab.voltage.com.tete.ProfileActivity"/>
-        <activity android:name="honbab.voltage.com.tete.SettingActivity"/>
+        <activity android:name="honbab.voltage.com.tete.ProfileActivity" />
+        <activity android:name="honbab.voltage.com.tete.SettingActivity" />
 
 
         <meta-data
             android:name="com.kakao.sdk.AppKey"
-            android:value="7e146f9c98e75bf4dde5b028ccd06aa4"/>
+            android:value="7e146f9c98e75bf4dde5b028ccd06aa4" />
 
     </application>
-
-
 
 
 </manifest>

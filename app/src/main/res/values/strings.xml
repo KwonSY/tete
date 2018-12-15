@@ -26,6 +26,7 @@
     <string name="go_to_reserve_godmuk">같먹 예약하러 가기</string>
     <string name="make_new_godmuk">새로운 같먹을 만들어보세요.</string>
     <string name="my">마이</string>
+    <string name="my_poke_list">내가 콕찌른 리스트</string>
     <string name="no">아니오</string>
     <string name="not_a_valid_email_format.">올바른 이메일 형식이 아닙니다.</string>
     <string name="poke_reserve">같이먹기</string>
@@ -38,7 +39,10 @@
     <string name="reservation">예약</string>
     <string name="reserve_new_godmuk">"새로운 같먹예약"</string>
     <string name="save">저장</string>
+    <string name="search_rest_this_area">이 지역에서 검색</string>
     <string name="search_near_rest">주변 음식점 검색</string>
+    <string name="update">업데이트</string>
+    <string name="update_app">같이먹어요 업데이트 버전이 나왔어요. 업데이트를 해주세요.</string>
     <string name="upload_profile_complete">프로필 사진이 업로드 되었습니다.</string>
     <string name="upload_profile_image">프로필 사진을 업로드해주세요.</string>
     <string name="waitlist">대기리스트</string>

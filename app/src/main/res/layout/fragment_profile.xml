@@ -5,7 +5,14 @@
     android:id="@+id/layout_fragment_profile"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context="honbab.voltage.com.tete.MainActivity">
+
+    <View
+        android:id="@+id/line_maincolor"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/mainColor" />
 
     <ScrollView
         android:layout_width="match_parent"

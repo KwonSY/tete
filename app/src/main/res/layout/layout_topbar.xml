@@ -3,23 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="52dp"
-    android:background="#efefef"
+    android:layout_height="43dp"
+    android:background="@color/white"
     tools:context="honbab.voltage.com.tete.MainActivity">
 
     <View
         android:id="@+id/line_maincolor"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#ff0000" />
+        android:layout_height="2dp"
+        android:background="@color/mainColor" />
 
-    <TextView
+    <ImageView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="22dp"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:layout_weight="1"
-        android:text="같이먹어요"/>
+        android:layout_marginLeft="15dp"
+        android:scaleType="fitStart"
+        android:src="@drawable/logo_oneline_bk" />
 </RelativeLayout>

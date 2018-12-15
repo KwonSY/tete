@@ -13,32 +13,33 @@
         android:orientation="vertical"
         android:paddingBottom="30dp"
         android:paddingLeft="50dp"
-        android:paddingRight="50dp"
-        android:paddingTop="50dp">
+        android:paddingRight="50dp">
 
         <ImageView
             android:id="@+id/image_myProfile"
-            android:layout_width="@dimen/profile_l"
-            android:layout_height="@dimen/profile_l"
-            android:layout_marginBottom="30dp"
+            android:layout_width="170dp"
+            android:layout_height="121dp"
             android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="34dp"
             android:src="@drawable/txt_logo_et" />
 
         <EditText
             android:id="@+id/edit_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
             android:hint="hong@voltage.com"
             android:inputType="textEmailAddress"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
 
         <EditText
             android:id="@+id/edit_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="******"
+            android:hint="********"
             android:inputType="textPassword"
-            android:textSize="12sp" />
+            android:letterSpacing="0.4"
+            android:textSize="14sp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -59,7 +60,14 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="9dp"
+                android:background="@drawable/btn_circle_bk1"
+                android:minHeight="0dp"
+                android:minWidth="0dp"
+                android:paddingBottom="9dp"
+                android:paddingLeft="23dp"
+                android:paddingRight="23dp"
+                android:paddingTop="9dp"
                 android:text="로그인" />
         </RelativeLayout>
 

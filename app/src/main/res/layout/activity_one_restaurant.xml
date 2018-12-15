@@ -154,7 +154,8 @@
             android:layout_marginLeft="14dp"
             android:layout_marginRight="14dp"
             android:background="@drawable/btn_circle_bk1"
-            android:text="@string/poke_reserve" />
+            android:text="@string/poke_reserve"
+            android:visibility="gone" />
     </RelativeLayout>
 
     <include

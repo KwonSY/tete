@@ -41,15 +41,36 @@
             android:text="오후 2시"
             android:textSize="12sp" />
 
-        <ImageView
-            android:id="@+id/img_feeder"
-            android:layout_width="@dimen/profile_m"
-            android:layout_height="@dimen/profile_m"
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_below="@id/txt_restName"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@id/img_rest"
-            android:src="@drawable/icon_noprofile_circle" />
+            android:layout_marginLeft="12dp"
+            android:layout_toRightOf="@id/img_rest">
+
+            <ImageView
+                android:id="@+id/img_feeder"
+                android:layout_width="@dimen/profile_s"
+                android:layout_height="@dimen/profile_s"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="1dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="2dp"
+                android:src="@drawable/icon_noprofile_circle" />
+
+            <TextView
+                android:id="@+id/txt_feedee_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/img_feeder"
+                android:layout_centerHorizontal="true"
+                android:ellipsize="end"
+                android:gravity="center_horizontal"
+                android:text="@string/applicant"
+                android:textSize="12sp"
+                android:transitionName="txt_userName" />
+        </RelativeLayout>
 
         <Button
             android:id="@+id/btn_feed_cancle"
