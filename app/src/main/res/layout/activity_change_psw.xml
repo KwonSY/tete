@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="honbab.voltage.com.tete.SettingActivity">
+
+    <include
+        android:id="@+id/layout_topbar"
+        layout="@layout/layout_topbar_backtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="260dp"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/edit_previous_psw"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:inputType="textPassword"
+            android:hint="@string/password_previous"/>
+
+        <EditText
+            android:id="@+id/edit_new_psw"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:inputType="textPassword"
+            android:hint="@string/password_new"/>
+
+        <EditText
+            android:id="@+id/edit_new_psw_confirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:inputType="textPassword"
+            android:hint="@string/password_new"/>
+
+        <Button
+            android:id="@+id/btn_change_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:background="@drawable/btn_circle_bk1"
+            android:text="비밀번호 변경하기" />
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="50dp" />
+    </LinearLayout>
+</RelativeLayout>

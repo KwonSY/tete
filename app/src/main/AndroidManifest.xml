@@ -46,15 +46,14 @@
         <activity android:name="honbab.voltage.com.tete.SplashActivity" />
 
         <activity android:name="honbab.voltage.com.tete.LoginActivity" />
-        <activity
-            android:name="honbab.voltage.com.tete.JoinActivity"
+        <activity android:name="honbab.voltage.com.tete.JoinActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name="honbab.voltage.com.tete.JoinActivity2"
+        <activity android:name="honbab.voltage.com.tete.JoinActivity2"
             android:windowSoftInputMode="adjustResize" />
 
-        <activity
-            android:name="honbab.voltage.com.tete.ChatActivity"
+        <activity android:name=".ChangePswActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".ChatActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="honbab.voltage.com.tete.CommentTalkActivity"
@@ -64,8 +63,7 @@
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity android:name="honbab.voltage.com.tete.DelayHandlerActivity" />
         <activity android:name="honbab.voltage.com.tete.GridViewActivity" />
-        <activity
-            android:name="honbab.voltage.com.tete.MapsActivity"
+        <activity android:name="honbab.voltage.com.tete.MapsActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity android:name="honbab.voltage.com.tete.MyFeedListActivity" />
         <activity android:name="honbab.voltage.com.tete.ReservActivity" />

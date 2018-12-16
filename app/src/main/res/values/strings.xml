@@ -14,7 +14,9 @@
     <string name="cancle">취소하기</string>
     <string name="cancellation">취소</string>
     <string name="chat">대화하기</string>
+    <string name="change_password">비밀번호 변경</string>
     <string name="complete_reserv_with">%s님과 예약이 완료되었습니다.</string>
+    <string name="connect_network">인터넷 연결이 원활하지 않습니다.<br></br>LTE/WIFI 상태를 확인해주세요.</string>
     <string name="edit">편집</string>
     <string name="enter_age">나이가 어떻게 되시나요?</string>
     <string name="enter_at_least_8">비밀번호를 영문 대,소문자, 숫자, 특수문자 포함 8자 이상으로 해주세요.</string>
@@ -33,6 +35,10 @@
     <string name="poke_reserved">신청 대기중</string>
     <string name="poke_compelete">같먹 종료</string>
     <string name="require_godmuk">만든 같먹</string>
+    <string name="password_confirm_not_correct">입력한 비밀번호와 재입력한 비밀번호가 일치하지 않습니다. 다시 확인해주세요.</string>
+    <string name="password_incorrect">비밀번호가 맞지 않습니다.</string>
+    <string name="password_new">새 비밀번호를 입력하세요.</string>
+    <string name="password_previous">기본 비밀번호를 입력하세요.</string>
     <string name="pokelist">신청한 예약</string>
     <string name="profile">프로필</string>
     <string name="repoke">다시 콕찌르기</string>
@@ -46,7 +52,7 @@
     <string name="upload_profile_complete">프로필 사진이 업로드 되었습니다.</string>
     <string name="upload_profile_image">프로필 사진을 업로드해주세요.</string>
     <string name="waitlist">대기리스트</string>
-    <string name="whose_profile">님의 프로필</string>
+    <string name="whose_profile">님 프로필</string>
     <string name="yes">예</string>
 
     <!--StringFilter-->

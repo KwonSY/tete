@@ -59,7 +59,8 @@
                     android:layout_marginTop="20dp"
                     android:background="@drawable/border_round_gr1"
                     android:padding="8dp"
-                    android:text="내 소개 읽어오는 중..." />
+                    android:hint="아직 소개글이 없습니다..."
+                    android:text="" />
             </LinearLayout>
 
             <ImageButton

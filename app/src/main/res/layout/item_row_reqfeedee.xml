@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_item_req_feeder"
     android:layout_width="wrap_content"
+    android:minWidth="44dp"
     android:layout_height="wrap_content"
     android:paddingTop="0dp">
 
@@ -40,19 +41,4 @@
         android:text="@string/applicant"
         android:textSize="12sp"
         android:transitionName="txt_userName" />
-
-    <Button
-        android:id="@+id/btn_accept"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:background="@drawable/btn_circle_bk1_s"
-        android:minHeight="10dp"
-        android:minWidth="10dp"
-        android:paddingBottom="8dp"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:paddingTop="8dp"
-        android:text="@string/acceptance"
-        android:visibility="gone" />
 </RelativeLayout>

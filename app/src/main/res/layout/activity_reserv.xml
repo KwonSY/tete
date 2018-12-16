@@ -25,6 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="50dp"
+            android:visibility="invisible"
             android:layout_marginRight="100dp" />
 
         <ImageView
@@ -34,22 +35,15 @@
             android:layout_alignParentRight="true"
             android:layout_marginBottom="8dp"
             android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_marginRight="10dp"
             android:layout_marginTop="8dp"
-            android:src="@drawable/icon_map_r" />
-
-        <TextView
-            android:id="@+id/title_nearRest"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/edit_search"
-            android:text="가까운 추천 음식점" />
+            android:src="@drawable/icon_map_wh" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerView_rest"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/title_nearRest"
+            android:layout_below="@id/topbar"
             android:layout_marginBottom="10dp" />
     </RelativeLayout>
 

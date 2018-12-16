@@ -26,6 +26,9 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/img_rest"
+            android:ellipsize="end"
+            android:lines="1"
+            android:maxWidth="120dp"
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
             android:text="음식점"
@@ -58,7 +61,7 @@
             android:layout_below="@id/txt_restName"
             android:layout_toRightOf="@id/img_rest"
             android:paddingLeft="15dp"
-            android:paddingRight="75dp" />
+            android:paddingRight="49dp" />
 
         <Button
             android:id="@+id/btn_feed_cancle"

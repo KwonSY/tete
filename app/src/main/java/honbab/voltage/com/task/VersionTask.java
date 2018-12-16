@@ -46,10 +46,10 @@ public class VersionTask extends AsyncTask<Void, Void, Void> {
 
         try {
             okhttp3.Response response = httpClient.newCall(request).execute();
+
             if (response.isSuccessful()) {
                 String bodyStr = response.body().string();
                 JSONObject obj = new JSONObject(bodyStr);
-                Log.e("abc", "Login root = " + obj);
 
                 version = obj.getString("version");
                 status = obj.getString("status");
@@ -59,7 +59,7 @@ public class VersionTask extends AsyncTask<Void, Void, Void> {
             }
 
         } catch (Exception e) {
-            Log.e("abc", "Error : " + e.getMessage());
+            Log.e("abc", "Error Version : " + e.getMessage());
             e.printStackTrace();
         }
 

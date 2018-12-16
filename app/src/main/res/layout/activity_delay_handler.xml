@@ -28,6 +28,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="17dp"
             android:text="홍길동"
+            android:textColor="@color/black"
             android:textSize="16sp"
             android:transitionName="txt_userName" />
 
@@ -41,16 +42,39 @@
             android:text="@string/complete_reserv_with"
             android:textSize="20sp"
             android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btn_call_rest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/btn_circle_or1"
+            android:minWidth="200dp"
+            android:text="음식점 전화하기"
+            android:autoLink="phone"
+            android:textColor="@color/grey"
+            android:textSize="14sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <Button
         android:id="@+id/btn_go_comment"
-        android:layout_width="150dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginRight="12dp"
+        android:layout_alignParentRight="true"
         android:layout_marginBottom="14dp"
+        android:layout_marginRight="12dp"
         android:layout_marginTop="50dp"
-        android:text="리스트로 돌아가기" />
+        android:background="@drawable/btn_circle_gr1"
+        android:minHeight="0dp"
+        android:minWidth="157dp"
+        android:padding="9dp"
+        android:text="5초후 리스트로 돌아가기"
+        android:textColor="@color/grey"
+        android:textSize="12sp"
+        android:textStyle="normal" />
 </RelativeLayout>
