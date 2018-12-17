@@ -146,6 +146,7 @@
             android:id="@+id/btn_reserv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
             android:layout_marginTop="20dp"
             android:background="@drawable/btn_circle_bk1"
             android:text="예약하기"

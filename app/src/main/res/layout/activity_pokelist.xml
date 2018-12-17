@@ -12,6 +12,37 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <LinearLayout
+        android:id="@+id/layout_no_poke"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/topbar"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/txt_no_poke"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
+            android:text="아직 콕찌르기를 하지 않았군요?\n같이 먹을 가조쿠들이 기다리고 있어요."
+            android:textColor="@color/grey"
+            android:textSize="13sp" />
+
+        <Button
+            android:id="@+id/btn_go_main"
+            android:layout_width="211dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txt_no_poke"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="2dp"
+            android:background="@drawable/btn_circle_gr1"
+            android:text="같먹 찾아보기"
+            android:textColor="@color/grey"
+            android:textStyle="bold" />
+    </LinearLayout>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
