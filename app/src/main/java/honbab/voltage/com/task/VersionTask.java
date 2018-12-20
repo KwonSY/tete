@@ -23,7 +23,9 @@ public class VersionTask extends AsyncTask<Void, Void, Void> {
     private OkHttpClient httpClient;
 
     String version, status, text;
+    int vCd;
     String appVersion;
+    int appVCd = 0;
 
     public VersionTask(Context mContext, OkHttpClient httpClient) {
         this.mContext = mContext;
@@ -52,6 +54,7 @@ public class VersionTask extends AsyncTask<Void, Void, Void> {
                 JSONObject obj = new JSONObject(bodyStr);
 
                 version = obj.getString("version");
+                vCd = obj.getInt("vCd");
                 status = obj.getString("status");
                 text = obj.getString("text");
             } else {
@@ -66,6 +69,7 @@ public class VersionTask extends AsyncTask<Void, Void, Void> {
         try {
             PackageInfo pInfo = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0);
             appVersion = pInfo.versionName;
+            appVCd = pInfo.versionCode;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -78,10 +82,8 @@ public class VersionTask extends AsyncTask<Void, Void, Void> {
 //        super.onPostExecute(result);
             Log.e("abc", "version" + version);
             Log.e("abc", "appVersion" + appVersion);
-
-            if (version.equals(appVersion)) {
-
-            } else {
+            //vCd 배포3, appVCd 2현재
+            if (vCd > appVCd) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 //        builder.setTitle("AlertDialog Title");
                 builder.setMessage(text);
@@ -106,6 +108,8 @@ public class VersionTask extends AsyncTask<Void, Void, Void> {
 //                            }
 //                        });
                 builder.show();
+            } else {
+
             }
     }
 

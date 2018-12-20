@@ -27,6 +27,8 @@
     <string name="enter_password">비밀번호를 입력해주세요.</string>
     <string name="explain_reserve_godmuk">같이 먹기 예약이 없습니다. 같먹을 예약해주시겠습니까?</string>
     <string name="go_to_reserve_godmuk">같먹 예약하러 가기</string>
+    <string name="law_personal">개인정보 취급방침</string>
+    <string name="law_privacy">이용약관</string>
     <string name="make_new_godmuk">새로운 같먹을 만들어보세요.</string>
     <string name="my">마이</string>
     <string name="my_poke_list">내가 콕찌른 리스트</string>
@@ -36,12 +38,14 @@
     <string name="poke_reserved">신청 대기중</string>
     <string name="poke_compelete">같먹 종료</string>
     <string name="require_godmuk">만든 같먹</string>
+    <string name="require_list">신청자 리스트</string>
     <string name="password_confirm_not_correct">입력한 비밀번호와 재입력한 비밀번호가 일치하지 않습니다. 다시 확인해주세요.</string>
     <string name="password_incorrect">비밀번호가 맞지 않습니다.</string>
     <string name="password_new">새 비밀번호를 입력하세요.</string>
     <string name="password_previous">기본 비밀번호를 입력하세요.</string>
     <string name="pokelist">신청한 예약</string>
     <string name="profile">프로필</string>
+    <string name="produce_myself">상대방에게 나를 한 문장으로 소개해보세요.</string>
     <string name="repoke">다시 콕찌르기</string>
     <string name="reservation">예약</string>
     <string name="reserve_new_godmuk">"새로운 같먹예약"</string>

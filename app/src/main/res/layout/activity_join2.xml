@@ -126,7 +126,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border_round_gr1"
-                    android:hint="상대방에게 보여줄 내 소개를 한 문장으로 적어보아요."
+                    android:hint="@string/produce_myself"
                     android:inputType="text|textMultiLine|textCapSentences"
                     android:maxLength="140"
                     android:maxLines="9"

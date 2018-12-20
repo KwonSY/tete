@@ -43,38 +43,36 @@
         </activity>
 
 
-        <activity android:name="honbab.voltage.com.tete.SplashActivity" />
+        <activity android:name=".SplashActivity" />
 
-        <activity android:name="honbab.voltage.com.tete.LoginActivity" />
-        <activity android:name="honbab.voltage.com.tete.JoinActivity"
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".JoinActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name="honbab.voltage.com.tete.JoinActivity2"
+        <activity android:name=".JoinActivity2"
             android:windowSoftInputMode="adjustResize" />
 
         <activity android:name=".ChangePswActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".ChatActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name="honbab.voltage.com.tete.CommentTalkActivity"
+        <activity android:name=".CommentTalkActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name="honbab.voltage.com.tete.FeedMapActivity"
+        <activity android:name=".FeedMapActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity android:name="honbab.voltage.com.tete.DelayHandlerActivity" />
-        <activity android:name="honbab.voltage.com.tete.GridViewActivity" />
-        <activity android:name="honbab.voltage.com.tete.MapsActivity"
+        <activity android:name=".DelayHandlerActivity" />
+        <activity android:name=".GridViewActivity" />
+        <activity android:name=".MapsActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity android:name="honbab.voltage.com.tete.MyFeedListActivity" />
-        <activity android:name="honbab.voltage.com.tete.ReservActivity" />
-        <activity android:name="honbab.voltage.com.tete.PokeListActivity" />
+        <activity android:name=".MyFeedListActivity" />
+        <activity android:name=".ReservActivity" />
+        <activity android:name=".PokeListActivity" />
 
 
-        <activity android:name="honbab.voltage.com.tete.OneImageActivity" />
-        <activity android:name="honbab.voltage.com.tete.OneRestaurantActivity" />
+        <activity android:name=".OneImageActivity" />
+        <activity android:name=".OneRestaurantActivity" />
 
-        <activity android:name="honbab.voltage.com.tete.ProfileActivity" />
-        <activity android:name="honbab.voltage.com.tete.SettingActivity" />
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".SettingActivity" />
 
 
         <meta-data

@@ -22,7 +22,7 @@
         android:ems="10"
         android:hint="음식점을 검색해주세요."
         android:inputType="textPersonName"
-        android:visibility="visible" />
+        android:visibility="invisible" />
 
     <Button
         android:id="@+id/btn_search_word"
@@ -38,7 +38,7 @@
         android:minWidth="0dp"
         android:onClick="onClick"
         android:text="검색"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:map="http://schemas.android.com/apk/res-auto"
