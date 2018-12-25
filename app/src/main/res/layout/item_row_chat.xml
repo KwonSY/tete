@@ -20,7 +20,9 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="3dp"
         android:layout_toRightOf="@id/img_user"
-        android:text="User_Name" />
+
+        android:text="User_Name"
+        android:textSize="13sp" />
 
     <TextView
         android:id="@+id/txt_chatMessage_item"
@@ -33,7 +35,8 @@
         android:background="#ffffff"
         android:maxWidth="200dp"
         android:padding="10dp"
-        android:text="" />
+        android:text=""
+        android:textSize="13sp" />
 
     <TextView
         android:id="@+id/chatTime_right"
@@ -42,7 +45,8 @@
         android:layout_alignBaseline="@id/txt_chatMessage_item"
         android:layout_marginLeft="10dp"
         android:layout_toRightOf="@id/txt_chatMessage_item"
-        android:text="12:00" />
+        android:text="12:00"
+        android:textSize="10sp" />
 
     <TextView
         android:id="@+id/chatTime_left"
@@ -51,7 +55,8 @@
         android:layout_alignBaseline="@id/txt_chatMessage_item"
         android:layout_marginLeft="10dp"
         android:layout_toLeftOf="@id/txt_chatMessage_item"
-        android:text="01:00" />
+        android:text="01:00"
+        android:textSize="10sp" />
 
     <ImageView
         android:id="@+id/img_chatting"
@@ -61,7 +66,6 @@
         android:layout_marginTop="3dp"
         android:layout_toRightOf="@id/img_user"
         android:maxWidth="150dip"
-        android:visibility="gone"
-        android:src="@drawable/stub_image" />
-
+        android:src="@drawable/stub_image"
+        android:visibility="gone" />
 </RelativeLayout>

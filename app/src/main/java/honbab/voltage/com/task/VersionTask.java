@@ -53,8 +53,8 @@ public class VersionTask extends AsyncTask<Void, Void, Void> {
                 String bodyStr = response.body().string();
                 JSONObject obj = new JSONObject(bodyStr);
 
-                version = obj.getString("version");
                 vCd = obj.getInt("vCd");
+                version = obj.getString("version");
                 status = obj.getString("status");
                 text = obj.getString("text");
             } else {
@@ -80,12 +80,10 @@ public class VersionTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void result) {
 //        super.onPostExecute(result);
-            Log.e("abc", "version" + version);
-            Log.e("abc", "appVersion" + appVersion);
+
             //vCd 배포3, appVCd 2현재
             if (vCd > appVCd) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-//        builder.setTitle("AlertDialog Title");
                 builder.setMessage(text);
                 builder.setPositiveButton(R.string.update,
                         new DialogInterface.OnClickListener() {
@@ -98,15 +96,6 @@ public class VersionTask extends AsyncTask<Void, Void, Void> {
                                 }
                             }
                         });
-//                builder.setNegativeButton(R.string.reserve_new_godmuk,
-//                        new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                Toast.makeText(getActivity().getApplicationContext(), R.string.make_new_godmuk, Toast.LENGTH_LONG).show();
-//                                Intent intent = new Intent(getActivity(), ReservActivity.class);
-//                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                                getActivity().startActivity(intent);
-//                            }
-//                        });
                 builder.show();
             } else {
 

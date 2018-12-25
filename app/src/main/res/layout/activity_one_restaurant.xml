@@ -31,29 +31,23 @@
                 android:scaleType="fitXY"
                 android:src="@drawable/img_gradient_bk_trans" />
 
-            <LinearLayout
-                android:id="@+id/layout_show_sliding_reserv"
+            <Button
+                android:id="@+id/btn_reserve_feed"
                 android:layout_width="wrap_content"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="10dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:visibility="visible">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="예약하기"
-                    android:textColor="@color/white" />
-
-                <ImageView
-                    android:id="@+id/btn_show_sliding"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    android:layout_marginLeft="10dp"
-                    android:src="@drawable/btn_check_or" />
-            </LinearLayout>
+                android:layout_marginRight="9dp"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/btn_round_or"
+                android:minHeight="0dp"
+                android:minWidth="0dp"
+                android:paddingBottom="10dp"
+                android:paddingLeft="14dp"
+                android:paddingRight="14dp"
+                android:paddingTop="10dp"
+                android:text="@string/reservate"
+                android:textColor="@color/white"
+                android:textSize="12sp" />
 
             <LinearLayout
                 android:id="@+id/layout_profile"

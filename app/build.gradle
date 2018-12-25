@@ -4,14 +4,14 @@ apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    buildToolsVersion '28.0.3'
 
     defaultConfig {
         applicationId "honbab.voltage.com.tete"
         minSdkVersion 19
         targetSdkVersion 27
-        versionCode 3
-        versionName "1.2"
+        versionCode 5
+        versionName "1.4"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -77,7 +77,7 @@ dependencies {
     //ByteStreams
     implementation 'com.google.guava:guava:18.0'
     //okhttp
-    implementation 'com.squareup.okhttp3:okhttp:3.9.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     //Picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
     //photoView

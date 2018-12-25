@@ -1,0 +1,5 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/border_round_or_wh" android:state_pressed="true" />
+    <item android:drawable="@drawable/border_round_or" android:state_checked="true" />
+    <item android:drawable="@drawable/border_round_or" />
+</selector>

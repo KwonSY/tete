@@ -13,7 +13,7 @@
     <string name="cancle_godmuk">%s 같먹을 취소하였습니다.</string>
     <string name="cancle">취소하기</string>
     <string name="cancellation">취소</string>
-    <string name="cannot_reserve_past">과거로 돌아가면, 추억을 먹고 살아요.</string>
+    <string name="cannot_reserve_past">예약시간을 다시 확인해주세요.</string>
     <string name="chat">대화하기</string>
     <string name="change_password">비밀번호 변경</string>
     <string name="complete_reserv_with">%s님과 예약이 완료되었습니다.</string>
@@ -47,6 +47,7 @@
     <string name="profile">프로필</string>
     <string name="produce_myself">상대방에게 나를 한 문장으로 소개해보세요.</string>
     <string name="repoke">다시 콕찌르기</string>
+    <string name="reservate">예약하기</string>
     <string name="reservation">예약</string>
     <string name="reserve_new_godmuk">"새로운 같먹예약"</string>
     <string name="save">저장</string>
