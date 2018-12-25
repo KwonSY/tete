@@ -51,6 +51,7 @@
             android:layout_alignParentLeft="true"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
+            android:inputType="phone"
             android:background="@drawable/btn_circle_or1"
             android:minWidth="200dp"
             android:text="음식점 전화하기"
