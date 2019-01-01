@@ -19,6 +19,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import honbab.voltage.com.data.RestData;
 import honbab.voltage.com.data.UserData;
 import honbab.voltage.com.task.AcceptFeedTask;
 import honbab.voltage.com.tete.ChatActivity;
@@ -31,30 +32,26 @@ import static android.support.v7.widget.RecyclerView.Adapter;
 import static android.support.v7.widget.RecyclerView.OnTouchListener;
 
 public class ReqFeedeeAdapter extends Adapter<ReqFeedeeAdapter.ViewHolder> {
-
-    Context mContext;
-    OkHttpClient httpClient;
+    private Context mContext;
+    private OkHttpClient httpClient;
     public ArrayList<UserData> listViewItemList = new ArrayList<>();
 
+    private RestData restData;
     public boolean activate;
-    int feed_id, rest_id;
-    String place_id, rest_phone;
+    private String feed_id;
 
     public ReqFeedeeAdapter() {
 
     }
 
     public ReqFeedeeAdapter(Context context, OkHttpClient httpClient,
-                            int feed_id, int rest_id, String place_id, String rest_phone,
+                            String feed_id, RestData restData,
                             ArrayList<UserData> usersItemList) {
         this.mContext = context;
         this.httpClient = httpClient;
 
         this.feed_id = feed_id;
-        this.rest_id = rest_id;
-        this.place_id = place_id;
-        this.rest_phone = rest_phone;
-
+        this.restData = restData;
         this.listViewItemList = usersItemList;
     }
 
@@ -70,6 +67,10 @@ public class ReqFeedeeAdapter extends Adapter<ReqFeedeeAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         final UserData data = listViewItemList.get(position);
+        Log.e("abc", "reqFeedee getRest_name = " + restData.getRest_name());
+        Log.e("abc", "reqFeedee getLatLng = " + restData.getLatLng());
+        Log.e("abc", "reqFeedee getLatitude = " + restData.getLatitude());
+        Log.e("abc", "reqFeedee getLongtitue = " + restData.getLongtitue());
 
         Picasso.get().load(data.getImg_url())
                 .placeholder(R.drawable.icon_noprofile_circle)
@@ -93,9 +94,10 @@ public class ReqFeedeeAdapter extends Adapter<ReqFeedeeAdapter.ViewHolder> {
                 intent.putExtra("toUserName", holder.toNm);
                 intent.putExtra("toUserImg", holder.toImg);
                 intent.putExtra("toToken", holder.toToken);
-                intent.putExtra("rest_phone", "");
+//                Bundle bundle = new Bundle();
+//                bundle.putSerializable("restData", restData);
+                intent.putExtra("restData", restData);
                 mContext.startActivity(intent);
-                Log.e("abc", "ReqFeedee toNm = " + holder.toNm + ", toId = " + holder.toId + ", rest_phone = " + rest_phone);
 //                    Intent intent = new Intent(mContext, ProfileActivity.class);
 //                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 //                    intent.putExtra("user_id", data.getUser_id());
@@ -118,8 +120,8 @@ public class ReqFeedeeAdapter extends Adapter<ReqFeedeeAdapter.ViewHolder> {
                 builder.setPositiveButton(R.string.yes,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                new AcceptFeedTask(mContext, httpClient, holder, data, feed_id, rest_id, place_id, position)
-                                        .execute(String.valueOf(feed_id), String.valueOf(data.getUser_id()));
+                                new AcceptFeedTask(mContext, httpClient, holder, data, feed_id, restData.getRest_id(), restData.getPlace_id(), position)
+                                        .execute(feed_id, data.getUser_id());
                             }
                         });
                 builder.setNegativeButton(R.string.no,

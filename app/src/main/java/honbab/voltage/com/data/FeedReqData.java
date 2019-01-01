@@ -6,14 +6,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class FeedReqData implements Serializable {
-    private int feed_id;
+    private String feed_id;
     private String compound_code, feed_time, place_id, status, vicinity;
     private transient LatLng latLng;
     private Double latitude, longtitue;
-    private int host_id;
+    private String host_id;
     private String host_name, host_img;
-    private int rest_id;
-    private String rest_name, rest_phone, rest_img;
+    private String rest_id, rest_name, rest_phone, rest_img;
     private ArrayList<UserData> usersList;
     private ArrayList<CommentData> commentsList;
 
@@ -22,7 +21,7 @@ public class FeedReqData implements Serializable {
     }
 
     //예약 전, 음식점만 좋아요
-    public FeedReqData(int rest_id, String rest_name, String rest_img, String rest_phone,
+    public FeedReqData(String rest_id, String rest_name, String rest_img, String rest_phone,
                        String compound_code, LatLng latLng, String place_id, String vicinity,
                        ArrayList<UserData> usersList) {
         this.rest_id = rest_id;
@@ -40,10 +39,10 @@ public class FeedReqData implements Serializable {
         this.usersList = usersList;
     }
 
-    public FeedReqData(int feed_id, String status, String feed_time,
+    public FeedReqData(String feed_id, String status, String feed_time,
                        String place_id, String compound_code, String vicinity, LatLng latLng,
-                       int host_id, String host_name, String host_img,
-                       int rest_id, String rest_name, String rest_phone, String rest_img,
+                       String host_id, String host_name, String host_img,
+                       String rest_id, String rest_name, String rest_phone, String rest_img,
                        ArrayList<UserData> usersList) {
         //피드
         this.feed_id = feed_id;
@@ -68,11 +67,11 @@ public class FeedReqData implements Serializable {
         this.usersList = usersList;
     }
 
-    public int getFeed_id() {
+    public String getFeed_id() {
         return feed_id;
     }
 
-    public void setFeed_id(int feed_id) {
+    public void setFeed_id(String feed_id) {
         this.feed_id = feed_id;
     }
 
@@ -140,11 +139,11 @@ public class FeedReqData implements Serializable {
         this.longtitue = longtitue;
     }
 
-    public int getHost_id() {
+    public String getHost_id() {
         return host_id;
     }
 
-    public void setHost_id(int host_id) {
+    public void setHost_id(String host_id) {
         this.host_id = host_id;
     }
 
@@ -164,11 +163,11 @@ public class FeedReqData implements Serializable {
         this.host_img = host_img;
     }
 
-    public int getRest_id() {
+    public String getRest_id() {
         return rest_id;
     }
 
-    public void setRest_id(int rest_id) {
+    public void setRest_id(String rest_id) {
         this.rest_id = rest_id;
     }
 

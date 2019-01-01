@@ -157,7 +157,7 @@ public class FeedFragment2 extends Fragment {
 
                         //음식점 정보
                         JSONObject rest_obj = obj2.getJSONObject("rest");
-                        int rest_id = rest_obj.getInt("sid");
+                        String rest_id = rest_obj.getString("sid");
                         String rest_name = rest_obj.getString("name");
                         String compound_code = rest_obj.getString("compound_code");
                         String lat = rest_obj.getString("lat");

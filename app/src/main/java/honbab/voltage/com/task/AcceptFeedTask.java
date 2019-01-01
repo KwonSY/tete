@@ -26,12 +26,13 @@ public class AcceptFeedTask extends AsyncTask<String, Void, String> {
 
     ReqFeedeeAdapter.ViewHolder viewHolder;
     UserData userData;
-    int feed_id, rest_id;
+    String feed_id;
+    String rest_id;
     String place_id;
     int position;
 
     public AcceptFeedTask(Context mContext, OkHttpClient httpClient, ReqFeedeeAdapter.ViewHolder viewHolder,
-                          UserData userData, int feed_id, int rest_id, String place_id, int position) {
+                          UserData userData, String feed_id, String rest_id, String place_id, int position) {
         this.mContext = mContext;
         this.httpClient = httpClient;
         this.viewHolder = viewHolder;

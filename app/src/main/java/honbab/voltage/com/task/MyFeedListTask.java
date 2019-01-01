@@ -71,17 +71,17 @@ public class MyFeedListTask extends AsyncTask<Void, Void, ArrayList<FeedReqData>
 
                     JSONObject feedObj = feedArr.getJSONObject(i);
 
-                    int feed_id = feedObj.getInt("sid");
+                    String feed_id = feedObj.getString("sid");
                     String feed_status = feedObj.getString("status");
                     String feed_time = feedObj.getString("time");
 
                     JSONObject hostObj = feedObj.getJSONObject("host");
-                    int host_id = hostObj.getInt("sid");
+                    String host_id = hostObj.getString("sid");
                     String host_name = hostObj.getString("name");
                     String host_img = Statics.main_url + hostObj.getString("img_url");
 
                     JSONObject restObj = feedObj.getJSONObject("rest");
-                    int rest_id = restObj.getInt("sid");
+                    String rest_id = restObj.getString("sid");
                     rest_name = restObj.getString("name");
                     String place_id = restObj.getString("place_id");
                     String compound_code = restObj.getString("compound_code");

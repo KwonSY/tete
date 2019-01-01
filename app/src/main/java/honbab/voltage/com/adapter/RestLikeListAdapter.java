@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import honbab.voltage.com.data.FeedReqData;
+import honbab.voltage.com.data.RestData;
 import honbab.voltage.com.data.UserData;
 import honbab.voltage.com.task.FeedCancleTask;
 import honbab.voltage.com.tete.OneRestaurantActivity;
@@ -51,7 +53,7 @@ public class RestLikeListAdapter extends RecyclerView.Adapter<RestLikeListAdapte
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         final View view;
 
-        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_row_my_feed_n, parent, false);
+        view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_row_restlikelist, parent, false);
 
         return new ViewHolder(view, viewType);
     }
@@ -59,12 +61,16 @@ public class RestLikeListAdapter extends RecyclerView.Adapter<RestLikeListAdapte
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
-
         final FeedReqData data = listViewItemList.get(position);
-        final int feed_id = data.getFeed_id();
-        final int rest_id = data.getRest_id();
-        final String place_id = data.getPlace_id();
+        Log.e("abc","xxxxxxxxxxxxxxxxxxxxxxx = " + data.getLatLng());
+        Log.e("abc","xxxxxxxxxxxxxxxxxxxxxxx = " + data.getLatitude());
+        final String feed_id = data.getFeed_id();
+        RestData restData = new RestData(data.getRest_id(), data.getRest_name(),
+                data.getCompound_code(), data.getLatLng(),
+                data.getPlace_id(), data.getRest_img(), data.getRest_phone(), data.getVicinity());
+        Log.e("abc", "reqFeedee getLatLng = " + restData.getLatLng());
         ArrayList<UserData> usersList = data.getUsersList();
+
 
         Picasso.get().load(data.getRest_img())
                 .resize(70, 70).centerCrop()
@@ -94,34 +100,17 @@ public class RestLikeListAdapter extends RecyclerView.Adapter<RestLikeListAdapte
         holder.txt_restName.setText(data.getRest_name());
 
 
-        //TYPE_STATUS_N
+
         final ReqFeedeeAdapter mAdapter = new ReqFeedeeAdapter(mContext, httpClient,
-                feed_id, rest_id, place_id, data.getRest_phone(), usersList);
+                feed_id, restData, usersList);
 
         if (usersList.size() == 0) {
             holder.txt_no_req.setVisibility(View.VISIBLE);
-            holder.btn_choose_feeder.setVisibility(View.GONE);
         } else {
             holder.txt_no_req.setVisibility(View.GONE);
-            holder.btn_choose_feeder.setVisibility(View.VISIBLE);
 
             holder.recyclerView_feedee.setAdapter(mAdapter);
         }
-
-        holder.btn_choose_feeder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                mAdapter.activateButtons(holder.bool_choose);
-//                Log.e("abc", "holder.bool_choose = " + holder.bool_choose);
-//                if (holder.bool_choose) {
-//                    holder.btn_choose_feeder.setText(R.string.cancellation);
-//                    holder.bool_choose = false;
-//                } else {
-//                    holder.btn_choose_feeder.setText(R.string.accept);
-//                    holder.bool_choose = true;
-//                }
-            }
-        });
 
         holder.btn_feed_cancle.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -173,7 +162,6 @@ public class RestLikeListAdapter extends RecyclerView.Adapter<RestLikeListAdapte
         TextView txt_restName, txt_feedTime;
         Button btn_feed_cancle;
         RecyclerView recyclerView_feedee;
-        Button btn_choose_feeder;
 
         ImageView img_rest, img_feeder;
         TextView txt_feedee_name;
@@ -186,7 +174,6 @@ public class RestLikeListAdapter extends RecyclerView.Adapter<RestLikeListAdapte
 
             txt_no_req = itemView.findViewById(R.id.txt_no_req);
             txt_no_req.setVisibility(View.VISIBLE);
-            btn_choose_feeder = itemView.findViewById(R.id.btn_choose_feeder);
 
             Context context = itemView.getContext();
             //수락대기 리스트

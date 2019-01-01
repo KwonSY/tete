@@ -21,14 +21,14 @@ public class FeedCancleTask extends AsyncTask<Void, Void, Void> {
     private Context mContext;
     private OkHttpClient httpClient;
 
-    private int feed_id;
+    private String feed_id;
     private String rest_name;
     private int position;
 
     private String result;
 
     public FeedCancleTask(Context mContext, OkHttpClient httpClient,
-                          int feed_id, String rest_name, int position) {
+                          String feed_id, String rest_name, int position) {
         this.mContext = mContext;
         this.httpClient = httpClient;
         this.feed_id = feed_id;

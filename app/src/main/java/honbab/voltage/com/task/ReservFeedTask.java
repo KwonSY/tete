@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 
+import honbab.voltage.com.tete.ChatActivity;
 import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.OneRestaurantActivity;
 import honbab.voltage.com.tete.R;
@@ -50,6 +51,8 @@ public class ReservFeedTask extends AsyncTask<String, Void, String> {
             comment = ((OneRestaurantActivity) mContext).edit_comment.getText().toString();
         } else if (activityName.equals("ReservActivity")) {
             comment = ((ReservActivity) mContext).edit_comment.getText().toString();
+        } else if (activityName.equals("ChatActivity")) {
+            comment = ((ChatActivity) mContext).edit_comment.getText().toString();
         }
 
         rest_name = rest[0];
@@ -60,6 +63,7 @@ public class ReservFeedTask extends AsyncTask<String, Void, String> {
         rest_img = rest[5];
         rest_phone = rest[6];
         vicinity = rest[7];
+        Log.e("abc", "ReservTask lat = " + lat + lng);
     }
 
     @Override
@@ -127,6 +131,17 @@ public class ReservFeedTask extends AsyncTask<String, Void, String> {
                 intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 mContext.startActivity(intent2);
                 ((Activity) mContext).finish();
+            } else {
+                Toast.makeText(mContext, R.string.cannot_reserve_past, Toast.LENGTH_SHORT).show();
+            }
+        } else if (activityName.equals("ChatActivity")) {
+            if (result.equals("0")) {
+                Toast.makeText(mContext, "식사가 예약되었습니다.", Toast.LENGTH_SHORT).show();
+
+//                Intent intent2 = new Intent(mContext, MainActivity.class);
+//                intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                mContext.startActivity(intent2);
+//                ((Activity) mContext).finish();
             } else {
                 Toast.makeText(mContext, R.string.cannot_reserve_past, Toast.LENGTH_SHORT).show();
             }

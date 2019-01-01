@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import honbab.voltage.com.data.FeedReqData;
+import honbab.voltage.com.data.RestData;
 import honbab.voltage.com.data.UserData;
 import honbab.voltage.com.task.FeedCancleTask;
 import honbab.voltage.com.tete.ChatActivity;
@@ -79,8 +80,8 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
 //            final int position = pos - 1; //HEADER붙일 때 onBindView position -> pos로 바꾸기
 
             final FeedReqData data = listViewItemList.get(position);
-            final int feed_id = data.getFeed_id();
-            final int rest_id = data.getRest_id();
+            final String feed_id = data.getFeed_id();
+            final String rest_id = data.getRest_id();
             final String place_id = data.getPlace_id();
             ArrayList<UserData> usersList = data.getUsersList();
 
@@ -144,8 +145,12 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
 
             if (holder.holderId == TYPE_STATUS_N) {
                 //TYPE_STATUS_N
+                RestData restData = new RestData(data.getRest_id(), data.getRest_name(),
+                        data.getCompound_code(), data.getLatLng(),
+                        data.getPlace_id(), data.getRest_img(), data.getRest_phone(), data.getVicinity());
+
                 final ReqFeedeeAdapter mAdapter = new ReqFeedeeAdapter(mContext, httpClient,
-                        feed_id, rest_id, place_id, data.getRest_phone(), usersList);
+                        feed_id, restData, usersList);
 
                 if (usersList.size() == 0) {
                     holder.txt_no_req.setVisibility(View.VISIBLE);

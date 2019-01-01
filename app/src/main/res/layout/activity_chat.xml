@@ -5,12 +5,11 @@
     android:id="@+id/layout_drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ChatActivity"
-    tools:openDrawer="end">
+    android:fitsSystemWindows="true"
+    tools:context="honbab.voltage.com.tete.ChatActivity"
+    tools:openDrawer="right">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -36,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="5dp"
             android:layout_marginRight="9dp"
             android:background="@drawable/btn_round_wh"
             android:minWidth="0dp"
@@ -100,36 +99,15 @@
                 android:maxHeight="140dp"
                 android:padding="10dp"
                 android:text="전송" />
-
-
         </LinearLayout>
     </RelativeLayout>
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
+        android:layout_gravity="right"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="right"
-        android:fitsSystemWindows="true" />
-
-    <android.support.design.widget.NavigationView
-        android:id="@+id/nav_view2"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="end"
-        android:layout_marginEnd="-65dp"
-        android:layout_marginRight="-65dp"
-        android:fitsSystemWindows="true">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <FrameLayout
-                android:id="@+id/fragment_chatlist"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </RelativeLayout>
-    </android.support.design.widget.NavigationView>
+        android:paddingTop="31dp"
+        app:headerLayout="@layout/drawer_chat"/>
 
 </android.support.v4.widget.DrawerLayout>

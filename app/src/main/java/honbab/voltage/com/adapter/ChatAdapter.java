@@ -62,8 +62,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        Log.e("abc", "chat listViewItemList.size() = " + listViewItemList.size());
-        Log.e("abc", "chat newList.size() = " + newList.size());
+//        Log.e("abc", "chat listViewItemList.size() = " + listViewItemList.size());
+//        Log.e("abc", "chat newList.size() = " + newList.size());
 //        return newList.size();
         return listViewItemList.size();
     }
@@ -100,39 +100,50 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
             chatTime_right.setText(formatter.format(calendar.getTime()));
             chatTime_left.setText(formatter.format(calendar.getTime()));
 
-            if (data.getFromId().equals(Statics.my_id)) {
-                layout_chatBox.setGravity(Gravity.RIGHT);
+            if (data.getType().equals("t")) {
+                if (data.getFromId().equals(Statics.my_id)) {
+                    layout_chatBox.setGravity(Gravity.RIGHT);
+                    img_user.setVisibility(View.GONE);
+                    txt_chatUserName_item.setVisibility(View.GONE);
+
+                    chatTime_right.setVisibility(View.GONE);
+                    chatTime_left.setVisibility(View.VISIBLE);
+
+                    Log.e("chat", "RIGHT , ");
+                } else {
+                    layout_chatBox.setGravity(Gravity.LEFT);
+                    img_user.setVisibility(View.VISIBLE);
+                    txt_chatUserName_item.setVisibility(View.VISIBLE);
+
+                    chatTime_right.setVisibility(View.VISIBLE);
+                    chatTime_left.setVisibility(View.GONE);
+
+                    Picasso.get().load(data.getToUserImg())
+                            .placeholder(R.drawable.icon_noprofile_circle)
+                            .error(R.drawable.icon_noprofile_circle)
+                            .transform(new CircleTransform())
+                            .into(img_user);
+                    Log.e("chat", "LEFT , " + data.getToId());
+
+                    img_user.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(mContext, ProfileActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.putExtra("user_id", data.getFromId());
+                            mContext.startActivity(intent);
+                        }
+                    });
+                }
+            } else if (data.getType().equals("a")) {
+                layout_chatBox.setGravity(Gravity.CENTER);
                 img_user.setVisibility(View.GONE);
                 txt_chatUserName_item.setVisibility(View.GONE);
 
                 chatTime_right.setVisibility(View.GONE);
-                chatTime_left.setVisibility(View.VISIBLE);
-
-                Log.e("chat", "RIGHT , ");
-            } else {
-                layout_chatBox.setGravity(Gravity.LEFT);
-                img_user.setVisibility(View.VISIBLE);
-                txt_chatUserName_item.setVisibility(View.VISIBLE);
-
-                chatTime_right.setVisibility(View.VISIBLE);
                 chatTime_left.setVisibility(View.GONE);
 
-                Picasso.get().load(data.getToUserImg())
-                        .placeholder(R.drawable.icon_noprofile_circle)
-                        .error(R.drawable.icon_noprofile_circle)
-                        .transform(new CircleTransform())
-                        .into(img_user);
-                Log.e("chat", "LEFT , " + data.getToId());
-
-                img_user.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent(mContext, ProfileActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putExtra("user_id", data.getFromId());
-                        mContext.startActivity(intent);
-                    }
-                });
+                Log.e("chat", "CENTER");
             }
         }
     }

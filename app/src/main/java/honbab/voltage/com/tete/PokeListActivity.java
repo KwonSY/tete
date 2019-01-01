@@ -134,18 +134,18 @@ public class PokeListActivity extends AppCompatActivity {
 
 
                             JSONObject feedObj = feedArr.getJSONObject(i);
-
-                            int feed_id = feedObj.getInt("sid");
+                            //피드[]
+                            String feed_id = feedObj.getString("sid");
                             String status = feedObj.getString("status");
                             String feed_time = feedObj.getString("time");
-
+                            //호스트
                             JSONObject hostObj = feedObj.getJSONObject("host");
-                            int host_id = hostObj.getInt("sid");
+                            String host_id = hostObj.getString("sid");
                             String host_name = hostObj.getString("name");
                             String host_img = Statics.main_url + hostObj.getString("img_url");
-
+                            //음식점
                             JSONObject restObj = feedObj.getJSONObject("rest");
-                            int rest_id = restObj.getInt("sid");
+                            String rest_id = restObj.getString("sid");
                             rest_name = restObj.getString("name");
                             String place_id = restObj.getString("place_id");
                             String compound_code = restObj.getString("compound_code");
@@ -155,7 +155,7 @@ public class PokeListActivity extends AppCompatActivity {
                             LatLng latLng = new LatLng(lat, lng);
                             String rest_phone = restObj.getString("phone");
                             String rest_img = restObj.getString("img_url");
-
+                            //피더 - 신청자
                             JSONArray usersArr = feedObj.getJSONArray("users");
                             for (int j = 0; j < usersArr.length(); j++) {
                                 String user_id = hostObj.getString("sid");

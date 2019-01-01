@@ -1,0 +1,178 @@
+package honbab.voltage.com.data;
+
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.google.android.gms.maps.model.LatLng;
+
+public class RestData implements Parcelable {
+
+    private String rest_id, rest_name, compound_code, place_id, rest_img, rest_phone, vicinity;
+    private LatLng latLng;
+    private double latitude, longtitue;
+
+    public RestData() {
+
+    }
+
+    // parameter 16EA
+    public RestData(String rest_id, String rest_name,
+                    String compound_code, LatLng latLng, String place_id, String rest_img, String rest_phone, String vicinity) {
+        this.rest_id = rest_id;
+        this.rest_name = rest_name;
+        this.compound_code = compound_code;
+        this.latLng = latLng;
+            this.latitude = latLng.latitude;
+            this.longtitue = latLng.longitude;
+
+        this.place_id = place_id;
+        this.rest_img = rest_img;
+        this.rest_phone = rest_phone;
+        this.vicinity = vicinity;
+    }
+
+    protected RestData(Parcel in) {
+        rest_id = in.readString();
+        rest_name = in.readString();
+        compound_code = in.readString();
+//        lat = in.readString();
+//        lng = in.readString();
+        place_id = in.readString();
+        rest_img = in.readString();
+        rest_phone = in.readString();
+        vicinity = in.readString();
+        latLng = in.readParcelable(LatLng.class.getClassLoader());
+        latitude = in.readDouble();
+        longtitue = in.readDouble();
+            latitude = latLng.latitude;
+            longtitue = latLng.longitude;
+    }
+
+    public static final Creator<RestData> CREATOR = new Creator<RestData>() {
+        @Override
+        public RestData createFromParcel(Parcel in) {
+            return new RestData(in);
+        }
+
+        @Override
+        public RestData[] newArray(int size) {
+            return new RestData[size];
+        }
+    };
+
+    public String getRest_id() {
+        return rest_id;
+    }
+
+    public void setRest_id(String rest_id) {
+        this.rest_id = rest_id;
+    }
+
+    public String getRest_name() {
+        return rest_name;
+    }
+
+    public void setRest_name(String rest_name) {
+        this.rest_name = rest_name;
+    }
+
+    public String getCompound_code() {
+        return compound_code;
+    }
+
+    public void setCompound_code(String compound_code) {
+        this.compound_code = compound_code;
+    }
+
+    public String getPlace_id() {
+        return place_id;
+    }
+
+    public void setPlace_id(String place_id) {
+        this.place_id = place_id;
+    }
+
+    public String getRest_img() {
+        return rest_img;
+    }
+
+    public void setRest_img(String rest_img) {
+        this.rest_img = rest_img;
+    }
+
+    public String getRest_phone() {
+        return rest_phone;
+    }
+
+    public void setRest_phone(String rest_phone) {
+        this.rest_phone = rest_phone;
+    }
+
+    public String getVicinity() {
+        return vicinity;
+    }
+
+    public void setVicinity(String vicinity) {
+        this.vicinity = vicinity;
+    }
+
+    public LatLng getLatLng() {
+        return latLng;
+    }
+
+    public void setLatLng(LatLng latLng) {
+        this.latLng = latLng;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongtitue() {
+        return longtitue;
+    }
+
+    public void setLongtitue(double longtitue) {
+        this.longtitue = longtitue;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(rest_id);
+        dest.writeString(rest_name);
+        dest.writeString(compound_code);
+//        dest.writeString(lat);
+//        dest.writeString(lng);
+        dest.writeString(place_id);
+        dest.writeString(rest_img);
+        dest.writeString(rest_phone);
+        dest.writeString(vicinity);
+        dest.writeParcelable(latLng, flags);
+        dest.writeDouble(latitude);
+        dest.writeDouble(longtitue);
+    }
+
+    private void readFromParcel(Parcel in){
+        rest_id = in.readString();
+        rest_name = in.readString();
+        compound_code = in.readString();
+//        lat = in.readString();
+//        lng = in.readString();
+        place_id = in.readString();
+        rest_img = in.readString();
+        rest_phone = in.readString();
+        vicinity = in.readString();
+//        latLng = in.read;
+        latitude = in.readInt();
+        longtitue = in.readInt();
+    }
+}
