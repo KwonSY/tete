@@ -1,80 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="honbab.voltage.com.tete.MyFeedListActivity">
+    tools:context=".ChatActivity"
+    tools:openDrawer="end">
 
-    <include
-        android:id="@+id/topbar"
-        layout="@layout/layout_topbar_backtitle"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/txt_rest_phone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:textColor="@color/white"
-        android:layout_marginRight="10dp"
-        android:text="aaaaa"
-        android:layout_alignParentRight="true"/>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/topbar">
+        <include
+            android:id="@+id/topbar"
+            layout="@layout/layout_topbar_backtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <TextView
-            android:id="@+id/txt_no_comment"
+            android:id="@+id/txt_rest_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="12dp"
+            android:layout_marginRight="10dp"
+            android:text="aaaaa"
+            android:textColor="@color/white"
+            android:visibility="invisible" />
+
+        <Button
+            android:id="@+id/btn_eat_with"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="6dp"
+            android:layout_marginRight="9dp"
+            android:background="@drawable/btn_round_wh"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:paddingLeft="11dp"
+            android:paddingTop="8dp"
+            android:paddingRight="11dp"
+            android:paddingBottom="8dp"
+            android:text="음식점 예약"
+            android:textColor="@color/black" />
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:gravity="center_horizontal"
-            android:padding="17dp"
-            android:text="같먹할 분과 첫 대화를 시작해보세요."
-            android:visibility="gone" />
+            android:layout_below="@id/topbar">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
+            <TextView
+                android:id="@+id/txt_no_comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:gravity="center_horizontal"
+                android:padding="17dp"
+                android:text="같먹할 분과 첫 대화를 시작해보세요."
+                android:visibility="gone" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="48dp"
+                app:stackFromEnd="true" />
+        </RelativeLayout>
+
+
+        <LinearLayout
+            android:id="@+id/footerContainer"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingBottom="48dp"
-            app:stackFromEnd="true" />
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/edit_chat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/btn_send_chat"
+                android:layout_weight="1"
+                android:hint="대화내용 입력.."
+                android:maxLines="5"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/btn_send_chat"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_weight="0"
+                android:background="@drawable/btn_send_or"
+                android:gravity="center"
+                android:maxHeight="140dp"
+                android:padding="10dp"
+                android:text="전송" />
+
+
+        </LinearLayout>
     </RelativeLayout>
 
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="right"
+        android:fitsSystemWindows="true" />
 
-    <LinearLayout
-        android:id="@+id/footerContainer"
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_view2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_alignParentBottom="true">
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:layout_marginEnd="-65dp"
+        android:layout_marginRight="-65dp"
+        android:fitsSystemWindows="true">
 
-        <EditText
-            android:id="@+id/edit_chat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:maxLines="5"
-            android:layout_toLeftOf="@id/btn_send_chat"
-            android:hint="대화내용 입력.."
-            android:layout_weight="1"
-            android:textSize="14sp" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/btn_send_chat"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:maxHeight="140dp"
-            android:gravity="center"
-            android:layout_weight="0"
-            android:background="@drawable/btn_send_or"
-            android:padding="10dp"
-            android:text="전송" />
+            <FrameLayout
+                android:id="@+id/fragment_chatlist"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </RelativeLayout>
+    </android.support.design.widget.NavigationView>
 
-
-    </LinearLayout>
-</RelativeLayout>
+</android.support.v4.widget.DrawerLayout>

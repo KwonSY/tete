@@ -40,7 +40,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -53,8 +52,6 @@ import honbab.voltage.com.utils.ButtonUtil;
 import honbab.voltage.com.utils.GoogleMapUtil;
 import honbab.voltage.com.widget.CustomTimePickerDialog;
 import honbab.voltage.com.widget.SnapHelper;
-
-import static com.sothree.slidinguppanel.SlidingUpPanelLayout.PanelState;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleMap.OnMyLocationButtonClickListener,
@@ -81,7 +78,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     int j = 0;
 
     private FusedLocationProviderClient mFusedLocationClient;
-    public SlidingUpPanelLayout layout_slidingPanel;
+//    public SlidingUpPanelLayout layout_slidingPanel;
     public TextView txt_restName, txt_clock;
     public static RecyclerView recyclerView;
     public static FeedMapHorzRestAdapter feedMapHorzRestAdapter;
@@ -104,13 +101,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         hour = intent.getIntExtra("hour", 0);
         min = intent.getIntExtra("min", 0);
 
-        layout_slidingPanel = (SlidingUpPanelLayout) findViewById(R.id.layout_slidingPanel);
-        layout_slidingPanel.setFadeOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                layout_slidingPanel.setPanelState(PanelState.COLLAPSED);
-            }
-        });
+//        layout_slidingPanel = (SlidingUpPanelLayout) findViewById(R.id.layout_slidingPanel);
+//        layout_slidingPanel.setFadeOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                layout_slidingPanel.setPanelState(PanelState.COLLAPSED);
+//            }
+//        });
         txt_restName = (TextView) findViewById(R.id.txt_restName);
         txt_clock = (TextView) findViewById(R.id.txt_clock);
         txt_clock.setOnClickListener(mOnClickListener);

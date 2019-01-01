@@ -92,7 +92,7 @@ public class MyPokeListAdapter extends RecyclerView.Adapter<MyPokeListAdapter.Vi
                     data.getUsersList().get(0).setStatus("n");
                 }
 
-                new PokeFeedTask(mContext, httpClient).execute(data.getFeed_id());
+                new PokeFeedTask(mContext, httpClient).execute(String.valueOf(data.getFeed_id()));
             }
         });
     }

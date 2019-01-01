@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/footerContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/layout_profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="50dp">
+
+        <ImageView
+            android:id="@+id/image_myProfile"
+            android:layout_width="@dimen/profile_l"
+            android:layout_height="@dimen/profile_l"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/icon_noprofile_circle" />
+
+        <TextView
+            android:id="@+id/txt_my_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="12dp"
+            android:text="내 프로필 읽어오는 중..."
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txt_comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="40dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/border_round_gr1"
+            android:padding="8dp"
+            android:hint="아직 소개글이 없습니다..."
+            android:text="" />
+    </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/btn_setting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="17dp"
+        android:layout_marginTop="14dp"
+        android:background="#00000000"
+        android:src="@drawable/icon_settting" />
+
+    <RelativeLayout
+        android:id="@+id/layout_go_pokelist"
+        android:layout_width="37dp"
+        android:layout_height="wrap_content"
+        android:layout_alignRight="@id/btn_setting"
+        android:layout_below="@id/btn_setting"
+        android:layout_marginTop="20dp">
+
+        <ImageView
+            android:id="@+id/icon_pokelist"
+            android:layout_width="wrap_content"
+            android:layout_height="27dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="3dp"
+            android:src="@drawable/icon_poke" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/icon_pokelist"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="6dp"
+            android:text="@string/pokelist"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/badge_poke_cnt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/circle_red"
+            android:gravity="center"
+            android:textSize="10sp"
+            android:text="0"
+            android:textColor="@android:color/white" />
+    </RelativeLayout>
+</RelativeLayout>

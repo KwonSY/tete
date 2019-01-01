@@ -135,17 +135,17 @@ public class PokeListActivity extends AppCompatActivity {
 
                             JSONObject feedObj = feedArr.getJSONObject(i);
 
-                            String feed_id = feedObj.getString("sid");
+                            int feed_id = feedObj.getInt("sid");
                             String status = feedObj.getString("status");
                             String feed_time = feedObj.getString("time");
 
                             JSONObject hostObj = feedObj.getJSONObject("host");
-                            String host_id = hostObj.getString("sid");
+                            int host_id = hostObj.getInt("sid");
                             String host_name = hostObj.getString("name");
                             String host_img = Statics.main_url + hostObj.getString("img_url");
 
                             JSONObject restObj = feedObj.getJSONObject("rest");
-                            String rest_id = restObj.getString("sid");
+                            int rest_id = restObj.getInt("sid");
                             rest_name = restObj.getString("name");
                             String place_id = restObj.getString("place_id");
                             String compound_code = restObj.getString("compound_code");

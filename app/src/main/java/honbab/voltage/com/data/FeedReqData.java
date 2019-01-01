@@ -6,11 +6,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class FeedReqData implements Serializable {
-    private String feed_id, compound_code, feed_time, place_id, status, vicinity;
+    private int feed_id;
+    private String compound_code, feed_time, place_id, status, vicinity;
     private transient LatLng latLng;
     private Double latitude, longtitue;
-    private String host_id, host_name, host_img;
-    private String rest_id, rest_name, rest_phone, rest_img;
+    private int host_id;
+    private String host_name, host_img;
+    private int rest_id;
+    private String rest_name, rest_phone, rest_img;
     private ArrayList<UserData> usersList;
     private ArrayList<CommentData> commentsList;
 
@@ -18,23 +21,29 @@ public class FeedReqData implements Serializable {
 
     }
 
-//    public FeedReqData(String feed_id, String status, String feed_time,
-//                       String rest_id, String rest_name, String rest_img,
-//                       ArrayList<UserData> usersList, ArrayList<CommentData> commentsList) {
-//        this.feed_id = feed_id;
-//        this.commentsList = commentsList;
-//        this.feed_time = feed_time;
-//        this.status = status;
-//        this.rest_id = rest_id;
-//        this.rest_name = rest_name;
-//        this.rest_img = rest_img;
-//        this.usersList = usersList;
-//    }
+    //예약 전, 음식점만 좋아요
+    public FeedReqData(int rest_id, String rest_name, String rest_img, String rest_phone,
+                       String compound_code, LatLng latLng, String place_id, String vicinity,
+                       ArrayList<UserData> usersList) {
+        this.rest_id = rest_id;
+        this.rest_name = rest_name;
+        this.rest_img = rest_img;
+        this.rest_phone = rest_phone;
 
-    public FeedReqData(String feed_id, String status, String feed_time,
+        this.compound_code = compound_code;
+        this.latLng = latLng;
+            this.latitude = latLng.latitude;
+            this.longtitue = latLng.longitude;
+        this.place_id = place_id;
+        this.vicinity = vicinity;
+
+        this.usersList = usersList;
+    }
+
+    public FeedReqData(int feed_id, String status, String feed_time,
                        String place_id, String compound_code, String vicinity, LatLng latLng,
-                       String host_id, String host_name, String host_img,
-                       String rest_id, String rest_name, String rest_phone, String rest_img,
+                       int host_id, String host_name, String host_img,
+                       int rest_id, String rest_name, String rest_phone, String rest_img,
                        ArrayList<UserData> usersList) {
         //피드
         this.feed_id = feed_id;
@@ -59,11 +68,11 @@ public class FeedReqData implements Serializable {
         this.usersList = usersList;
     }
 
-    public String getFeed_id() {
+    public int getFeed_id() {
         return feed_id;
     }
 
-    public void setFeed_id(String feed_id) {
+    public void setFeed_id(int feed_id) {
         this.feed_id = feed_id;
     }
 
@@ -131,11 +140,11 @@ public class FeedReqData implements Serializable {
         this.longtitue = longtitue;
     }
 
-    public String getHost_id() {
+    public int getHost_id() {
         return host_id;
     }
 
-    public void setHost_id(String host_id) {
+    public void setHost_id(int host_id) {
         this.host_id = host_id;
     }
 
@@ -155,11 +164,11 @@ public class FeedReqData implements Serializable {
         this.host_img = host_img;
     }
 
-    public String getRest_id() {
+    public int getRest_id() {
         return rest_id;
     }
 
-    public void setRest_id(String rest_id) {
+    public void setRest_id(int rest_id) {
         this.rest_id = rest_id;
     }
 

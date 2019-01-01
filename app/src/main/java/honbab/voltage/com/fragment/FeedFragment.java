@@ -89,22 +89,12 @@ public class FeedFragment extends Fragment {
     }
 
     private void initControls() {
-        swipeContainer = (SwipeRefreshLayout) getActivity().findViewById(R.id.swipeContainer);
+        swipeContainer = (SwipeRefreshLayout) getActivity().findViewById(R.id.swipeContainer_feed);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-//                fetchTimelineAsync(0);
                 mAdapter.clearItemList();
                 new FeedListTask().execute();
-
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override public void run() {
-//                        // Stop animation (This will be after 3 seconds)
-//
-//
-//                        swipeContainer.setRefreshing(false);
-//                    }
-//                }, 4000);
             }
         });
 

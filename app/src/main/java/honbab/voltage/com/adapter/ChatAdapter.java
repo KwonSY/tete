@@ -137,11 +137,11 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         }
     }
 
-    public void addItem(String fromId, String toId, String toUserName, String message,
+    public void addItem(String type, String fromId, String toId, String toUserName, String message,
                         Long milliSeconds,
                         String imageUrl, int imageWidth, int imageHeight, String toUserImg) {
 //        ChatData item = new ChatData();
-        ChatData item = new ChatData(fromId, toId, toUserName, message, imageUrl, imageWidth, imageHeight, toUserImg);
+        ChatData item = new ChatData(type, fromId, toId, toUserName, message, imageUrl, imageWidth, imageHeight, toUserImg);
 //        item.setFromId(fromId);
 //        item.setToId(toId);
 //        item.setToUserName(ToUserName);

@@ -16,7 +16,6 @@ import honbab.voltage.com.adapter.MyFeedListAdapter;
 import honbab.voltage.com.data.CommentData;
 import honbab.voltage.com.data.FeedReqData;
 import honbab.voltage.com.data.UserData;
-import honbab.voltage.com.fragment.ProfileFragment;
 import honbab.voltage.com.tete.MyFeedListActivity;
 import honbab.voltage.com.tete.Statics;
 import okhttp3.FormBody;
@@ -72,17 +71,17 @@ public class MyFeedListTask extends AsyncTask<Void, Void, ArrayList<FeedReqData>
 
                     JSONObject feedObj = feedArr.getJSONObject(i);
 
-                    String feed_id = feedObj.getString("sid");
+                    int feed_id = feedObj.getInt("sid");
                     String feed_status = feedObj.getString("status");
                     String feed_time = feedObj.getString("time");
 
                     JSONObject hostObj = feedObj.getJSONObject("host");
-                    String host_id = hostObj.getString("sid");
+                    int host_id = hostObj.getInt("sid");
                     String host_name = hostObj.getString("name");
                     String host_img = Statics.main_url + hostObj.getString("img_url");
 
                     JSONObject restObj = feedObj.getJSONObject("rest");
-                    String rest_id = restObj.getString("sid");
+                    int rest_id = restObj.getInt("sid");
                     rest_name = restObj.getString("name");
                     String place_id = restObj.getString("place_id");
                     String compound_code = restObj.getString("compound_code");
@@ -139,20 +138,22 @@ public class MyFeedListTask extends AsyncTask<Void, Void, ArrayList<FeedReqData>
         String activityName = mContext.getClass().getSimpleName();
 
         if (activityName.equals("MainActivity")) {
-            //vvvvvvvvvvvvvv static ->
-            ProfileFragment.badge_poke_cnt.setText(String.valueOf(cnt_poke));
-
-            if (cnt_poke == 0)
-                ProfileFragment.badge_poke_cnt.setVisibility(View.GONE);
+//            //vvvvvvvvvvvvvv static ->
+//            ProfileFragment.badge_poke_cnt.setText(String.valueOf(cnt_poke));
+//
+//            if (cnt_poke == 0)
+//                ProfileFragment.badge_poke_cnt.setVisibility(View.GONE);
 
             if (feedReqList.size() > 0) {
                 //vvvvvvvvvvvvvvv static 처리되어있음
-                ProfileFragment.myFeedListAdapter = new MyFeedListAdapter(mContext, httpClient, feedReqList);
-                ProfileFragment.recyclerView_myFeed.setAdapter(ProfileFragment.myFeedListAdapter);
-                ProfileFragment.myFeedListAdapter.notifyDataSetChanged();
+//                ProfileFragment.myFeedListAdapter = new MyFeedListAdapter(mContext, httpClient, feedReqList);
+//                ProfileFragment.recyclerView_myFeed.setAdapter(ProfileFragment.myFeedListAdapter);
+//                ProfileFragment.myFeedListAdapter.notifyDataSetChanged();
             } else {
 
             }
+
+
 
         } else if (activityName.equals("MyFeedListActivity")) {
             if (feedReqList.size() > 0) {

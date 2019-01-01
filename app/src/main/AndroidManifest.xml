@@ -73,6 +73,8 @@
         <activity android:name=".ProfileActivity" />
         <activity android:name=".SettingActivity" />
 
+        <activity android:name=".GodTinderActivity" />
+
 
         <meta-data
             android:name="com.kakao.sdk.AppKey"

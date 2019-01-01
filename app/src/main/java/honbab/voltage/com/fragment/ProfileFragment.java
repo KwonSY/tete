@@ -1,9 +1,11 @@
 package honbab.voltage.com.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,7 +21,6 @@ import android.widget.TextView;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
@@ -33,7 +34,6 @@ import honbab.voltage.com.tete.ProfileActivity;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.tete.SettingActivity;
 import honbab.voltage.com.tete.Statics;
-import honbab.voltage.com.widget.CircleTransform;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
 import honbab.voltage.com.widget.VerticalItemDecoration;
 import okhttp3.FormBody;
@@ -41,7 +41,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
 public class ProfileFragment extends Fragment {
-
     private OkHttpClient httpClient;
 
     public String my_id = Statics.my_id;
@@ -52,14 +51,40 @@ public class ProfileFragment extends Fragment {
     private ImageButton btn_setting;
     private ImageView image_myProfile;
     private TextView txt_my_name, txt_comment;
-    private TextView title_reserve;
-    private RelativeLayout layout_go_feedlist, layout_go_pokelist, layout_go_talk;
+//    private TextView title_reserve;
+//    private RelativeLayout layout_go_feedlist, layout_go_pokelist, layout_go_talk;
+    private RelativeLayout layout_go_pokelist;
     public static TextView badge_poke_cnt;
+    public SwipeRefreshLayout swipeContainer;
     public static RecyclerView recyclerView_myFeed;
     public static MyFeedListAdapter myFeedListAdapter;
 
     private String token;
     private ArrayList<FeedReqData> pokeList = new ArrayList<>();
+
+
+
+    private OnFragmentInteractionListener mListener;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mListener = (OnFragmentInteractionListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    public interface OnFragmentInteractionListener {
+        void onFragmentInteraction(boolean refresh);
+    }
 
     public ProfileFragment() {
 
@@ -124,6 +149,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void initControls() {
+        /*
         //마이탭 프로필
         image_myProfile = (ImageView) getActivity().findViewById(R.id.image_myProfile);
         txt_my_name = (TextView) getActivity().findViewById(R.id.txt_my_name);
@@ -136,15 +162,19 @@ public class ProfileFragment extends Fragment {
         btn_setting.setOnTouchListener(mOnTouchListener);
 
         //3가지 버튼
-//        layout_go_feedlist = (RelativeLayout) getActivity().findViewById(R.id.layout_go_feedlist);
         layout_go_pokelist = (RelativeLayout) getActivity().findViewById(R.id.layout_go_pokelist);
-//        layout_go_talk = (RelativeLayout) getActivity().findViewById(R.id.layout_go_talk);
-//        layout_go_feedlist.setOnClickListener(mOnClickListener);
         layout_go_pokelist.setOnClickListener(mOnClickListener);
-//        layout_go_talk.setOnClickListener(mOnClickListener);
-//        badge_feed_cnt = (TextView) getActivity().findViewById(R.id.badge_feed_cnt);
         badge_poke_cnt = (TextView) getActivity().findViewById(R.id.badge_poke_cnt);
-//        badge_comment_cnt = (TextView) getActivity().findViewById(R.id.badge_comment_cnt);
+        */
+
+        swipeContainer = (SwipeRefreshLayout) getActivity().findViewById(R.id.swipeContainer);
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                myFeedListAdapter.clearItemList();
+                new MyFeedListTask(getActivity(), httpClient).execute();
+            }
+        });
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView_myFeed = (RecyclerView) getActivity().findViewById(R.id.recyclerView_myFeed);
@@ -260,6 +290,7 @@ public class ProfileFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Void aVoid) {
+            /*
             txt_my_name.setText(user_name);
             txt_comment.setText(comment);
             Picasso.get().load(img_url)
@@ -267,8 +298,7 @@ public class ProfileFragment extends Fragment {
                     .error(R.drawable.icon_noprofile_circle)
                     .transform(new CircleTransform())
                     .into(image_myProfile);
-
-//            new MyTotalFeedListTask().execute();
+            */
             new MyFeedListTask(getActivity(), httpClient).execute();
 
             if (!token.equals(user_token))
@@ -286,7 +316,6 @@ public class ProfileFragment extends Fragment {
 
         @Override
         protected Void doInBackground(String... params) {
-            Log.e("abc", "token 갱신한다 = " + token);
             FormBody body = new FormBody.Builder()
                     .add("opt", "update_token")
                     .add("my_id", my_id)
@@ -301,7 +330,6 @@ public class ProfileFragment extends Fragment {
                     String bodyStr = response.body().string();
 
                     JSONObject obj = new JSONObject(bodyStr);
-                    Log.e("abc", "update_token = " + obj);
 
                     result = obj.getString("result");
                 } else {
@@ -322,4 +350,7 @@ public class ProfileFragment extends Fragment {
         }
     }
 
+    public void setSwipeRefresh(boolean refresh) {
+        swipeContainer.setRefreshing(refresh);
+    }
 }

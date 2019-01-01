@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +47,6 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         final FeedData data = listViewItemList.get(position);
-        Log.e("abc", "FeedListAdapter feed_id = " + data.getFeed_id());
 
         Picasso.get().load(Statics.main_url + data.getUser_img())
                 .resize(200,200)
@@ -80,7 +78,6 @@ public class FeedListAdapter extends RecyclerView.Adapter<FeedListAdapter.ViewHo
         if (data.getUser_gender().equals("f"))
             str_gender = "여";
 
-        Log.e("abc", "FeedListAdapter data.getRest_name() = " + data.getRest_name());
         holder.txt_userName.setText(data.getUser_name() + " " + data.getUser_age() + " " + str_gender);
         holder.txt_restName.setText(data.getRest_name() + data.getVicinity());
 

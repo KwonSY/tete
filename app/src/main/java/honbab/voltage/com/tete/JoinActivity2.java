@@ -253,7 +253,7 @@ public class JoinActivity2 extends AppCompatActivity {
             Long tsLong = System.currentTimeMillis() / 1000;
             timestamp = tsLong.toString();
 
-            Toast.makeText(getApplicationContext(), timestamp, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getApplicationContext(), timestamp, Toast.LENGTH_SHORT).show();
 
 //            new Upload(img_user, "Profile_" + Statics.my_id + "_" + timestamp).execute();
             Bitmap bitImage = ((BitmapDrawable) img_origin.getDrawable()).getBitmap();
@@ -324,8 +324,7 @@ public class JoinActivity2 extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Uri image) {
-            //show image uploaded
-            Toast.makeText(getApplicationContext(), "Image Uploaded", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), R.string.upload_profile_complete, Toast.LENGTH_SHORT).show();
         }
     }
 }

@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -83,8 +82,8 @@ public class FeedMapHorzRestAdapter extends RecyclerView.Adapter<FeedMapHorzRest
             @Override
             public void onClick(View view) {
                 if (mContext.getClass().equals(MapsActivity.class)) {
-                    ((MapsActivity) mContext).txt_restName.setText(data.getRest_name());
-                    ((MapsActivity) mContext).layout_slidingPanel.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
+//                    ((MapsActivity) mContext).txt_restName.setText(data.getRest_name());
+//                    ((MapsActivity) mContext).layout_slidingPanel.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
                 } else if (mContext.getClass().equals(FeedMapActivity.class)) {
 //                    ((FeedMapActivity) mContext).txt_restName.setText(data.getRest_name());
 //                    ((FeedMapActivity) mContext).layout_slidingPanel.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);

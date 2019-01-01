@@ -15,6 +15,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -88,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
                 }
 
 
-                // Adding Toolbar to the activity
                 Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
                 setSupportActionBar(toolbar);
 
@@ -117,6 +118,9 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 });
+
+                ImageButton btn_go_tinder = (ImageButton) findViewById(R.id.btn_go_tinder);
+                btn_go_tinder.setOnClickListener(mOnClickListener);
 
                 Intent intent = getIntent();
                 int position = intent.getIntExtra("position", 0);
@@ -153,4 +157,29 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+//    @Override//xxxxxxxxxxxxxxxxxx 지금은 안씀
+//    public void onFragmentInteraction(boolean refresh) {
+////        Interface interfaceUse = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.container + ":" + mViewPager.getCurrentItem());
+////        interfaceUse.InterfaceMethod(1);
+////
+////        viewPager.getCurrentItem();
+////        Log.e("abc", "ProfileFragment ID = " + viewPager.getCurrentItem());
+////
+////        ProfileFragment profileFragment = (ProfileFragment)getSupportFragmentManager().findFragmentById(viewPager.get);
+////        profileFragment.setSwipeRefresh(refresh);
+//    }
+
+    private View.OnClickListener mOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.btn_go_tinder:
+                    Intent intent = new Intent(MainActivity.this, GodTinderActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+
+                    break;
+            }
+        }
+    };
 }

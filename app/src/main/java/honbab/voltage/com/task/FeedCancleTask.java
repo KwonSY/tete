@@ -21,14 +21,14 @@ public class FeedCancleTask extends AsyncTask<Void, Void, Void> {
     private Context mContext;
     private OkHttpClient httpClient;
 
-    private String feed_id;
+    private int feed_id;
     private String rest_name;
     private int position;
 
     private String result;
 
     public FeedCancleTask(Context mContext, OkHttpClient httpClient,
-                          String feed_id, String rest_name, int position) {
+                          int feed_id, String rest_name, int position) {
         this.mContext = mContext;
         this.httpClient = httpClient;
         this.feed_id = feed_id;
@@ -46,7 +46,7 @@ public class FeedCancleTask extends AsyncTask<Void, Void, Void> {
         FormBody body = new FormBody.Builder()
                 .add("opt", "feed_cancle")
                 .add("my_id", Statics.my_id)
-                .add("feed_id", feed_id)
+                .add("feed_id", String.valueOf(feed_id))
                 .build();
 
         Request request = new Request.Builder().url(Statics.opt_url).post(body).build();

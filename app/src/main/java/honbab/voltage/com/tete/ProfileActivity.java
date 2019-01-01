@@ -50,7 +50,7 @@ public class ProfileActivity extends AppCompatActivity {
     public Button btn_edit_comment;
 
     public int seq = 0;
-    String user_id;
+    private String user_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +87,7 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        new AccountTask(ProfileActivity.this, httpClient, user_id, seq).execute();
+        new AccountTask(ProfileActivity.this, httpClient, seq).execute(user_id);
     }
 
     boolean bool_edityn = false;

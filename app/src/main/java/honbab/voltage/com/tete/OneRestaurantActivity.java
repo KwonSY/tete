@@ -117,6 +117,7 @@ public class OneRestaurantActivity extends AppCompatActivity {
 
 
         layout_slidingPanel = (SlidingUpPanelLayout) findViewById(R.id.layout_slidingPanel);
+        layout_slidingPanel.setVisibility(View.GONE);
         layout_slidingPanel.setFadeOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -130,6 +131,7 @@ public class OneRestaurantActivity extends AppCompatActivity {
 
         Button btn_reserve_feed;
         btn_reserve_feed = (Button) findViewById(R.id.btn_reserve_feed);
+        btn_reserve_feed.setVisibility(View.GONE);
         btn_reserve_feed.setOnClickListener(mOnClickListener);
 //        btn_show_sliding = (ImageView) findViewById(R.id.btn_show_sliding);
 //        btn_show_sliding.setOnClickListener(mOnClickListener);
@@ -147,18 +149,15 @@ public class OneRestaurantActivity extends AppCompatActivity {
         } else {
             title2_topbar.setText(feed_time.substring(5, 16));
 
-            Log.e("abc", "Statics.my_id = " + Statics.my_id);
-//            LinearLayout layout_show_sliding = (LinearLayout) findViewById(R.id.layout_show_sliding_reserv);
-//            layout_show_sliding.setVisibility(View.GONE);
             btn_reserve_feed.setVisibility(View.GONE);
 
-            if (Statics.my_id == null) {
-                btn_poke.setVisibility(View.VISIBLE);
-            } else if (Statics.my_id.equals(feeder_id)) {
-                btn_poke.setVisibility(View.GONE);
-            } else {
-                btn_poke.setVisibility(View.VISIBLE);
-            }
+//            if (Statics.my_id == null) {
+//                btn_poke.setVisibility(View.VISIBLE);
+//            } else if (Statics.my_id.equals(feeder_id)) {
+//                btn_poke.setVisibility(View.GONE);
+//            } else {
+//                btn_poke.setVisibility(View.VISIBLE);
+//            }
 
             // 같이먹기 o
             ImageView img_feeder = (ImageView) findViewById(R.id.img_feeder);

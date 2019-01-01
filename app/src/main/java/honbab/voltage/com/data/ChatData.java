@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ChatData {
+    private String type;
     private String id_message;
 
     private String fromId;
@@ -27,7 +28,8 @@ public class ChatData {
 
     }
 
-    public ChatData(String fromId, String toId, String text, HashMap<String, Object> timestamp) {
+    public ChatData(String type, String fromId, String toId, String text, HashMap<String, Object> timestamp) {
+        this.type = type;
         this.fromId = fromId;
         this.toId = toId;
         this.text = text;
@@ -35,10 +37,12 @@ public class ChatData {
 //        this.imageHeight = 0;
     }
 
-    public ChatData(String fromId, String toId, String toUserName, String message,
+    public ChatData(String type,
+                    String fromId, String toId, String toUserName, String message,
                     String imageUrl, int imageWidth, int imageHeight, String toUserImg) {
 //        fromId, toId, imageUrl, milliSeconds, imageUrl, imageWidth, imageHeight, toUserImg
 
+        this.type = type;
         this.fromId = fromId;
         this.toId = toId;
         this.toUserName = toUserName;
@@ -58,6 +62,14 @@ public class ChatData {
 //        result.put("time", body);
 
         return result;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getId_message() {

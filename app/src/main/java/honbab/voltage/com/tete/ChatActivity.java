@@ -5,11 +5,17 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -34,23 +40,22 @@ import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
-public class ChatActivity extends AppCompatActivity {
+public class ChatActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private OkHttpClient httpClient;
     private SessionManager session;
     private DatabaseReference mDatabase;
 
     private ChatData chatData;
-//    private ArrayList<ChatData> arrayList = new ArrayList<>();
     private LinearLayoutManager layoutManager;
 
+    public DrawerLayout drawerLayout;
     public TextView title_topbar;
     public RecyclerView recyclerView;
     public ChatAdapter mAdapter;
-    //    private FirebaseRecyclerAdapter<ChatData, ChatViewHolder> mAdapter;
     private EditText edit_chat;
 
-//    private ArrayList<Message> messages;
-    private String fromId = Statics.my_id, toId = "5", toUserName = "상대방", toUserImg, toToken;
+    private String fromId = Statics.my_id, toId;
+    private String toUserName = "상대방", toUserImg, toToken;
     private String rest_phone;
 
     @Override
@@ -71,6 +76,7 @@ public class ChatActivity extends AppCompatActivity {
         rest_phone = intent.getStringExtra("rest_phone");
         Log.e("abc", "fromId = " + fromId + ", toId = " + toId);
         Log.e("abc", "toUserName = " + toUserName);
+        Log.e("abc", "rest_phone = " + rest_phone);
 
         title_topbar = (TextView) findViewById(R.id.title_topbar);
         title_topbar.setText(toUserName);
@@ -88,7 +94,9 @@ public class ChatActivity extends AppCompatActivity {
         recyclerView.setAdapter(mAdapter);
 
 //        messages = new ArrayList<>();
-
+        Button btn_eat_with;
+        btn_eat_with = (Button) findViewById(R.id.btn_eat_with);
+        btn_eat_with.setOnClickListener(mOnClickListener);
 
         edit_chat = (EditText) findViewById(R.id.edit_chat);
 
@@ -96,13 +104,20 @@ public class ChatActivity extends AppCompatActivity {
         btn_send.setOnClickListener(mOnClickListener);
 
         ButtonUtil.setBackButtonClickListener(this);
+
+
+        drawerLayout = (DrawerLayout) findViewById(R.id.layout_drawer);
+//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+//                this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        NavigationView nav_view = (NavigationView) findViewById(R.id.nav_view);
+        nav_view.setNavigationItemSelectedListener(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        loadFirebaseDatabase();
+        loadFirebaseDatabase(fromId, toId);
     }
 
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
@@ -113,13 +128,17 @@ public class ChatActivity extends AppCompatActivity {
                     sendMessage();
 
                     break;
+                case R.id.btn_eat_with:
+                    //같이먹기 시작
+                    drawerLayout.openDrawer(GravityCompat.START);
+
+                    break;
             }
         }
     };
 
 
-
-    private void loadFirebaseDatabase() {
+    private void loadFirebaseDatabase(String fromId, String toId) {
         mDatabase.child("user-messages").child(fromId).child(toId).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -129,12 +148,11 @@ public class ChatActivity extends AppCompatActivity {
                         chatData = dataSnapshot.getValue(ChatData.class);
                         chatData.setToUserName(toUserName);
                         chatData.setToUserImg(toUserImg);
-//                        arrayList.add(chatData);
 
 //                        recyclerView.setLayoutManager(layoutManager);
 //                        mAdapter = new ChatAdapter(getApplicationContext());
 //                        mAdapter = new ChatAdapter(ChatActivity.this, arrayList);
-                        mAdapter.addItem(chatData.getFromId(), chatData.getToId(), chatData.getToUserName(), chatData.getText(),
+                        mAdapter.addItem(chatData.getType(), chatData.getFromId(), chatData.getToId(), chatData.getToUserName(), chatData.getText(),
                                 chatData.getTimestampLong(),
                                 chatData.getImageUrl(), chatData.getImageWidth(), chatData.getImageHeight(), toUserImg);
                         recyclerView.setAdapter(mAdapter);
@@ -177,7 +195,7 @@ public class ChatActivity extends AppCompatActivity {
             final HashMap<String, Object> timestamp = new HashMap<>();
             timestamp.put("time", ServerValue.TIMESTAMP);
 
-            ChatData chatData = new ChatData(fromId, toId, message, timestamp);
+            ChatData chatData = new ChatData("t", fromId, toId, message, timestamp);
 
             DatabaseReference id_message = mDatabase.child("messages").push();
             mDatabase.child("messages").child(id_message.getKey()).setValue(chatData);
@@ -185,8 +203,8 @@ public class ChatActivity extends AppCompatActivity {
             Map<String, Object> taskMap = new HashMap<String, Object>();
             taskMap.put(id_message.getKey(), 1);
 
-            mDatabase.child("user-messages").child(fromId).child(toId).updateChildren(taskMap);
-            mDatabase.child("user-messages").child(toId).child(fromId).updateChildren(taskMap);
+            mDatabase.child("user-messages").child(String.valueOf(fromId)).child(String.valueOf(toId)).updateChildren(taskMap);
+            mDatabase.child("user-messages").child(String.valueOf(toId)).child(String.valueOf(fromId)).updateChildren(taskMap);
 
             chatData.setToUserName(toUserName);
 
@@ -197,6 +215,16 @@ public class ChatActivity extends AppCompatActivity {
             FcmData params = new FcmData(toToken, message);
             new ChatFCMTask().execute(params);
         }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        Fragment fragment = null;
+        String title = getString(R.string.app_name);
+
+        return false;
     }
 
     private class ChatFCMTask extends AsyncTask<FcmData, Void, Void> {
@@ -217,7 +245,7 @@ public class ChatActivity extends AppCompatActivity {
                         .add("message", params[0].message)
                         .build();
 
-                Request request = new Request.Builder().url(Statics.main_url+"fcm/push_chat.php").post(body).build();
+                Request request = new Request.Builder().url(Statics.main_url + "fcm/push_chat.php").post(body).build();
 
                 try {
                     okhttp3.Response response = httpClient.newCall(request).execute();
