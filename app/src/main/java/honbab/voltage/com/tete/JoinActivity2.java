@@ -67,8 +67,7 @@ public class JoinActivity2 extends AppCompatActivity {
 
         if (Statics.my_id == null) {
             HashMap<String, String> user = session.getUserDetails();
-            String my_id = user.get("my_id");
-            Statics.my_id = my_id;
+            Statics.my_id = user.get("my_id");
         }
 
         img_origin = (ImageView) findViewById(R.id.img_origin);

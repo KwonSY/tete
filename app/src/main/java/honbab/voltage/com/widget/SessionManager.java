@@ -31,7 +31,7 @@ public class SessionManager extends Activity {
 
 	// User name (make variable public to access from outside)
 	public static final String KEY_NAME = "my_id";
-	public static final String KEY_GENDER = "mygender";
+	public static final String KEY_GENDER = "my_gender";
 	public static final String KEY_INVATE_CNT = "invite_cnt";
 
 	// Email address (make variable public to access from outside)
@@ -93,15 +93,11 @@ public class SessionManager extends Activity {
 		editor.clear();
 		editor.commit();
 
-		// After logout redirect user to Loing Activity
 		Intent i = new Intent(_context, MainActivity.class);
 		// Closing all the Activities
 		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
 		// Add new Flag to start new Activity
 		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-		// Staring Login Activity
 		_context.startActivity(i);
 	}
 

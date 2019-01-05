@@ -4,6 +4,9 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
@@ -23,12 +26,11 @@ public class AccountTask extends AsyncTask<String, Void, UserData> {
 
     private String user_id;
     private int seq;
-    private String user_name, user_img, comment;
+    private String user_name, user_img, comment, token;
 
     public AccountTask(Context mContext, OkHttpClient httpClient, int seq) {
         this.mContext = mContext;
         this.httpClient = httpClient;
-//        this.user_id = user_id;
         this.seq = seq;
     }
 
@@ -83,14 +85,25 @@ public class AccountTask extends AsyncTask<String, Void, UserData> {
     protected void onPostExecute(UserData userData) {
         super.onPostExecute(userData);
 
+        if (userData.getUser_id().equals(Statics.my_id)) {
+            FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+                @Override
+                public void onSuccess(InstanceIdResult instanceIdResult) {
+                    token = instanceIdResult.getToken();
+                    Log.e("abc", "업데이트 token 업데이트 = " + token);
+
+                    if (!userData.getToken().equals(token))
+                        new UpdateTokenTask(mContext, httpClient).execute(token);
+                }
+            });
+        }
+
         String activityName = mContext.getClass().getSimpleName();
         if (activityName.equals("ProfileActivity")) {
             if (seq == 0) {
                 ((ProfileActivity) mContext).title_topbar.setText(user_name + mContext.getResources().getString(R.string.whose_profile));
 
                 Picasso.get().load(user_img)
-//                    .resize(200,200)
-//                    .centerCrop()
                         .placeholder(R.drawable.icon_noprofile_circle)
                         .error(R.drawable.icon_noprofile_circle)
                         .transform(new CircleTransform())

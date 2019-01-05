@@ -35,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:background="#efefef"
+                android:background="@color/white"
                 android:orientation="vertical">
 
                 <TextView
@@ -43,17 +43,24 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:layout_margin="10dp"
-                    android:text="아직 좋아요를 누른 음식점이 없습니다. 같먹 레스토랑을 둘러보시겠습니까?" />
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="20dp"
+                    android:textStyle="bold"
+                    android:text="@string/explain_search_godmuk_rest"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
 
                 <Button
+                    android:id="@+id/btn_go_pick_rest"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="32dp"
                     android:background="@drawable/btn_circle_bk1"
                     android:paddingLeft="40dp"
                     android:paddingRight="40dp"
-                    android:text="음식점 둘러보기" />
+                    android:text="@string/search_godmuk_rest"
+                    android:textSize="16sp" />
             </LinearLayout>
 
             <android.support.v7.widget.RecyclerView

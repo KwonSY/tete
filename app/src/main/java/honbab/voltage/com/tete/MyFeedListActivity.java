@@ -13,7 +13,6 @@ import java.util.ArrayList;
 
 import honbab.voltage.com.adapter.MyFeedListAdapter;
 import honbab.voltage.com.data.FeedReqData;
-import honbab.voltage.com.task.MyFeedListTask2;
 import honbab.voltage.com.utils.ButtonUtil;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
 import honbab.voltage.com.widget.SessionManager;
@@ -59,7 +58,7 @@ public class MyFeedListActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        new MyFeedListTask2(MyFeedListActivity.this, httpClient).execute();
+//        new MyFeedListTask(MyFeedListActivity.this, httpClient).execute();
     }
 
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {

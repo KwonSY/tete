@@ -4,7 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import honbab.voltage.com.fragment.FeedFragment2;
+import honbab.voltage.com.fragment.RestLikeFragment;
 import honbab.voltage.com.fragment.MyFeedFragment;
 import honbab.voltage.com.fragment.NoProfileFragment;
 import honbab.voltage.com.tete.Statics;
@@ -34,7 +34,7 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
                     return tabFragment1;
                 }
             case 1:
-                FeedFragment2 tabFragment2 = new FeedFragment2();
+                RestLikeFragment tabFragment2 = new RestLikeFragment();
                 fm.beginTransaction().addToBackStack("restlike").commit();
                 return tabFragment2;
 

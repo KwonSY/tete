@@ -19,16 +19,14 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
 public class LoginTask extends AsyncTask<String, Void, String> {
-
-    private OkHttpClient httpClient;
     private Context mContext;
+    private OkHttpClient httpClient;
     private SessionManager session;
 
-    EditText edit_email, edit_password;
+    private EditText edit_email, edit_password;
     private ProgressDialog progressDialog;
 
     String result;
-//    String email, password;
     String user_name, age;
 
     public LoginTask(Context mContext, OkHttpClient httpClient) {

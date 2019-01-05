@@ -93,11 +93,14 @@ public class GetNearPlacesTaskForMap extends AsyncTask<Object, String, String> {
             mMap.addMarker(markerOptions);
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 
-            FeedData data = new FeedData(null,
-                    null, null, null, null, null, null,
-                    null, placeName,
-                    compound_code, latLng, place_id, "", formatted_phone_number, vicinity,
-                    null, null);
+            FeedData data = new FeedData();
+            data.setRest_name(placeName);
+            data.setCompound_code(compound_code);
+            data.setLatLng(latLng);
+            data.setPlace_id(place_id);
+            data.setRest_phone(formatted_phone_number);
+            data.setVicinity(vicinity);
+
             if(photo_reference != null && !photo_reference.isEmpty()) {
 //                String photoUrl = getPlacePhoto(photo_reference);
                 String photoUrl = GoogleMapUtil.getPlacePhoto(mContext, photo_reference);

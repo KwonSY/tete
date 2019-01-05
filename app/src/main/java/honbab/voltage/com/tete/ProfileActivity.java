@@ -74,6 +74,7 @@ public class ProfileActivity extends AppCompatActivity {
         txt_my_name = (TextView) findViewById(R.id.txt_my_name);
 
         img_user.setOnClickListener(mOnClickListener);
+        img_setting.setOnClickListener(mOnClickListener);
 
         edit_comment = (EditText) findViewById(R.id.edit_comment);
         edit_comment.setEnabled(false);
@@ -105,12 +106,6 @@ public class ProfileActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
-                case R.id.img_setting:
-                    Intent intent2 = new Intent(getApplicationContext(), SettingActivity.class);
-                    intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent2);
-
-                    break;
                 case R.id.img_user:
                     if (user_id.equals(Statics.my_id))
                         selectImage();
@@ -141,6 +136,12 @@ public class ProfileActivity extends AppCompatActivity {
 
                         new EditCommentTask(ProfileActivity.this, httpClient, comment, seq).execute();
                     }
+
+                    break;
+                case R.id.img_setting:
+                    Intent intent2 = new Intent(getApplicationContext(), SettingActivity.class);
+                    intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent2);
 
                     break;
             }

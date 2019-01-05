@@ -66,7 +66,7 @@ public class FeedMapHorzRestAdapter extends RecyclerView.Adapter<FeedMapHorzRest
                 intent.putExtra("rest_name", data.getRest_name());
                 intent.putExtra("compound_code", data.getCompound_code());
                 intent.putExtra("rest_phone", data.getRest_phone());
-                intent.putExtra("feed_time", data.getTime());
+                intent.putExtra("feed_time", data.getFeed_time());
                 intent.putExtra("place_id", data.getPlace_id());
                 intent.putExtra("vicinity", data.getVicinity());
                 intent.putExtra("latLng", data.getLatLng());

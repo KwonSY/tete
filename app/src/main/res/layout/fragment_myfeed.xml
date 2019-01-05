@@ -8,6 +8,7 @@
     tools:context="honbab.voltage.com.tete.MainActivity">
 
     <View
+        android:id="@+id/line_timeline_vertical"
         android:layout_width="5dp"
         android:layout_height="match_parent"
         android:layout_marginLeft="60dp"

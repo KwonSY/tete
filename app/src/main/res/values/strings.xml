@@ -28,6 +28,9 @@
     <string name="enter_name">이름을 입력해주세요.</string>
     <string name="enter_password">비밀번호를 입력해주세요.</string>
     <string name="explain_reserve_godmuk">같이 먹기 예약이 없습니다. 같먹을 예약해주시겠습니까?</string>
+    <string name="explain_search_godmuk_rest">맛집들이 준비되어 있어요.\n한 번 둘러보세요.</string>
+    <string name="explain_start_chat">같이 밥 먹을 가조쿠와\n대화하여 같먹약속을 잡아보세요.</string>
+    <string name="go_to_chat">대화하러 가기</string>
     <string name="go_to_reserve_godmuk">같먹 예약하러 가기</string>
     <string name="law_personal">개인정보 취급방침</string>
     <string name="law_privacy">이용약관</string>
@@ -55,6 +58,7 @@
     <string name="reservation">예약</string>
     <string name="reserve_new_godmuk">"새로운 같먹예약"</string>
     <string name="save">저장</string>
+    <string name="search_godmuk_rest">음식점 둘러보기 시작!</string>
     <string name="search_rest_this_area">이 지역에서 검색</string>
     <string name="search_near_rest">주변 음식점 검색</string>
     <string name="update">업데이트</string>

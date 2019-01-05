@@ -6,12 +6,12 @@ import java.io.Serializable;
 
 public class FeedData implements Serializable {
 
-    private String feed_id;
+    private String feed_id, feed_time;
     private String user_id, user_name, user_img, user_age, user_gender, token;
 
     private String rest_id;
     private String compound_code, place_id, rest_name, rest_phone, rest_img, vicinity;
-    private String status, time;
+    private String status;
 
     private transient LatLng latLng;
     private Double latitude, longtitue;
@@ -22,12 +22,14 @@ public class FeedData implements Serializable {
     }
 
     // parameter 16EA
-    public FeedData(String feed_id,
+    public FeedData(String feed_id, String feed_time,
                     String user_id, String user_name, String user_age, String user_gender, String user_img, String token,
                     String rest_id, String rest_name,
                     String compound_code, LatLng latLng, String place_id, String rest_img, String rest_phone, String vicinity,
-                    String status, String time) {
+                    String status) {
         this.feed_id = feed_id;
+        this.feed_time = feed_time;
+
         this.user_id = user_id;
         this.user_name = user_name;
         this.user_age = user_age;
@@ -47,8 +49,6 @@ public class FeedData implements Serializable {
         this.rest_img = rest_img;
         this.vicinity = vicinity;
         this.status = status;
-
-        this.time = time;
     }
 
     public String getFeed_id() {
@@ -57,6 +57,14 @@ public class FeedData implements Serializable {
 
     public void setFeed_id(String feed_id) {
         this.feed_id = feed_id;
+    }
+
+    public String getFeed_time() {
+        return feed_time;
+    }
+
+    public void setFeed_time(String feed_time) {
+        this.feed_time = feed_time;
     }
 
     public String getUser_id() {
@@ -169,14 +177,6 @@ public class FeedData implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
     }
 
     public LatLng getLatLng() {

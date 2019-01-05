@@ -8,7 +8,7 @@ import android.util.Log;
 
 import org.json.JSONObject;
 
-import honbab.voltage.com.fragment.FeedFragment2;
+import honbab.voltage.com.fragment.RestLikeFragment;
 import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.Statics;
 import okhttp3.FormBody;
@@ -75,28 +75,7 @@ public class CancleRestLikeTask extends AsyncTask<String, Void, Void> {
             if (activityName.equals("MainActivity")) {
                 FragmentManager fm = ((MainActivity) mContext).getSupportFragmentManager();
                 Fragment fragment = fm.getFragments().get(1);
-                ((FeedFragment2) fragment).mAdapter.removeAt(position);
-
-//                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-//                builder.setMessage(R.string.ask_cancle_restlike);
-//                builder.setPositiveButton(R.string.yes,
-//                        new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                Resources res = mContext.getResources();
-//                                String text = String.format(res.getString(R.string.cancle_godmuk), rest_name);
-//                                Toast.makeText(mContext.getApplicationContext(), text, Toast.LENGTH_LONG).show();
-//
-//
-//                                new MyFeedListTask(mContext, httpClient).execute();
-//                            }
-//                        });
-//                builder.setNegativeButton(R.string.no,
-//                        new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int which) {
-//
-//                            }
-//                        });
-//                builder.show();
+                ((RestLikeFragment) fragment).mAdapter.removeAt(position);
             }
 
         }

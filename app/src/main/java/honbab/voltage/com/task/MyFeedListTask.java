@@ -4,16 +4,19 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.View;
 
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import honbab.voltage.com.adapter.FeedListAdapter;
+import honbab.voltage.com.adapter.MyFeedListAdapter;
 import honbab.voltage.com.data.FeedData;
 import honbab.voltage.com.fragment.MyFeedFragment;
+import honbab.voltage.com.fragment.NoMyFeedFragment;
 import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.Statics;
 import okhttp3.FormBody;
@@ -40,15 +43,14 @@ public class MyFeedListTask extends AsyncTask<Void, Void, Void> {
     protected void onPreExecute() {
         FragmentManager fm = ((MainActivity) mContext).getSupportFragmentManager();
         fragment = fm.getFragments().get(0);
-        Log.e("abc", "frfragment = " + fragment);
-//        MyFeedFragment fragment = (MyFeedFragment) fm.findFragmentById(R.id.placeholder_fragment);
-//        fragment.setItem();
+
         ((MyFeedFragment) fragment).feedList.clear();
         ((MyFeedFragment) fragment).mAdapter.clearItemList();
     }
 
     @Override
     protected Void doInBackground(Void... params) {
+        Log.e("abc", "MyFeedList my_id = " + Statics.my_id);
         FormBody body = new FormBody.Builder()
                 .add("opt", "my_feed_list")
                 .add("my_id", Statics.my_id)
@@ -70,13 +72,13 @@ public class MyFeedListTask extends AsyncTask<Void, Void, Void> {
                     //피드정보
                     String feed_id = obj2.getString("sid");
                     String status = obj2.getString("status");
-                    String time = obj2.getString("time");
+                    String feed_time = obj2.getString("time");
 
                     //등록자 정보
                     JSONObject host_obj = obj2.getJSONObject("host");
                     String host_id = host_obj.getString("sid");
                     String host_name = host_obj.getString("name");
-                    String host_img = host_obj.getString("img_url");
+                    String host_img = Statics.main_url + host_obj.getString("img_url");
                     String host_age = host_obj.getString("age");
                     String host_gender = host_obj.getString("gender");
                     String host_token = host_obj.getString("token");
@@ -101,22 +103,23 @@ public class MyFeedListTask extends AsyncTask<Void, Void, Void> {
                     JSONObject user_obj = obj2.getJSONArray("users").getJSONObject(0);
                     String user_id = user_obj.getString("sid");
                     String user_name = user_obj.getString("name");
-                    String user_img = user_obj.getString("img_url");
+                    String user_img = Statics.main_url + user_obj.getString("img_url");
                     String user_age = user_obj.getString("age");
                     String user_gender = user_obj.getString("gender");
                     String user_token = user_obj.getString("token");
 
                     FeedData feedData;
+                    Log.e("abc", "MyFeedTask = " + user_id + user_name + user_img);
                     if (host_id.equals(Statics.my_id)) {
-                        feedData = new FeedData(feed_id,
+                        feedData = new FeedData(feed_id, feed_time,
                                 user_id, user_name, user_age, user_gender, user_img, user_token,
                                 rest_id, rest_name, compound_code, latLng, place_id, rest_img, rest_phone, vicinity,
-                                status, time);
+                                status);
                     } else {
-                        feedData = new FeedData(feed_id,
+                        feedData = new FeedData(feed_id, feed_time,
                                 host_id, host_name, host_age, host_gender, host_img,host_token,
                                 rest_id, rest_name, compound_code, latLng, place_id, rest_img, rest_phone, vicinity,
-                                status, time);
+                                status);
                     }
                     ((MyFeedFragment) fragment).feedList.add(feedData);
                 }
@@ -139,13 +142,21 @@ public class MyFeedListTask extends AsyncTask<Void, Void, Void> {
         String activityName = mContext.getClass().getSimpleName();
 
         if (activityName.equals("MainActivity")) {
-
-            ((MyFeedFragment) fragment).mAdapter = new FeedListAdapter(mContext, httpClient, ((MyFeedFragment) fragment).feedList);
+            ((MyFeedFragment) fragment).mAdapter = new MyFeedListAdapter(mContext, httpClient, ((MyFeedFragment) fragment).feedList);
             ((MyFeedFragment) fragment).gridView_feed.setAdapter(((MyFeedFragment) fragment).mAdapter);
             ((MyFeedFragment) fragment).mAdapter.notifyDataSetChanged();
 
             ((MyFeedFragment) fragment).swipeContainer.setRefreshing(false);
 
+            if (((MyFeedFragment) fragment).mAdapter.getItemCount() == 0) {
+                ((MyFeedFragment) fragment).line_timeline_vertical.setVisibility(View.INVISIBLE);
+                ((MainActivity) mContext).viewPager.setCurrentItem(1);
+                ((MainActivity) mContext).getSupportFragmentManager().beginTransaction()
+                        .replace(((MainActivity) mContext).viewPager.getChildAt(0).getId(), new NoMyFeedFragment())
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                        .addToBackStack("myfeed")
+                        .commit();
+            }
         }
     }
 

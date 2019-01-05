@@ -64,7 +64,6 @@
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity android:name=".MyFeedListActivity" />
         <activity android:name=".ReservActivity" />
-        <activity android:name=".PokeListActivity" />
 
 
         <activity android:name=".OneImageActivity" />

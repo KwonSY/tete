@@ -85,7 +85,7 @@ public class GetPhotoTask extends AsyncTask<Object, String, String> {
         Log.e("abc", "googlePlacesData = " + googlePlacesData);
 
         String activityName = mContext.getClass().getSimpleName();
-        Log.e("abc", "activityName = " + activityName);
+
         HashMap<String, Object> placeDetailList = null;
         PhotoParser parser = new PhotoParser();
         placeDetailList = parser.parse(googlePlacesData);
@@ -136,9 +136,7 @@ public class GetPhotoTask extends AsyncTask<Object, String, String> {
         Log.e("abc", "formatted_phone_number)" + placeDetailList.get("formatted_phone_number").toString());
         Log.e("abc", "fullAddress)" + placeDetailList.get("fullAddress").toString());
         Log.e("abc", "adr_address)" + placeDetailList.get("adr_address").toString());
-//        Log.e("abc", "rating)" + placeDetailList.get("rating").toString());
-        ((OneRestaurantActivity) mContext).txt_rest_phone.setText("전화하기 " + placeDetailList.get("formatted_phone_number").toString());
-//        ((OneRestaurantActivity) mContext).txt_rest_address.setText("주소 " + placeDetailList.get("fullAddress").toString());
+        ((OneRestaurantActivity) mContext).btn_call.setText("전화하기 " + placeDetailList.get("formatted_phone_number").toString());
         ((OneRestaurantActivity) mContext).txt_rest_address.setText(Html.fromHtml(placeDetailList.get("adr_address").toString()));
         ((OneRestaurantActivity) mContext).txt_rating.setText("평점 " + placeDetailList.get("rating").toString());
     }

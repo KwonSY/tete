@@ -14,6 +14,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -46,13 +47,14 @@ public class MainActivity extends AppCompatActivity {
         session = new SessionManager(getApplicationContext());
         HashMap<String, String> user = session.getUserDetails();
         Statics.my_id = user.get("my_id");
-        Statics.my_gender = user.get("mygender");
+        Statics.my_gender = user.get("my_gender");
 
+        Log.e("abc", "user.get(\"my_id\") = " + user.get("my_id"));
+        Log.e("abc", "MainAct my_id = " + Statics.my_id);
         //Wifi check
 //        if (!NetworkUtil.isNetworkPresent(this)) {
         if (!NetworkUtil.isOnline(this)) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        builder.setTitle("AlertDialog Title");
             builder.setMessage(R.string.connect_network);
             builder.setPositiveButton(R.string.yes,
                     new DialogInterface.OnClickListener() {
@@ -76,6 +78,16 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             } else {
+
+                Log.e("abc", "xxxxxxxx = " + Statics.my_id);
+                if (Statics.my_id == null) {
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    finish();
+                }
+
+
                 try {
                     PackageInfo info = getPackageManager().getPackageInfo("honbab.voltage.com.tete", PackageManager.GET_SIGNATURES);
                     for (Signature signature : info.signatures) {
@@ -155,18 +167,6 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-//    @Override//xxxxxxxxxxxxxxxxxx 지금은 안씀
-//    public void onFragmentInteraction(boolean refresh) {
-////        Interface interfaceUse = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.container + ":" + mViewPager.getCurrentItem());
-////        interfaceUse.InterfaceMethod(1);
-////
-////        viewPager.getCurrentItem();
-////        Log.e("abc", "ProfileFragment ID = " + viewPager.getCurrentItem());
-////
-////        ProfileFragment profileFragment = (ProfileFragment)getSupportFragmentManager().findFragmentById(viewPager.get);
-////        profileFragment.setSwipeRefresh(refresh);
-//    }
 
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
