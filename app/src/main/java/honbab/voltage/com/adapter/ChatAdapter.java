@@ -3,6 +3,7 @@ package honbab.voltage.com.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -143,6 +144,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
                 chatTime_right.setVisibility(View.GONE);
                 chatTime_left.setVisibility(View.GONE);
 
+                txt_chatMessage_item.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                txt_chatMessage_item.setBackgroundResource(R.color.brightgrey);
+                txt_chatMessage_item.setTextColor(Color.parseColor("#ffffff"));
                 Log.e("chat", "CENTER");
             }
         }

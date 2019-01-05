@@ -2,31 +2,31 @@ package honbab.voltage.com.task;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
-import android.view.View;
 
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
-import honbab.voltage.com.adapter.MyFeedListAdapter;
-import honbab.voltage.com.data.CommentData;
-import honbab.voltage.com.data.FeedReqData;
-import honbab.voltage.com.data.UserData;
-import honbab.voltage.com.tete.MyFeedListActivity;
+import honbab.voltage.com.adapter.FeedListAdapter;
+import honbab.voltage.com.data.FeedData;
+import honbab.voltage.com.fragment.MyFeedFragment;
+import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.Statics;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
-public class MyFeedListTask extends AsyncTask<Void, Void, ArrayList<FeedReqData>> {
+public class MyFeedListTask extends AsyncTask<Void, Void, Void> {
     private Context mContext;
     private OkHttpClient httpClient;
 
-    int cnt_poke = 0;
+    Fragment fragment;
+
+    String my_id;
 
     String result;
     String rest_name;
@@ -38,13 +38,17 @@ public class MyFeedListTask extends AsyncTask<Void, Void, ArrayList<FeedReqData>
 
     @Override
     protected void onPreExecute() {
-        cnt_poke = 0;
+        FragmentManager fm = ((MainActivity) mContext).getSupportFragmentManager();
+        fragment = fm.getFragments().get(0);
+        Log.e("abc", "frfragment = " + fragment);
+//        MyFeedFragment fragment = (MyFeedFragment) fm.findFragmentById(R.id.placeholder_fragment);
+//        fragment.setItem();
+        ((MyFeedFragment) fragment).feedList.clear();
+        ((MyFeedFragment) fragment).mAdapter.clearItemList();
     }
 
     @Override
-    protected ArrayList<FeedReqData> doInBackground(Void... params) {
-        ArrayList<FeedReqData> feedReqList = new ArrayList<>();
-
+    protected Void doInBackground(Void... params) {
         FormBody body = new FormBody.Builder()
                 .add("opt", "my_feed_list")
                 .add("my_id", Statics.my_id)
@@ -60,64 +64,61 @@ public class MyFeedListTask extends AsyncTask<Void, Void, ArrayList<FeedReqData>
                 JSONObject obj = new JSONObject(bodyStr);
                 Log.e("abc", "my_feed_list = " + obj);
 
-                result = obj.getString("result");
+                JSONArray hash_arr = obj.getJSONArray("feed");
+                for (int i = 0; i < hash_arr.length(); i++) {
+                    JSONObject obj2 = hash_arr.getJSONObject(i);
+                    //피드정보
+                    String feed_id = obj2.getString("sid");
+                    String status = obj2.getString("status");
+                    String time = obj2.getString("time");
 
-                cnt_poke = Integer.parseInt(obj.getString("cnt_poke"));
+                    //등록자 정보
+                    JSONObject host_obj = obj2.getJSONObject("host");
+                    String host_id = host_obj.getString("sid");
+                    String host_name = host_obj.getString("name");
+                    String host_img = host_obj.getString("img_url");
+                    String host_age = host_obj.getString("age");
+                    String host_gender = host_obj.getString("gender");
+                    String host_token = host_obj.getString("token");
 
-                JSONArray feedArr = obj.getJSONArray("feed");
-                for (int i = 0; i < feedArr.length(); i++) {
-                    ArrayList<UserData> reqUsersList = new ArrayList<>();
-                    ArrayList<CommentData> commentsList = new ArrayList<>();
+                    //음식점 정보
+                    JSONObject rest_obj = obj2.getJSONObject("rest");
+                    String rest_id = rest_obj.getString("sid");
+                    String rest_name = rest_obj.getString("name");
+                    String compound_code = rest_obj.getString("compound_code");
+                    String vicinity = rest_obj.getString("vicinity");
+                    String place_id = rest_obj.getString("place_id");
+                    String lat = rest_obj.getString("lat");
+                    String lng = rest_obj.getString("lng");
+                    Double db_lat = Double.parseDouble(lat);
+                    Double db_lng = Double.parseDouble(lng);
+                    LatLng latLng = new LatLng(db_lat, db_lng);
+                    String rest_phone = rest_obj.getString("phone");
+                    String rest_img = rest_obj.getString("img_url");
 
-                    JSONObject feedObj = feedArr.getJSONObject(i);
+                    //참가자
+//                        if (obj2.getJSONArray("users").length() > 0) {
+                    JSONObject user_obj = obj2.getJSONArray("users").getJSONObject(0);
+                    String user_id = user_obj.getString("sid");
+                    String user_name = user_obj.getString("name");
+                    String user_img = user_obj.getString("img_url");
+                    String user_age = user_obj.getString("age");
+                    String user_gender = user_obj.getString("gender");
+                    String user_token = user_obj.getString("token");
 
-                    String feed_id = feedObj.getString("sid");
-                    String feed_status = feedObj.getString("status");
-                    String feed_time = feedObj.getString("time");
-
-                    JSONObject hostObj = feedObj.getJSONObject("host");
-                    String host_id = hostObj.getString("sid");
-                    String host_name = hostObj.getString("name");
-                    String host_img = Statics.main_url + hostObj.getString("img_url");
-
-                    JSONObject restObj = feedObj.getJSONObject("rest");
-                    String rest_id = restObj.getString("sid");
-                    rest_name = restObj.getString("name");
-                    String place_id = restObj.getString("place_id");
-                    String compound_code = restObj.getString("compound_code");
-                    String vicinity = restObj.getString("vicinity");
-                    Double lat = Double.parseDouble(restObj.getString("lat"));
-                    Double lng = Double.parseDouble(restObj.getString("lng"));
-                    LatLng latLng = new LatLng(lat, lng);
-                    String rest_phone = restObj.getString("phone");
-                    String rest_img = restObj.getString("img_url");
-
-                    if (feedObj.has("users")) {
-                        JSONArray usersArr = feedObj.getJSONArray("users");
-
-                        for (int j = 0; j < usersArr.length(); j++) {
-                            JSONObject userObj = usersArr.getJSONObject(j);
-
-                            String user_id = userObj.getString("sid");
-                            String user_name = userObj.getString("name");
-                            String user_img = Statics.main_url + userObj.getString("img_url");
-                            String age = userObj.getString("age");
-                            String gender = userObj.getString("gender");
-                            String token = userObj.getString("token");
-                            String status = userObj.getString("status");
-                            String time = userObj.getString("time");
-
-                            UserData userData = new UserData(user_id, user_name, age, gender, token, user_img, status);
-                            reqUsersList.add(userData);
-                        }
+                    FeedData feedData;
+                    if (host_id.equals(Statics.my_id)) {
+                        feedData = new FeedData(feed_id,
+                                user_id, user_name, user_age, user_gender, user_img, user_token,
+                                rest_id, rest_name, compound_code, latLng, place_id, rest_img, rest_phone, vicinity,
+                                status, time);
+                    } else {
+                        feedData = new FeedData(feed_id,
+                                host_id, host_name, host_age, host_gender, host_img,host_token,
+                                rest_id, rest_name, compound_code, latLng, place_id, rest_img, rest_phone, vicinity,
+                                status, time);
                     }
-
-                    FeedReqData data = new FeedReqData(feed_id, feed_status, feed_time,
-                            place_id, compound_code, vicinity, latLng,
-                            host_id, host_name, host_img,
-                            rest_id, rest_name, rest_phone, rest_img,
-                            reqUsersList);
-                    feedReqList.add(data);
+                    ((MyFeedFragment) fragment).feedList.add(feedData);
                 }
 
             } else {
@@ -128,47 +129,22 @@ public class MyFeedListTask extends AsyncTask<Void, Void, ArrayList<FeedReqData>
             Log.e("abc", "Error : " + e.getMessage());
             e.printStackTrace();
         }
-        return feedReqList;
+        return null;
     }
 
     @Override
-    protected void onPostExecute(final ArrayList<FeedReqData> feedReqList) {
-        super.onPostExecute(feedReqList);
-        Log.e("abc", "onPostExecute feedReqList.size = " + feedReqList.size());
+    protected void onPostExecute(Void aVoid) {
+//        super.onPostExecute(feedReqList);
+
         String activityName = mContext.getClass().getSimpleName();
 
         if (activityName.equals("MainActivity")) {
-//            //vvvvvvvvvvvvvv static ->
-//            ProfileFragment.badge_poke_cnt.setText(String.valueOf(cnt_poke));
-//
-//            if (cnt_poke == 0)
-//                ProfileFragment.badge_poke_cnt.setVisibility(View.GONE);
 
-            if (feedReqList.size() > 0) {
-                //vvvvvvvvvvvvvvv static 처리되어있음
-//                ProfileFragment.myFeedListAdapter = new MyFeedListAdapter(mContext, httpClient, feedReqList);
-//                ProfileFragment.recyclerView_myFeed.setAdapter(ProfileFragment.myFeedListAdapter);
-//                ProfileFragment.myFeedListAdapter.notifyDataSetChanged();
-            } else {
+            ((MyFeedFragment) fragment).mAdapter = new FeedListAdapter(mContext, httpClient, ((MyFeedFragment) fragment).feedList);
+            ((MyFeedFragment) fragment).gridView_feed.setAdapter(((MyFeedFragment) fragment).mAdapter);
+            ((MyFeedFragment) fragment).mAdapter.notifyDataSetChanged();
 
-            }
-
-
-
-        } else if (activityName.equals("MyFeedListActivity")) {
-            if (feedReqList.size() > 0) {
-                ((MyFeedListActivity) mContext).txt_no_feed.setVisibility(View.GONE);
-                ((MyFeedListActivity) mContext).btn_go_reserv.setVisibility(View.GONE);
-                ((MyFeedListActivity) mContext).recyclerView_myFeed.setVisibility(View.VISIBLE);
-
-                ((MyFeedListActivity) mContext).myFeedListAdapter = new MyFeedListAdapter(mContext, httpClient, feedReqList);
-                ((MyFeedListActivity) mContext).recyclerView_myFeed.setAdapter(((MyFeedListActivity) mContext).myFeedListAdapter);
-                ((MyFeedListActivity) mContext).myFeedListAdapter.notifyDataSetChanged();
-            } else {
-                ((MyFeedListActivity) mContext).txt_no_feed.setVisibility(View.VISIBLE);
-                ((MyFeedListActivity) mContext).btn_go_reserv.setVisibility(View.VISIBLE);
-                ((MyFeedListActivity) mContext).recyclerView_myFeed.setVisibility(View.GONE);
-            }
+            ((MyFeedFragment) fragment).swipeContainer.setRefreshing(false);
 
         }
     }

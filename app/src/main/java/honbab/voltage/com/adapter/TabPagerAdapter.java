@@ -4,17 +4,18 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import honbab.voltage.com.fragment.ChatListFragment;
 import honbab.voltage.com.fragment.FeedFragment2;
+import honbab.voltage.com.fragment.MyFeedFragment;
 import honbab.voltage.com.fragment.NoProfileFragment;
 import honbab.voltage.com.tete.Statics;
 
 public class TabPagerAdapter extends FragmentStatePagerAdapter {
-
+    private FragmentManager fm;
     private int tabCount;
 
     public TabPagerAdapter(FragmentManager fm, int tabCount) {
         super(fm);
+        this.fm = fm;
         this.tabCount = tabCount;
     }
 
@@ -23,17 +24,19 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
         // Returning the current tabs
         switch (position) {
             case 0:
-                FeedFragment2 tabFragment1 = new FeedFragment2();
-                return tabFragment1;
-            case 1:
                 if (Statics.my_id == null) {
-                    NoProfileFragment tabFragment2 = new NoProfileFragment();
-                    return tabFragment2;
+                    NoProfileFragment tabFragment1 = new NoProfileFragment();
+                    fm.beginTransaction().addToBackStack("myfeed").commit();
+                    return tabFragment1;
                 } else {
-//                    ProfileFragment tabFragment2 = new ProfileFragment();
-                    ChatListFragment tabFragment2 = new ChatListFragment();
-                    return tabFragment2;
+                    MyFeedFragment tabFragment1 = new MyFeedFragment();
+                    fm.beginTransaction().addToBackStack("myfeed").commit();
+                    return tabFragment1;
                 }
+            case 1:
+                FeedFragment2 tabFragment2 = new FeedFragment2();
+                fm.beginTransaction().addToBackStack("restlike").commit();
+                return tabFragment2;
 
             default:
                 return null;

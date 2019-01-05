@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_item_req_feeder"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:minWidth="68dp"
+    android:paddingBottom="12dp">
+
+    <ImageView
+        android:id="@+id/img_user"
+        android:layout_width="@dimen/profile_m"
+        android:layout_height="@dimen/profile_m"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="1dp"
+        android:src="@drawable/icon_noprofile_circle"
+        android:transitionName="img_user" />
+
+    <ImageView
+        android:id="@+id/img_new_chat"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_alignBottom="@id/img_user"
+        android:layout_marginLeft="48dp"
+        android:layout_marginBottom="13dp"
+        android:src="@drawable/circle_or_wh" />
+
+    <TextView
+        android:id="@+id/txt_userName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/img_user"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="2dp"
+        android:ellipsize="end"
+        android:gravity="center_horizontal"
+        android:text="@string/applicant"
+        android:textSize="12sp"
+        android:transitionName="txt_userName" />
+</RelativeLayout>

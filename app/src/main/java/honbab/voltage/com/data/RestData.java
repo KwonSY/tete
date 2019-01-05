@@ -12,7 +12,16 @@ public class RestData implements Parcelable {
     private double latitude, longtitue;
 
     public RestData() {
-
+        this.rest_id = null;
+        this.rest_name = null;
+        this.compound_code = null;
+        this.latLng = null;
+            this.latitude = 0;
+            this.longtitue = 0;
+        this.place_id = null;
+        this.rest_img = null;
+        this.rest_phone = null;
+        this.vicinity = null;
     }
 
     // parameter 16EA
@@ -22,9 +31,13 @@ public class RestData implements Parcelable {
         this.rest_name = rest_name;
         this.compound_code = compound_code;
         this.latLng = latLng;
+        if (latLng != null) {
             this.latitude = latLng.latitude;
             this.longtitue = latLng.longitude;
-
+        } else {
+            this.latitude = 0;
+            this.longtitue = 0;
+        }
         this.place_id = place_id;
         this.rest_img = rest_img;
         this.rest_phone = rest_phone;
@@ -35,8 +48,6 @@ public class RestData implements Parcelable {
         rest_id = in.readString();
         rest_name = in.readString();
         compound_code = in.readString();
-//        lat = in.readString();
-//        lng = in.readString();
         place_id = in.readString();
         rest_img = in.readString();
         rest_phone = in.readString();
@@ -44,8 +55,8 @@ public class RestData implements Parcelable {
         latLng = in.readParcelable(LatLng.class.getClassLoader());
         latitude = in.readDouble();
         longtitue = in.readDouble();
-            latitude = latLng.latitude;
-            longtitue = latLng.longitude;
+//            latitude = latLng.latitude;
+//            longtitue = latLng.longitude;
     }
 
     public static final Creator<RestData> CREATOR = new Creator<RestData>() {
@@ -150,8 +161,6 @@ public class RestData implements Parcelable {
         dest.writeString(rest_id);
         dest.writeString(rest_name);
         dest.writeString(compound_code);
-//        dest.writeString(lat);
-//        dest.writeString(lng);
         dest.writeString(place_id);
         dest.writeString(rest_img);
         dest.writeString(rest_phone);
@@ -165,8 +174,6 @@ public class RestData implements Parcelable {
         rest_id = in.readString();
         rest_name = in.readString();
         compound_code = in.readString();
-//        lat = in.readString();
-//        lng = in.readString();
         place_id = in.readString();
         rest_img = in.readString();
         rest_phone = in.readString();

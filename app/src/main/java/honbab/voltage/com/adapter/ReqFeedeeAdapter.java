@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -67,10 +66,6 @@ public class ReqFeedeeAdapter extends Adapter<ReqFeedeeAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         final UserData data = listViewItemList.get(position);
-        Log.e("abc", "reqFeedee getRest_name = " + restData.getRest_name());
-        Log.e("abc", "reqFeedee getLatLng = " + restData.getLatLng());
-        Log.e("abc", "reqFeedee getLatitude = " + restData.getLatitude());
-        Log.e("abc", "reqFeedee getLongtitue = " + restData.getLongtitue());
 
         Picasso.get().load(data.getImg_url())
                 .placeholder(R.drawable.icon_noprofile_circle)

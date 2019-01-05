@@ -15,9 +15,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -29,18 +33,24 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import honbab.voltage.com.adapter.ChatAdapter;
 import honbab.voltage.com.data.ChatData;
 import honbab.voltage.com.data.FcmData;
 import honbab.voltage.com.data.RestData;
+import honbab.voltage.com.task.CommonRestLikeTask;
 import honbab.voltage.com.task.ReservFeedTask;
 import honbab.voltage.com.utils.ButtonUtil;
+import honbab.voltage.com.widget.CircleTransform;
 import honbab.voltage.com.widget.CustomTimePickerDialog;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
 import honbab.voltage.com.widget.SessionManager;
@@ -58,14 +68,14 @@ public class ChatActivity extends AppCompatActivity {
 
     public DrawerLayout drawerLayout;
     public TextView title_topbar;
+    private LinearLayout layout_no_chat;
     public RecyclerView recyclerView;
     public ChatAdapter mAdapter;
     private EditText edit_chat;
 
     private String fromId = Statics.my_id, toId;
     private String toUserName = "상대방", toUserImg, toToken;
-    private RestData restData;
-//    private String rest_name, rest_phone;
+    public RestData restData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,24 +92,40 @@ public class ChatActivity extends AppCompatActivity {
         toUserName = intent.getStringExtra("toUserName");
         toUserImg = intent.getStringExtra("toUserImg");
         toToken = intent.getStringExtra("toToken");
-//        restData = (RestData) intent.getSerializableExtra("restData");
         restData = (RestData) intent.getParcelableExtra("restData");
         Log.e("abc", "fromId = " + fromId + ", toId = " + toId);
         Log.e("abc", "toUserName = " + toUserName);
         Log.e("abc", "getRest_name = " + restData.getRest_name());
         Log.e("abc", "ChatActivity getLatLng = " + restData.getLatLng());
-//        Log.e("abc", "ChatActivity getLat = " + restData.getLat());
-//        Log.e("abc", "ChatActivity getLng = " + restData.getLng());
         Log.e("abc", "ChatActivity rest_phone = " + restData.getRest_phone());
 
+        //상단바
         title_topbar = (TextView) findViewById(R.id.title_topbar);
-        title_topbar.setText(toUserName);
+        ImageView topbar_img_user = (ImageView) findViewById(R.id.topbar_img_user);
+        TextView txt_userName = (TextView) findViewById(R.id.txt_userName);
+        title_topbar.setText("");
+        Picasso.get().load(toUserImg)
+                .placeholder(R.drawable.icon_noprofile_circle)
+                .error(R.drawable.icon_noprofile_circle)
+                .transform(new CircleTransform())
+                .into(topbar_img_user);
+        txt_userName.setText(toUserName);
+        topbar_img_user.setOnClickListener(mOnClickListener);
 
-        TextView txt_rest_phone;
-        txt_rest_phone = (TextView) findViewById(R.id.txt_rest_phone);
-//        txt_rest_phone.setText(restData.getRest_phone());
-
-
+        //채팅 없을 때
+        layout_no_chat = (LinearLayout) findViewById(R.id.layout_no_chat);
+        ImageView no_chat_img_user = (ImageView) findViewById(R.id.no_chat_img_user);
+        TextView no_chat_txt_userName = (TextView) findViewById(R.id.no_chat_txt_userName);
+        TextView no_chat_explain = (TextView) findViewById(R.id.no_chat_explain);
+        Picasso.get().load(toUserImg)
+                .placeholder(R.drawable.icon_noprofile_circle)
+                .error(R.drawable.icon_noprofile_circle)
+                .transform(new CircleTransform())
+                .into(no_chat_img_user);
+        no_chat_txt_userName.setText(toUserName);
+        String str_no_chat = String.format(getResources().getString(R.string.chat_start), toUserName);
+        no_chat_explain.setText(str_no_chat);
+        no_chat_img_user.setOnClickListener(mOnClickListener);
 
         layoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
         layoutManager.setStackFromEnd(true);
@@ -124,7 +150,7 @@ public class ChatActivity extends AppCompatActivity {
 
         drawerLayout = (DrawerLayout) findViewById(R.id.layout_drawer);
         drawerLayout.addDrawerListener(mDrawerListener);
-        setDateTime();
+        setDrawerReserv();
     }
 
     @Override
@@ -138,6 +164,21 @@ public class ChatActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
+                case R.id.img_user:
+                    Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.putExtra("user_id", toId);
+                    startActivity(intent);
+
+                    break;
+                case R.id.no_chat_img_user:
+                    Log.e("abc", " no_chat_img_user 클릭클릭");
+                    Intent intent2 = new Intent(ChatActivity.this, ProfileActivity.class);
+                    intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent2.putExtra("user_id", toId);
+                    startActivity(intent2);
+
+                    break;
                 case R.id.btn_send_chat:
                     sendMessage("t");//t = text
 
@@ -150,7 +191,7 @@ public class ChatActivity extends AppCompatActivity {
 
                     break;
                 case R.id.txt_date:
-                    DatePickerDialog dialog = new DatePickerDialog(ChatActivity.this, dateSetListener, year, month-1, day);
+                    DatePickerDialog dialog = new DatePickerDialog(ChatActivity.this, dateSetListener, year, month - 1, day);
                     dialog.show();
 
                     break;
@@ -168,14 +209,15 @@ public class ChatActivity extends AppCompatActivity {
                     String[] rest = {restData.getRest_name(), restData.getCompound_code(),
                             String.valueOf(restData.getLatitude()), String.valueOf(restData.getLongtitue()),
                             restData.getPlace_id(), restData.getRest_img(), restData.getRest_phone(), restData.getVicinity()};
-                    Log.e("abc", "ChatAct lat = " + restData.getLatitude() +  restData.getLongtitue());
+//                    Log.e("abc", "ChatAct lat = " + restData.getLatitude() + restData.getLongtitue());
+//                    RestData restData2 = restData;
 
                     Calendar curCal = Calendar.getInstance();
                     long time_setting = calendar.getTimeInMillis();
                     long time_current = curCal.getTimeInMillis();
 
                     if (time_setting > time_current) {
-                        new ReservFeedTask(ChatActivity.this, httpClient, date, rest).execute();
+                        new ReservFeedTask(ChatActivity.this, httpClient, date, rest).execute(toId);
                     } else {
                         Toast.makeText(getApplicationContext(), R.string.cannot_reserve_past, Toast.LENGTH_SHORT).show();
                     }
@@ -226,6 +268,7 @@ public class ChatActivity extends AppCompatActivity {
         mDatabase.child("user-messages").child(fromId).child(toId).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                mDatabase.child("user-messages").child(fromId).child(toId).child(dataSnapshot.getKey()).setValue(0);
                 mDatabase.child("messages").child(dataSnapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -233,15 +276,13 @@ public class ChatActivity extends AppCompatActivity {
                         chatData.setToUserName(toUserName);
                         chatData.setToUserImg(toUserImg);
 
-//                        recyclerView.setLayoutManager(layoutManager);
-//                        mAdapter = new ChatAdapter(getApplicationContext());
-//                        mAdapter = new ChatAdapter(ChatActivity.this, arrayList);
                         mAdapter.addItem(chatData.getType(), chatData.getFromId(), chatData.getToId(), chatData.getToUserName(), chatData.getText(),
                                 chatData.getTimestampLong(),
                                 chatData.getImageUrl(), chatData.getImageWidth(), chatData.getImageHeight(), toUserImg);
                         recyclerView.setAdapter(mAdapter);
-//                        recyclerView.scrollToPosition(mAdapter.newList.size()-1);
                         mAdapter.notifyDataSetChanged();
+
+                        layout_no_chat.setVisibility(View.GONE);
                     }
 
                     @Override
@@ -303,7 +344,7 @@ public class ChatActivity extends AppCompatActivity {
         } else if (type.equals("a")) {
 
             final String message = toUserName + "님과 " +
-                    month + "월 " + day + "일 " + hour + "시 "+ min + "분 " +
+                    month + "월 " + day + "일 " + hour + "시 " + min + "분 " +
                     restData.getRest_name() + "에서 식사가 예약되었습니다.";
             final HashMap<String, Object> timestamp = new HashMap<>();
             timestamp.put("time", ServerValue.TIMESTAMP);
@@ -372,20 +413,96 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
+    public Spinner spinner_restName;
+    public ImageView img_rest;
     private TextView txt_date, txt_clock;
     public EditText edit_comment;
     private Button btn_reserv;
     private Calendar calendar;
     int year, month, day, hour, min;// Calender 에서 얻는 값
-    private void setDateTime() {
+    private ArrayList<RestData> restList = new ArrayList<>();
+
+    private void setDrawerReserv() {
         NavigationView nav_view = (NavigationView) findViewById(R.id.nav_view);
         View view = nav_view.getHeaderView(0);
 
-        TextView txt_restName = (TextView) view.findViewById(R.id.txt_restName) ;
+        spinner_restName = (Spinner) view.findViewById(R.id.spinner_restName);
+        img_rest = (ImageView) view.findViewById(R.id.img_rest);
         txt_date = (TextView) view.findViewById(R.id.txt_date);
         txt_clock = (TextView) view.findViewById(R.id.txt_clock);
         edit_comment = (EditText) view.findViewById(R.id.edit_comment);
         btn_reserv = (Button) view.findViewById(R.id.btn_reserv);
+
+        spinner_restName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                int r = 0;
+
+                for (int i = 0; i < restList.size(); i++) {
+                    Log.e("abc", "rrr restList.get(i).getRest_name() : " + restList.get(i).getRest_name());
+//                    spinner_restName.getItemIdAtPosition(position))
+                    if (restList.get(i).getRest_name().equals(spinner_restName.getSelectedItem().toString()))
+                        r = i;
+                }
+//                Log.e("abc", "rrr getItemIdAtPosition(position) : " + spinner_restName.getItemIdAtPosition(position));
+                Log.e("abc", "rrr getSelectedItem().toString() : " + spinner_restName.getSelectedItem().toString());
+
+                RestData pickData = restList.get(r);
+                restData = new RestData(pickData.getRest_id(), pickData.getRest_name(),
+                        pickData.getCompound_code(), pickData.getLatLng(), pickData.getPlace_id(), pickData.getRest_img(), pickData.getRest_phone(), pickData.getVicinity());
+                Log.e("abc", "rrrrr restData : " + pickData.getRest_img());
+
+                Picasso.get().load(restData.getRest_img())
+                        .placeholder(R.drawable.icon_no_image)
+                        .error(R.drawable.icon_no_image)
+                        .memoryPolicy(MemoryPolicy.NO_CACHE)
+                        .into(img_rest);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                Log.e("abc", "xxxxx : " + restData.getRest_img());
+                Picasso.get().load(restData.getRest_img())
+                        .placeholder(R.drawable.icon_no_image)
+                        .error(R.drawable.icon_no_image)
+                        .memoryPolicy(MemoryPolicy.NO_CACHE)
+                        .into(img_rest);
+            }
+        });
+
+//                new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                int r = 0;
+//
+//                for (int i=0; i<restList.size(); i++) {
+//                    if (restList.get(i).getRest_name().equals(spinner_restName.getItemIdAtPosition(position)))
+//                        r = i;
+//                }
+//                RestData pickData = restList.get(r);
+//                restData = new RestData(pickData.getRest_id(), pickData.getRest_name(),
+//                        pickData.getCompound_code(), pickData.getLatLng(), pickData.getPlace_id(), pickData.getRest_img(), pickData.getRest_phone(), pickData.getVicinity());
+//
+//                Picasso.get().load(restData.getRest_img())
+//                        .placeholder(R.drawable.icon_no_image)
+//                        .error(R.drawable.icon_no_image)
+//                        .into(img_rest);
+//            }
+//        });
+
+        try {
+            restList = new CommonRestLikeTask(ChatActivity.this, httpClient).execute(Statics.my_id, toId, restData.getRest_id()).get();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+//        Log.e("abc", "xxxxxxxxxxxxxxxxx" + restData.getRest_id());
+//        if (restData.getRest_id() == null || restData.getRest_id().equals(null)) {
+//            Log.e("abc", "커몬레스트");
+//
+//        }
 
         Date currentTime = new Date();
 //        calendar = GregorianCalendar.getInstance();
@@ -409,7 +526,7 @@ public class ChatActivity extends AppCompatActivity {
         }
 
         if (hour > 12)
-            str_time += String.valueOf(hour-12) + "시 ";
+            str_time += String.valueOf(hour - 12) + "시 ";
         else
             str_time += String.valueOf(hour) + "시 ";
 
@@ -424,7 +541,7 @@ public class ChatActivity extends AppCompatActivity {
         }
         str_date = String.valueOf(month) + "/" + String.valueOf(day);
 
-        txt_restName.setText(restData.getRest_name());
+//        txt_restName.setText(restData.getRest_name());
         txt_date.setText(str_date);
         txt_date.setOnClickListener(mOnClickListener);
         txt_clock.setText(str_time);

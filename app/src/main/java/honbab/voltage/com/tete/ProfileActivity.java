@@ -44,7 +44,7 @@ public class ProfileActivity extends AppCompatActivity {
     private RequestQueue mQueue;
 
     public TextView title_topbar;
-    public ImageView img_origin, img_user;
+    public ImageView img_origin, img_user, icon_camera;
     public TextView txt_my_name;
     public EditText edit_comment;
     public Button btn_edit_comment;
@@ -62,23 +62,33 @@ public class ProfileActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         user_id = intent.getStringExtra("user_id");
-        Log.e("abc", "ProfileAct user_id = " + user_id);
         if (user_id == null) {
             user_id = Statics.my_id;
         }
 
         title_topbar = (TextView) findViewById(R.id.title_topbar);
+        ImageView img_setting = (ImageView) findViewById(R.id.img_setting);
         img_origin = (ImageView) findViewById(R.id.img_origin);
         img_user = (ImageView) findViewById(R.id.img_user);
-        img_user.setOnClickListener(mOnClickListener);
+        icon_camera = (ImageView) findViewById(R.id.icon_camera);
         txt_my_name = (TextView) findViewById(R.id.txt_my_name);
+
+        img_user.setOnClickListener(mOnClickListener);
 
         edit_comment = (EditText) findViewById(R.id.edit_comment);
         edit_comment.setEnabled(false);
         btn_edit_comment = (Button) findViewById(R.id.btn_edit_comment);
         btn_edit_comment.setOnClickListener(mOnClickListener);
-        if (!user_id.equals(Statics.my_id))
+
+        //마이 프로필 구분
+        if (user_id.equals(Statics.my_id)) {
+            img_setting.setVisibility(View.VISIBLE);
+            icon_camera.setVisibility(View.VISIBLE);
+        } else {
+            img_setting.setVisibility(View.GONE);
+            icon_camera.setVisibility(View.GONE);
             btn_edit_comment.setVisibility(View.GONE);
+        }
 
         ButtonUtil.setBackButtonClickListener(this);
     }
@@ -95,6 +105,12 @@ public class ProfileActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
+                case R.id.img_setting:
+                    Intent intent2 = new Intent(getApplicationContext(), SettingActivity.class);
+                    intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent2);
+
+                    break;
                 case R.id.img_user:
                     if (user_id.equals(Statics.my_id))
                         selectImage();

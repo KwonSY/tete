@@ -7,7 +7,8 @@
     <color name="mainColor">#f9a953</color>
     <color name="black">#000000</color>
     <color name="grey">#6f6f6f</color>
-    <color name="darkgrey">#afafaf</color>
+    <color name="brightgrey">#afafaf</color>
+    <color name="whitegrey">#efefef</color>
     <color name="orange">#f9a953</color>
     <color name="white">#ffffff</color>
 

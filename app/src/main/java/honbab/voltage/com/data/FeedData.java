@@ -6,10 +6,10 @@ import java.io.Serializable;
 
 public class FeedData implements Serializable {
 
-    private int feed_id;
-    private String user_id, user_name, user_img, user_age, user_gender;
+    private String feed_id;
+    private String user_id, user_name, user_img, user_age, user_gender, token;
 
-    private int rest_id;
+    private String rest_id;
     private String compound_code, place_id, rest_name, rest_phone, rest_img, vicinity;
     private String status, time;
 
@@ -22,9 +22,9 @@ public class FeedData implements Serializable {
     }
 
     // parameter 16EA
-    public FeedData(int feed_id,
-                    String user_id, String user_name, String user_age, String user_gender, String user_img,
-                    int rest_id, String rest_name,
+    public FeedData(String feed_id,
+                    String user_id, String user_name, String user_age, String user_gender, String user_img, String token,
+                    String rest_id, String rest_name,
                     String compound_code, LatLng latLng, String place_id, String rest_img, String rest_phone, String vicinity,
                     String status, String time) {
         this.feed_id = feed_id;
@@ -32,6 +32,7 @@ public class FeedData implements Serializable {
         this.user_name = user_name;
         this.user_age = user_age;
         this.user_gender = user_gender;
+        this.token = token;
 
         this.user_img = user_img;
         this.rest_id = rest_id;
@@ -50,11 +51,11 @@ public class FeedData implements Serializable {
         this.time = time;
     }
 
-    public int getFeed_id() {
+    public String getFeed_id() {
         return feed_id;
     }
 
-    public void setFeed_id(int feed_id) {
+    public void setFeed_id(String feed_id) {
         this.feed_id = feed_id;
     }
 
@@ -98,11 +99,19 @@ public class FeedData implements Serializable {
         this.user_gender = user_gender;
     }
 
-    public int getRest_id() {
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getRest_id() {
         return rest_id;
     }
 
-    public void setRest_id(int rest_id) {
+    public void setRest_id(String rest_id) {
         this.rest_id = rest_id;
     }
 

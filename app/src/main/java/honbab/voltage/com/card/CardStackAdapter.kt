@@ -8,11 +8,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import com.bumptech.glide.Glide
-import honbab.voltage.com.data.FeedData
+import honbab.voltage.com.data.RestData
 import honbab.voltage.com.tete.R
 
 class CardStackAdapter(
-        private var data: List<FeedData> = emptyList()
+        private var data: List<RestData> = emptyList()
 ) : RecyclerView.Adapter<CardStackAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -36,11 +36,11 @@ class CardStackAdapter(
         return data.size
     }
 
-    fun setSpots(data: List<FeedData>) {
+    fun setSpots(data: List<RestData>) {
         this.data = data
     }
 
-    fun getSpots(): List<FeedData> {
+    fun getSpots(): List<RestData> {
         return data
     }
 

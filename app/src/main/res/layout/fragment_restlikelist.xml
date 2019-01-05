@@ -5,6 +5,7 @@
     android:id="@+id/layout_fragment_feed"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context="honbab.voltage.com.tete.MainActivity">
 
     <include
@@ -13,17 +14,54 @@
         android:layout_width="match_parent"
         android:layout_height="43dp" />
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView_chat_before"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layout_topbar" />
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeContainer_feed"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/layout_topbar">
+        android:layout_below="@id/recyclerView_chat_before">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView_feed"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white" />
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/layout_rest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="#efefef"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txt_no_req"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="10dp"
+                    android:text="아직 좋아요를 누른 음식점이 없습니다. 같먹 레스토랑을 둘러보시겠습니까?" />
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/btn_circle_bk1"
+                    android:paddingLeft="40dp"
+                    android:paddingRight="40dp"
+                    android:text="음식점 둘러보기" />
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView_feed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white" />
+        </RelativeLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

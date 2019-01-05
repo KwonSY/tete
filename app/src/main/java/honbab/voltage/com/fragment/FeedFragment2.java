@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -17,15 +19,24 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.concurrent.ExecutionException;
 
+import honbab.voltage.com.adapter.ChatListAdapter;
 import honbab.voltage.com.adapter.RestLikeListAdapter;
 import honbab.voltage.com.data.FeedReqData;
 import honbab.voltage.com.data.UserData;
+import honbab.voltage.com.task.AccountTask;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.tete.ReservActivity;
 import honbab.voltage.com.tete.Statics;
@@ -38,8 +49,9 @@ public class FeedFragment2 extends Fragment {
     private OkHttpClient httpClient;
 
     private SwipeRefreshLayout swipeContainer;
-    private RecyclerView recyclerView;
-    private RestLikeListAdapter mAdapter;
+    public RecyclerView recyclerView, recyclerView_cb;
+    public RestLikeListAdapter mAdapter;
+    public ChatListAdapter mAdapter_cb;
 
     private ArrayList<FeedReqData> feedList = new ArrayList<>();
     private String my_id = Statics.my_id;
@@ -73,6 +85,7 @@ public class FeedFragment2 extends Fragment {
         super.onResume();
 
         new RestLikeListTask().execute();
+        loadFirebaseChatList();
     }
 
     private void initControls() {
@@ -84,6 +97,12 @@ public class FeedFragment2 extends Fragment {
                 new RestLikeListTask().execute();
             }
         });
+
+        LinearLayoutManager layoutManager2 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerView_cb = (RecyclerView) getActivity().findViewById(R.id.recyclerView_chat_before);
+        recyclerView_cb.setLayoutManager(layoutManager2);
+        mAdapter_cb = new ChatListAdapter(getActivity());
+        recyclerView_cb.setAdapter(mAdapter_cb);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView = (RecyclerView) getActivity().findViewById(R.id.recyclerView_feed);
@@ -298,6 +317,93 @@ public class FeedFragment2 extends Fragment {
                     }
                 });
         builder.show();
+    }
+
+    private DatabaseReference mDatabase;
+    public void loadFirebaseChatList() {
+        final int i = 0;
+        HashMap<String, Integer> chatListHash = new HashMap<>();
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.child("user-messages").child(Statics.my_id).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//                i = 0;
+                String toId = dataSnapshot.getKey();
+                chatListHash.put(toId, 0);
+                mDatabase.child("user-messages").child(Statics.my_id).child(toId).limitToLast(1).addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                        Object o = dataSnapshot.getValue();
+                        int plus = Integer.parseInt(o.toString());
+//                        i += plus;
+//                        Log.e("abc", "ooooooooooo = " + o.toString());
+                        Log.e("abc", "ooooooooooo plus = " + s + ", " + plus);
+//                        Log.e("abc", "ooooooooooo s = " + s);
+                        if (plus > 0)
+                            chatListHash.put(toId, plus);
+
+                        Log.e("abc", "ooooo chatListHash.size() " + chatListHash.size()+", ItemCount() " + mAdapter_cb.getItemCount() + " / "+ chatListHash.get("20"));
+
+                        if (chatListHash.size() > mAdapter_cb.getItemCount()) {
+                            try {
+                                UserData userData = new AccountTask(getActivity(), httpClient, 0).execute(toId).get();
+                                userData.setStatus(chatListHash.get(toId).toString());
+
+                                mAdapter_cb.addItem(userData);
+                                recyclerView_cb.setAdapter(mAdapter_cb);
+                            } catch (ExecutionException e) {
+                                e.printStackTrace();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                    }
+
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
 }

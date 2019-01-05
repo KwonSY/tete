@@ -9,11 +9,8 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 
-import honbab.voltage.com.tete.ChatActivity;
 import honbab.voltage.com.tete.MainActivity;
-import honbab.voltage.com.tete.OneRestaurantActivity;
 import honbab.voltage.com.tete.R;
-import honbab.voltage.com.tete.ReservActivity;
 import honbab.voltage.com.tete.Statics;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -46,14 +43,14 @@ public class ReservFeedTask extends AsyncTask<String, Void, String> {
         date_reserv = str_year + "-" + str_mon + "-" + str_da + " " + str_hour + ":" + str_min;
         Log.e("abc", "ReservTask date_reserv = " + date_reserv);
 
-        String activityName = mContext.getClass().getSimpleName();
-        if (activityName.equals("OneRestaurantActivity")) {
-            comment = ((OneRestaurantActivity) mContext).edit_comment.getText().toString();
-        } else if (activityName.equals("ReservActivity")) {
-            comment = ((ReservActivity) mContext).edit_comment.getText().toString();
-        } else if (activityName.equals("ChatActivity")) {
-            comment = ((ChatActivity) mContext).edit_comment.getText().toString();
-        }
+//        String activityName = mContext.getClass().getSimpleName();
+//        if (activityName.equals("OneRestaurantActivity")) {
+//            comment = ((OneRestaurantActivity) mContext).edit_comment.getText().toString();
+//        } else if (activityName.equals("ReservActivity")) {
+//            comment = ((ReservActivity) mContext).edit_comment.getText().toString();
+//        } else if (activityName.equals("ChatActivity")) {
+//            comment = ((ChatActivity) mContext).edit_comment.getText().toString();
+//        }
 
         rest_name = rest[0];
         compound_code = rest[1];
@@ -76,6 +73,7 @@ public class ReservFeedTask extends AsyncTask<String, Void, String> {
         FormBody body = new FormBody.Builder()
                 .add("opt", "reservation")
                 .add("my_id", Statics.my_id)
+                .add("to_id", objects[0])
                 .add("rest_name", rest_name)
                 .add("compound_code", compound_code)
                 .add("lat", lat)
@@ -85,7 +83,7 @@ public class ReservFeedTask extends AsyncTask<String, Void, String> {
                 .add("rest_img_url", rest_img)
                 .add("vicinity", vicinity)
                 .add("date_reserv", date_reserv)
-                .add("comment", comment)
+//                .add("comment", comment)
                 .build();
 
         Request request = new Request.Builder().url(Statics.opt_url).post(body).build();

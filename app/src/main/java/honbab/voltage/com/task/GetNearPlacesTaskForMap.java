@@ -93,9 +93,9 @@ public class GetNearPlacesTaskForMap extends AsyncTask<Object, String, String> {
             mMap.addMarker(markerOptions);
             mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
 
-            FeedData data = new FeedData(0,
-                    null, null, null, null, null,
-                    0, placeName,
+            FeedData data = new FeedData(null,
+                    null, null, null, null, null, null,
+                    null, placeName,
                     compound_code, latLng, place_id, "", formatted_phone_number, vicinity,
                     null, null);
             if(photo_reference != null && !photo_reference.isEmpty()) {

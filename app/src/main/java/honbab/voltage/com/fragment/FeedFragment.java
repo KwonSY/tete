@@ -198,7 +198,7 @@ public class FeedFragment extends Fragment {
                     for (int i = 0; i < hash_arr.length(); i++) {
                         JSONObject obj2 = hash_arr.getJSONObject(i);
 
-                        int feed_id = obj2.getInt("sid");
+                        String feed_id = obj2.getString("sid");
 
                         //등록자 정보
                         JSONObject host_obj = obj2.getJSONObject("host");
@@ -207,10 +207,11 @@ public class FeedFragment extends Fragment {
                         String user_img = host_obj.getString("img_url");
                         String user_age = host_obj.getString("age");
                         String user_gender = host_obj.getString("gender");
+                        String user_token = host_obj.getString("token");
 
                         //음식점 정보
                         JSONObject rest_obj = obj2.getJSONObject("rest");
-                        int rest_id = rest_obj.getInt("sid");
+                        String rest_id = rest_obj.getString("sid");
                         String rest_name = rest_obj.getString("name");
                         String compound_code = rest_obj.getString("compound_code");
                         String vicinity = rest_obj.getString("vicinity");
@@ -227,7 +228,7 @@ public class FeedFragment extends Fragment {
                         String time = obj2.getString("time");
 
                         FeedData feedData = new FeedData(feed_id,
-                                user_id, user_name, user_age, user_gender, user_img,
+                                user_id, user_name, user_age, user_gender, user_img, user_token,
                                 rest_id, rest_name, compound_code, latLng, place_id, rest_img, rest_phone, vicinity,
                                 status, time);
                         feedList.add(feedData);
@@ -246,7 +247,7 @@ public class FeedFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            mAdapter = new FeedListAdapter(getActivity(), feedList);
+            mAdapter = new FeedListAdapter(getActivity(), httpClient, feedList);
             gridView_feed.setAdapter(mAdapter);
             mAdapter.notifyDataSetChanged();
 

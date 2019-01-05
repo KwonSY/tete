@@ -26,7 +26,6 @@ import java.util.Date;
 import honbab.voltage.com.data.FeedReqData;
 import honbab.voltage.com.data.RestData;
 import honbab.voltage.com.data.UserData;
-import honbab.voltage.com.task.FeedCancleTask;
 import honbab.voltage.com.tete.ChatActivity;
 import honbab.voltage.com.tete.OneRestaurantActivity;
 import honbab.voltage.com.tete.ProfileActivity;
@@ -128,9 +127,9 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
                     builder.setPositiveButton(R.string.yes,
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    new FeedCancleTask(mContext, httpClient,
-                                            feed_id, listViewItemList.get(position).getRest_name(), position)
-                                            .execute();
+//                                    new CancleFeedTask(mContext, httpClient,
+//                                            feed_id, listViewItemList.get(position).getRest_name(), position)
+//                                            .execute();
                                 }
                             });
                     builder.setNegativeButton(R.string.no,

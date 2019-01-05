@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import honbab.voltage.com.card.CardStackAdapter;
-import honbab.voltage.com.data.FeedData;
+import honbab.voltage.com.data.RestData;
 import honbab.voltage.com.task.RestLikeTask;
 import honbab.voltage.com.task.RestaurantListTask;
 import honbab.voltage.com.utils.ButtonUtil;
@@ -35,7 +35,7 @@ public class GodTinderActivity extends AppCompatActivity {
     private CardStackAdapter adapter;
     private CardStackView cardStackView;
 
-    private ArrayList<FeedData> feedList = new ArrayList<>();
+    private ArrayList<RestData> restList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,14 +68,14 @@ public class GodTinderActivity extends AppCompatActivity {
         super.onResume();
 
         try {
-            feedList = new RestaurantListTask(GodTinderActivity.this, httpClient).execute().get();
+            restList = new RestaurantListTask(GodTinderActivity.this, httpClient).execute().get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        CardStackAdapter adapter = new CardStackAdapter(feedList);
+        CardStackAdapter adapter = new CardStackAdapter(restList);
         cardStackView.setAdapter(adapter);
     }
 
@@ -142,7 +142,7 @@ public class GodTinderActivity extends AppCompatActivity {
         public void onCardAppeared(View view, int position) {
             Log.e("abc", "스와이프5 = " + position);
             if (position!=0) {
-                String rest_id = String.valueOf(feedList.get(position - 1).getRest_id());
+                String rest_id = String.valueOf(restList.get(position - 1).getRest_id());
 
                 if (!like_yn.equals(""))
                     new RestLikeTask(GodTinderActivity.this, httpClient).execute(rest_id, like_yn);

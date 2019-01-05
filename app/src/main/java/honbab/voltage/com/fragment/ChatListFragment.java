@@ -136,7 +136,6 @@ public class ChatListFragment extends Fragment {
 
         try {
             UserData myData = new AccountTask(getActivity(), httpClient, 0).execute(my_id).get();
-            Log.e("abc", "ddddddddddddddd " + myData.getImg_url());
 
             Picasso.get().load(myData.getImg_url())
                     .placeholder(R.drawable.icon_noprofile_circle)
@@ -389,18 +388,10 @@ public class ChatListFragment extends Fragment {
             ChatData chatData = new ChatData("t", my_id, String.valueOf(userData.getUser_id()), userData.getUser_name(), lastMessage,
                     "", 0, 0, userData.getImg_url());
 
-            mAdapter.addItem(chatData);
+//            mAdapter.addItem(chatData);
 //            mAdapter.changeUserName(dataSnapshot3.getKey(), userVo.getUsername(), userVo.getImg_url());
             recyclerView.setAdapter(mAdapter);
             mAdapter.notifyDataSetChanged();
-
-
-
-
-//            new MyFeedListTask(getActivity(), httpClient).execute();
-
-//            if (!token.equals(user_token))
-//                new UpdateToken().execute(token);
         }
     }
 

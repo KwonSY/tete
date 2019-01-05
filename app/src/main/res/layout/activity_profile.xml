@@ -16,84 +16,102 @@
         android:id="@+id/img_origin"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible"/>
+        android:visibility="invisible" />
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/topbar">
+        android:layout_below="@id/topbar"
+        android:orientation="vertical"
+        android:paddingLeft="20dp"
+        android:paddingTop="50dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="30dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <RelativeLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="30dp"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
-            android:paddingTop="50dp">
+            android:layout_gravity="center_horizontal">
 
             <ImageView
                 android:id="@+id/img_user"
                 android:layout_width="@dimen/profile_xl"
                 android:layout_height="@dimen/profile_xl"
-                android:layout_gravity="center_horizontal"
                 android:src="@drawable/icon_noprofile_circle" />
 
-            <TextView
-                android:id="@+id/txt_my_name"
+            <ImageView
+                android:id="@+id/icon_camera"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="13dp"
-                android:text="내 프로필 읽어오는 중..." />
+                android:layout_alignEnd="@id/img_user"
+                android:layout_alignBottom="@id/img_user"
+                android:src="@drawable/icon_camera" />
+        </RelativeLayout>
 
-            <RelativeLayout
+        <TextView
+            android:id="@+id/txt_my_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="13dp"
+            android:text="내 프로필 읽어오는 중..." />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp">
+
+            <TextView
+                android:id="@+id/title_comment"
+                android:layout_width="80dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="내 소개" />
+
+            <EditText
+                android:id="@+id/edit_comment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp">
+                android:layout_toRightOf="@id/title_comment"
+                android:layout_weight="3"
+                android:background="@drawable/border_round_gr1"
+                android:padding="10dp"
+                android:text="내 소개 읽어오는 중..."
+                android:textColor="#afafaf"
+                android:textColorHint="#afafaf"
+                android:textSize="12sp" />
 
-                <TextView
-                    android:id="@+id/title_comment"
-                    android:layout_width="80dp"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="내 소개" />
-
-                <EditText
-                    android:id="@+id/edit_comment"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/title_comment"
-                    android:layout_weight="3"
-                    android:background="@drawable/border_round_gr1"
-                    android:padding="10dp"
-                    android:text="내 소개 읽어오는 중..."
-                    android:textColor="#afafaf"
-                    android:textColorHint="#afafaf"
-                    android:textSize="12sp" />
-
-                <Button
-                    android:id="@+id/btn_edit_comment"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="7dp"
-                    android:background="@drawable/btn_circle_bk1"
-                    android:minHeight="0dp"
-                    android:minWidth="0dp"
-                    android:paddingBottom="6dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:paddingTop="6dp"
-                    android:text="편집" />
-            </RelativeLayout>
-
-            <TextView
+            <Button
+                android:id="@+id/btn_edit_comment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="나이를 수정하시려면 본인 인증을 하셔야 합니다." />
-        </LinearLayout>
-    </ScrollView>
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="7dp"
+                android:background="@drawable/btn_circle_bk1"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="6dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="6dp"
+                android:text="편집" />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="나이를 수정하시려면 본인 인증을 하셔야 합니다." />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/img_setting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/topbar"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/icon_settting" />
 </RelativeLayout>

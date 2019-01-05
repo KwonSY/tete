@@ -41,7 +41,7 @@
             android:background="@drawable/border_round_gr1"
             android:hint="아직 소개글이 없습니다..."
             android:padding="8dp"
-            android:text="" />UserData
+            android:text="" />
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView

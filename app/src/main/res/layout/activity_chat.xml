@@ -19,16 +19,28 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <TextView
-            android:id="@+id/txt_rest_phone"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="12dp"
-            android:layout_marginRight="10dp"
-            android:text="aaaaa"
-            android:textColor="@color/white"
-            android:visibility="invisible" />
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="4dp">
+
+            <ImageView
+                android:id="@+id/topbar_img_user"
+                android:layout_width="@dimen/profile_s"
+                android:layout_height="@dimen/profile_s"
+                android:src="@drawable/icon_noprofile_circle" />
+
+            <TextView
+                android:id="@+id/txt_userName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="6dp"
+                android:text="상대방 읽어오는 중..."
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+        </LinearLayout>
 
         <Button
             android:id="@+id/btn_eat_with"
@@ -44,7 +56,7 @@
             android:paddingTop="8dp"
             android:paddingRight="11dp"
             android:paddingBottom="8dp"
-            android:text="음식점 예약"
+            android:text="같이 먹기"
             android:textColor="@color/black" />
 
         <RelativeLayout
@@ -52,15 +64,46 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/topbar">
 
-            <TextView
-                android:id="@+id/txt_no_comment"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:id="@+id/layout_no_chat"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:gravity="center_horizontal"
-                android:padding="17dp"
-                android:text="같먹할 분과 첫 대화를 시작해보세요."
-                android:visibility="gone" />
+                android:layout_centerInParent="true"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/no_chat_img_user"
+                    android:layout_width="@dimen/profile_xl"
+                    android:layout_height="@dimen/profile_xl"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/icon_noprofile_circle" />
+
+                <TextView
+                    android:id="@+id/no_chat_txt_userName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="17dp"
+                    android:gravity="center_horizontal"
+                    android:text="로딩.."
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/no_chat_explain"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="34dp"
+                    android:layout_marginBottom="54dp"
+                    android:gravity="center_horizontal"
+                    android:text="@string/chat_start"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerView"
@@ -70,33 +113,34 @@
                 app:stackFromEnd="true" />
         </RelativeLayout>
 
-
+        <!--댓글입력창-->
         <LinearLayout
             android:id="@+id/footerContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:background="@color/white"
+            android:maxHeight="132dp"
             android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/edit_chat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toLeftOf="@id/btn_send_chat"
                 android:layout_weight="1"
                 android:hint="대화내용 입력.."
                 android:maxLines="5"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
                 android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/btn_send_chat"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_alignParentRight="true"
                 android:layout_weight="0"
                 android:background="@drawable/btn_send_or"
                 android:gravity="center"
-                android:maxHeight="140dp"
                 android:padding="10dp"
                 android:text="전송" />
         </LinearLayout>
@@ -104,10 +148,10 @@
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
-        android:layout_gravity="right"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_gravity="right"
         android:paddingTop="31dp"
-        app:headerLayout="@layout/drawer_chat"/>
+        app:headerLayout="@layout/drawer_chat" />
 
 </android.support.v4.widget.DrawerLayout>

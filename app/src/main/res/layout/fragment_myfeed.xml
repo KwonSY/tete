@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_fragment_feed"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="honbab.voltage.com.tete.MainActivity">
+
+    <View
+        android:layout_width="5dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="60dp"
+        android:layout_marginTop="50dp"
+        android:background="@color/mainColor" />
+
+    <RelativeLayout
+        android:id="@+id/layout_my_profile"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#00000000"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp">
+
+        <ImageView
+            android:id="@+id/img_my"
+            android:layout_width="@dimen/profile_l"
+            android:layout_height="@dimen/profile_l"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/icon_noprofile_circle" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/img_my"
+            android:layout_toRightOf="@id/img_my"
+            android:orientation="vertical"
+            android:paddingLeft="26dp"
+            android:paddingRight="20dp">
+
+            <TextView
+                android:id="@+id/txt_myName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="11dp"
+                android:text="프로필 읽어오는 중..."
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txt_comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txt_myName"
+                android:layout_centerVertical="true"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="40dp"
+                android:layout_toRightOf="@id/image_myProfile"
+                android:background="@drawable/border_round_gr1"
+                android:hint="아직 소개글이 없습니다..."
+                android:padding="8dp"
+                android:text="" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipeContainer_myfeed"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/layout_my_profile">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/gridView_feed"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#00000000" />
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+</RelativeLayout>

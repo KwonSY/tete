@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import honbab.voltage.com.data.FeedReqData;
 import honbab.voltage.com.data.RestData;
 import honbab.voltage.com.data.UserData;
-import honbab.voltage.com.task.FeedCancleTask;
+import honbab.voltage.com.task.CancleRestLikeTask;
 import honbab.voltage.com.tete.OneRestaurantActivity;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.tete.Statics;
@@ -62,8 +62,6 @@ public class RestLikeListAdapter extends RecyclerView.Adapter<RestLikeListAdapte
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         final FeedReqData data = listViewItemList.get(position);
-        Log.e("abc","xxxxxxxxxxxxxxxxxxxxxxx = " + data.getLatLng());
-        Log.e("abc","xxxxxxxxxxxxxxxxxxxxxxx = " + data.getLatitude());
         final String feed_id = data.getFeed_id();
         RestData restData = new RestData(data.getRest_id(), data.getRest_name(),
                 data.getCompound_code(), data.getLatLng(),
@@ -73,8 +71,8 @@ public class RestLikeListAdapter extends RecyclerView.Adapter<RestLikeListAdapte
 
 
         Picasso.get().load(data.getRest_img())
-                .resize(70, 70).centerCrop()
-                .placeholder(R.drawable.icon_no_image).error(R.drawable.icon_no_image)
+                .placeholder(R.drawable.icon_no_image)
+                .error(R.drawable.icon_no_image)
                 .into(holder.img_rest);
         holder.img_rest.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,13 +114,11 @@ public class RestLikeListAdapter extends RecyclerView.Adapter<RestLikeListAdapte
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                builder.setMessage(R.string.ask_cancle_godmuk);
+                builder.setMessage(R.string.ask_cancle_restlike);
                 builder.setPositiveButton(R.string.yes,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                new FeedCancleTask(mContext, httpClient,
-                                        feed_id, listViewItemList.get(position).getRest_name(), position)
-                                        .execute();
+                                new CancleRestLikeTask(mContext, httpClient, position).execute(data.getRest_id(), data.getRest_name());
                             }
                         });
                 builder.setNegativeButton(R.string.no,
@@ -159,7 +155,7 @@ public class RestLikeListAdapter extends RecyclerView.Adapter<RestLikeListAdapte
         public String fromId, fromImg, toId, toNm, toImg, toToken;
 
         TextView txt_no_req;
-        TextView txt_restName, txt_feedTime;
+        TextView txt_restName;
         Button btn_feed_cancle;
         RecyclerView recyclerView_feedee;
 
@@ -183,7 +179,6 @@ public class RestLikeListAdapter extends RecyclerView.Adapter<RestLikeListAdapte
 
             img_rest = itemView.findViewById(R.id.img_rest);
             txt_restName = itemView.findViewById(R.id.txt_restName);
-            txt_feedTime = itemView.findViewById(R.id.txt_feedTime);
             btn_feed_cancle = itemView.findViewById(R.id.btn_feed_cancle);
         }
     }

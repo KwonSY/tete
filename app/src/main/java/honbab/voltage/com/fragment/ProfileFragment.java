@@ -28,7 +28,7 @@ import java.util.ArrayList;
 
 import honbab.voltage.com.adapter.MyFeedListAdapter;
 import honbab.voltage.com.data.FeedReqData;
-import honbab.voltage.com.task.MyFeedListTask;
+import honbab.voltage.com.task.MyFeedListTask2;
 import honbab.voltage.com.tete.PokeListActivity;
 import honbab.voltage.com.tete.ProfileActivity;
 import honbab.voltage.com.tete.R;
@@ -172,7 +172,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onRefresh() {
                 myFeedListAdapter.clearItemList();
-                new MyFeedListTask(getActivity(), httpClient).execute();
+                new MyFeedListTask2(getActivity(), httpClient).execute();
             }
         });
 
@@ -299,7 +299,7 @@ public class ProfileFragment extends Fragment {
                     .transform(new CircleTransform())
                     .into(image_myProfile);
             */
-            new MyFeedListTask(getActivity(), httpClient).execute();
+            new MyFeedListTask2(getActivity(), httpClient).execute();
 
             if (!token.equals(user_token))
                 new UpdateToken().execute(token);

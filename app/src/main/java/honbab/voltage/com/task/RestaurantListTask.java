@@ -11,17 +11,17 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import honbab.voltage.com.data.FeedData;
+import honbab.voltage.com.data.RestData;
 import honbab.voltage.com.tete.Statics;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
-public class RestaurantListTask extends AsyncTask<Void, Void, ArrayList<FeedData>> {
+public class RestaurantListTask extends AsyncTask<Void, Void, ArrayList<RestData>> {
     private Context mContext;
     private OkHttpClient httpClient;
 
-    private ArrayList<FeedData> feedList = new ArrayList<>();
+    private ArrayList<RestData> restList = new ArrayList<>();
     String result;
 
     public RestaurantListTask(Context mContext, OkHttpClient httpClient) {
@@ -31,14 +31,14 @@ public class RestaurantListTask extends AsyncTask<Void, Void, ArrayList<FeedData
 
     @Override
     protected void onPreExecute() {
-        feedList.clear();
+        restList.clear();
     }
 
     @Override
-    protected ArrayList<FeedData> doInBackground(Void... params) {
+    protected ArrayList<RestData> doInBackground(Void... params) {
         FormBody body = new FormBody.Builder()
-                .add("opt", "feed_list")
-                .add("my_id", Statics.my_id)
+                .add("opt", "rest_list")
+                .add("pack", "GNG1")
                 .build();
 
         Request request = new Request.Builder().url(Statics.opt_url).post(body).build();
@@ -50,23 +50,10 @@ public class RestaurantListTask extends AsyncTask<Void, Void, ArrayList<FeedData
 
                 JSONObject obj = new JSONObject(bodyStr);
 
-                JSONArray hash_arr = obj.getJSONArray("feed_list");
-                for (int i = 0; i < hash_arr.length(); i++) {
-                    JSONObject obj2 = hash_arr.getJSONObject(i);
-
-                    int feed_id = obj2.getInt("sid");
-
-                    //등록자 정보
-                    JSONObject host_obj = obj2.getJSONObject("host");
-                    String user_id = host_obj.getString("sid");
-                    String user_name = host_obj.getString("name");
-                    String user_img = host_obj.getString("img_url");
-                    String user_age = host_obj.getString("age");
-                    String user_gender = host_obj.getString("gender");
-
-                    //음식점 정보
-                    JSONObject rest_obj = obj2.getJSONObject("rest");
-                    int rest_id = rest_obj.getInt("sid");
+                JSONArray rest_arr = obj.getJSONArray("rest");
+                for (int i = 0; i < rest_arr.length(); i++) {
+                    JSONObject rest_obj = rest_arr.getJSONObject(i);
+                    String rest_id = rest_obj.getString("sid");
                     String rest_name = rest_obj.getString("name");
                     String compound_code = rest_obj.getString("compound_code");
                     String vicinity = rest_obj.getString("vicinity");
@@ -79,14 +66,12 @@ public class RestaurantListTask extends AsyncTask<Void, Void, ArrayList<FeedData
                     String rest_phone = rest_obj.getString("phone");
                     String rest_img = rest_obj.getString("img_url");
 
-                    String status = obj2.getString("status");
-                    String time = obj2.getString("time");
-
-                    FeedData feedData = new FeedData(feed_id,
-                            user_id, user_name, user_age, user_gender, user_img,
-                            rest_id, rest_name, compound_code, latLng, place_id, rest_img, rest_phone, vicinity,
-                            status, time);
-                    feedList.add(feedData);
+//                    FeedData feedData = new FeedData(feed_id,
+//                            null, null, null, null, null, null,
+//                            rest_id, rest_name, compound_code, latLng, place_id, rest_img, rest_phone, vicinity,
+//                            null, null);
+                    RestData restData = new RestData(rest_id, rest_name, compound_code, latLng, place_id, rest_img, rest_phone, vicinity);
+                    restList.add(restData);
                 }
 
             } else {
@@ -97,18 +82,18 @@ public class RestaurantListTask extends AsyncTask<Void, Void, ArrayList<FeedData
             Log.e("abc", "Error : " + e.getMessage());
             e.printStackTrace();
         }
-        return feedList;
+        return restList;
     }
 
     @Override
-    protected void onPostExecute(final ArrayList<FeedData> feedList) {
-        super.onPostExecute(feedList);
-        Log.e("abc", "onPostExecute feedReqList.size = " + feedList.size());
+    protected void onPostExecute(final ArrayList<RestData> restList) {
+        super.onPostExecute(restList);
+
         String activityName = mContext.getClass().getSimpleName();
 
         if (activityName.equals("GodTinderActivity")) {
 
-            if (feedList.size() > 0) {
+            if (restList.size() > 0) {
 
             } else {
 

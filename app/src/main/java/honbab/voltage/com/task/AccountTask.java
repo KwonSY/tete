@@ -40,6 +40,7 @@ public class AccountTask extends AsyncTask<String, Void, UserData> {
     @Override
     protected UserData doInBackground(String... objects) {
         UserData userData = new UserData();
+        user_id = objects[0];
 
         FormBody body = new FormBody.Builder()
                 .add("opt", "account")
@@ -54,7 +55,6 @@ public class AccountTask extends AsyncTask<String, Void, UserData> {
                 String bodyStr = response.body().string();
 
                 JSONObject obj = new JSONObject(bodyStr);
-                Log.e("abc", "어카운트 : " + obj);
 
                 JSONObject user_obj = obj.getJSONObject("user");
 //                user_id = user_obj.getString("sid");
@@ -118,7 +118,7 @@ public class AccountTask extends AsyncTask<String, Void, UserData> {
 
             ((ProfileActivity) mContext).seq++;
         } else {
-
+            //MainActivity > MyFeedFragment는 get으로 해당 fragment에서 처리
         }
 
     }
