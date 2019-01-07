@@ -1,11 +1,13 @@
 package honbab.voltage.com.tete;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.yuyakaido.android.cardstackview.CardStackLayoutManager;
@@ -20,7 +22,7 @@ import java.util.concurrent.ExecutionException;
 
 import honbab.voltage.com.card.CardStackAdapter;
 import honbab.voltage.com.data.RestData;
-import honbab.voltage.com.task.RestLikeTask;
+import honbab.voltage.com.task.ReservFeedTask;
 import honbab.voltage.com.task.RestaurantListTask;
 import honbab.voltage.com.utils.ButtonUtil;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
@@ -35,6 +37,8 @@ public class GodTinderActivity extends AppCompatActivity {
     private CardStackAdapter adapter;
     private CardStackView cardStackView;
 
+    private String feed_location;
+    private String[] feed_time;
     private ArrayList<RestData> restList = new ArrayList<>();
 
     @Override
@@ -44,6 +48,10 @@ public class GodTinderActivity extends AppCompatActivity {
 
         httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
         session = new SessionManager(this.getApplicationContext());
+
+        Intent intent = getIntent();
+        feed_location = intent.getStringExtra("feed_location");
+        feed_time = intent.getStringArrayExtra("feed_time");
 
         TextView title_topbar = (TextView) findViewById(R.id.title_topbar);
         title_topbar.setText("");
@@ -61,6 +69,9 @@ public class GodTinderActivity extends AppCompatActivity {
         FloatingActionButton like_button = (FloatingActionButton) findViewById(R.id.like_button);
         skip_button.setOnClickListener(mOnClickListener);
         like_button.setOnClickListener(mOnClickListener);
+
+        Button btn_go_rest_like = (Button) findViewById(R.id.btn_go_tab1);
+        btn_go_rest_like.setOnClickListener(mOnClickListener);
     }
 
     @Override
@@ -68,7 +79,7 @@ public class GodTinderActivity extends AppCompatActivity {
         super.onResume();
 
         try {
-            restList = new RestaurantListTask(GodTinderActivity.this, httpClient).execute().get();
+            restList = new RestaurantListTask(GodTinderActivity.this, httpClient).execute(feed_location).get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -101,6 +112,13 @@ public class GodTinderActivity extends AppCompatActivity {
                             .build();
                     manager.setSwipeAnimationSetting(setting2);
                     cardStackView.swipe();
+
+                    break;
+                case R.id.btn_go_tab1:
+                    Intent intent = new Intent(GodTinderActivity.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
 
                     break;
             }
@@ -141,11 +159,22 @@ public class GodTinderActivity extends AppCompatActivity {
         @Override
         public void onCardAppeared(View view, int position) {
             Log.e("abc", "스와이프5 = " + position);
-            if (position!=0) {
-                String rest_id = String.valueOf(restList.get(position - 1).getRest_id());
+            if (position != 0) {
+                RestData restData = restList.get(position - 1);
+//                String rest_id = String.valueOf(restList.get(position - 1).getRest_id());
+                String rest_id = restData.getRest_id();
+
+
+//                String[] rest = {restData.getRest_name(), restData.getCompound_code(),
+//                        String.valueOf(restData.getLatitude()), String.valueOf(restData.getLongtitue()),
+//                        restData.getPlace_id(), restData.getRest_img(), restData.getRest_phone(), restData.getVicinity()};
 
                 if (!like_yn.equals(""))
-                    new RestLikeTask(GodTinderActivity.this, httpClient).execute(rest_id, like_yn);
+//                    new RestLikeTask(GodTinderActivity.this, httpClient).execute(rest_id, like_yn);
+                    new ReservFeedTask(GodTinderActivity.this, httpClient, feed_time, restData).execute("", "n");
+
+                if (position == restList.size())
+                    cardStackView.setVisibility(View.GONE);
             }
         }
 

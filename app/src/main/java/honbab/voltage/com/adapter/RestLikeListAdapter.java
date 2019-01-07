@@ -20,19 +20,18 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-import honbab.voltage.com.data.FeedReqData;
+import honbab.voltage.com.data.FeedData;
 import honbab.voltage.com.data.RestData;
 import honbab.voltage.com.data.UserData;
 import honbab.voltage.com.task.CancleRestLikeTask;
 import honbab.voltage.com.tete.OneRestaurantActivity;
 import honbab.voltage.com.tete.R;
-import honbab.voltage.com.tete.Statics;
 import okhttp3.OkHttpClient;
 
 public class RestLikeListAdapter extends RecyclerView.Adapter<RestLikeListAdapter.ViewHolder> {
     Context mContext;
     OkHttpClient httpClient;
-    public ArrayList<FeedReqData> listViewItemList = new ArrayList<>();
+    public ArrayList<FeedData> listViewItemList = new ArrayList<>();
 
 //    int TYPE_HEADER = 0;
     int TYPE_STATUS_N = 1;
@@ -42,7 +41,7 @@ public class RestLikeListAdapter extends RecyclerView.Adapter<RestLikeListAdapte
 
     }
 
-    public RestLikeListAdapter(Context mContext, OkHttpClient httpClient, ArrayList<FeedReqData> listViewItemList) {
+    public RestLikeListAdapter(Context mContext, OkHttpClient httpClient, ArrayList<FeedData> listViewItemList) {
         this.mContext = mContext;
         this.httpClient = httpClient;
         this.listViewItemList = listViewItemList;
@@ -61,12 +60,11 @@ public class RestLikeListAdapter extends RecyclerView.Adapter<RestLikeListAdapte
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
-        final FeedReqData data = listViewItemList.get(position);
+        final FeedData data = listViewItemList.get(position);
         final String feed_id = data.getFeed_id();
         RestData restData = new RestData(data.getRest_id(), data.getRest_name(),
                 data.getCompound_code(), data.getLatLng(),
                 data.getPlace_id(), data.getRest_img(), data.getRest_phone(), data.getVicinity());
-        Log.e("abc", "reqFeedee getLatLng = " + restData.getLatLng());
         ArrayList<UserData> usersList = data.getUsersList();
 
 
@@ -77,6 +75,8 @@ public class RestLikeListAdapter extends RecyclerView.Adapter<RestLikeListAdapte
         holder.img_rest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                ArrayList<UserData> usersList = data.getUsersList();
+
                 Intent intent = new Intent(mContext, OneRestaurantActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.putExtra("rest_name", data.getRest_name());
@@ -86,10 +86,14 @@ public class RestLikeListAdapter extends RecyclerView.Adapter<RestLikeListAdapte
                 intent.putExtra("latLng", data.getLatLng());
                 intent.putExtra("place_id", data.getPlace_id());
                 intent.putExtra("vicinity", data.getVicinity());
-//                intent.putExtra("latLng", data.getLatLng());
-                intent.putExtra("feeder_id", data.getHost_id());
-                intent.putExtra("feeder_name", data.getHost_name());
-                intent.putExtra("feeder_img", Statics.main_url + data.getHost_img());
+//                if (usersList.size() > 0) {
+//                    UserData userData = usersList.get(0);
+//
+//                    intent.putExtra("latLng", data.getLatLng());
+//                    intent.putExtra("feeder_id", userData.getUser_id());
+//                    intent.putExtra("feeder_name", userData.getUser_name());
+//                    intent.putExtra("feeder_img", Statics.main_url + data.getUser_name());
+//                }
                 intent.putExtra("status", data.getStatus());
                 mContext.startActivity(intent);
             }
@@ -97,7 +101,7 @@ public class RestLikeListAdapter extends RecyclerView.Adapter<RestLikeListAdapte
         holder.txt_restName.setText(data.getRest_name());
 
 
-
+        Log.e("abc", "feed_id = " + feed_id);
         final ReqFeedeeAdapter mAdapter = new ReqFeedeeAdapter(mContext, httpClient,
                 feed_id, restData, usersList);
 

@@ -31,6 +31,7 @@ public class SessionManager extends Activity {
 
 	// User name (make variable public to access from outside)
 	public static final String KEY_NAME = "my_id";
+	public static final String KEY_USERNAME = "my_username";
 	public static final String KEY_GENDER = "my_gender";
 	public static final String KEY_INVATE_CNT = "invite_cnt";
 
@@ -47,9 +48,10 @@ public class SessionManager extends Activity {
 	/**
 	 * Create login session
 	 * */
-	public void createLoginSession(String my_id, String gender) {
+	public void createLoginSession(String my_id, String username, String gender) {
 		editor.putBoolean(IS_LOGIN, true); // Storing login value as TRUE
 		editor.putString(KEY_NAME, my_id); // Storing name in pref
+		editor.putString(KEY_USERNAME, username);
 		editor.putString(KEY_GENDER, gender);
 		editor.commit(); // commit changes
 	}
@@ -79,6 +81,7 @@ public class SessionManager extends Activity {
 	public HashMap<String, String> getUserDetails() {
 		HashMap<String, String> user = new HashMap<String, String>();
 		user.put(KEY_NAME, pref.getString(KEY_NAME, null)); // user name
+		user.put(KEY_USERNAME, pref.getString(KEY_USERNAME, null)); // user name
 		user.put(KEY_GENDER, pref.getString(KEY_GENDER, null));
 		user.put(KEY_INVATE_CNT, pref.getString(KEY_INVATE_CNT, null));
 

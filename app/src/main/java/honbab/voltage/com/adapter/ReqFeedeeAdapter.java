@@ -3,7 +3,6 @@ package honbab.voltage.com.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
@@ -21,7 +20,7 @@ import java.util.ArrayList;
 import honbab.voltage.com.data.RestData;
 import honbab.voltage.com.data.UserData;
 import honbab.voltage.com.task.AcceptFeedTask;
-import honbab.voltage.com.tete.ChatActivity;
+import honbab.voltage.com.task.PokeFeedTask;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.tete.Statics;
 import honbab.voltage.com.widget.CircleTransform;
@@ -82,21 +81,40 @@ public class ReqFeedeeAdapter extends Adapter<ReqFeedeeAdapter.ViewHolder> {
         holder.img_feedee.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(mContext, ChatActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.putExtra("fromId", holder.fromId);
-                intent.putExtra("toId", holder.toId);
-                intent.putExtra("toUserName", holder.toNm);
-                intent.putExtra("toUserImg", holder.toImg);
-                intent.putExtra("toToken", holder.toToken);
-//                Bundle bundle = new Bundle();
-//                bundle.putSerializable("restData", restData);
-                intent.putExtra("restData", restData);
-                mContext.startActivity(intent);
-//                    Intent intent = new Intent(mContext, ProfileActivity.class);
-//                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                    intent.putExtra("user_id", data.getUser_id());
-//                    mContext.startActivity(intent);
+//                Intent intent = new Intent(mContext, ChatActivity.class);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                intent.putExtra("fromId", holder.fromId);
+////                intent.putExtra("fromUserName", holder.fromUserName);
+//                intent.putExtra("toId", holder.toId);
+//                intent.putExtra("toUserName", holder.toNm);
+//                intent.putExtra("toUserImg", holder.toImg);
+//                intent.putExtra("toToken", holder.toToken);
+////                Bundle bundle = new Bundle();
+////                bundle.putSerializable("restData", restData);
+//                intent.putExtra("restData", restData);
+//                mContext.startActivity(intent);
+////                    Intent intent = new Intent(mContext, ProfileActivity.class);
+////                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+////                    intent.putExtra("user_id", data.getUser_id());
+////                    mContext.startActivity(intent);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setMessage(data.getUser_name() + "님과 같이 식사하시겠습니까? 이후에 대화창이 열립니다.");
+                builder.setPositiveButton(R.string.yes,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                new PokeFeedTask(mContext, httpClient).execute(feed_id, data.getUser_id());
+//                                new AcceptFeedTask(mContext, httpClient, holder, data, feed_id, restData.getRest_id(), restData.getPlace_id(), position)
+//                                        .execute(feed_id, data.getUser_id());
+                            }
+                        });
+                builder.setNegativeButton(R.string.no,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+//                                holder.btn_check_feedee.setBackgroundResource(R.drawable.icon_check_n);
+                            }
+                        });
+                builder.show();
             }
         });
 

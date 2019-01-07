@@ -206,7 +206,7 @@ public class JoinActivity2 extends AppCompatActivity {
 //                progressDialog.setMessage("가입 중...");
 //                progressDialog.show();
 
-                session.createLoginSession(Statics.my_id, Statics.my_gender);
+                session.createLoginSession(Statics.my_id, Statics.my_username, Statics.my_gender);
 
 //                finish();
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);

@@ -8,17 +8,21 @@
     android:background="@color/white"
     tools:context="honbab.voltage.com.tete.MainActivity">
 
-    <include
-        android:id="@+id/layout_topbar"
-        layout="@layout/layout_topbar"
+    <TextView
+        android:id="@+id/title_chatlist"
         android:layout_width="match_parent"
-        android:layout_height="43dp" />
+        android:layout_height="wrap_content"
+        android:background="@color/whitegrey"
+        android:padding="10dp"
+        android:text="대화중인 상대방"
+        android:textSize="14sp"
+        android:textStyle="bold" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView_chat_before"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/layout_topbar" />
+        android:layout_below="@id/title_chatlist" />
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeContainer_feed"
@@ -45,10 +49,10 @@
                     android:layout_centerHorizontal="true"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="20dp"
-                    android:textStyle="bold"
                     android:text="@string/explain_search_godmuk_rest"
                     android:textColor="@color/black"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
                 <Button
                     android:id="@+id/btn_go_pick_rest"
@@ -63,10 +67,40 @@
                     android:textSize="16sp" />
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/layout_feed_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/whitegrey"
+                android:orientation="horizontal"
+                android:paddingLeft="10dp"
+                android:paddingTop="9dp"
+                android:paddingBottom="9dp">
+
+                <TextView
+                    android:id="@+id/title_feedTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="내가 신청한 약속 시간 : "
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txt_feedTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@id/title_feedTime"
+                    android:text=""
+                    android:textSize="14sp"
+                    android:textStyle="normal" />
+            </LinearLayout>
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerView_feed"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/layout_feed_time"
                 android:background="@color/white" />
         </RelativeLayout>
     </android.support.v4.widget.SwipeRefreshLayout>

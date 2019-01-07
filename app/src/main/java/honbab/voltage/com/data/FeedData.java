@@ -3,6 +3,7 @@ package honbab.voltage.com.data;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class FeedData implements Serializable {
 
@@ -16,6 +17,8 @@ public class FeedData implements Serializable {
     private transient LatLng latLng;
     private Double latitude, longtitue;
     private int height, width;
+
+    private ArrayList<UserData> usersList;
 
     public FeedData() {
 
@@ -217,5 +220,13 @@ public class FeedData implements Serializable {
 
     public void setWidth(int width) {
         this.width = width;
+    }
+
+    public ArrayList<UserData> getUsersList() {
+        return usersList;
+    }
+
+    public void setUsersList(ArrayList<UserData> usersList) {
+        this.usersList = usersList;
     }
 }

@@ -100,6 +100,8 @@
 
             </LinearLayout>
 
+
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -108,19 +110,37 @@
                 android:clipToPadding="false"
                 android:padding="20dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:layout_width="220dp"
                     android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="레스토랑 좋아요를 끝냈습니다. 다시 진행하겠습니까?"/>
+                    android:layout_centerInParent="true">
+
+                    <TextView
+                        android:id="@+id/explain_finish_rest_like"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="20dp"
+                        android:gravity="center_horizontal"
+                        android:text="@string/finish_rest_like"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+
+                    <Button
+                        android:id="@+id/btn_go_tab1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/explain_finish_rest_like"
+                        android:background="@drawable/btn_circle_or1"
+                        android:paddingLeft="45dp"
+                        android:paddingRight="45dp"
+                        android:text="같먹 약속 잡으러 가기" />
+                </RelativeLayout>
 
                 <com.yuyakaido.android.cardstackview.CardStackView
                     android:id="@+id/card_stack_view"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"></com.yuyakaido.android.cardstackview.CardStackView>
-
+                    android:layout_height="match_parent" />
             </RelativeLayout>
-
         </RelativeLayout>
 
     </LinearLayout>

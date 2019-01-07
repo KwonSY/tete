@@ -8,7 +8,6 @@ import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,7 +59,6 @@ public class ReservMapFragment extends Fragment implements OnMapReadyCallback {
         btn_reserv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.e("abc", "xxxxxxxxxxx");
                 Intent intent = new Intent(getActivity(), DaumMapActivity.class);
                 startActivity(intent);
             }

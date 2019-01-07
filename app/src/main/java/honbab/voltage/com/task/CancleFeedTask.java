@@ -75,7 +75,7 @@ public class CancleFeedTask extends AsyncTask<String, Void, Void> {
 
             if (activityName.equals("MainActivity")) {
                 FragmentManager fm = ((MainActivity) mContext).getSupportFragmentManager();
-                Fragment fragment = fm.getFragments().get(0);
+                Fragment fragment = fm.getFragments().get(1);
                 ((MyFeedFragment) fragment).mAdapter.removeAt(position);
             } else if (activityName.equals("MyFeedListActivity")) {
 //                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);

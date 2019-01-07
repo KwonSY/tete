@@ -13,15 +13,14 @@ import java.util.List;
 
 public class CustomTimePickerDialog extends TimePickerDialog {
 
-    private final static int TIME_PICKER_INTERVAL = 15;
+    private final static int TIME_PICKER_INTERVAL = 30;
     private TimePicker mTimePicker;
     private final OnTimeSetListener mTimeSetListener;
 
     public CustomTimePickerDialog(Context context, OnTimeSetListener listener, int hourOfDay, int minute, boolean is24HourView) {
         super(context, TimePickerDialog.THEME_HOLO_LIGHT, null, hourOfDay,minute / TIME_PICKER_INTERVAL, is24HourView);
-        Log.e("abc", "xx = " + hourOfDay + minute);
-        mTimeSetListener = listener;
 
+        mTimeSetListener = listener;
 //        mTimePicker.setCurrentHour(hourOfDay);
     }
 
@@ -36,8 +35,6 @@ public class CustomTimePickerDialog extends TimePickerDialog {
     public void onClick(DialogInterface dialog, int which) {
         switch (which) {
             case BUTTON_POSITIVE:
-                Log.e("abc", "mTimePicker.getCurrentHour() = " + mTimePicker.getCurrentHour());
-                Log.e("abc", "mTimePicker.getCurrentMinute() = " + mTimePicker.getCurrentMinute());
                 if (mTimeSetListener != null) {
                     mTimeSetListener.onTimeSet(mTimePicker, mTimePicker.getCurrentHour(),
                             mTimePicker.getCurrentMinute() * TIME_PICKER_INTERVAL);
@@ -66,9 +63,6 @@ public class CustomTimePickerDialog extends TimePickerDialog {
                 displayedValues.add(String.format("%02d", i));
             }
             minuteSpinner.setDisplayedValues(displayedValues.toArray(new String[displayedValues.size()]));
-            Log.e("abc", "displayedValues = " + displayedValues.size());
-            Log.e("abc", "displayedValues = " + displayedValues.get(0));
-            Log.e("abc", "displayedValues = " + displayedValues.get(1));
         } catch (Exception e) {
             e.printStackTrace();
         }

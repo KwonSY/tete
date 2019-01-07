@@ -19,5 +19,16 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="15dp"
         android:scaleType="fitStart"
-        android:src="@drawable/logo_oneline_bk" />
+        android:src="@drawable/logo_oneline_bk"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/topbar_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="17dp"
+        android:text=""
+        android:textSize="16sp"
+        android:textStyle="bold" />
 </RelativeLayout>

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,7 +75,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
 
         public void bindToPost(final UserData data) {
             int new_chat = Integer.parseInt(data.getStatus());
-            Log.e("abc", "chatlist newchat " + data.getUser_name() + new_chat);
+
             if (new_chat > 0)
                 img_new_chat.setVisibility(View.VISIBLE);
             else
@@ -100,9 +99,10 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
                     Intent intent = new Intent(mContext, ChatActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra("fromId", Statics.my_id);
+//                    intent.putExtra("fromUserName", Statics.my_username);
                     intent.putExtra("toId", data.getUser_id());
                     intent.putExtra("toUserName", data.getUser_name());
-                    intent.putExtra("toUserImg", data.getUser_name());
+                    intent.putExtra("toUserImg", data.getImg_url());
                     intent.putExtra("toToken", data.getToken());
                     intent.putExtra("restData", new RestData());
                     mContext.startActivity(intent);

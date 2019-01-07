@@ -17,7 +17,7 @@ import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
-public class RestaurantListTask extends AsyncTask<Void, Void, ArrayList<RestData>> {
+public class RestaurantListTask extends AsyncTask<String, Void, ArrayList<RestData>> {
     private Context mContext;
     private OkHttpClient httpClient;
 
@@ -35,10 +35,10 @@ public class RestaurantListTask extends AsyncTask<Void, Void, ArrayList<RestData
     }
 
     @Override
-    protected ArrayList<RestData> doInBackground(Void... params) {
+    protected ArrayList<RestData> doInBackground(String... params) {
         FormBody body = new FormBody.Builder()
                 .add("opt", "rest_list")
-                .add("pack", "GNG1")
+                .add("pack", params[0])
                 .build();
 
         Request request = new Request.Builder().url(Statics.opt_url).post(body).build();

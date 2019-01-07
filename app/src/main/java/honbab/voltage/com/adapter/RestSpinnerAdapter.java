@@ -102,7 +102,7 @@ public class RestSpinnerAdapter extends RecyclerView.Adapter<RestSpinnerAdapter.
                     intent.putExtra("fromId", Statics.my_id);
                     intent.putExtra("toId", data.getUser_id());
                     intent.putExtra("toUserName", data.getUser_name());
-                    intent.putExtra("toUserImg", data.getUser_name());
+                    intent.putExtra("toUserImg", data.getImg_url());
                     intent.putExtra("toToken", data.getToken());
                     intent.putExtra("restData", new RestData());
                     mContext.startActivity(intent);

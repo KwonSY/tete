@@ -15,6 +15,40 @@
         android:layout_marginTop="50dp"
         android:background="@color/mainColor" />
 
+    <LinearLayout
+        android:id="@+id/layout_no_my_schedule"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:paddingLeft="50dp"
+        android:paddingRight="50dp"
+        android:paddingBottom="30dp"
+        android:visibility="visible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="109dp"
+            android:layout_marginBottom="20dp"
+            android:text="@string/explain_go_to_get_feed"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btn_go_rest_like"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/btn_circle_bk1"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp"
+            android:text="@string/go_to_get_feed"
+            android:textSize="16sp" />
+    </LinearLayout>
+
     <RelativeLayout
         android:id="@+id/layout_my_profile"
         android:layout_width="match_parent"

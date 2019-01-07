@@ -29,7 +29,6 @@ public class UpdateRestPhoneTask extends AsyncTask<String, Void, Void> {
 
     @Override
     protected Void doInBackground(String... params) {
-        Log.e("abc", "xxxxxxx = " + params[0] + ", " + params[1]);
         FormBody body = new FormBody.Builder()
                 .add("opt", "update_rest_phone")
                 .add("rest_id", params[0])

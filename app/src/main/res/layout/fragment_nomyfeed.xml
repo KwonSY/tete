@@ -21,7 +21,7 @@
             android:layout_marginTop="109dp"
             android:layout_marginBottom="20dp"
             android:layout_gravity="center_horizontal"
-            android:text="@string/explain_start_chat"
+            android:text="@string/explain_go_to_get_feed"
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold" />

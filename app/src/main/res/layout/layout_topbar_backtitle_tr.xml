@@ -13,12 +13,12 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="0dp"
         android:background="@android:color/transparent"
-        android:minHeight="0dp"
         android:minWidth="0dp"
-        android:paddingBottom="14dp"
+        android:minHeight="0dp"
         android:paddingLeft="18dp"
-        android:paddingRight="22dp"
         android:paddingTop="14dp"
+        android:paddingRight="22dp"
+        android:paddingBottom="14dp"
         android:src="@drawable/icon_back_arrow_wh"
         android:visibility="visible" />
 

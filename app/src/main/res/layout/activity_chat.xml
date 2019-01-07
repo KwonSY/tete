@@ -43,21 +43,22 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/btn_eat_with"
+            android:id="@+id/btn_call_rest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginTop="5dp"
             android:layout_marginRight="9dp"
             android:background="@drawable/btn_round_wh"
+            android:gravity="center"
+            android:maxHeight="38dp"
             android:minWidth="0dp"
-            android:minHeight="0dp"
+            android:minHeight="35dp"
             android:paddingLeft="11dp"
-            android:paddingTop="8dp"
             android:paddingRight="11dp"
-            android:paddingBottom="8dp"
-            android:text="같이 먹기"
-            android:textColor="@color/black" />
+            android:text="식당 전화하기"
+            android:textColor="@color/black"
+            android:textSize="10sp" />
 
         <RelativeLayout
             android:layout_width="match_parent"

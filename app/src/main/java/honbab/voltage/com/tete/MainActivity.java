@@ -17,7 +17,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         session = new SessionManager(getApplicationContext());
         HashMap<String, String> user = session.getUserDetails();
         Statics.my_id = user.get("my_id");
+        Statics.my_username = user.get("my_username");
         Statics.my_gender = user.get("my_gender");
 
         Log.e("abc", "user.get(\"my_id\") = " + user.get("my_id"));
@@ -79,7 +80,6 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             } else {
 
-                Log.e("abc", "xxxxxxxx = " + Statics.my_id);
                 if (Statics.my_id == null) {
                     Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -105,8 +105,8 @@ public class MainActivity extends AppCompatActivity {
                 setSupportActionBar(toolbar);
 
                 TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
-                tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.reservation)));
-                tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.my)));
+                tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_1_like_rest)));
+                tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_2_my)));
                 tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
                 viewPager = (ViewPager) findViewById(R.id.viewPager);
@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-                ImageButton btn_go_tinder = (ImageButton) findViewById(R.id.btn_go_tinder);
+                ImageView btn_go_tinder = (ImageView) findViewById(R.id.btn_go_tinder);
                 btn_go_tinder.setOnClickListener(mOnClickListener);
 
                 Intent intent = getIntent();
@@ -173,7 +173,8 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.btn_go_tinder:
-                    Intent intent = new Intent(MainActivity.this, GodTinderActivity.class);
+//                    Intent intent = new Intent(MainActivity.this, GodTinderActivity.class);
+                    Intent intent = new Intent(MainActivity.this, DelayBefroePickRestActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
 

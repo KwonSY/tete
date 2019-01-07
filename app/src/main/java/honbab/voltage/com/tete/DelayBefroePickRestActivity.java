@@ -1,159 +1,193 @@
 package honbab.voltage.com.tete;
 
-import android.Manifest;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.DatePicker;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
-import com.squareup.picasso.Picasso;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
-import honbab.voltage.com.network.OnTaskCompleted;
-import honbab.voltage.com.task.GetPhotoTask;
-import honbab.voltage.com.utils.GoogleMapUtil;
-import honbab.voltage.com.widget.CircleTransform;
+import honbab.voltage.com.utils.ButtonUtil;
+import honbab.voltage.com.widget.CustomTimePickerDialog;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
 import okhttp3.OkHttpClient;
 
 public class DelayBefroePickRestActivity extends AppCompatActivity {
     private OkHttpClient httpClient;
 
-    public TextView btn_call_rest;
-
-    private String rest_id, place_id;
-    public String formatted_phone_number = "";
+    String feed_location, feed_time;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_delay_handler);
+        setContentView(R.layout.activity_delay_befre_pick_rest);
 
         httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
 
-        final Intent intent = getIntent();
-        String user_name = intent.getStringExtra("user_name");
-        String user_img = intent.getStringExtra("user_img");
-        rest_id = intent.getStringExtra("rest_id");
-        place_id = intent.getStringExtra("place_id");
 
-        btn_call_rest = (TextView) findViewById(R.id.btn_call_rest);
-        btn_call_rest.setOnClickListener(mOnClickListener);
 
-        ImageView img_user = (ImageView) findViewById(R.id.img_user);
-        Picasso.get().load(user_img)
-                .transform(new CircleTransform())
-                .placeholder(R.drawable.icon_noprofile_circle)
-                .error(R.drawable.icon_noprofile_circle)
-                .into(img_user);
+        ArrayList<String> locationList = new ArrayList<>();
+        locationList.add("강남역");
 
-        TextView txt_userName = (TextView) findViewById(R.id.txt_userName);
-        txt_userName.setText(user_name);
+        Spinner spinner = (Spinner) findViewById(R.id.spinner_location);
+        SpinnerAdapter spinnerAdapter = new ArrayAdapter(DelayBefroePickRestActivity.this,
+                R.layout.support_simple_spinner_dropdown_item, locationList);
+        spinner.setAdapter(spinnerAdapter);
 
-        TextView txt_text = (TextView) findViewById(R.id.txt_text);
-//        Resources res = mContext.getResources();
-        String text = String.format(getResources().getString(R.string.complete_reserv_with), user_name);
-        txt_text.setText(text);
+        setDrawerReserv();
 
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                finish();
-                Intent intent2 = new Intent(DelayBefroePickRestActivity.this, MainActivity.class);
-                intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent2.putExtra("position", 1);
-                startActivity(intent2);
-            }
-        }, 7500);
+        Button btn_go_pick_rest = (Button) findViewById(R.id.btn_go_pick_rest);
+        btn_go_pick_rest.setOnClickListener(mOnClickListener);
 
-        Button btn_go_comment = (Button) findViewById(R.id.btn_go_comment);
-        btn_go_comment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-                Intent intent2 = new Intent(DelayBefroePickRestActivity.this, MainActivity.class);
-                intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent2.putExtra("position", 1);
-                startActivity(intent2);
-            }
-        });
+        ButtonUtil.setBackButtonClickListener(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-//        String url = "";
-//        RestClient client = new RestClient(url);
-//        client.addBasicAuthentication(user_name, password);
-//        try {
-//            client.execute(RequestMethod.GET);
-//            if (client.getResponseCode() != 200) {
-//                //return server error
-//                return client.getErrorMessage();
-//            }
-//            //return valid data
-//            JSONObject jObj = new JSONObject(client.getResponse());
-//            return jObj.toString();
-//        } catch (Exception e) {
-//            return e.toString();
-//        }
-
-        String url = GoogleMapUtil.getDetailUrl(getApplicationContext(), place_id);
-        OnTaskCompleted onTaskCompleted = new OnTaskCompleted() {
-            @Override
-            public void onTaskCompleted(String value) {
-
-            }
-        };
-        new GetPhotoTask(DelayBefroePickRestActivity.this, httpClient, onTaskCompleted, rest_id).execute(url);
-
-
-//        try {
-//
-////            String formatted_phone_number = new GetPhotoTask(DelayHandlerActivity.this, null, null).execute(url).get();
-////            Log.e("abc", "캬겟써봣다잉 formatted_phone_number = " + formatted_phone_number);
-////            btn_call_rest.setText(formatted_phone_number);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        } catch (ExecutionException e) {
-//            e.printStackTrace();
-//        }
-//            formatted_phone_number = GetPhotoTask.onTaskCompleted();
     }
 
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
-                case R.id.btn_call_rest:
-                    String uri = "tel:" + formatted_phone_number;
+                case R.id.btn_go_pick_rest:
+                    String[] feed_time = {String.valueOf(year), String.valueOf(month), String.valueOf(day), String.valueOf(hour), String.valueOf(min)};
 
-                    Intent callIntent = new Intent(Intent.ACTION_DIAL);
-                    callIntent.setData(Uri.parse(uri));
-                    if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                        // TODO: Consider calling
-                        //    ActivityCompat#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for ActivityCompat#requestPermissions for more details.
-                        return;
-                    }
-                    startActivity(callIntent);
+                    Intent intent = new Intent(DelayBefroePickRestActivity.this, GodTinderActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("feed_location", "GNS1");
+                    intent.putExtra("feed_time", feed_time);
+                    startActivity(intent);
+
+                    break;
+                case R.id.txt_date:
+                    DatePickerDialog dialog = new DatePickerDialog(DelayBefroePickRestActivity.this, dateSetListener,
+                            year, month - 1, day);
+                    dialog.show();
+
+                    break;
+                case R.id.txt_clock:
+                    CustomTimePickerDialog dialog2 = new CustomTimePickerDialog(DelayBefroePickRestActivity.this, timeSetListener,
+                            hour, min, false);
+//                dialog.updateTime();
+                    dialog2.show();
 
                     break;
             }
         }
     };
 
+    private TextView txt_date, txt_clock;
+    private Calendar calendar;
+    int year, month, day, hour, min;
 
+    private void setDrawerReserv() {
+//        NavigationView nav_view = (NavigationView) findViewById(R.id.nav_view);
+//        View view = nav_view.getHeaderView(0);
+
+        txt_date = (TextView) findViewById(R.id.txt_date);
+        txt_clock = (TextView) findViewById(R.id.txt_clock);
+
+        Date currentTime = new Date();
+        calendar = Calendar.getInstance();
+        calendar.setTime(currentTime);
+        calendar.add(Calendar.HOUR, 2);
+
+        year = calendar.get(Calendar.YEAR);
+        month = calendar.get(Calendar.MONTH) + 1;
+        day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        int ampm = calendar.get(Calendar.AM_PM);
+        hour = calendar.get(Calendar.HOUR_OF_DAY);
+        min = calendar.get(Calendar.MINUTE);
+
+        String str_date, str_time;
+        if (ampm == 0) {
+            str_time = "오전 ";
+        } else {
+            str_time = "오후 ";
+        }
+
+        if (hour > 12)
+            str_time += String.valueOf(hour - 12) + "시 ";
+        else
+            str_time += String.valueOf(hour) + "시 ";
+
+        if (min < 30) {
+            calendar.set(Calendar.MINUTE, 30);
+            min = 30;
+            str_time += "30분";
+        } else {
+            calendar.set(Calendar.MINUTE, 0);
+            min = 0;
+            str_time += "00분";
+        }
+        str_date = String.valueOf(month) + "/" + String.valueOf(day);
+
+        txt_date.setText(str_date);
+        txt_date.setOnClickListener(mOnClickListener);
+        txt_clock.setText(str_time);
+        txt_clock.setOnClickListener(mOnClickListener);
+    }
+
+    public DatePickerDialog.OnDateSetListener dateSetListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+            year = i;
+            month = i1 + 1;
+            day = i2;
+
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.MONTH, i1);
+            calendar.set(Calendar.DAY_OF_MONTH, day);
+
+            txt_date.setText(month + "/" + i2);
+        }
+    };
+
+    public TimePickerDialog.OnTimeSetListener timeSetListener = new TimePickerDialog.OnTimeSetListener() {
+        @Override
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            String str_time;
+
+            hour = hourOfDay;
+            min = minute;
+
+            if (hourOfDay < 12) {
+                calendar.set(Calendar.AM_PM, 0);
+                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                calendar.set(Calendar.MINUTE, minute);
+
+                str_time = "오전 " + hourOfDay + "시 " + minute + "분";
+            } else {
+                calendar.set(Calendar.AM_PM, 1);
+                calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                calendar.set(Calendar.MINUTE, minute);
+
+                if (hourOfDay == 12) {
+
+                } else {
+                    hourOfDay = hourOfDay - 12;
+                }
+
+                str_time = "오후 " + hourOfDay + "시 " + minute + "분";
+            }
+
+            txt_clock.setText(str_time);
+        }
+    };
 }

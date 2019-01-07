@@ -3,6 +3,7 @@ package honbab.voltage.com.tete;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -47,7 +48,8 @@ import honbab.voltage.com.adapter.ChatAdapter;
 import honbab.voltage.com.data.ChatData;
 import honbab.voltage.com.data.FcmData;
 import honbab.voltage.com.data.RestData;
-import honbab.voltage.com.task.CommonRestLikeTask;
+import honbab.voltage.com.task.ChatFCMTask;
+import honbab.voltage.com.task.CommonRestTask;
 import honbab.voltage.com.task.ReservFeedTask;
 import honbab.voltage.com.utils.ButtonUtil;
 import honbab.voltage.com.widget.CircleTransform;
@@ -63,18 +65,19 @@ public class ChatActivity extends AppCompatActivity {
     private SessionManager session;
     private DatabaseReference mDatabase;
 
-    private ChatData chatData;
     private LinearLayoutManager layoutManager;
 
     public DrawerLayout drawerLayout;
     public TextView title_topbar;
+    public Button btn_call_rest;
     private LinearLayout layout_no_chat;
     public RecyclerView recyclerView;
     public ChatAdapter mAdapter;
     private EditText edit_chat;
 
-    private String fromId = Statics.my_id, toId;
-    private String toUserName = "상대방", toUserImg, toToken;
+    private String fromId = Statics.my_id, fromUserName;
+    private String toId, toUserName = "상대방", toUserImg, toToken;
+    private ChatData chatData;
     public RestData restData;
 
     @Override
@@ -88,6 +91,7 @@ public class ChatActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         fromId = intent.getStringExtra("fromId");
+//        fromUserName = intent.getStringExtra("fromUserName");
         toId = intent.getStringExtra("toId");
         toUserName = intent.getStringExtra("toUserName");
         toUserImg = intent.getStringExtra("toUserImg");
@@ -95,6 +99,7 @@ public class ChatActivity extends AppCompatActivity {
         restData = (RestData) intent.getParcelableExtra("restData");
         Log.e("abc", "fromId = " + fromId + ", toId = " + toId);
         Log.e("abc", "toUserName = " + toUserName);
+        Log.e("abc", "toUserImg = " + toUserImg);
         Log.e("abc", "getRest_name = " + restData.getRest_name());
         Log.e("abc", "ChatActivity getLatLng = " + restData.getLatLng());
         Log.e("abc", "ChatActivity rest_phone = " + restData.getRest_phone());
@@ -136,9 +141,10 @@ public class ChatActivity extends AppCompatActivity {
         recyclerView.setAdapter(mAdapter);
 
 //        messages = new ArrayList<>();
-        Button btn_eat_with;
-        btn_eat_with = (Button) findViewById(R.id.btn_eat_with);
-        btn_eat_with.setOnClickListener(mOnClickListener);
+
+        btn_call_rest = (Button) findViewById(R.id.btn_call_rest);
+        btn_call_rest.setText(restData.getRest_phone());
+        btn_call_rest.setOnClickListener(mOnClickListener);
 
         edit_chat = (EditText) findViewById(R.id.edit_chat);
 
@@ -158,13 +164,15 @@ public class ChatActivity extends AppCompatActivity {
         super.onResume();
 
         loadFirebaseDatabase(fromId, toId);
+
+        new CommonRestTask(ChatActivity.this, httpClient).execute(toId, null);
     }
 
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
-                case R.id.img_user:
+                case R.id.topbar_img_user:
                     Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.putExtra("user_id", toId);
@@ -181,6 +189,25 @@ public class ChatActivity extends AppCompatActivity {
                     break;
                 case R.id.btn_send_chat:
                     sendMessage("t");//t = text
+
+                    break;
+                case R.id.btn_call_rest:
+                    String uri = "tel:" + restData.getRest_phone();
+                    Log.e("abc", "tel : = " + uri);
+                    Intent intent1 = new Intent(Intent.ACTION_DIAL, Uri.parse(uri));
+//                    intent1.setData(Uri.parse(uri));
+                    startActivity(intent1);
+//                    if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+//                        // TODO: Consider calling
+//                        //    ActivityCompat#requestPermissions
+//                        // here to request the missing permissions, and then overriding
+//                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+//                        //                                          int[] grantResults)
+//                        // to handle the case where the user grants the permission. See the documentation
+//                        // for ActivityCompat#requestPermissions for more details.
+//                        return;
+//                    }
+
 
                     break;
                 case R.id.btn_eat_with:
@@ -206,9 +233,10 @@ public class ChatActivity extends AppCompatActivity {
                     sendMessage("a");
 
                     String[] date = {String.valueOf(year), String.valueOf(month), String.valueOf(day), String.valueOf(hour), String.valueOf(min)};
-                    String[] rest = {restData.getRest_name(), restData.getCompound_code(),
-                            String.valueOf(restData.getLatitude()), String.valueOf(restData.getLongtitue()),
-                            restData.getPlace_id(), restData.getRest_img(), restData.getRest_phone(), restData.getVicinity()};
+                    RestData r_data = restData;
+//                    String[] rest = {restData.getRest_name(), restData.getCompound_code(),
+//                            String.valueOf(restData.getLatitude()), String.valueOf(restData.getLongtitue()),
+//                            restData.getPlace_id(), restData.getRest_img(), restData.getRest_phone(), restData.getVicinity()};
 //                    Log.e("abc", "ChatAct lat = " + restData.getLatitude() + restData.getLongtitue());
 //                    RestData restData2 = restData;
 
@@ -217,7 +245,7 @@ public class ChatActivity extends AppCompatActivity {
                     long time_current = curCal.getTimeInMillis();
 
                     if (time_setting > time_current) {
-                        new ReservFeedTask(ChatActivity.this, httpClient, date, rest).execute(toId);
+                        new ReservFeedTask(ChatActivity.this, httpClient, date, r_data).execute(toId);
                     } else {
                         Toast.makeText(getApplicationContext(), R.string.cannot_reserve_past, Toast.LENGTH_SHORT).show();
                     }
@@ -315,9 +343,11 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void sendMessage(String type) {
+        String message = "";
+
         if (type.equals("t")) {
             if (edit_chat.getText().toString().length() > 0) {
-                final String message = edit_chat.getText().toString();
+                message = edit_chat.getText().toString();
                 final HashMap<String, Object> timestamp = new HashMap<>();
                 timestamp.put("time", ServerValue.TIMESTAMP);
 
@@ -337,13 +367,10 @@ public class ChatActivity extends AppCompatActivity {
                 recyclerView.setLayoutManager(layoutManager);
                 mAdapter.notifyDataSetChanged();
                 edit_chat.setText("");
-
-                FcmData params = new FcmData(toToken, message);
-                new ChatFCMTask().execute(params);
             }
         } else if (type.equals("a")) {
 
-            final String message = toUserName + "님과 " +
+            message = toUserName + "님과 " +
                     month + "월 " + day + "일 " + hour + "시 " + min + "분 " +
                     restData.getRest_name() + "에서 식사가 예약되었습니다.";
             final HashMap<String, Object> timestamp = new HashMap<>();
@@ -365,13 +392,13 @@ public class ChatActivity extends AppCompatActivity {
             recyclerView.setLayoutManager(layoutManager);
             mAdapter.notifyDataSetChanged();
             edit_chat.setText("");
-
-            FcmData params = new FcmData(toToken, message);
-            new ChatFCMTask().execute(params);
         }
+
+        FcmData params = new FcmData(toToken, Statics.my_username, message);
+        new ChatFCMTask(httpClient).execute(params);
     }
 
-    private class ChatFCMTask extends AsyncTask<FcmData, Void, Void> {
+    private class ChatFCMTaskxxx extends AsyncTask<FcmData, Void, Void> {
 
         @Override
         protected void onPreExecute() {
@@ -386,6 +413,7 @@ public class ChatActivity extends AppCompatActivity {
             } else {
                 FormBody body = new FormBody.Builder()
                         .add("token", params[0].token)
+                        .add("user_name", params[0].user_name)
                         .add("message", params[0].message)
                         .build();
 
@@ -396,7 +424,7 @@ public class ChatActivity extends AppCompatActivity {
 
                     if (response.isSuccessful()) {
                         String bodyStr = response.body().string();
-                        Log.e("FCM", "FCM_obj 444 = " + bodyStr);
+                        Log.e("FCM", "FCM_obj = " + bodyStr);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -461,7 +489,6 @@ public class ChatActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                Log.e("abc", "xxxxx : " + restData.getRest_img());
                 Picasso.get().load(restData.getRest_img())
                         .placeholder(R.drawable.icon_no_image)
                         .error(R.drawable.icon_no_image)
@@ -491,7 +518,7 @@ public class ChatActivity extends AppCompatActivity {
 //        });
 
         try {
-            restList = new CommonRestLikeTask(ChatActivity.this, httpClient).execute(Statics.my_id, toId, restData.getRest_id()).get();
+            restList = new CommonRestTask(ChatActivity.this, httpClient).execute(toId, restData.getRest_id()).get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

@@ -23,7 +23,7 @@ class CardStackAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val data = data[position]
         holder.name.text = "${data.rest_id}. ${data.rest_name}"
-        holder.city.text = data.rest_name+"xxxx"
+        holder.city.text = data.vicinity
         Glide.with(holder.image)
                 .load(data.rest_img)
                 .into(holder.image)

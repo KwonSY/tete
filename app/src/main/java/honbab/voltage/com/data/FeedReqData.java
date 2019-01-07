@@ -39,10 +39,10 @@ public class FeedReqData implements Serializable {
         this.usersList = usersList;
     }
 
-    public FeedReqData(String feed_id, String status, String feed_time,
-                       String place_id, String compound_code, String vicinity, LatLng latLng,
+    public FeedReqData(String feed_id, String feed_time, String status,
                        String host_id, String host_name, String host_img,
                        String rest_id, String rest_name, String rest_phone, String rest_img,
+                       String compound_code, LatLng latLng, String place_id, String vicinity,
                        ArrayList<UserData> usersList) {
         //피드
         this.feed_id = feed_id;

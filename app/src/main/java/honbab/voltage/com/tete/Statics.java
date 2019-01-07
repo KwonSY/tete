@@ -8,6 +8,7 @@ public class Statics {
     public static final String URL_SEND_MESSAGE = ROOT_URL + "send";
 
     public static String my_id;
+    public static String my_username;
     public static String my_gender;
     public static int i_splash = 0;
 }

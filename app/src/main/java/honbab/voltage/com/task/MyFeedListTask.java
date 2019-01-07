@@ -3,8 +3,6 @@ package honbab.voltage.com.task;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 
@@ -16,7 +14,6 @@ import org.json.JSONObject;
 import honbab.voltage.com.adapter.MyFeedListAdapter;
 import honbab.voltage.com.data.FeedData;
 import honbab.voltage.com.fragment.MyFeedFragment;
-import honbab.voltage.com.fragment.NoMyFeedFragment;
 import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.Statics;
 import okhttp3.FormBody;
@@ -41,8 +38,7 @@ public class MyFeedListTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected void onPreExecute() {
-        FragmentManager fm = ((MainActivity) mContext).getSupportFragmentManager();
-        fragment = fm.getFragments().get(0);
+        fragment = ((MainActivity) mContext).getSupportFragmentManager().getFragments().get(1);
 
         ((MyFeedFragment) fragment).feedList.clear();
         ((MyFeedFragment) fragment).mAdapter.clearItemList();
@@ -50,7 +46,6 @@ public class MyFeedListTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected Void doInBackground(Void... params) {
-        Log.e("abc", "MyFeedList my_id = " + Statics.my_id);
         FormBody body = new FormBody.Builder()
                 .add("opt", "my_feed_list")
                 .add("my_id", Statics.my_id)
@@ -150,12 +145,17 @@ public class MyFeedListTask extends AsyncTask<Void, Void, Void> {
 
             if (((MyFeedFragment) fragment).mAdapter.getItemCount() == 0) {
                 ((MyFeedFragment) fragment).line_timeline_vertical.setVisibility(View.INVISIBLE);
-                ((MainActivity) mContext).viewPager.setCurrentItem(1);
-                ((MainActivity) mContext).getSupportFragmentManager().beginTransaction()
-                        .replace(((MainActivity) mContext).viewPager.getChildAt(0).getId(), new NoMyFeedFragment())
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                        .addToBackStack("myfeed")
-                        .commit();
+                ((MyFeedFragment) fragment).layout_no_my_schedule.setVisibility(View.VISIBLE);
+                ((MyFeedFragment) fragment).swipeContainer_myfeed.setVisibility(View.INVISIBLE);
+//                ((MyFeedFragment) fragment).btn_go_rest_like.setOnClickListener(((MyFeedFragment) fragment).mOnClickListener);
+//                ((MainActivity) mContext).viewPager.setCurrentItem(0);
+//                ((MainActivity) mContext).getSupportFragmentManager().beginTransaction()
+//                        .replace(((MainActivity) mContext).viewPager.getChildAt(0).getId(), new NoMyFeedFragment())
+//                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+//                        .addToBackStack("myfeed")
+//                        .commit();
+            } else {
+                ((MyFeedFragment) fragment).swipeContainer_myfeed.setVisibility(View.VISIBLE);
             }
         }
     }

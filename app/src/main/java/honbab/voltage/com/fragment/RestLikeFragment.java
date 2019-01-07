@@ -3,7 +3,6 @@ package honbab.voltage.com.fragment;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,22 +11,18 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,24 +33,24 @@ import honbab.voltage.com.adapter.RestLikeListAdapter;
 import honbab.voltage.com.data.FeedReqData;
 import honbab.voltage.com.data.UserData;
 import honbab.voltage.com.task.AccountTask;
-import honbab.voltage.com.tete.GodTinderActivity;
+import honbab.voltage.com.task.RestLikeListTask;
+import honbab.voltage.com.tete.DelayBefroePickRestActivity;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.tete.ReservActivity;
 import honbab.voltage.com.tete.Statics;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
-import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
 
 public class RestLikeFragment extends Fragment {
     private OkHttpClient httpClient;
 
-    private SwipeRefreshLayout swipeContainer;
+    public SwipeRefreshLayout swipeContainer;
+    public TextView txt_feedTime;
     public RecyclerView recyclerView, recyclerView_cb;
     public RestLikeListAdapter mAdapter;
     public ChatListAdapter mAdapter_cb;
 
-    private ArrayList<FeedReqData> feedList = new ArrayList<>();
+    public ArrayList<FeedReqData> feedList = new ArrayList<>();
     private String my_id = Statics.my_id;
 
     @Override
@@ -86,7 +81,8 @@ public class RestLikeFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        new RestLikeListTask().execute();
+        new RestLikeListTask(getActivity(), httpClient).execute();
+
         loadFirebaseChatList();
     }
 
@@ -96,7 +92,7 @@ public class RestLikeFragment extends Fragment {
             @Override
             public void onRefresh() {
                 mAdapter.clearItemList();
-                new RestLikeListTask().execute();
+                new RestLikeListTask(getActivity(), httpClient).execute();
             }
         });
 
@@ -105,6 +101,9 @@ public class RestLikeFragment extends Fragment {
         recyclerView_cb.setLayoutManager(layoutManager2);
         mAdapter_cb = new ChatListAdapter(getActivity());
         recyclerView_cb.setAdapter(mAdapter_cb);
+
+        //Rest Like
+        txt_feedTime = (TextView) getActivity().findViewById(R.id.txt_feedTime);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         recyclerView = (RecyclerView) getActivity().findViewById(R.id.recyclerView_feed);
@@ -122,9 +121,8 @@ public class RestLikeFragment extends Fragment {
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.btn_go_pick_rest:
-                    Intent intent = new Intent(getActivity(), GodTinderActivity.class);
+                    Intent intent = new Intent(getActivity(), DelayBefroePickRestActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.putExtra("feedList", feedList);
                     startActivity(intent);
 
                     break;
@@ -151,100 +149,100 @@ public class RestLikeFragment extends Fragment {
         }
     };
 
-    //피드리스트
-    public class RestLikeListTask extends AsyncTask<Void, Void, Void> {
-        String my_id;
-
-        @Override
-        protected void onPreExecute() {
-            feedList.clear();
-            mAdapter.clearItemList();
-
-            if (Statics.my_id == null)
-                my_id = "0";
-            else
-                my_id = Statics.my_id;
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            FormBody body = new FormBody.Builder()
-                    .add("opt", "rest_like_list")
-                    .add("my_id", my_id)
-                    .build();
-
-            Request request = new Request.Builder().url(Statics.opt_url).post(body).build();
-
-            try {
-                okhttp3.Response response = httpClient.newCall(request).execute();
-                if (response.isSuccessful()) {
-                    String bodyStr = response.body().string();
-
-                    JSONObject obj = new JSONObject(bodyStr);
-
-                    JSONArray hash_arr = obj.getJSONArray("rest_like_list");
-                    for (int i=0; i<hash_arr.length(); i++) {
-                        JSONObject obj2 = hash_arr.getJSONObject(i);
-
-                        //음식점 정보
-                        JSONObject rest_obj = obj2.getJSONObject("rest");
-                        String rest_id = rest_obj.getString("sid");
-                        String rest_name = rest_obj.getString("name");
-                        String compound_code = rest_obj.getString("compound_code");
-                        String lat = rest_obj.getString("lat");
-                        String lng = rest_obj.getString("lng");
-                        Double db_lat = Double.parseDouble(lat);
-                        Double db_lng = Double.parseDouble(lng);
-                        LatLng latLng = new LatLng(db_lat, db_lng);
-                        String place_id = rest_obj.getString("place_id");
-                        String rest_phone = rest_obj.getString("phone");
-                        String rest_img = rest_obj.getString("img_url");
-                        String vicinity = rest_obj.getString("vicinity");
-
-                        ArrayList<UserData> usersList = new ArrayList<>();
-                        //좋아요 누른 User
-                        JSONArray users_arr = obj2.getJSONArray("users");
-                        for (int j=0; j<users_arr.length(); j++) {
-                            JSONObject user_obj = users_arr.getJSONObject(j);
-
-                            String user_id = user_obj.getString("sid");
-                            String user_name = user_obj.getString("name");
-                            String age = user_obj.getString("age");
-                            String gender = user_obj.getString("gender");
-                            String token = user_obj.getString("token");
-                            String user_img = Statics.main_url + user_obj.getString("img_url");
-
-                            UserData userData = new UserData(user_id, user_name,
-                                    age, gender, token, user_img, null);
-                            usersList.add(userData);
-                        }
-
-                        FeedReqData feedData = new FeedReqData(rest_id, rest_name, rest_img, rest_phone,
-                                compound_code, latLng, place_id, vicinity,
-                                usersList);
-                        feedList.add(feedData);
-                    }
-
-                } else {
-//                    Log.d(TAG, "Error : " + response.code() + ", " + response.message());
-                }
-
-            } catch (Exception e) {
-                Log.e("abc", "Error : " + e.getMessage());
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            mAdapter = new RestLikeListAdapter(getActivity(), httpClient, feedList);
-            recyclerView.setAdapter(mAdapter);
-            mAdapter.notifyDataSetChanged();
-
-            swipeContainer.setRefreshing(false);
-        }
-    }
+//    //피드리스트
+//    public class RestLikeListTaskxxxx extends AsyncTask<Void, Void, Void> {
+//        String my_id;
+//
+//        @Override
+//        protected void onPreExecute() {
+//            feedList.clear();
+//            mAdapter.clearItemList();
+//
+//            if (Statics.my_id == null)
+//                my_id = "0";
+//            else
+//                my_id = Statics.my_id;
+//        }
+//
+//        @Override
+//        protected Void doInBackground(Void... params) {
+//            FormBody body = new FormBody.Builder()
+//                    .add("opt", "rest_like_list")
+//                    .add("my_id", my_id)
+//                    .build();
+//
+//            Request request = new Request.Builder().url(Statics.opt_url).post(body).build();
+//
+//            try {
+//                okhttp3.Response response = httpClient.newCall(request).execute();
+//                if (response.isSuccessful()) {
+//                    String bodyStr = response.body().string();
+//
+//                    JSONObject obj = new JSONObject(bodyStr);
+//
+//                    JSONArray hash_arr = obj.getJSONArray("rest_like_list");
+//                    for (int i=0; i<hash_arr.length(); i++) {
+//                        JSONObject obj2 = hash_arr.getJSONObject(i);
+//
+//                        //음식점 정보
+//                        JSONObject rest_obj = obj2.getJSONObject("rest");
+//                        String rest_id = rest_obj.getString("sid");
+//                        String rest_name = rest_obj.getString("name");
+//                        String compound_code = rest_obj.getString("compound_code");
+//                        String lat = rest_obj.getString("lat");
+//                        String lng = rest_obj.getString("lng");
+//                        Double db_lat = Double.parseDouble(lat);
+//                        Double db_lng = Double.parseDouble(lng);
+//                        LatLng latLng = new LatLng(db_lat, db_lng);
+//                        String place_id = rest_obj.getString("place_id");
+//                        String rest_phone = rest_obj.getString("phone");
+//                        String rest_img = rest_obj.getString("img_url");
+//                        String vicinity = rest_obj.getString("vicinity");
+//
+//                        ArrayList<UserData> usersList = new ArrayList<>();
+//                        //좋아요 누른 User
+//                        JSONArray users_arr = obj2.getJSONArray("users");
+//                        for (int j=0; j<users_arr.length(); j++) {
+//                            JSONObject user_obj = users_arr.getJSONObject(j);
+//
+//                            String user_id = user_obj.getString("sid");
+//                            String user_name = user_obj.getString("name");
+//                            String age = user_obj.getString("age");
+//                            String gender = user_obj.getString("gender");
+//                            String token = user_obj.getString("token");
+//                            String user_img = Statics.main_url + user_obj.getString("img_url");
+//
+//                            UserData userData = new UserData(user_id, user_name,
+//                                    age, gender, token, user_img, null);
+//                            usersList.add(userData);
+//                        }
+//
+//                        FeedReqData feedData = new FeedReqData(rest_id, rest_name, rest_img, rest_phone,
+//                                compound_code, latLng, place_id, vicinity,
+//                                usersList);
+//                        feedList.add(feedData);
+//                    }
+//
+//                } else {
+////                    Log.d(TAG, "Error : " + response.code() + ", " + response.message());
+//                }
+//
+//            } catch (Exception e) {
+//                Log.e("abc", "Error : " + e.getMessage());
+//                e.printStackTrace();
+//            }
+//            return null;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Void aVoid) {
+////            mAdapter = new RestLikeListAdapter(getActivity(), httpClient, feedList);
+//            recyclerView.setAdapter(mAdapter);
+//            mAdapter.notifyDataSetChanged();
+//
+//            swipeContainer.setRefreshing(false);
+//        }
+//    }
 
 //    public class CheckReservTask extends AsyncTask<Void, Void, Void> {
 //        private String result;
@@ -347,14 +345,9 @@ public class RestLikeFragment extends Fragment {
                     public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                         Object o = dataSnapshot.getValue();
                         int plus = Integer.parseInt(o.toString());
-//                        i += plus;
-//                        Log.e("abc", "ooooooooooo = " + o.toString());
-                        Log.e("abc", "ooooooooooo plus = " + s + ", " + plus);
-//                        Log.e("abc", "ooooooooooo s = " + s);
+
                         if (plus > 0)
                             chatListHash.put(toId, plus);
-
-                        Log.e("abc", "ooooo chatListHash.size() " + chatListHash.size()+", ItemCount() " + mAdapter_cb.getItemCount() + " / "+ chatListHash.get("20"));
 
                         if (chatListHash.size() > mAdapter_cb.getItemCount()) {
                             try {

@@ -27,7 +27,7 @@ public class LoginTask extends AsyncTask<String, Void, String> {
     private ProgressDialog progressDialog;
 
     String result;
-    String user_name, age;
+    String age;
 
     public LoginTask(Context mContext, OkHttpClient httpClient) {
         this.mContext = mContext;
@@ -36,13 +36,6 @@ public class LoginTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPreExecute() {
-//        email = edit_email.getText().toString();
-//        password = edit_password.getText().toString();
-//
-//        Encryption.setPassword(password);
-//        Encryption.encryption(password);
-//        password = Encryption.getPassword();
-
         session = new SessionManager(mContext.getApplicationContext());
 
         progressDialog = new ProgressDialog(mContext);
@@ -67,8 +60,8 @@ public class LoginTask extends AsyncTask<String, Void, String> {
         try {
             okhttp3.Response response = httpClient.newCall(request).execute();
             if (response.isSuccessful()) {
-                String bodyStr = response.body().string()
-                        ;
+                String bodyStr = response.body().string();
+
                 JSONObject obj = new JSONObject(bodyStr);
 
                 result = obj.getString("result");
@@ -76,7 +69,7 @@ public class LoginTask extends AsyncTask<String, Void, String> {
                 if (result.equals("0")) {
                     JSONObject obj_user = obj.getJSONObject("user");
                     Statics.my_id = obj_user.getString("sid");
-                    user_name = obj_user.getString("user_name");
+                    Statics.my_username = obj_user.getString("user_name");
                     String email = obj_user.getString("email");
                     Statics.my_gender = obj_user.getString("gender");
                     age = obj_user.getString("age");
@@ -117,7 +110,7 @@ public class LoginTask extends AsyncTask<String, Void, String> {
                 //vvvvvvvvv
                 //1초정도 로그인 화면 보여주기
 
-                session.createLoginSession(Statics.my_id, Statics.my_gender);
+                session.createLoginSession(Statics.my_id, Statics.my_username ,Statics.my_gender);
 
                 //vvvvvvvvvvvv
 //                finish();

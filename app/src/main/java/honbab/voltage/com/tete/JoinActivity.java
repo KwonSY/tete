@@ -182,6 +182,7 @@ public class JoinActivity extends AppCompatActivity {
                     if (result.equals("0")) {
                         JSONObject obj_user = obj.getJSONObject("user");
                         Statics.my_id = obj_user.getString("sid");
+                        Statics.my_username = obj_user.getString("user_name");
                         email = obj.getString("email");
                         Statics.my_gender = obj.getString("gender");
                     }
@@ -201,7 +202,7 @@ public class JoinActivity extends AppCompatActivity {
 //                progressDialog.setMessage("가입 중...");
 //                progressDialog.show();
 
-                session.createLoginSession(Statics.my_id, Statics.my_gender);
+                session.createLoginSession(Statics.my_id, Statics.my_username, Statics.my_gender);
 
                 Toast.makeText(JoinActivity.this, "환영합니다. 우리 이제 같이먹어요!", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(getApplicationContext(), JoinActivity2.class);

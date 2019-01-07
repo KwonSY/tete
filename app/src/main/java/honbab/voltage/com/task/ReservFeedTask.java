@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 
+import honbab.voltage.com.data.RestData;
 import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.tete.Statics;
@@ -22,10 +23,11 @@ public class ReservFeedTask extends AsyncTask<String, Void, String> {
 
     String result;
     String date_reserv;
+    private RestData restData;
     String comment;
-    String lat, lng, place_id, rest_name, rest_phone, rest_img, compound_code, vicinity;
+//    String lat, lng, place_id, rest_name, rest_phone, rest_img, compound_code, vicinity;
 
-    public ReservFeedTask(Context mContext, OkHttpClient httpClient, String[] date, String[] rest) {
+    public ReservFeedTask(Context mContext, OkHttpClient httpClient, String[] date, RestData restData) {
         this.mContext = mContext;
         this.httpClient = httpClient;
 
@@ -51,16 +53,16 @@ public class ReservFeedTask extends AsyncTask<String, Void, String> {
 //        } else if (activityName.equals("ChatActivity")) {
 //            comment = ((ChatActivity) mContext).edit_comment.getText().toString();
 //        }
-
-        rest_name = rest[0];
-        compound_code = rest[1];
-        lat = rest[2];
-        lng = rest[3];
-        place_id = rest[4];
-        rest_img = rest[5];
-        rest_phone = rest[6];
-        vicinity = rest[7];
-        Log.e("abc", "ReservTask lat = " + lat + lng);
+        this.restData = restData;
+//        rest_name = rest[0];
+//        compound_code = rest[1];
+//        lat = rest[2];
+//        lng = rest[3];
+//        place_id = rest[4];
+//        rest_img = rest[5];
+//        rest_phone = rest[6];
+//        vicinity = rest[7];
+//        Log.e("abc", "ReservTask lat = " + lat + lng);
     }
 
     @Override
@@ -69,19 +71,19 @@ public class ReservFeedTask extends AsyncTask<String, Void, String> {
     }
 
     @Override
-    protected String doInBackground(String... objects) {
+    protected String doInBackground(String... params) {
         FormBody body = new FormBody.Builder()
                 .add("opt", "reservation")
                 .add("my_id", Statics.my_id)
-                .add("to_id", objects[0])
-                .add("rest_name", rest_name)
-                .add("compound_code", compound_code)
-                .add("lat", lat)
-                .add("lng", lng)
-                .add("place_id", place_id)
-                .add("phone", rest_phone)
-                .add("rest_img_url", rest_img)
-                .add("vicinity", vicinity)
+                .add("to_id", params[0])
+                .add("rest_name", restData.getRest_name())
+                .add("compound_code", restData.getCompound_code())
+                .add("lat", String.valueOf(restData.getLatitude()))
+                .add("lng", String.valueOf(restData.getLongtitue()))
+                .add("place_id", restData.getPlace_id())
+                .add("phone", restData.getRest_phone())
+                .add("rest_img_url", restData.getRest_img())
+                .add("vicinity", restData.getVicinity())
                 .add("date_reserv", date_reserv)
 //                .add("comment", comment)
                 .build();

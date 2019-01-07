@@ -13,7 +13,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,8 +29,8 @@ import honbab.voltage.com.data.FeedData;
 import honbab.voltage.com.data.UserData;
 import honbab.voltage.com.task.AccountTask;
 import honbab.voltage.com.task.MyFeedListTask;
-import honbab.voltage.com.tete.FeedMapActivity;
-import honbab.voltage.com.tete.LoginActivity;
+import honbab.voltage.com.tete.DelayBefroePickRestActivity;
+import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.ProfileActivity;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.tete.ReservActivity;
@@ -46,9 +48,13 @@ public class MyFeedFragment extends Fragment {
     private ImageView img_my;
     private TextView txt_myName, txt_comment;
     //마이피드
+    public SwipeRefreshLayout swipeContainer_myfeed;
     public SwipeRefreshLayout swipeContainer;
     public RecyclerView gridView_feed;
     public MyFeedListAdapter mAdapter;
+    //스케쥴없음
+    public LinearLayout layout_no_my_schedule;
+    public Button btn_go_rest_like;
 
     public ArrayList<FeedData> feedList = new ArrayList<>();
     private String my_id = Statics.my_id;
@@ -80,7 +86,7 @@ public class MyFeedFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.e("abc", "MyFeedFragment = " + Statics.my_id);
+
         new MyFeedListTask(getActivity(), httpClient).execute();
 
         try {
@@ -109,7 +115,7 @@ public class MyFeedFragment extends Fragment {
 
         img_my.setOnClickListener(mOnClickListener);
 
-
+        swipeContainer_myfeed = (SwipeRefreshLayout) getActivity().findViewById(R.id.swipeContainer_myfeed);
         swipeContainer = (SwipeRefreshLayout) getActivity().findViewById(R.id.swipeContainer_myfeed);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -124,9 +130,15 @@ public class MyFeedFragment extends Fragment {
         gridView_feed.setLayoutManager(layoutManager);
         mAdapter = new MyFeedListAdapter();
         gridView_feed.setAdapter(mAdapter);
+
+
+        //스케쥴없음
+        layout_no_my_schedule = (LinearLayout) getActivity().findViewById(R.id.layout_no_my_schedule);
+        btn_go_rest_like = (Button) getActivity().findViewById(R.id.btn_go_rest_like);
+        btn_go_rest_like.setOnClickListener(mOnClickListener);
     }
 
-    private View.OnClickListener mOnClickListener = new View.OnClickListener() {
+    public View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
@@ -137,24 +149,45 @@ public class MyFeedFragment extends Fragment {
                     startActivity(intent3);
 
                     break;
-                case R.id.btn_go_map:
-                    Intent intent = new Intent(getActivity(), FeedMapActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.putExtra("feedList", feedList);
-                    startActivity(intent);
+                case R.id.btn_go_rest_like:
+                    Fragment fragment = ((MainActivity) getActivity()).getSupportFragmentManager().getFragments().get(0);
+                    Log.e("abc", "씨발존나안되네" + ((RestLikeFragment) fragment).feedList.size());
 
-                    break;
-                case R.id.btn_reserve_google:
-                    Intent intent2;
-                    if (Statics.my_id == null) {
-                        intent2 = new Intent(getActivity(), LoginActivity.class);
-                        intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent2);
+                    if (((RestLikeFragment) fragment).mAdapter.getItemCount() > 0) {
+                        ((MainActivity) getActivity()).viewPager.setCurrentItem(0);
                     } else {
-//                        new CheckReservTask().execute();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setMessage("내가 원하는 시간, 음식점을 골라주세요");
+                        builder.setPositiveButton(R.string.search_godmuk_rest,
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent intent = new Intent(getActivity(), DelayBefroePickRestActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                        startActivity(intent);
+                                    }
+                                });
+                        builder.show();
                     }
 
                     break;
+//                case R.id.btn_go_map:
+//                    Intent intent = new Intent(getActivity(), FeedMapActivity.class);
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                    intent.putExtra("feedList", feedList);
+//                    startActivity(intent);
+//
+//                    break;
+//                case R.id.btn_reserve_google:
+//                    Intent intent2;
+//                    if (Statics.my_id == null) {
+//                        intent2 = new Intent(getActivity(), LoginActivity.class);
+//                        intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                        startActivity(intent2);
+//                    } else {
+////                        new CheckReservTask().execute();
+//                    }
+//
+//                    break;
             }
         }
     };

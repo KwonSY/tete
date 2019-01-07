@@ -74,7 +74,7 @@ public class CancleRestLikeTask extends AsyncTask<String, Void, Void> {
 
             if (activityName.equals("MainActivity")) {
                 FragmentManager fm = ((MainActivity) mContext).getSupportFragmentManager();
-                Fragment fragment = fm.getFragments().get(1);
+                Fragment fragment = fm.getFragments().get(0);
                 ((RestLikeFragment) fragment).mAdapter.removeAt(position);
             }
 

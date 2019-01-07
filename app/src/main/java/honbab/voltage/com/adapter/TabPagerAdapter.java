@@ -21,22 +21,18 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        // Returning the current tabs
         switch (position) {
             case 0:
+                RestLikeFragment tabFragment2 = new RestLikeFragment();
+                return tabFragment2;
+            case 1:
                 if (Statics.my_id == null) {
                     NoProfileFragment tabFragment1 = new NoProfileFragment();
-                    fm.beginTransaction().addToBackStack("myfeed").commit();
                     return tabFragment1;
                 } else {
                     MyFeedFragment tabFragment1 = new MyFeedFragment();
-                    fm.beginTransaction().addToBackStack("myfeed").commit();
                     return tabFragment1;
                 }
-            case 1:
-                RestLikeFragment tabFragment2 = new RestLikeFragment();
-                fm.beginTransaction().addToBackStack("restlike").commit();
-                return tabFragment2;
 
             default:
                 return null;

@@ -59,6 +59,7 @@
         <activity android:name=".FeedMapActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity android:name=".DelayHandlerActivity" />
+        <activity android:name=".DelayBefroePickRestActivity" />
         <activity android:name=".GridViewActivity" />
         <activity android:name=".MapsActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />

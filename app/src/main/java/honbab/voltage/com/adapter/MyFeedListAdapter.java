@@ -75,7 +75,7 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
                 mContext.startActivity(intent);
             }
         });
-        Picasso.get().load(Statics.main_url + data.getUser_img())
+        Picasso.get().load(data.getUser_img())
                 .resize(200,200)
                 .centerCrop()
                 .placeholder(R.drawable.icon_noprofile_circle)
@@ -94,7 +94,7 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
                 intent.putExtra("fromId", Statics.my_id);
                 intent.putExtra("toId", data.getUser_id());
                 intent.putExtra("toUserName", data.getUser_name());
-                intent.putExtra("toUserImg", data.getUser_name());
+                intent.putExtra("toUserImg", data.getUser_img());
                 intent.putExtra("toToken", data.getToken());
                 intent.putExtra("restData", restData);
                 mContext.startActivity(intent);

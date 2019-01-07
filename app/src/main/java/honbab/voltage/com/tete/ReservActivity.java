@@ -39,6 +39,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import honbab.voltage.com.adapter.GridViewNearByAdapter;
+import honbab.voltage.com.data.RestData;
 import honbab.voltage.com.task.GetNearPlacesTaskForReserv;
 import honbab.voltage.com.task.ReservFeedTask;
 import honbab.voltage.com.utils.ButtonUtil;
@@ -70,7 +71,8 @@ public class ReservActivity extends AppCompatActivity {
 //    int hour = 0;
 //    int min = 0;// Task post로 넘길 값
 
-    public String rest_name, place_id, lat, lng, rest_phone, rest_img, compound_code, vicinity;
+    public RestData restData;
+//    public String rest_name, place_id, lat, lng, rest_phone, rest_img, compound_code, vicinity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -233,14 +235,15 @@ public class ReservActivity extends AppCompatActivity {
                     break;
                 case R.id.btn_reserv:
                     String[] date = {String.valueOf(year), String.valueOf(month), String.valueOf(day), String.valueOf(hour), String.valueOf(min)};
-                    String[] rest = {rest_name, compound_code, lat, lng, place_id, rest_img, rest_phone, vicinity};
+                    RestData rData = restData;
+//                    String[] rest = {rest_name, compound_code, lat, lng, place_id, rest_img, rest_phone, vicinity};
 
                     Calendar curCal = Calendar.getInstance();
                     long time_setting = calendar.getTimeInMillis();
                     long time_current = curCal.getTimeInMillis();
 
                     if (time_setting > time_current) {
-                        new ReservFeedTask(ReservActivity.this, httpClient, date, rest).execute();
+                        new ReservFeedTask(ReservActivity.this, httpClient, date, rData).execute();
                     } else {
                         Toast.makeText(getApplicationContext(), R.string.cannot_reserve_past, Toast.LENGTH_SHORT).show();
                     }
