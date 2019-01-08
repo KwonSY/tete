@@ -1,115 +1,148 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_fragment_feed"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="honbab.voltage.com.tete.MainActivity">
 
-    <View
-        android:id="@+id/line_timeline_vertical"
-        android:layout_width="5dp"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="60dp"
-        android:layout_marginTop="50dp"
-        android:background="@color/mainColor" />
-
-    <LinearLayout
-        android:id="@+id/layout_no_my_schedule"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:orientation="vertical"
-        android:paddingLeft="50dp"
-        android:paddingRight="50dp"
-        android:paddingBottom="30dp"
-        android:visibility="visible">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="109dp"
-            android:layout_marginBottom="20dp"
-            android:text="@string/explain_go_to_get_feed"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <Button
-            android:id="@+id/btn_go_rest_like"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/btn_circle_bk1"
-            android:paddingLeft="40dp"
-            android:paddingRight="40dp"
-            android:text="@string/go_to_get_feed"
-            android:textSize="16sp" />
-    </LinearLayout>
-
     <RelativeLayout
-        android:id="@+id/layout_my_profile"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#00000000"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp">
+        android:layout_weight="1"
+        android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/img_my"
-            android:layout_width="@dimen/profile_l"
-            android:layout_height="@dimen/profile_l"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="20dp"
-            android:src="@drawable/icon_noprofile_circle" />
+        <View
+            android:id="@+id/line_timeline_vertical"
+            android:layout_width="5dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="58dp"
+            android:layout_marginTop="50dp"
+            android:background="@color/mainColor" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:id="@+id/layout_no_my_schedule"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@id/img_my"
-            android:layout_toRightOf="@id/img_my"
+            android:layout_centerInParent="true"
             android:orientation="vertical"
-            android:paddingLeft="26dp"
-            android:paddingRight="20dp">
+            android:paddingLeft="50dp"
+            android:paddingRight="50dp"
+            android:paddingBottom="30dp"
+            android:visibility="visible">
 
             <TextView
-                android:id="@+id/txt_myName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="11dp"
-                android:text="프로필 읽어오는 중..."
-                android:textSize="20sp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="109dp"
+                android:layout_marginBottom="20dp"
+                android:text="@string/explain_go_to_get_feed"
+                android:textColor="@color/black"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/txt_comment"
+            <Button
+                android:id="@+id/btn_go_rest_like"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/btn_circle_bk1"
+                android:paddingLeft="40dp"
+                android:paddingRight="40dp"
+                android:text="@string/go_to_get_feed"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_my_profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:paddingLeft="20dp"
+            android:paddingTop="20dp"
+            android:paddingRight="10dp">
+
+            <ImageView
+                android:id="@+id/img_my"
+                android:layout_width="@dimen/profile_l"
+                android:layout_height="@dimen/profile_l"
+                android:src="@drawable/icon_noprofile_circle" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/txt_myName"
-                android:layout_centerVertical="true"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="40dp"
-                android:layout_toRightOf="@id/image_myProfile"
-                android:background="@drawable/border_round_gr1"
-                android:hint="아직 소개글이 없습니다..."
-                android:padding="8dp"
-                android:text="" />
-        </LinearLayout>
-    </RelativeLayout>
+                android:layout_alignTop="@id/img_my"
+                android:layout_toRightOf="@id/img_my"
+                android:orientation="vertical"
+                android:paddingLeft="26dp"
+                android:paddingRight="20dp">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipeContainer_myfeed"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/layout_my_profile">
+                <TextView
+                    android:id="@+id/txt_myName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text="프로필 읽어오는 중..."
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/gridView_feed"
+                <TextView
+                    android:id="@+id/txt_comment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/txt_myName"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_toRightOf="@id/image_myProfile"
+                    android:background="@drawable/border_round_gr1"
+                    android:hint="아직 소개글이 없습니다..."
+                    android:padding="8dp"
+                    android:text="" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipeContainer_myfeed"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#00000000" />
-    </android.support.v4.widget.SwipeRefreshLayout>
+            android:layout_below="@id/layout_my_profile">
 
-</RelativeLayout>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/gridView_feed"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#00000000" />
+        </android.support.v4.widget.SwipeRefreshLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_chatlist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/title_chatlist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/whitegrey"
+            android:paddingLeft="14dp"
+            android:paddingTop="7dp"
+            android:paddingBottom="7dp"
+            android:text="대화중인 상대"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView_chat_before"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingTop="5dp"
+            android:layout_below="@id/title_chatlist" />
+    </LinearLayout>
+</LinearLayout>

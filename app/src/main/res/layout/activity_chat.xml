@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_drawer"
@@ -42,23 +42,39 @@
                 android:textSize="14sp" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btn_call_rest"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="46dp"
             android:layout_alignParentRight="true"
-            android:layout_marginTop="5dp"
-            android:layout_marginRight="9dp"
-            android:background="@drawable/btn_round_wh"
-            android:gravity="center"
-            android:maxHeight="38dp"
-            android:minWidth="0dp"
-            android:minHeight="35dp"
-            android:paddingLeft="11dp"
-            android:paddingRight="11dp"
-            android:text="식당 전화하기"
-            android:textColor="@color/black"
-            android:textSize="10sp" />
+            android:layout_marginRight="0dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_call_rest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="0dp"
+                android:background="@drawable/btn_round_wh"
+                android:gravity="center"
+                android:maxHeight="38dp"
+                android:minWidth="0dp"
+                android:minHeight="35dp"
+                android:paddingLeft="11dp"
+                android:paddingRight="11dp"
+                android:text="식당 전화하기"
+                android:textColor="@color/black"
+                android:textSize="10sp" />
+
+            <ImageView
+                android:id="@+id/icon_more_dots"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="0dp"
+                android:src="@drawable/icon_more_dots_v" />
+        </LinearLayout>
+
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -146,7 +162,7 @@
                 android:text="전송" />
         </LinearLayout>
     </RelativeLayout>
-
+<!--
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
@@ -154,5 +170,6 @@
         android:layout_gravity="right"
         android:paddingTop="31dp"
         app:headerLayout="@layout/drawer_chat" />
+-->
 
-</android.support.v4.widget.DrawerLayout>
+</RelativeLayout>

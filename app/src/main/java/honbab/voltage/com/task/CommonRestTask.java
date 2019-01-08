@@ -3,6 +3,7 @@ package honbab.voltage.com.task;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -108,7 +109,10 @@ public class CommonRestTask extends AsyncTask<String, Void, ArrayList<RestData>>
 //            Log.e("abc", "defalutPos = " + defalutPos);
             if (restList.size() > 0) {
                 ((ChatActivity) mContext).restData = restList.get(0);
+                ((ChatActivity) mContext).btn_call_rest.setVisibility(View.VISIBLE);
                 ((ChatActivity) mContext).btn_call_rest.setText(restList.get(0).getRest_name() + "\n" + restList.get(0).getRest_phone());
+            } else {
+                ((ChatActivity) mContext).btn_call_rest.setVisibility(View.GONE);
             }
 
             //채팅 우측 예약하기 버튼

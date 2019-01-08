@@ -2,14 +2,10 @@ package honbab.voltage.com.task;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 
 import org.json.JSONObject;
 
-import honbab.voltage.com.fragment.MyFeedFragment;
-import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.Statics;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -51,7 +47,7 @@ public class CancleFeedTask extends AsyncTask<String, Void, Void> {
             okhttp3.Response response = httpClient.newCall(request).execute();
             if (response.isSuccessful()) {
                 String bodyStr = response.body().string();
-
+                Log.e("abc", "CancleFeedTask  : " + bodyStr);
                 JSONObject obj = new JSONObject(bodyStr);
 
                 result = obj.getString("result");
@@ -74,9 +70,9 @@ public class CancleFeedTask extends AsyncTask<String, Void, Void> {
             String activityName = mContext.getClass().getSimpleName();
 
             if (activityName.equals("MainActivity")) {
-                FragmentManager fm = ((MainActivity) mContext).getSupportFragmentManager();
-                Fragment fragment = fm.getFragments().get(1);
-                ((MyFeedFragment) fragment).mAdapter.removeAt(position);
+//                FragmentManager fm = ((MainActivity) mContext).getSupportFragmentManager();
+//                Fragment fragment = fm.getFragments().get(0);
+//                ((RestLikeFragment) fragment).mAdapter.removeAt(position);
             } else if (activityName.equals("MyFeedListActivity")) {
 //                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 //                builder.setMessage(R.string.ask_cancle_godmuk);

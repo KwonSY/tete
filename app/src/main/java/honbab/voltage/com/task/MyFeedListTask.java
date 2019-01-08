@@ -26,10 +26,8 @@ public class MyFeedListTask extends AsyncTask<Void, Void, Void> {
 
     Fragment fragment;
 
-    String my_id;
-
+//    String my_id;
     String result;
-    String rest_name;
 
     public MyFeedListTask(Context mContext, OkHttpClient httpClient) {
         this.mContext = mContext;
@@ -94,7 +92,6 @@ public class MyFeedListTask extends AsyncTask<Void, Void, Void> {
                     String rest_img = rest_obj.getString("img_url");
 
                     //참가자
-//                        if (obj2.getJSONArray("users").length() > 0) {
                     JSONObject user_obj = obj2.getJSONArray("users").getJSONObject(0);
                     String user_id = user_obj.getString("sid");
                     String user_name = user_obj.getString("name");
@@ -104,7 +101,6 @@ public class MyFeedListTask extends AsyncTask<Void, Void, Void> {
                     String user_token = user_obj.getString("token");
 
                     FeedData feedData;
-                    Log.e("abc", "MyFeedTask = " + user_id + user_name + user_img);
                     if (host_id.equals(Statics.my_id)) {
                         feedData = new FeedData(feed_id, feed_time,
                                 user_id, user_name, user_age, user_gender, user_img, user_token,
@@ -155,6 +151,8 @@ public class MyFeedListTask extends AsyncTask<Void, Void, Void> {
 //                        .addToBackStack("myfeed")
 //                        .commit();
             } else {
+                ((MyFeedFragment) fragment).line_timeline_vertical.setVisibility(View.VISIBLE);
+                ((MyFeedFragment) fragment).layout_no_my_schedule.setVisibility(View.GONE);
                 ((MyFeedFragment) fragment).swipeContainer_myfeed.setVisibility(View.VISIBLE);
             }
         }

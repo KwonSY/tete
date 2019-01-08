@@ -4,18 +4,16 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.View;
 
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
-import honbab.voltage.com.adapter.RestLikeListAdapter;
+import honbab.voltage.com.adapter.RestLikeOneDateAdapter;
 import honbab.voltage.com.data.FeedData;
 import honbab.voltage.com.data.RestLikeData;
 import honbab.voltage.com.data.UserData;
@@ -65,7 +63,7 @@ public class RestLikeListTask extends AsyncTask<Void, Void, ArrayList<RestLikeDa
                 JSONObject obj = new JSONObject(bodyStr);
 
                 JSONArray hash_arr = obj.getJSONArray("rest_like");
-                for (int i=0; i<hash_arr.length(); i++) {
+                for (int i = 0; i < hash_arr.length(); i++) {
                     JSONObject restlikeObj = hash_arr.getJSONObject(i);
 
                     String feed_time = restlikeObj.getString("time");
@@ -73,7 +71,7 @@ public class RestLikeListTask extends AsyncTask<Void, Void, ArrayList<RestLikeDa
 
                     ArrayList<FeedData> feedList = new ArrayList<>();
 
-                    for (int j=0; j<feedArr.length(); j++) {
+                    for (int j = 0; j < feedArr.length(); j++) {
                         JSONObject feedObj = feedArr.getJSONObject(j);
 
                         String feed_id = feedObj.getString("sid");
@@ -94,7 +92,7 @@ public class RestLikeListTask extends AsyncTask<Void, Void, ArrayList<RestLikeDa
                         ArrayList<UserData> usersList = new ArrayList<>();
                         //음식점좋아요 누른 User
                         JSONArray users_arr = feedObj.getJSONArray("users");
-                        for (int k=0; k<users_arr.length(); k++) {
+                        for (int k = 0; k < users_arr.length(); k++) {
                             JSONObject user_obj = users_arr.getJSONObject(k);
 
                             String user_id = user_obj.getString("sid");
@@ -143,28 +141,40 @@ public class RestLikeListTask extends AsyncTask<Void, Void, ArrayList<RestLikeDa
 
         if (activityName.equals("MainActivity")) {
             if (restLikeList.size() > 0) {
-                String feed_time = restLikeList.get(0).getFeed_time();
-                ArrayList<FeedData> feedList = restLikeList.get(0).getFeedList();
-
-                try {
-                    SimpleDateFormat formatter = new SimpleDateFormat("MM월 dd일 hh:mm");
-                    SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-                    Date date = formatter2.parse(feed_time + "");
-                    Log.e("abc", "date : " + date.toString());
-                    String str_feed_time = formatter.format(date);
-                    Log.e("abc", "str_feed_time : " + str_feed_time);
-                    ((RestLikeFragment) fragment).txt_feedTime.setText(str_feed_time);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-                ((RestLikeFragment) fragment).mAdapter = new RestLikeListAdapter(mContext, httpClient, feedList);
+                ((RestLikeFragment) fragment).btn_go_tinder.setVisibility(View.VISIBLE);
+                ((RestLikeFragment) fragment).swipeContainer.setVisibility(View.VISIBLE);
+                ((RestLikeFragment) fragment).mAdapter = new RestLikeOneDateAdapter(mContext, httpClient, restLikeList);
                 ((RestLikeFragment) fragment).recyclerView.setAdapter(((RestLikeFragment) fragment).mAdapter);
                 ((RestLikeFragment) fragment).mAdapter.notifyDataSetChanged();
 
+                ((RestLikeFragment) fragment).layout_rest.setVisibility(View.GONE);
                 ((RestLikeFragment) fragment).swipeContainer.setRefreshing(false);
-            } else {
+//                try {
+////                    SimpleDateFormat formatter = new SimpleDateFormat("MM월 dd일 hh:mm");
+////                    SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+////                    Date date = formatter2.parse(feed_time + "");
+////                    Log.e("abc", "date : " + date.toString());
+////                    String str_feed_time = formatter.format(date);
+////                    Log.e("abc", "str_feed_time : " + str_feed_time);
+//
+////                    ((RestLikeOneDateAdapter) ((RestLikeFragment) fragment).mAdapter).
+////                    ((RestLikeFragment) fragment).mAdapter.txt_feedTime.setText(str_feed_time);
+//
+//                    ((RestLikeFragment) fragment).mAdapter = new RestLikeOneDateAdapter(mContext, httpClient, restLikeList);
+//                    ((RestLikeFragment) fragment).recyclerView.setAdapter(((RestLikeFragment) fragment).mAdapter);
+//                    ((RestLikeFragment) fragment).mAdapter.notifyDataSetChanged();
+//
+//                    ((RestLikeFragment) fragment).swipeContainer.setRefreshing(false);
+//                } catch (ParseException e) {
+//                    e.printStackTrace();
+//                }
 
+//                ((RestLikeFragment) fragment).mAdapter = new RestLikeListAdapter(mContext, httpClient, feedList);
+            } else {
+                ((RestLikeFragment) fragment).btn_go_tinder.setVisibility(View.GONE);
+                ((RestLikeFragment) fragment).swipeContainer.setVisibility(View.GONE);
+                ((RestLikeFragment) fragment).layout_rest.setVisibility(View.VISIBLE);
+                ((RestLikeFragment) fragment).swipeContainer.setRefreshing(false);
             }
         }
     }

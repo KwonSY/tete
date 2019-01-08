@@ -72,6 +72,12 @@ public class ReqFeedeeAdapter extends Adapter<ReqFeedeeAdapter.ViewHolder> {
                 .transform(new CircleTransform())
                 .into(holder.img_feedee);
         holder.txt_feedee_name.setText(data.getUser_name());
+        String gender = "";
+        if (data.getGender().equals("m"))
+            gender += " / 남";
+        else
+            gender += " / 여";
+        holder.txt_feedee_info.setText(data.getAge() + gender);
 
         holder.fromId = Statics.my_id;
         holder.toId = String.valueOf(data.getUser_id());
@@ -174,7 +180,7 @@ public class ReqFeedeeAdapter extends Adapter<ReqFeedeeAdapter.ViewHolder> {
 
         ImageView img_feedee;
         public ImageView btn_check_feedee;
-        TextView txt_feedee_name;
+        TextView txt_feedee_name, txt_feedee_info;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -182,6 +188,7 @@ public class ReqFeedeeAdapter extends Adapter<ReqFeedeeAdapter.ViewHolder> {
             img_feedee = itemView.findViewById(R.id.img_feedee);
             btn_check_feedee = itemView.findViewById(R.id.btn_check_feedee);
             txt_feedee_name = itemView.findViewById(R.id.txt_feedee_name);
+            txt_feedee_info = itemView.findViewById(R.id.txt_feedee_info);
         }
     }
 

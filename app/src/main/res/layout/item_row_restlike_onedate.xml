@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/layout_title_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/brightgrey"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:paddingLeft="14dp"
+        android:paddingTop="7dp"
+        android:paddingBottom="7dp">
+
+        <TextView
+            android:id="@+id/title_feedTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="내가 신청한 약속 시간 : "
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txt_feedTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/title_feedTime"
+            android:text=""
+            android:textSize="12sp"
+            android:textStyle="italic" />
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView_onedate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layout_title_time"
+        android:background="@color/white"
+        android:minHeight="65dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="10dp" />
+</RelativeLayout>

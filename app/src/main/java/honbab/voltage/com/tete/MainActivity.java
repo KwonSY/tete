@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
         Log.e("abc", "user.get(\"my_id\") = " + user.get("my_id"));
         Log.e("abc", "MainAct my_id = " + Statics.my_id);
+        Log.e("abc", "MainAct my_username = " + Statics.my_username);
         //Wifi check
 //        if (!NetworkUtil.isNetworkPresent(this)) {
         if (!NetworkUtil.isOnline(this)) {

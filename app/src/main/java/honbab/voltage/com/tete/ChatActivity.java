@@ -4,17 +4,16 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -22,6 +21,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -33,6 +33,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
@@ -43,6 +44,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Semaphore;
 
 import honbab.voltage.com.adapter.ChatAdapter;
 import honbab.voltage.com.data.ChatData;
@@ -56,9 +58,7 @@ import honbab.voltage.com.widget.CircleTransform;
 import honbab.voltage.com.widget.CustomTimePickerDialog;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
 import honbab.voltage.com.widget.SessionManager;
-import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
 
 public class ChatActivity extends AppCompatActivity {
     private OkHttpClient httpClient;
@@ -70,10 +70,13 @@ public class ChatActivity extends AppCompatActivity {
     public DrawerLayout drawerLayout;
     public TextView title_topbar;
     public Button btn_call_rest;
+    private ImageView icon_more_dots;
     private LinearLayout layout_no_chat;
     public RecyclerView recyclerView;
     public ChatAdapter mAdapter;
+    //채팅 입력창
     private EditText edit_chat;
+    private TextView btn_send;
 
     private String fromId = Statics.my_id, fromUserName;
     private String toId, toUserName = "상대방", toUserImg, toToken;
@@ -145,18 +148,24 @@ public class ChatActivity extends AppCompatActivity {
         btn_call_rest = (Button) findViewById(R.id.btn_call_rest);
         btn_call_rest.setText(restData.getRest_phone());
         btn_call_rest.setOnClickListener(mOnClickListener);
+        if (restData.getRest_id() == null || restData.getRest_id().equals(null)) {
+            btn_call_rest.setVisibility(View.GONE);
+        }
+
+        icon_more_dots = (ImageView) findViewById(R.id.icon_more_dots);
+        icon_more_dots.setOnClickListener(mOnClickListener);
 
         edit_chat = (EditText) findViewById(R.id.edit_chat);
 
-        TextView btn_send = (TextView) findViewById(R.id.btn_send_chat);
+        btn_send = (TextView) findViewById(R.id.btn_send_chat);
         btn_send.setOnClickListener(mOnClickListener);
 
         ButtonUtil.setBackButtonClickListener(this);
 
 
-        drawerLayout = (DrawerLayout) findViewById(R.id.layout_drawer);
-        drawerLayout.addDrawerListener(mDrawerListener);
-        setDrawerReserv();
+//        drawerLayout = (DrawerLayout) findViewById(R.id.layout_drawer);
+//        drawerLayout.addDrawerListener(mDrawerListener);
+//        setDrawerReserv();
     }
 
     @Override
@@ -207,7 +216,24 @@ public class ChatActivity extends AppCompatActivity {
 //                        // for ActivityCompat#requestPermissions for more details.
 //                        return;
 //                    }
+                    break;
+                case R.id.icon_more_dots:
+                    PopupMenu popupMenu = new PopupMenu(getApplicationContext(), icon_more_dots);
+                    popupMenu.inflate(R.menu.chatmenu);
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            switch (item.getItemId()) {
+                                case R.id.chat_out:
+                                    goOutFirebaseChat(fromId, fromId, toId);
 
+                                    return true;
+                            }
+
+                            return true;
+                        }
+                    });
+                    popupMenu.show();
 
                     break;
                 case R.id.btn_eat_with:
@@ -311,6 +337,11 @@ public class ChatActivity extends AppCompatActivity {
                         mAdapter.notifyDataSetChanged();
 
                         layout_no_chat.setVisibility(View.GONE);
+
+                        if (chatData.getType().equals("a")) {
+                            btn_send.setBackgroundResource(R.color.whitegrey);
+                            btn_send.setEnabled(false);
+                        }
                     }
 
                     @Override
@@ -327,7 +358,9 @@ public class ChatActivity extends AppCompatActivity {
 
             @Override
             public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
+                btn_send.setBackgroundResource(R.color.whitegrey);
+                btn_send.setEnabled(false);
+//                mDatabase.child("messages").child(dataSnapshot.getKey()).removeValue();
             }
 
             @Override
@@ -340,6 +373,141 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void goOutFirebaseChat(String fromId, String fromUserName, String toId) {
+
+        if (mAdapter.getLastType().equals("a")) {
+//            Log.e("abc", "xxxxxxxxxxxxx semaphore type " + mAdapter.getLastType());
+            Query query = mDatabase.child("user-messages").child(fromId).child(toId);
+//            mDatabase.child("user-messages").child(fromId).child(toId).addChildEventListener(new ChildEventListener() {
+//                @Override
+//                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+////                    int i = count;
+////                    i++;
+//                    count[0]++;
+//                    Log.e("abc", "xxxxxxxxxxxxx semaphore 벨류 " + dataSnapshot);
+//                    Log.e("abc", "xxxxxxxxxxxxx semaphore 갯수 " + dataSnapshot.getChildrenCount());
+////                    mDatabase.child("messages").child(dataSnapshot.getValue()).removeValue();
+//
+//                    for (int i=0; i<dataSnapshot.getChildrenCount(); i++) {
+//                        Object ooo = dataSnapshot.getKey();
+//                        ooo.hashCode();
+//                        Log.e("abc", "xxxxxxxxxxxxx semaphore ooo.hashCode() " + ooo.hashCode());
+//                    }
+//
+//                    if (count[0] >= dataSnapshot.getChildrenCount())
+//                        Log.e("abc", "xxxxxxxxxxxxx semaphore 끝 " + count[0]);
+//                    //mDatabase.child("user-messages").child(fromId).child(toId).removeValue();
+//                }
+//
+//                @Override
+//                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//
+//                }
+//
+//                @Override
+//                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+//
+//                }
+//
+//                @Override
+//                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//
+//                }
+//
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                }
+//            });
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    int i = 0;
+
+                    for (DataSnapshot child : dataSnapshot.getChildren()) {
+                        i++;
+//                        child.getKey();
+                        mDatabase.child("messages").child(child.getKey()).removeValue();
+
+                        if (i >= dataSnapshot.getChildrenCount()) {
+                            mDatabase.child("user-messages").child(fromId).child(toId).removeValue();
+
+                            finish();
+                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                        }
+                    }
+
+//                    if (count[0] >= dataSnapshot.getChildrenCount()) {
+//                        mDatabase.child("user-messages").child(fromId).child(toId).removeValue();
+//                        finish();
+//                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+//                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                        startActivity(intent);
+//                        Log.e("abc", "xxxxxxxxxxxxx semaphore 끝 ");
+//                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+
+
+
+        } else {
+            String type = "a";
+            String message = "상대방이 채팅방을 나갔습니다.";
+            HashMap<String, Object> timestamp = new HashMap<>();
+            timestamp.put("time", ServerValue.TIMESTAMP);
+
+            ChatData chatData = new ChatData(type, fromId, toId, message, timestamp);
+
+            DatabaseReference id_message = mDatabase.child("messages").push();
+            mDatabase.child("messages").child(id_message.getKey()).setValue(chatData);
+
+            Map<String, Object> taskMap = new HashMap<String, Object>();
+            taskMap.put(id_message.getKey(), 1);
+
+            mDatabase.child("user-messages").child(String.valueOf(toId)).child(String.valueOf(fromId)).updateChildren(taskMap);
+            mDatabase.child("user-messages").child(fromId).child(toId).removeValue();
+        }
+
+//        finish();
+//        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        startActivity(intent);
+    }
+
+    private void delChatMessage() throws InterruptedException {
+        Query query = mDatabase.child("user-messages").child(toId).child(fromId);
+
+        Semaphore semaphore = new Semaphore(0);
+        Log.e("abc", "xxxxxxxxxxxxx semaphore 돌아감 " + mAdapter.getLastType());
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.e("abc", "xxxxxxxxxxxxx semaphore 릴리즈 " + dataSnapshot.getKey());
+                mDatabase.child("messages").child(dataSnapshot.getKey()).removeValue();
+
+                semaphore.release();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        Log.e("abc", "xxxxxxxxxxxxx semaphore 어콰이어 " + mAdapter.getLastType());
+        semaphore.acquire();
+        Log.e("abc", "xxxxxxxxxxxxx semaphore 던 " + mAdapter.getLastType());
     }
 
     private void sendMessage(String type) {
@@ -371,7 +539,8 @@ public class ChatActivity extends AppCompatActivity {
         } else if (type.equals("a")) {
 
             message = toUserName + "님과 " +
-                    month + "월 " + day + "일 " + hour + "시 " + min + "분 " +
+                    month + "월 " + day + "일 " + hour + "시 " +
+//                    min + "분 " +
                     restData.getRest_name() + "에서 식사가 예약되었습니다.";
             final HashMap<String, Object> timestamp = new HashMap<>();
             timestamp.put("time", ServerValue.TIMESTAMP);
@@ -394,51 +563,9 @@ public class ChatActivity extends AppCompatActivity {
             edit_chat.setText("");
         }
 
+        Log.e("abc", "Statics.my_username = " + Statics.my_username);
         FcmData params = new FcmData(toToken, Statics.my_username, message);
         new ChatFCMTask(httpClient).execute(params);
-    }
-
-    private class ChatFCMTaskxxx extends AsyncTask<FcmData, Void, Void> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-        }
-
-        @Override
-        protected Void doInBackground(FcmData... params) {
-            if (params[0].token == null || params[0].token.equals("null")) {
-
-            } else {
-                FormBody body = new FormBody.Builder()
-                        .add("token", params[0].token)
-                        .add("user_name", params[0].user_name)
-                        .add("message", params[0].message)
-                        .build();
-
-                Request request = new Request.Builder().url(Statics.main_url + "fcm/push_chat.php").post(body).build();
-
-                try {
-                    okhttp3.Response response = httpClient.newCall(request).execute();
-
-                    if (response.isSuccessful()) {
-                        String bodyStr = response.body().string();
-                        Log.e("FCM", "FCM_obj = " + bodyStr);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-
-        }
     }
 
     public Spinner spinner_restName;
@@ -451,15 +578,15 @@ public class ChatActivity extends AppCompatActivity {
     private ArrayList<RestData> restList = new ArrayList<>();
 
     private void setDrawerReserv() {
-        NavigationView nav_view = (NavigationView) findViewById(R.id.nav_view);
-        View view = nav_view.getHeaderView(0);
+//        NavigationView nav_view = (NavigationView) findViewById(R.id.nav_view);
+//        View view = nav_view.getHeaderView(0);
 
-        spinner_restName = (Spinner) view.findViewById(R.id.spinner_restName);
-        img_rest = (ImageView) view.findViewById(R.id.img_rest);
-        txt_date = (TextView) view.findViewById(R.id.txt_date);
-        txt_clock = (TextView) view.findViewById(R.id.txt_clock);
-        edit_comment = (EditText) view.findViewById(R.id.edit_comment);
-        btn_reserv = (Button) view.findViewById(R.id.btn_reserv);
+//        spinner_restName = (Spinner) view.findViewById(R.id.spinner_restName);
+//        img_rest = (ImageView) view.findViewById(R.id.img_rest);
+//        txt_date = (TextView) view.findViewById(R.id.txt_date);
+//        txt_clock = (TextView) view.findViewById(R.id.txt_clock);
+//        edit_comment = (EditText) view.findViewById(R.id.edit_comment);
+//        btn_reserv = (Button) view.findViewById(R.id.btn_reserv);
 
         spinner_restName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -557,18 +684,19 @@ public class ChatActivity extends AppCompatActivity {
         else
             str_time += String.valueOf(hour) + "시 ";
 
-        if (min < 30) {
-            calendar.set(Calendar.MINUTE, 30);
-            min = 30;
-            str_time += "30분";
-        } else {
-            calendar.set(Calendar.MINUTE, 0);
-            min = 0;
-            str_time += "00분";
-        }
+//        if (min < 30) {
+//            calendar.set(Calendar.MINUTE, 30);
+//            min = 30;
+//            str_time += "30분";
+//        } else {
+//            calendar.set(Calendar.MINUTE, 0);
+//            min = 0;
+//            str_time += "00분";
+//        }
+        calendar.set(Calendar.MINUTE, 0);
+        min = 0;
         str_date = String.valueOf(month) + "/" + String.valueOf(day);
 
-//        txt_restName.setText(restData.getRest_name());
         txt_date.setText(str_date);
         txt_date.setOnClickListener(mOnClickListener);
         txt_clock.setText(str_time);

@@ -21,8 +21,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
 public class AccountTask extends AsyncTask<String, Void, UserData> {
-    private OkHttpClient httpClient;
     private Context mContext;
+    private OkHttpClient httpClient;
 
     private String user_id;
     private int seq;
@@ -90,7 +90,6 @@ public class AccountTask extends AsyncTask<String, Void, UserData> {
                 @Override
                 public void onSuccess(InstanceIdResult instanceIdResult) {
                     token = instanceIdResult.getToken();
-                    Log.e("abc", "업데이트 token 업데이트 = " + token);
 
                     if (!userData.getToken().equals(token))
                         new UpdateTokenTask(mContext, httpClient).execute(token);
@@ -99,6 +98,7 @@ public class AccountTask extends AsyncTask<String, Void, UserData> {
         }
 
         String activityName = mContext.getClass().getSimpleName();
+
         if (activityName.equals("ProfileActivity")) {
             if (seq == 0) {
                 ((ProfileActivity) mContext).title_topbar.setText(user_name + mContext.getResources().getString(R.string.whose_profile));
@@ -131,7 +131,7 @@ public class AccountTask extends AsyncTask<String, Void, UserData> {
 
             ((ProfileActivity) mContext).seq++;
         } else {
-            //MainActivity > MyFeedFragment는 get으로 해당 fragment에서 처리
+
         }
 
     }

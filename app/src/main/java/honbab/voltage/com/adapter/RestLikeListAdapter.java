@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import honbab.voltage.com.data.FeedData;
 import honbab.voltage.com.data.RestData;
 import honbab.voltage.com.data.UserData;
-import honbab.voltage.com.task.CancleRestLikeTask;
+import honbab.voltage.com.task.CancleFeedTask;
 import honbab.voltage.com.tete.OneRestaurantActivity;
 import honbab.voltage.com.tete.R;
 import okhttp3.OkHttpClient;
@@ -121,7 +121,10 @@ public class RestLikeListAdapter extends RecyclerView.Adapter<RestLikeListAdapte
                 builder.setPositiveButton(R.string.yes,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                new CancleRestLikeTask(mContext, httpClient, position).execute(data.getRest_id(), data.getRest_name());
+//                                new CancleRestLikeTask(mContext, httpClient, position).execute(data.getRest_id(), data.getRest_name());
+                                new CancleFeedTask(mContext, httpClient, position).execute(data.getFeed_id(), data.getRest_name());
+                                Log.e("abc", "position = " + position);
+                                removeAt(position);
                             }
                         });
                 builder.setNegativeButton(R.string.no,

@@ -146,6 +146,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
                 txt_chatMessage_item.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 txt_chatMessage_item.setBackgroundResource(R.color.brightgrey);
+                txt_chatMessage_item.setGravity(Gravity.CENTER);
                 txt_chatMessage_item.setTextColor(Color.parseColor("#ffffff"));
                 Log.e("chat", "CENTER");
             }
@@ -186,5 +187,9 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
         set.addAll(listViewItemList);
 
         newList = new ArrayList<ChatData>(set);
+    }
+
+    public String getLastType() {
+        return listViewItemList.get(listViewItemList.size() - 1).getType();
     }
 }

@@ -6,7 +6,7 @@
     <string name="acceptComplete">수락완료</string>
     <string name="agree_privacy">이용약관을 동의해주세요.</string>
     <string name="agree_personal">개인정보 취급방침을 동의해주세요.</string>
-    <string name="already_reserved_godmuk">오늘 이미 예약 중인 식사약속이 있습니다. 예약한 같먹을 보시겠습니까?</string>
+    <string name="already_reserved_godmuk">오늘 이미 예약시간을 걸어두셨습니다. 다른 시간으로 갱신하기겠습니까?</string>
     <string name="applicant">신청자</string>
     <string name="ask_godmuk_with">%s님과 같이 식사를 하시겠습니까?</string>
     <string name="ask_cancle_godmuk">같먹을 취소하시겠습니까?</string>

@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -19,11 +21,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
+import honbab.voltage.com.adapter.ChatListAdapter;
 import honbab.voltage.com.adapter.MyFeedListAdapter;
 import honbab.voltage.com.data.FeedData;
 import honbab.voltage.com.data.UserData;
@@ -42,7 +51,12 @@ import okhttp3.OkHttpClient;
 public class MyFeedFragment extends Fragment {
 
     private OkHttpClient httpClient;
+    private DatabaseReference mDatabase;
 
+    //채팅리스트
+    private TextView title_chatlist;
+    public RecyclerView recyclerView_cb;
+    public ChatListAdapter mAdapter_cb;
     //마이프로필
     public View line_timeline_vertical;
     private ImageView img_my;
@@ -104,9 +118,20 @@ public class MyFeedFragment extends Fragment {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        loadFirebaseChatList();
     }
 
     private void initControls() {
+        //채팅 리스트
+        title_chatlist = (TextView) getActivity().findViewById(R.id.title_chatlist);
+
+        LinearLayoutManager layoutManager2 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        recyclerView_cb = (RecyclerView) getActivity().findViewById(R.id.recyclerView_chat_before);
+        recyclerView_cb.setLayoutManager(layoutManager2);
+        mAdapter_cb = new ChatListAdapter(getActivity());
+        recyclerView_cb.setAdapter(mAdapter_cb);
+
         //마이 프로필
         img_my = (ImageView) getActivity().findViewById(R.id.img_my);
         txt_myName = (TextView) getActivity().findViewById(R.id.txt_myName);
@@ -217,62 +242,92 @@ public class MyFeedFragment extends Fragment {
         builder.show();
     }
 
-//    public class CheckReservTask extends AsyncTask<Void, Void, Void> {
-//        private String result;
-//        private String status;
-//
-//        @Override
-//        protected void onPreExecute() {
-//
-//        }
-//
-//        @Override
-//        protected Void doInBackground(Void... params) {
-//            FormBody body = new FormBody.Builder()
-//                    .add("opt", "check_reserv")
-//                    .add("my_id", Statics.my_id)
-//                    .build();
-//
-//            Request request = new Request.Builder().url(Statics.opt_url).post(body).build();
-//
-//            try {
-//                okhttp3.Response response = httpClient.newCall(request).execute();
-//
-//                if (response.isSuccessful()) {
-//                    String bodyStr = response.body().string();
-//
-//                    JSONObject obj = new JSONObject(bodyStr);
-//
-//                    result = obj.getString("result");
-//
-//                    if (!obj.isNull("feed")) {
-//                        JSONObject feedObj = obj.getJSONObject("feed");
-//                        status = feedObj.getString("status");
-//                    }
-//                } else {
-//                    Log.d("abc", "Error : " + response.code() + ", " + response.message());
-//                }
-//
-//            } catch (Exception e) {
-//                Log.e("abc", "Error : " + e.getMessage());
-//                e.printStackTrace();
-//            }
-//            return null;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Void aVoid) {
-//            if (result.equals("0")) {
-//                //예약없다
-//                Intent intent2 = new Intent(getActivity(), ReservActivity.class);
-//                intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                startActivity(intent2);
-//            } else {
-//                //예약있다
-//                //이미 예약하신 같먹이 있습니다. dialog
-//                MyFeedListActivity mActivity = new MyFeedListActivity();
-//                alertShow(mActivity);
-//            }
-//        }
-//    }
+    public void loadFirebaseChatList() {
+        final int i = 0;
+        HashMap<String, Integer> chatListHash = new HashMap<>();
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase.child("user-messages").child(Statics.my_id).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+//                i = 0;
+                String toId = dataSnapshot.getKey();
+                chatListHash.put(toId, 0);
+                mDatabase.child("user-messages").child(Statics.my_id).child(toId).limitToLast(1).addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                        Object o = dataSnapshot.getValue();
+                        int plus = Integer.parseInt(o.toString());
+
+                        if (plus > 0)
+                            chatListHash.put(toId, plus);
+
+                        if (chatListHash.size() > mAdapter_cb.getItemCount()) {
+                            try {
+                                UserData userData = new AccountTask(getActivity(), httpClient, 0).execute(toId).get();
+                                userData.setStatus(chatListHash.get(toId).toString());
+
+                                mAdapter_cb.addItem(userData);
+                                recyclerView_cb.setAdapter(mAdapter_cb);
+                            } catch (ExecutionException e) {
+                                e.printStackTrace();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                        if (mAdapter_cb.getItemCount() == 0)
+                            title_chatlist.setVisibility(View.INVISIBLE);
+                        else
+                            title_chatlist.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        if (mAdapter_cb.getItemCount() == 0)
+            title_chatlist.setVisibility(View.INVISIBLE);
+        else
+            title_chatlist.setVisibility(View.VISIBLE);
+    }
 }

@@ -8,101 +8,86 @@
     android:background="@color/white"
     tools:context="honbab.voltage.com.tete.MainActivity">
 
-    <TextView
-        android:id="@+id/title_chatlist"
+    <LinearLayout
+        android:id="@+id/layout_rest"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/whitegrey"
-        android:padding="10dp"
-        android:text="대화중인 상대방"
-        android:textSize="14sp"
-        android:textStyle="bold" />
+        android:layout_centerInParent="true"
+        android:visibility="invisible"
+        android:background="@color/white"
+        android:orientation="vertical">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView_chat_before"
+        <TextView
+            android:id="@+id/txt_no_req"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="20dp"
+            android:text="@string/explain_search_godmuk_rest"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btn_go_pick_rest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="32dp"
+            android:background="@drawable/btn_circle_bk1"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp"
+            android:text="@string/search_godmuk_rest"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardView_go_godtinder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/title_chatlist" />
+        android:layout_marginLeft="19dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="19dp"
+        android:layout_marginBottom="11dp"
+        app:cardCornerRadius="9dp">
+
+        <RelativeLayout
+            android:id="@+id/btn_go_tinder"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:background="@drawable/btn_round_or5"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/icon_godtinder"
+                android:layout_width="39dp"
+                android:layout_height="39dp"
+                android:background="@drawable/circle_or_wh"
+                android:src="@drawable/icon_godmuk" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/icon_godtinder"
+                android:text="식사시간 예약하기" />
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipeContainer_feed"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/recyclerView_chat_before">
+        android:layout_height="wrap_content"
+        android:layout_below="@id/cardView_go_godtinder">
 
-        <RelativeLayout
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView_feed"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:id="@+id/layout_rest"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:background="@color/white"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/txt_no_req"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="20dp"
-                    android:text="@string/explain_search_godmuk_rest"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <Button
-                    android:id="@+id/btn_go_pick_rest"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="32dp"
-                    android:background="@drawable/btn_circle_bk1"
-                    android:paddingLeft="40dp"
-                    android:paddingRight="40dp"
-                    android:text="@string/search_godmuk_rest"
-                    android:textSize="16sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layout_feed_time"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/whitegrey"
-                android:orientation="horizontal"
-                android:paddingLeft="10dp"
-                android:paddingTop="9dp"
-                android:paddingBottom="9dp">
-
-                <TextView
-                    android:id="@+id/title_feedTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="내가 신청한 약속 시간 : "
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/txt_feedTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_toRightOf="@id/title_feedTime"
-                    android:text=""
-                    android:textSize="14sp"
-                    android:textStyle="normal" />
-            </LinearLayout>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerView_feed"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/layout_feed_time"
-                android:background="@color/white" />
-        </RelativeLayout>
+            android:layout_height="wrap_content"
+            android:background="@color/white" />
     </android.support.v4.widget.SwipeRefreshLayout>
 
 </RelativeLayout>
