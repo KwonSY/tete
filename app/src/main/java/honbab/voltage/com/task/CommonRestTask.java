@@ -27,7 +27,7 @@ public class CommonRestTask extends AsyncTask<String, Void, ArrayList<RestData>>
     //    private ArrayList<String> restNameList = new ArrayList<>();
 //    private String result;
 //    private int defalutPos = 0;
-    private String pick_rest_id;
+    private String user_id;
 
     public CommonRestTask(Context mContext, OkHttpClient httpClient) {
         this.mContext = mContext;
@@ -42,13 +42,12 @@ public class CommonRestTask extends AsyncTask<String, Void, ArrayList<RestData>>
 
     @Override
     protected ArrayList<RestData> doInBackground(String... params) {
-//        pick_rest_id = params[1];
-//        Log.e("abc", "pick_rest_id = " + pick_rest_id);
+        user_id = params[0];
 
         FormBody body = new FormBody.Builder()
                 .add("opt", "common_rest")
                 .add("my_id", Statics.my_id)
-                .add("user_id", params[0])
+                .add("user_id", user_id)
                 .build();
 
         Request request = new Request.Builder().url(Statics.opt_url).post(body).build();
@@ -114,6 +113,8 @@ public class CommonRestTask extends AsyncTask<String, Void, ArrayList<RestData>>
             } else {
                 ((ChatActivity) mContext).btn_call_rest.setVisibility(View.GONE);
             }
+
+            new AccountTask(mContext, 0).execute(user_id);
 
             //채팅 우측 예약하기 버튼
 //            SpinnerAdapter spinnerAdapter = new ArrayAdapter(mContext, R.layout.support_simple_spinner_dropdown_item, restNameList);

@@ -44,6 +44,16 @@ public class RestLikeFragment extends Fragment {
     public ArrayList<FeedReqData> feedList = new ArrayList<>();
     private String my_id = Statics.my_id;
 
+    public static RestLikeFragment newInstance (int val) {
+        RestLikeFragment fragment = new RestLikeFragment();
+
+        Bundle args = new Bundle();
+        args.putInt("val", val);
+        fragment.setArguments(args);
+
+        return fragment;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="32dp"
-            android:background="@drawable/btn_circle_bk1"
+            android:background="@drawable/btn_circle_or1"
             android:paddingLeft="40dp"
             android:paddingRight="40dp"
             android:text="@string/search_godmuk_rest"

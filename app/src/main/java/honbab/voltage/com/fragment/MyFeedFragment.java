@@ -26,15 +26,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
 import honbab.voltage.com.adapter.ChatListAdapter;
 import honbab.voltage.com.adapter.MyFeedListAdapter;
-import honbab.voltage.com.data.FeedData;
 import honbab.voltage.com.data.UserData;
 import honbab.voltage.com.task.AccountTask;
 import honbab.voltage.com.task.MyFeedListTask;
@@ -44,7 +41,6 @@ import honbab.voltage.com.tete.ProfileActivity;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.tete.ReservActivity;
 import honbab.voltage.com.tete.Statics;
-import honbab.voltage.com.widget.CircleTransform;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
 import okhttp3.OkHttpClient;
 
@@ -54,13 +50,13 @@ public class MyFeedFragment extends Fragment {
     private DatabaseReference mDatabase;
 
     //채팅리스트
-    private TextView title_chatlist;
+    public TextView title_chatlist;
     public RecyclerView recyclerView_cb;
     public ChatListAdapter mAdapter_cb;
     //마이프로필
     public View line_timeline_vertical;
-    private ImageView img_my;
-    private TextView txt_myName, txt_comment;
+    public ImageView img_my;
+    public TextView txt_myName, txt_comment;
     //마이피드
     public SwipeRefreshLayout swipeContainer_myfeed;
     public SwipeRefreshLayout swipeContainer;
@@ -70,8 +66,18 @@ public class MyFeedFragment extends Fragment {
     public LinearLayout layout_no_my_schedule;
     public Button btn_go_rest_like;
 
-    public ArrayList<FeedData> feedList = new ArrayList<>();
+//    public ArrayList<FeedData> feedList = new ArrayList<>();
     private String my_id = Statics.my_id;
+
+    public static MyFeedFragment newInstance(int val) {
+        MyFeedFragment fragment = new MyFeedFragment();
+
+        Bundle args = new Bundle();
+        args.putInt("val2", val);
+        fragment.setArguments(args);
+
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -101,23 +107,22 @@ public class MyFeedFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        new MyFeedListTask(getActivity(), httpClient).execute();
-
-        try {
-            UserData myData = new AccountTask(getActivity(), httpClient, 0).execute(my_id).get();
-
-            Picasso.get().load(myData.getImg_url())
-                    .placeholder(R.drawable.icon_noprofile_circle)
-                    .error(R.drawable.icon_noprofile_circle)
-                    .transform(new CircleTransform())
-                    .into(img_my);
-            txt_myName.setText(myData.getUser_name());
-            txt_comment.setText(myData.getComment());
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        new MyFeedListTask(getActivity()).execute();
+//        try {
+//            UserData myData = new AccountTask(getActivity(), httpClient, 0).execute(my_id).get();
+//
+//            Picasso.get().load(myData.getImg_url())
+//                    .placeholder(R.drawable.icon_noprofile_circle)
+//                    .error(R.drawable.icon_noprofile_circle)
+//                    .transform(new CircleTransform())
+//                    .into(img_my);
+//            txt_myName.setText(myData.getUser_name());
+//            txt_comment.setText(myData.getComment());
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
 
         loadFirebaseChatList();
     }
@@ -146,7 +151,7 @@ public class MyFeedFragment extends Fragment {
             @Override
             public void onRefresh() {
                 mAdapter.clearItemList();
-                new MyFeedListTask(getActivity(), httpClient).execute();
+                new MyFeedListTask(getActivity()).execute();
             }
         });
 
@@ -175,8 +180,9 @@ public class MyFeedFragment extends Fragment {
 
                     break;
                 case R.id.btn_go_rest_like:
-                    Fragment fragment = ((MainActivity) getActivity()).getSupportFragmentManager().getFragments().get(0);
-                    Log.e("abc", "씨발존나안되네" + ((RestLikeFragment) fragment).feedList.size());
+//                    Fragment fragment = ((MainActivity) getActivity()).getSupportFragmentManager().getFragments().get(0);
+                    Fragment fragment = ((MainActivity) getActivity()).getSupportFragmentManager().findFragmentByTag("page:0");
+//                    Log.e("abc", "씨발존나안되네" + ((RestLikeFragment) fragment).feedList.size());
 
                     if (((RestLikeFragment) fragment).mAdapter.getItemCount() > 0) {
                         ((MainActivity) getActivity()).viewPager.setCurrentItem(0);
@@ -243,6 +249,8 @@ public class MyFeedFragment extends Fragment {
     }
 
     public void loadFirebaseChatList() {
+        title_chatlist.setVisibility(View.GONE);
+
         final int i = 0;
         HashMap<String, Integer> chatListHash = new HashMap<>();
 
@@ -264,11 +272,14 @@ public class MyFeedFragment extends Fragment {
 
                         if (chatListHash.size() > mAdapter_cb.getItemCount()) {
                             try {
-                                UserData userData = new AccountTask(getActivity(), httpClient, 0).execute(toId).get();
+                                UserData userData = new AccountTask(getActivity(), 0).execute(toId).get();
+                                Log.e("abc", "AccountTask userData = " + userData.getUser_name());
                                 userData.setStatus(chatListHash.get(toId).toString());
 
                                 mAdapter_cb.addItem(userData);
                                 recyclerView_cb.setAdapter(mAdapter_cb);
+
+                                title_chatlist.setVisibility(View.VISIBLE);
                             } catch (ExecutionException e) {
                                 e.printStackTrace();
                             } catch (InterruptedException e) {
@@ -324,10 +335,5 @@ public class MyFeedFragment extends Fragment {
 
             }
         });
-
-        if (mAdapter_cb.getItemCount() == 0)
-            title_chatlist.setVisibility(View.INVISIBLE);
-        else
-            title_chatlist.setVisibility(View.VISIBLE);
     }
 }

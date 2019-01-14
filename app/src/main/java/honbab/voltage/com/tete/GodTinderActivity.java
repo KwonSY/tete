@@ -38,7 +38,7 @@ public class GodTinderActivity extends AppCompatActivity {
     private CardStackView cardStackView;
 
     private String feed_location;
-    private String[] feed_time;
+    private String feed_time;
     private ArrayList<RestData> restList = new ArrayList<>();
 
     @Override
@@ -51,7 +51,7 @@ public class GodTinderActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         feed_location = intent.getStringExtra("feed_location");
-        feed_time = intent.getStringArrayExtra("feed_time");
+        feed_time = intent.getStringExtra("feed_time");
 
         TextView title_topbar = (TextView) findViewById(R.id.title_topbar);
         title_topbar.setText("");
@@ -164,14 +164,9 @@ public class GodTinderActivity extends AppCompatActivity {
 //                String rest_id = String.valueOf(restList.get(position - 1).getRest_id());
                 String rest_id = restData.getRest_id();
 
-
-//                String[] rest = {restData.getRest_name(), restData.getCompound_code(),
-//                        String.valueOf(restData.getLatitude()), String.valueOf(restData.getLongtitue()),
-//                        restData.getPlace_id(), restData.getRest_img(), restData.getRest_phone(), restData.getVicinity()};
-
                 if (!like_yn.equals(""))
 //                    new RestLikeTask(GodTinderActivity.this, httpClient).execute(rest_id, like_yn);
-                    new ReservFeedTask(GodTinderActivity.this, httpClient, feed_time, restData).execute("", "n");
+                    new ReservFeedTask(GodTinderActivity.this, httpClient, restData).execute("", feed_time);
 
                 if (position == restList.size())
                     cardStackView.setVisibility(View.GONE);

@@ -1,6 +1,8 @@
 package honbab.voltage.com.tete;
 
 import android.app.AlarmManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -8,8 +10,10 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -19,11 +23,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.github.arturogutierrez.Badges;
+import com.github.arturogutierrez.BadgesNotSupportedException;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import honbab.voltage.com.adapter.TabPagerAdapter;
+import honbab.voltage.com.fragment.MyFeedFragment;
+import honbab.voltage.com.fragment.NoProfileFragment;
+import honbab.voltage.com.fragment.RestLikeFragment;
 import honbab.voltage.com.task.VersionTask;
 import honbab.voltage.com.utils.NetworkUtil;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
@@ -36,6 +48,12 @@ public class MainActivity extends AppCompatActivity {
 
     public TabPagerAdapter pagerAdapter;
     public ViewPager viewPager;
+
+    public RestLikeFragment restLikeFragment = new RestLikeFragment();
+    public MyFeedFragment myFeedFragment = new MyFeedFragment();
+    public NoProfileFragment noProfileFragment = new NoProfileFragment();
+
+    int tab_position = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,12 +68,11 @@ public class MainActivity extends AppCompatActivity {
         Statics.my_username = user.get("my_username");
         Statics.my_gender = user.get("my_gender");
 
-        Log.e("abc", "user.get(\"my_id\") = " + user.get("my_id"));
-        Log.e("abc", "MainAct my_id = " + Statics.my_id);
         Log.e("abc", "MainAct my_username = " + Statics.my_username);
         //Wifi check
 //        if (!NetworkUtil.isNetworkPresent(this)) {
         if (!NetworkUtil.isOnline(this)) {
+            //인터넷이 안 될 때
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage(R.string.connect_network);
             builder.setPositiveButton(R.string.yes,
@@ -81,11 +98,20 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             } else {
 
-                if (Statics.my_id == null) {
+                if (Statics.my_id == null || Statics.my_username == null) {
                     Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     finish();
+                }
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    // Create channel to show notifications.
+                    String channelId  = getString(R.string.default_notification_channel_id);
+                    String channelName = getString(R.string.default_notification_channel_name);
+                    NotificationManager notificationManager = getSystemService(NotificationManager.class);
+                    notificationManager.createNotificationChannel(new NotificationChannel(channelId,
+                            channelName, NotificationManager.IMPORTANCE_LOW));
                 }
 
 
@@ -110,8 +136,17 @@ public class MainActivity extends AppCompatActivity {
                 tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.tab_2_my)));
                 tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
+                List<Fragment> fragmentList = new ArrayList<>();
+//                fragmentList.add(new RestLikeFragment());
+                fragmentList.add(restLikeFragment);
+                if (Statics.my_id == null) {
+                    fragmentList.add(noProfileFragment);
+                } else {
+                    fragmentList.add(myFeedFragment);
+                }
+
                 viewPager = (ViewPager) findViewById(R.id.viewPager);
-                pagerAdapter = new TabPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+                pagerAdapter = new TabPagerAdapter(getSupportFragmentManager(), MainActivity.this, fragmentList, tabLayout.getTabCount());
                 viewPager.setAdapter(pagerAdapter);
                 viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
                 tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -130,13 +165,14 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 });
+//                pagerAdapter.setPrimaryItem(pagerAdapter.getC);
+//                pagerAdapter.getFragmentTag(0x7f0901fe, 0);
 
                 ImageView btn_go_tinder = (ImageView) findViewById(R.id.btn_go_tinder);
                 btn_go_tinder.setOnClickListener(mOnClickListener);
 
                 Intent intent = getIntent();
-                int position = intent.getIntExtra("position", 0);
-                viewPager.setCurrentItem(position);
+                tab_position = intent.getIntExtra("position", 0);
             }
 
         }
@@ -149,6 +185,17 @@ public class MainActivity extends AppCompatActivity {
 
         if (NetworkUtil.isOnline(this)) {
             new VersionTask(MainActivity.this, httpClient).execute();
+        }
+
+        viewPager.setCurrentItem(tab_position);
+
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
+
+        try {
+            Badges.setBadge(this, 0);
+        } catch (BadgesNotSupportedException e) {
+            e.printStackTrace();
         }
     }
 

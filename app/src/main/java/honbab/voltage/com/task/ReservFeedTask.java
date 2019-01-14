@@ -21,29 +21,28 @@ public class ReservFeedTask extends AsyncTask<String, Void, String> {
     private Context mContext;
     private OkHttpClient httpClient;
 
-    String result;
-    String date_reserv;
+    private String result;
+    private String date_reserv;
     private RestData restData;
-    String comment;
 //    String lat, lng, place_id, rest_name, rest_phone, rest_img, compound_code, vicinity;
 
-    public ReservFeedTask(Context mContext, OkHttpClient httpClient, String[] date, RestData restData) {
+    public ReservFeedTask(Context mContext, OkHttpClient httpClient, RestData restData) {
         this.mContext = mContext;
         this.httpClient = httpClient;
 
-        String year = date[0];
-        String month = date[1];
-        String day = date[2];
-        String hour = date[3];
-        String min = date[4];
-
-        String str_year = String.valueOf(year);
-        String str_mon = String.valueOf(month);
-        String str_da = String.valueOf(day);
-        String str_hour = String.valueOf(hour);
-        String str_min = String.valueOf(min);
-        date_reserv = str_year + "-" + str_mon + "-" + str_da + " " + str_hour + ":" + str_min;
-        Log.e("abc", "ReservTask date_reserv = " + date_reserv);
+//        String year = date[0];
+//        String month = date[1];
+//        String day = date[2];
+//        String hour = date[3];
+//        String min = date[4];
+//
+//        String str_year = String.valueOf(year);
+//        String str_mon = String.valueOf(month);
+//        String str_da = String.valueOf(day);
+//        String str_hour = String.valueOf(hour);
+//        String str_min = String.valueOf(min);
+//        date_reserv = str_year + "-" + str_mon + "-" + str_da + " " + str_hour + ":" + str_min;
+//        Log.e("abc", "ReservTask date_reserv = " + date_reserv);
 
 //        String activityName = mContext.getClass().getSimpleName();
 //        if (activityName.equals("OneRestaurantActivity")) {
@@ -84,7 +83,7 @@ public class ReservFeedTask extends AsyncTask<String, Void, String> {
                 .add("phone", restData.getRest_phone())
                 .add("rest_img_url", restData.getRest_img())
                 .add("vicinity", restData.getVicinity())
-                .add("date_reserv", date_reserv)
+                .add("date_reserv", params[1])
 //                .add("comment", comment)
                 .build();
 

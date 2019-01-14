@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="15dp"
+    android:background="@color/white"
     tools:context="honbab.voltage.com.tete.JoinActivity2">
 
     <View
@@ -30,14 +31,20 @@
             android:paddingLeft="25dp"
             android:paddingRight="25dp">
 
+            <ImageView
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/logo_oneline_bk"/>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="22dp"
-                android:layout_marginTop="15dp"
                 android:gravity="center_horizontal"
-                android:text="이제 같이 먹어요!&#10;밥 걱정없이 밥친구를 만들어요."
+                android:text="혼밥 걱정없이 밥친구를 만들어요."
                 android:textSize="16sp" />
 
             <ImageView

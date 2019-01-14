@@ -25,6 +25,7 @@ public class ChatFCMTask extends AsyncTask<FcmData, Void, Void> {
         } else {
             FormBody body = new FormBody.Builder()
                     .add("token", params[0].token)
+                    .add("user_id", params[0].user_id)
                     .add("user_name", params[0].user_name)
                     .add("message", params[0].message)
                     .build();

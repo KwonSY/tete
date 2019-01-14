@@ -1,7 +1,10 @@
 package honbab.voltage.com.utils;
 
 import android.app.Application;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.SharedPreferences;
+import android.os.Build;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -22,12 +25,28 @@ public class AppController extends Application {
     //We will store the user data in sharedpreferences
     private SharedPreferences sharedPreferences;
 
+    public static final String CHANNEL_1_ID = "channel1";
+    public static final String CHANNEL_2_ID = "channel2";
+
     //class instance will be initialized on app launch
     @Override
     public void onCreate() {
         super.onCreate();
-        mInstance = this;
+
+        createNotificationChannels();
+//        mInstance = this;
     }
+
+    private void createNotificationChannels() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel1 = new NotificationChannel(CHANNEL_1_ID, "Channel 1",
+                    NotificationManager.IMPORTANCE_HIGH);
+//            channel1.setSound(Uri.parse("android.resource://" + get.getPackageName() + "/" + R.raw.alarm_godmuk1));
+        }
+    }
+
+
+
 
     //Public static method to get the instance of this class
     public static synchronized AppController getInstance() {

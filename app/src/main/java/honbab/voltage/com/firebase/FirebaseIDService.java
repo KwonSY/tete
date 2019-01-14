@@ -5,6 +5,9 @@ import android.util.Log;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
+import honbab.voltage.com.task.UpdateTokenTask;
+import honbab.voltage.com.tete.Statics;
+
 public class FirebaseIDService extends FirebaseInstanceIdService {
     private static final String TAG = "FirebaseIDService";
 
@@ -20,5 +23,7 @@ public class FirebaseIDService extends FirebaseInstanceIdService {
 
     private void sendRegistrationToServer(String token) {
         // Add custom implementation, as needed.
+        if (Statics.my_id != null)
+        new UpdateTokenTask(getApplicationContext()).execute(token);
     }
 }

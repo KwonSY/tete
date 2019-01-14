@@ -7,15 +7,23 @@ import android.util.Log;
 import android.view.View;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+
 import honbab.voltage.com.adapter.MyFeedListAdapter;
 import honbab.voltage.com.data.FeedData;
+import honbab.voltage.com.data.UserData;
 import honbab.voltage.com.fragment.MyFeedFragment;
 import honbab.voltage.com.tete.MainActivity;
+import honbab.voltage.com.tete.R;
 import honbab.voltage.com.tete.Statics;
+import honbab.voltage.com.widget.CircleTransform;
+import honbab.voltage.com.widget.OkHttpClientSingleton;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -24,22 +32,25 @@ public class MyFeedListTask extends AsyncTask<Void, Void, Void> {
     private Context mContext;
     private OkHttpClient httpClient;
 
-    Fragment fragment;
+    private Fragment fragment;
 
-//    String my_id;
-    String result;
+    public ArrayList<FeedData> feedList = new ArrayList<>();
 
-    public MyFeedListTask(Context mContext, OkHttpClient httpClient) {
+    public MyFeedListTask(Context mContext) {
+        Log.e("abc", "MyFeedListTask mContext = " + mContext);
         this.mContext = mContext;
-        this.httpClient = httpClient;
+        this.httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
     }
 
     @Override
     protected void onPreExecute() {
-        fragment = ((MainActivity) mContext).getSupportFragmentManager().getFragments().get(1);
+//        fragment = ((MainActivity) mContext).getSupportFragmentManager().getFragments().get(1);
+        fragment = (Fragment) ((MainActivity) mContext).pagerAdapter.instantiateItem(((MainActivity) mContext).viewPager, 1);
+        Log.e("abc", "fragment = " + fragment);
 
-        ((MyFeedFragment) fragment).feedList.clear();
+        feedList.clear();
         ((MyFeedFragment) fragment).mAdapter.clearItemList();
+//        Log.e("abc", "((MyFeedFragment) fragment).feedList.size() = " + ((MyFeedFragment) fragment).feedList.size());
     }
 
     @Override
@@ -57,7 +68,6 @@ public class MyFeedListTask extends AsyncTask<Void, Void, Void> {
                 String bodyStr = response.body().string();
 
                 JSONObject obj = new JSONObject(bodyStr);
-                Log.e("abc", "my_feed_list = " + obj);
 
                 JSONArray hash_arr = obj.getJSONArray("feed");
                 for (int i = 0; i < hash_arr.length(); i++) {
@@ -108,11 +118,11 @@ public class MyFeedListTask extends AsyncTask<Void, Void, Void> {
                                 status);
                     } else {
                         feedData = new FeedData(feed_id, feed_time,
-                                host_id, host_name, host_age, host_gender, host_img,host_token,
+                                host_id, host_name, host_age, host_gender, host_img, host_token,
                                 rest_id, rest_name, compound_code, latLng, place_id, rest_img, rest_phone, vicinity,
                                 status);
                     }
-                    ((MyFeedFragment) fragment).feedList.add(feedData);
+                    feedList.add(feedData);
                 }
 
             } else {
@@ -133,7 +143,7 @@ public class MyFeedListTask extends AsyncTask<Void, Void, Void> {
         String activityName = mContext.getClass().getSimpleName();
 
         if (activityName.equals("MainActivity")) {
-            ((MyFeedFragment) fragment).mAdapter = new MyFeedListAdapter(mContext, httpClient, ((MyFeedFragment) fragment).feedList);
+            ((MyFeedFragment) fragment).mAdapter = new MyFeedListAdapter(mContext, feedList);
             ((MyFeedFragment) fragment).gridView_feed.setAdapter(((MyFeedFragment) fragment).mAdapter);
             ((MyFeedFragment) fragment).mAdapter.notifyDataSetChanged();
 
@@ -154,6 +164,22 @@ public class MyFeedListTask extends AsyncTask<Void, Void, Void> {
                 ((MyFeedFragment) fragment).line_timeline_vertical.setVisibility(View.VISIBLE);
                 ((MyFeedFragment) fragment).layout_no_my_schedule.setVisibility(View.GONE);
                 ((MyFeedFragment) fragment).swipeContainer_myfeed.setVisibility(View.VISIBLE);
+            }
+
+            try {
+                UserData myData = new AccountTask(mContext, 0).execute(Statics.my_id).get();
+
+                Picasso.get().load(myData.getImg_url())
+                        .placeholder(R.drawable.icon_noprofile_circle)
+                        .error(R.drawable.icon_noprofile_circle)
+                        .transform(new CircleTransform())
+                        .into(((MyFeedFragment) fragment).img_my);
+                ((MyFeedFragment) fragment).txt_myName.setText(myData.getUser_name());
+                ((MyFeedFragment) fragment).txt_comment.setText(myData.getComment());
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }

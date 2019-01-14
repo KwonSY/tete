@@ -234,7 +234,7 @@ public class ReservActivity extends AppCompatActivity {
 
                     break;
                 case R.id.btn_reserv:
-                    String[] date = {String.valueOf(year), String.valueOf(month), String.valueOf(day), String.valueOf(hour), String.valueOf(min)};
+//                    String[] date = {String.valueOf(year), String.valueOf(month), String.valueOf(day), String.valueOf(hour), String.valueOf(min)};
                     RestData rData = restData;
 //                    String[] rest = {rest_name, compound_code, lat, lng, place_id, rest_img, rest_phone, vicinity};
 
@@ -243,7 +243,7 @@ public class ReservActivity extends AppCompatActivity {
                     long time_current = curCal.getTimeInMillis();
 
                     if (time_setting > time_current) {
-                        new ReservFeedTask(ReservActivity.this, httpClient, date, rData).execute();
+                        new ReservFeedTask(ReservActivity.this, httpClient, rData).execute("", "");
                     } else {
                         Toast.makeText(getApplicationContext(), R.string.cannot_reserve_past, Toast.LENGTH_SHORT).show();
                     }

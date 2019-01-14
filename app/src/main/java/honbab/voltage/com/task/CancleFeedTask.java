@@ -2,10 +2,13 @@ package honbab.voltage.com.task;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 
 import org.json.JSONObject;
 
+import honbab.voltage.com.fragment.MyFeedFragment;
+import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.Statics;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -71,8 +74,11 @@ public class CancleFeedTask extends AsyncTask<String, Void, Void> {
 
             if (activityName.equals("MainActivity")) {
 //                FragmentManager fm = ((MainActivity) mContext).getSupportFragmentManager();
-//                Fragment fragment = fm.getFragments().get(0);
-//                ((RestLikeFragment) fragment).mAdapter.removeAt(position);
+                Fragment fragment = ((MainActivity) mContext).getSupportFragmentManager().findFragmentByTag("page:1");
+                ((MyFeedFragment) fragment).mAdapter.removeAt(position);
+
+                if (((MyFeedFragment) fragment).mAdapter.getItemCount() == 0)
+                    new MyFeedListTask(mContext).execute();
             } else if (activityName.equals("MyFeedListActivity")) {
 //                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 //                builder.setMessage(R.string.ask_cancle_godmuk);

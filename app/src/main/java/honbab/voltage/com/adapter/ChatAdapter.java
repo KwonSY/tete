@@ -55,8 +55,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
-//        final ChatData data = newList.get(position);
-        final ChatData data = listViewItemList.get(position);
+        final ChatData data = newList.get(position);
+//        final ChatData data = listViewItemList.get(position);
 
         holder.bindToPost(data);
     }
@@ -65,8 +65,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     public int getItemCount() {
 //        Log.e("abc", "chat listViewItemList.size() = " + listViewItemList.size());
 //        Log.e("abc", "chat newList.size() = " + newList.size());
-//        return newList.size();
-        return listViewItemList.size();
+        return newList.size();
+//        return listViewItemList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -170,7 +170,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
         listViewItemList.add(item);
 
-//        RemoveDuplicate();
+        RemoveDuplicate();
     }
 
     public void RemoveDuplicate() {
@@ -191,5 +191,10 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
 
     public String getLastType() {
         return listViewItemList.get(listViewItemList.size() - 1).getType();
+    }
+
+    public void clearItemList() {
+        listViewItemList.clear();
+        notifyDataSetChanged();
     }
 }

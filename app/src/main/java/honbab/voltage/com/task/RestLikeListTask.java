@@ -28,7 +28,7 @@ public class RestLikeListTask extends AsyncTask<Void, Void, ArrayList<RestLikeDa
     private Context mContext;
     private OkHttpClient httpClient;
 
-    private Fragment fragment;
+    private Fragment fragment, fragment2;
 
     private ArrayList<RestLikeData> restLikeList = new ArrayList<>();
     String result;
@@ -40,7 +40,11 @@ public class RestLikeListTask extends AsyncTask<Void, Void, ArrayList<RestLikeDa
 
     @Override
     protected void onPreExecute() {
-        fragment = ((MainActivity) mContext).getSupportFragmentManager().getFragments().get(0);
+//        fragment = ((MainActivity) mContext).getSupportFragmentManager().getFragments().get(0);
+        fragment = ((MainActivity) mContext).getSupportFragmentManager().findFragmentByTag("page:0");
+        fragment2 = ((MainActivity) mContext).getSupportFragmentManager().findFragmentByTag("page:1");
+        Log.e("abc","((MainActivity) mContext).getSupportFragmentManager() = " + ((MainActivity) mContext).getSupportFragmentManager().getFragments());
+        Log.e("abc","ffffffffragment = " + fragment);
 
         restLikeList.clear();
         ((RestLikeFragment) fragment).mAdapter.clearItemList();
@@ -59,7 +63,7 @@ public class RestLikeListTask extends AsyncTask<Void, Void, ArrayList<RestLikeDa
             okhttp3.Response response = httpClient.newCall(request).execute();
             if (response.isSuccessful()) {
                 String bodyStr = response.body().string();
-                Log.e("abc", "RestLikeListTask = " + bodyStr);
+
                 JSONObject obj = new JSONObject(bodyStr);
 
                 JSONArray hash_arr = obj.getJSONArray("rest_like");
@@ -175,6 +179,9 @@ public class RestLikeListTask extends AsyncTask<Void, Void, ArrayList<RestLikeDa
                 ((RestLikeFragment) fragment).swipeContainer.setVisibility(View.GONE);
                 ((RestLikeFragment) fragment).layout_rest.setVisibility(View.VISIBLE);
                 ((RestLikeFragment) fragment).swipeContainer.setRefreshing(false);
+
+//                fragment2;
+                new MyFeedListTask(mContext).execute();
             }
         }
     }

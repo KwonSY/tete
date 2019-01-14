@@ -23,6 +23,16 @@ public class NoProfileFragment extends Fragment {
 
     EditText edit_email, edit_password;
 
+    public static NoProfileFragment newInstance(int val) {
+        NoProfileFragment fragment = new NoProfileFragment();
+
+        Bundle args = new Bundle();
+        args.putInt("val2", val);
+        fragment.setArguments(args);
+
+        return fragment;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_noprofile, container, false);

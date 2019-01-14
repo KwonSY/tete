@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,23 +24,26 @@ import honbab.voltage.com.data.RestData;
 import honbab.voltage.com.task.CancleFeedTask;
 import honbab.voltage.com.tete.ChatActivity;
 import honbab.voltage.com.tete.OneRestaurantActivity;
+import honbab.voltage.com.tete.ProfileActivity;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.tete.Statics;
 import honbab.voltage.com.widget.CircleTransform;
+import honbab.voltage.com.widget.OkHttpClientSingleton;
 import okhttp3.OkHttpClient;
 
 public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.ViewHolder> {
-    Context mContext;
-    OkHttpClient httpClient;
+    private Context mContext;
+    private OkHttpClient httpClient;
+
     public ArrayList<FeedData> listViewItemList = new ArrayList<FeedData>();
 
     public MyFeedListAdapter() {
 
     }
 
-    public MyFeedListAdapter(Context mContext, OkHttpClient httpClient, ArrayList<FeedData> listViewItemList) {
+    public MyFeedListAdapter(Context mContext, ArrayList<FeedData> listViewItemList) {
         this.mContext = mContext;
-        this.httpClient = httpClient;
+        this.httpClient = OkHttpClientSingleton.getInstance().getHttpClient();;
         this.listViewItemList = listViewItemList;
     }
 
@@ -85,18 +89,9 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
         holder.img_user.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RestData restData = new RestData();
-//                RestData restData = new RestData(null, null, null, null, null, null, null, null);
-//                restData.writeToParcel(null, 0);
-
-                Intent intent = new Intent(mContext, ChatActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("fromId", Statics.my_id);
-                intent.putExtra("toId", data.getUser_id());
-                intent.putExtra("toUserName", data.getUser_name());
-                intent.putExtra("toUserImg", data.getUser_img());
-                intent.putExtra("toToken", data.getToken());
-                intent.putExtra("restData", restData);
+                Intent intent = new Intent(mContext, ProfileActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("user_id", data.getUser_id());
                 mContext.startActivity(intent);
             }
         });
@@ -114,8 +109,10 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
         if (data.getUser_gender().equals("f"))
             str_gender = "여";
 
-        holder.txt_userName.setText(data.getUser_name() + " / " + data.getUser_age() + " / " + str_gender);
-        holder.txt_restName.setText(data.getRest_name() + data.getVicinity());
+        holder.txt_userName.setText(data.getUser_name());
+        holder.txt_userInfo.setText(data.getUser_age() + " / " + str_gender);
+        holder.txt_restName.setText(data.getRest_name());
+        holder.txt_restAddress.setText(data.getVicinity());
 
         String[] time1 = data.getFeed_time().split(" ");
         String date[] = time1[0].split("-");
@@ -166,6 +163,22 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
                 builder.show();
             }
         });
+        holder.btn_go_chat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RestData restData = new RestData();
+
+                Intent intent = new Intent(mContext, ChatActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("fromId", Statics.my_id);
+                intent.putExtra("toId", data.getUser_id());
+                intent.putExtra("toUserName", data.getUser_name());
+                intent.putExtra("toUserImg", data.getUser_img());
+                intent.putExtra("toToken", data.getToken());
+                intent.putExtra("restData", restData);
+                mContext.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -183,9 +196,10 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
     public class ViewHolder extends RecyclerView.ViewHolder {
         CardView careView_rest;
         ImageView img_user, img_rest, btn_cancle;
-        TextView txt_userName;
-        TextView txt_restName;
+        TextView txt_userName, txt_userInfo;
+        TextView txt_restName, txt_restAddress;
         TextView txt_date, txt_time;
+        Button btn_go_chat;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -196,9 +210,12 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
             btn_cancle = itemView.findViewById(R.id.btn_cancle);
 
             txt_userName = itemView.findViewById(R.id.txt_userName);
+            txt_userInfo = itemView.findViewById(R.id.txt_userInfo);
             txt_restName = itemView.findViewById(R.id.txt_restName);
+            txt_restAddress = itemView.findViewById(R.id.txt_restAddress);
             txt_date = itemView.findViewById(R.id.txt_date);
             txt_time = itemView.findViewById(R.id.txt_time);
+            btn_go_chat = itemView.findViewById(R.id.btn_go_chat);
         }
     }
 

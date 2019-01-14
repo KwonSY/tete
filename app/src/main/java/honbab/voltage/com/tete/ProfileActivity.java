@@ -98,7 +98,7 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        new AccountTask(ProfileActivity.this, httpClient, seq).execute(user_id);
+        new AccountTask(ProfileActivity.this, seq).execute(user_id);
     }
 
     boolean bool_edityn = false;
@@ -192,7 +192,7 @@ public class ProfileActivity extends AppCompatActivity {
             Long tsLong = System.currentTimeMillis() / 1000;
             timestamp = tsLong.toString();
 
-            Toast.makeText(getApplicationContext(), timestamp, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getApplicationContext(), timestamp, Toast.LENGTH_SHORT).show();
 
 //            new Upload(img_user, "Profile_" + Statics.my_id + "_" + timestamp).execute();
             Bitmap bitImage = ((BitmapDrawable) img_origin.getDrawable()).getBitmap();
@@ -287,160 +287,8 @@ public class ProfileActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Uri image) {
             //show image uploaded
-            Toast.makeText(getApplicationContext(), "Image Uploaded", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "프로필이 업로드 되었습니다.", Toast.LENGTH_SHORT).show();
         }
     }
 
-
-//    String realPath;
-//    private Uri mImageUri;
-//    Bitmap newbitmap;
-//    private Uri fileUri;
-//
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        Log.d("abc", "result Code : " + resultCode);
-//
-//        if (requestCode == GALLERY_PHOTO) {
-//
-//            if (resultCode == RESULT_OK) {
-//                // SDK < API 11
-//                if (Build.VERSION.SDK_INT < 11) {
-//                    try {
-//                        realPath = RealPathUtil.getRealPathFromURI_BelowAPI11(this, data.getData());
-//                        setTextViews(Build.VERSION.SDK_INT, data.getData().getPath(), realPath);
-//
-//                        mImageUri = data.getData();
-//                        img_user.setImageURI(mImageUri);
-//                        Picasso.get().load(mImageUri)
-//                                .placeholder(R.drawable.icon_noprofile_circle)
-//                                .error(R.drawable.icon_noprofile_circle)
-//                                .transform(new CircleTransform())
-//                                .into(img_user);
-//
-//                        Log.e("abc", "case sdk below 11 = " + Build.VERSION.SDK_INT);
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                        Uri selectedImage = data.getData();
-//                        String[] filePathColumn = {MediaStore.Images.Media.DATA};
-//
-//                        Cursor cursor = getContentResolver()
-//                                .query(selectedImage, filePathColumn, null,null, null);
-//                        cursor.moveToFirst();
-//
-//                        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-//                        String filePath = cursor.getString(columnIndex);
-//                        cursor.close();
-//
-//                        newbitmap = BitmapFactory.decodeFile(filePath);
-//                        img_user.setImageBitmap(newbitmap);
-//                    }
-//                } else if (Build.VERSION.SDK_INT < 19) {
-//                    // SDK >= 11 && SDK < 19
-//
-//                    try {
-//                        realPath = RealPathUtil.getRealPathFromURI_API11to18(this, data.getData());
-//                        setTextViews(Build.VERSION.SDK_INT, data.getData().getPath(), realPath);
-//
-//                        mImageUri = data.getData();
-//                        Log.e("abc", "case sdk below 17 = " + Build.VERSION.SDK_INT);
-//                    } catch (Exception e1) {
-//
-//                        e1.printStackTrace();
-//                        Uri selectedImage = data.getData();
-//                        String[] filePathColumn = {MediaStore.Images.Media.DATA};
-//
-//                        Cursor cursor = getContentResolver()
-//                                .query(selectedImage, filePathColumn, null,
-//                                        null, null);
-//                        cursor.moveToFirst();
-//
-//                        int columnIndex = cursor
-//                                .getColumnIndex(filePathColumn[0]);
-//                        String filePath = cursor.getString(columnIndex);
-//                        cursor.close();
-//
-//                        newbitmap = BitmapFactory.decodeFile(filePath);
-//                        img_user.setImageBitmap(newbitmap);
-//
-//                    }
-//                } else {
-//                    // SDK  >= 19
-//                    try {
-//                        mImageUri = data.getData();
-//                        Picasso.get().load(mImageUri)
-//                                .placeholder(R.drawable.icon_noprofile_circle)
-//                                .error(R.drawable.icon_noprofile_circle)
-//                                .transform(new CircleTransform())
-//                                .into(img_user);
-//                        Log.e("abc", "mImageUri = " + mImageUri);
-//                        Log.e("abc", "case sdk upper 19 = " + Build.VERSION.SDK_INT);
-//                    } catch (Exception e) {
-//                        Uri selectedImage = data.getData();
-//                        String[] filePathColumn = {MediaStore.Images.Media.DATA};
-//
-//                        Cursor cursor = getContentResolver()
-//                                .query(selectedImage, filePathColumn, null,
-//                                        null, null);
-//                        cursor.moveToFirst();
-//
-//                        int columnIndex = cursor
-//                                .getColumnIndex(filePathColumn[0]);
-//                        String filePath = cursor.getString(columnIndex);
-//                        cursor.close();
-//
-//                        newbitmap = BitmapFactory.decodeFile(filePath);
-//                        img_user.setImageBitmap(newbitmap);
-//                    }
-//                }
-//
-//                uploadContents(img_user);
-//
-//            } else if (resultCode == RESULT_CANCELED) {
-//                Toast.makeText(getApplicationContext(), "취소되었습니다.", Toast.LENGTH_SHORT).show();
-//            } else {
-//                // failed to capture image
-//                Toast.makeText(getApplicationContext(), "잠시 후 재시도해주세요.", Toast.LENGTH_SHORT).show();
-//            }
-//
-//        }
-//    }
-//
-//    private void setTextViews(int sdk, String uriPath, String realPath) {
-//        Uri uriFromPath = Uri.fromFile(new File(realPath));
-//
-//        fileUri = uriFromPath;
-//
-//        try {
-//            newbitmap = BitmapFactory.decodeStream(getContentResolver()
-//                    .openInputStream(fileUri));
-//        } catch (FileNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//
-//        img_user.setImageURI(fileUri);
-//    }
-//
-//    public void uploadContents(View v) {
-//        ProfileUploadRequest req = new ProfileUploadRequest(ProfileActivity.this, com.android.volley.Request.Method.POST, Statics.opt_url, new Response.Listener<String>() {
-//            @Override
-//            public void onResponse(String response) {
-//                Toast.makeText(ProfileActivity.this, R.string.upload_profile_complete, Toast.LENGTH_SHORT).show();
-//            }
-//        }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-////                Log.e(TAG, "ErrorResponse", error);
-//            }
-//        });
-//
-////        Log.e("abc", "uploadContents = ", mImageUri);
-//        if (mImageUri != null) {
-//            req.addFileUpload("uploadfile", mImageUri);
-//            req.addStringUpload("opt", "upload_profile");
-//            req.addStringUpload("my_id", Statics.my_id);
-//        }
-//
-//        mQueue.add(req);
-//    }
 }

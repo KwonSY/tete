@@ -7,19 +7,21 @@ import android.util.Log;
 import org.json.JSONObject;
 
 import honbab.voltage.com.tete.Statics;
+import honbab.voltage.com.widget.OkHttpClientSingleton;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
 public class UpdateTokenTask extends AsyncTask<String, Void, Void> {
-    private OkHttpClient httpClient;
     private Context mContext;
+    private OkHttpClient httpClient;
 
     private String result;
 
-    public UpdateTokenTask(Context mContext, OkHttpClient httpClient) {
+    public UpdateTokenTask(Context mContext) {
         this.mContext = mContext;
-        this.httpClient = httpClient;
+//        this.httpClient = httpClient;
+        this.httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
     }
 
     @Override

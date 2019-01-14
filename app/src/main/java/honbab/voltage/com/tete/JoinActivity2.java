@@ -140,11 +140,13 @@ public class JoinActivity2 extends AppCompatActivity {
 
                     break;
                 case R.id.btn_start:
+                    Log.e("abc", "timestamp = " + timestamp);
+                    Log.e("abc", "timestamp = " + timestamp.length());
                     Log.e("abc", "radio_group = " + radio_group.getCheckedRadioButtonId());
                     Log.e("abc", "numberPicker = " + numberPicker.getValue());
 
 //                    if (mImageUri == null) {
-                    if (1 == 0) {
+                    if (timestamp.length() == 0) {
                         Toast.makeText(getApplicationContext(), R.string.upload_profile_image, Toast.LENGTH_SHORT).show();
                     } else if (radio_group.getCheckedRadioButtonId() == -1) {
                         //2131296531 / 2131296529
@@ -220,7 +222,7 @@ public class JoinActivity2 extends AppCompatActivity {
     }
 
 //    int GALLERY_PHOTO = 2;
-    public String timestamp;
+    public String timestamp = "";
     private static final int RESULT_SELECT_IMAGE = 1;
 
     public void selectImage(View v) {

@@ -33,7 +33,7 @@ public class SessionManager extends Activity {
 	public static final String KEY_NAME = "my_id";
 	public static final String KEY_USERNAME = "my_username";
 	public static final String KEY_GENDER = "my_gender";
-	public static final String KEY_INVATE_CNT = "invite_cnt";
+//	public static final String KEY_INVATE_CNT = "invite_cnt";
 
 	// Email address (make variable public to access from outside)
 	public static final String KEY_EMAIL = "email";
@@ -56,10 +56,10 @@ public class SessionManager extends Activity {
 		editor.commit(); // commit changes
 	}
 
-	public void saveInviteSession(String invite_num) {
-		editor.putString(KEY_INVATE_CNT, invite_num);
-		editor.commit(); // commit changes
-	}
+//	public void saveInviteSession(String invite_num) {
+//		editor.putString(KEY_INVATE_CNT, invite_num);
+//		editor.commit(); // commit changes
+//	}
 
 	/**
 	 * Check login method wil check user login status If false it will redirect
@@ -83,7 +83,7 @@ public class SessionManager extends Activity {
 		user.put(KEY_NAME, pref.getString(KEY_NAME, null)); // user name
 		user.put(KEY_USERNAME, pref.getString(KEY_USERNAME, null)); // user name
 		user.put(KEY_GENDER, pref.getString(KEY_GENDER, null));
-		user.put(KEY_INVATE_CNT, pref.getString(KEY_INVATE_CNT, null));
+//		user.put(KEY_INVATE_CNT, pref.getString(KEY_INVATE_CNT, null));
 
 		return user; // return user
 	}

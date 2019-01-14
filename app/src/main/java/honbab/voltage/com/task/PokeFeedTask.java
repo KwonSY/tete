@@ -40,7 +40,7 @@ public class PokeFeedTask extends AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground(String... objects) {
         String result = "1";
-
+        Log.e("abc", "to_id : " + objects[1] + " feed_id = " + objects[0]);
         FormBody body = new FormBody.Builder()
                 .add("opt", "poke")
                 .add("my_id", Statics.my_id)
@@ -115,6 +115,16 @@ public class PokeFeedTask extends AsyncTask<String, Void, String> {
                     intent.putExtra("toToken", userData.getToken());
                     intent.putExtra("restData", restData);
                     mContext.startActivity(intent);
+                } else if (process.equals("my")) {
+                    Intent intent = new Intent(mContext, ChatActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("fromId", Statics.my_id);
+                    intent.putExtra("toId", userData.getUser_id());
+                    intent.putExtra("toUserName", userData.getUser_name());
+                    intent.putExtra("toUserImg", userData.getImg_url());
+                    intent.putExtra("toToken", userData.getToken());
+                    intent.putExtra("restData", restData);
+                    mContext.startActivity(intent);
                 } else {
                     Toast.makeText(mContext, "다시 시도해보세요.", Toast.LENGTH_SHORT).show();
                 }
@@ -130,7 +140,7 @@ public class PokeFeedTask extends AsyncTask<String, Void, String> {
 //
 //                if (process.equals("insert")) {
 //                    ((OneRestaurantActivity) mContext).btn_poke.setText(R.string.poke_reserved);
-//                    ((OneRestaurantActivity) mContext).btn_poke.setBackgroundResource(R.drawable.border_circle_gr2);
+//                    ((OneRestaurantActivity) mContext).btn_poke.setBackgroundResource(R.drawable.border_circle_or2);
 //                } else if (process.equals("delete")) {
 //                    ((OneRestaurantActivity) mContext).btn_poke.setText(R.string.poke_reserve);
 //                    ((OneRestaurantActivity) mContext).btn_poke.setBackgroundResource(R.drawable.border_circle_bk1);

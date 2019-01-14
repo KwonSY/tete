@@ -25,9 +25,10 @@ import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.firebase.client.ServerValue;
+import com.github.arturogutierrez.Badges;
+import com.github.arturogutierrez.BadgesNotSupportedException;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -44,7 +45,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Semaphore;
 
 import honbab.voltage.com.adapter.ChatAdapter;
 import honbab.voltage.com.data.ChatData;
@@ -52,25 +52,25 @@ import honbab.voltage.com.data.FcmData;
 import honbab.voltage.com.data.RestData;
 import honbab.voltage.com.task.ChatFCMTask;
 import honbab.voltage.com.task.CommonRestTask;
-import honbab.voltage.com.task.ReservFeedTask;
 import honbab.voltage.com.utils.ButtonUtil;
 import honbab.voltage.com.widget.CircleTransform;
 import honbab.voltage.com.widget.CustomTimePickerDialog;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
-import honbab.voltage.com.widget.SessionManager;
 import okhttp3.OkHttpClient;
 
 public class ChatActivity extends AppCompatActivity {
     private OkHttpClient httpClient;
-    private SessionManager session;
+//    private SessionManager session;
     private DatabaseReference mDatabase;
 
     private LinearLayoutManager layoutManager;
 
     public DrawerLayout drawerLayout;
-    public TextView title_topbar;
+    public TextView title_topbar, txt_userName;
+    public ImageView topbar_img_user;
     public Button btn_call_rest;
     private ImageView icon_more_dots;
+
     private LinearLayout layout_no_chat;
     public RecyclerView recyclerView;
     public ChatAdapter mAdapter;
@@ -78,8 +78,8 @@ public class ChatActivity extends AppCompatActivity {
     private EditText edit_chat;
     private TextView btn_send;
 
-    private String fromId = Statics.my_id, fromUserName;
-    private String toId, toUserName = "상대방", toUserImg, toToken;
+    public String fromId = Statics.my_id;
+    public String toId, toUserName = "상대방", toUserImg, toToken;
     private ChatData chatData;
     public RestData restData;
 
@@ -89,35 +89,34 @@ public class ChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chat);
 
         httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
-        session = new SessionManager(this.getApplicationContext());
+//        session = new SessionManager(this.getApplicationContext());
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         Intent intent = getIntent();
-        fromId = intent.getStringExtra("fromId");
+//        fromId = intent.getStringExtra("fromId");
 //        fromUserName = intent.getStringExtra("fromUserName");
         toId = intent.getStringExtra("toId");
-        toUserName = intent.getStringExtra("toUserName");
-        toUserImg = intent.getStringExtra("toUserImg");
-        toToken = intent.getStringExtra("toToken");
+//        toToken = intent.getStringExtra("toToken");
+        if (intent.getParcelableExtra("restData") != null)
         restData = (RestData) intent.getParcelableExtra("restData");
+        else
+            restData = new RestData();
         Log.e("abc", "fromId = " + fromId + ", toId = " + toId);
         Log.e("abc", "toUserName = " + toUserName);
         Log.e("abc", "toUserImg = " + toUserImg);
         Log.e("abc", "getRest_name = " + restData.getRest_name());
-        Log.e("abc", "ChatActivity getLatLng = " + restData.getLatLng());
-        Log.e("abc", "ChatActivity rest_phone = " + restData.getRest_phone());
 
         //상단바
         title_topbar = (TextView) findViewById(R.id.title_topbar);
-        ImageView topbar_img_user = (ImageView) findViewById(R.id.topbar_img_user);
-        TextView txt_userName = (TextView) findViewById(R.id.txt_userName);
+        topbar_img_user = (ImageView) findViewById(R.id.topbar_img_user);
+        txt_userName = (TextView) findViewById(R.id.txt_userName);
         title_topbar.setText("");
-        Picasso.get().load(toUserImg)
-                .placeholder(R.drawable.icon_noprofile_circle)
-                .error(R.drawable.icon_noprofile_circle)
-                .transform(new CircleTransform())
-                .into(topbar_img_user);
-        txt_userName.setText(toUserName);
+//        Picasso.get().load(toUserImg)
+//                .placeholder(R.drawable.icon_noprofile_circle)
+//                .error(R.drawable.icon_noprofile_circle)
+//                .transform(new CircleTransform())
+//                .into(topbar_img_user);
+//        txt_userName.setText(toUserName);
         topbar_img_user.setOnClickListener(mOnClickListener);
 
         //채팅 없을 때
@@ -175,6 +174,12 @@ public class ChatActivity extends AppCompatActivity {
         loadFirebaseDatabase(fromId, toId);
 
         new CommonRestTask(ChatActivity.this, httpClient).execute(toId, null);
+
+        try {
+            Badges.setBadge(this, 0);
+        } catch (BadgesNotSupportedException e) {
+            e.printStackTrace();
+        }
     }
 
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
@@ -255,74 +260,81 @@ public class ChatActivity extends AppCompatActivity {
                     dialog2.show();
 
                     break;
-                case R.id.btn_reserv:
-                    sendMessage("a");
-
-                    String[] date = {String.valueOf(year), String.valueOf(month), String.valueOf(day), String.valueOf(hour), String.valueOf(min)};
-                    RestData r_data = restData;
-//                    String[] rest = {restData.getRest_name(), restData.getCompound_code(),
-//                            String.valueOf(restData.getLatitude()), String.valueOf(restData.getLongtitue()),
-//                            restData.getPlace_id(), restData.getRest_img(), restData.getRest_phone(), restData.getVicinity()};
-//                    Log.e("abc", "ChatAct lat = " + restData.getLatitude() + restData.getLongtitue());
-//                    RestData restData2 = restData;
-
-                    Calendar curCal = Calendar.getInstance();
-                    long time_setting = calendar.getTimeInMillis();
-                    long time_current = curCal.getTimeInMillis();
-
-                    if (time_setting > time_current) {
-                        new ReservFeedTask(ChatActivity.this, httpClient, date, r_data).execute(toId);
-                    } else {
-                        Toast.makeText(getApplicationContext(), R.string.cannot_reserve_past, Toast.LENGTH_SHORT).show();
-                    }
-
-                    break;
+//                case R.id.btn_reserv:
+//                    sendMessage("a");
+//
+//                    String[] date = {String.valueOf(year), String.valueOf(month), String.valueOf(day), String.valueOf(hour), String.valueOf(min)};
+//                    RestData r_data = restData;
+////                    String[] rest = {restData.getRest_name(), restData.getCompound_code(),
+////                            String.valueOf(restData.getLatitude()), String.valueOf(restData.getLongtitue()),
+////                            restData.getPlace_id(), restData.getRest_img(), restData.getRest_phone(), restData.getVicinity()};
+////                    Log.e("abc", "ChatAct lat = " + restData.getLatitude() + restData.getLongtitue());
+////                    RestData restData2 = restData;
+//
+//                    Calendar curCal = Calendar.getInstance();
+//                    long time_setting = calendar.getTimeInMillis();
+//                    long time_current = curCal.getTimeInMillis();
+//
+//                    if (time_setting > time_current) {
+//                        new ReservFeedTask(ChatActivity.this, httpClient, date, r_data).execute(toId);
+//                    } else {
+//                        Toast.makeText(getApplicationContext(), R.string.cannot_reserve_past, Toast.LENGTH_SHORT).show();
+//                    }
+//
+//                    break;
             }
         }
     };
 
-    DrawerLayout.DrawerListener mDrawerListener = new DrawerLayout.DrawerListener() {
-        @Override
-        public void onDrawerSlide(@NonNull View view, float v) {
-
-        }
-
-        @Override
-        public void onDrawerOpened(@NonNull View view) {
-
-        }
-
-        @Override
-        public void onDrawerClosed(@NonNull View view) {
-
-        }
-
-        @Override
-        public void onDrawerStateChanged(int newState) {
-            String state;
-            switch (newState) {
-                case DrawerLayout.STATE_IDLE:
-                    state = "STATE_IDLE";
-                    break;
-                case DrawerLayout.STATE_DRAGGING:
-                    state = "STATE_DRAGGING";
-                    break;
-                case DrawerLayout.STATE_SETTLING:
-                    state = "STATE_SETTLING";
-                    break;
-                default:
-                    state = "unknown!";
-            }
-
-//            txtPrompt2.setText(state);
-        }
-    };
+//    DrawerLayout.DrawerListener mDrawerListener = new DrawerLayout.DrawerListener() {
+//        @Override
+//        public void onDrawerSlide(@NonNull View view, float v) {
+//
+//        }
+//
+//        @Override
+//        public void onDrawerOpened(@NonNull View view) {
+//
+//        }
+//
+//        @Override
+//        public void onDrawerClosed(@NonNull View view) {
+//
+//        }
+//
+//        @Override
+//        public void onDrawerStateChanged(int newState) {
+//            String state;
+//            switch (newState) {
+//                case DrawerLayout.STATE_IDLE:
+//                    state = "STATE_IDLE";
+//                    break;
+//                case DrawerLayout.STATE_DRAGGING:
+//                    state = "STATE_DRAGGING";
+//                    break;
+//                case DrawerLayout.STATE_SETTLING:
+//                    state = "STATE_SETTLING";
+//                    break;
+//                default:
+//                    state = "unknown!";
+//            }
+//
+////            txtPrompt2.setText(state);
+//        }
+//    };
 
     private void loadFirebaseDatabase(String fromId, String toId) {
+        mAdapter.clearItemList();
+//        final int position = 0;
+//        final int pos_a = 0;
+        final String[] chatoutYn = {"e"};
+
         mDatabase.child("user-messages").child(fromId).child(toId).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                //읽음 처리
                 mDatabase.child("user-messages").child(fromId).child(toId).child(dataSnapshot.getKey()).setValue(0);
+
                 mDatabase.child("messages").child(dataSnapshot.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -339,9 +351,25 @@ public class ChatActivity extends AppCompatActivity {
                         layout_no_chat.setVisibility(View.GONE);
 
                         if (chatData.getType().equals("a")) {
+                            chatoutYn[0] = "logout";
+
                             btn_send.setBackgroundResource(R.color.whitegrey);
                             btn_send.setEnabled(false);
+                        } else if (chatoutYn[0].equals("logout") && chatData.getToId().equals(Statics.my_id)) {
+                            chatoutYn[0] = "n";
+                        } else if (chatoutYn[0].equals("logout") && chatData.getFromId().equals(Statics.my_id)) {
+                            chatoutYn[0] = "y";
                         }
+
+                        Log.e("abc", "chatoutYn[0] = " + chatoutYn[0]);
+                        if (chatoutYn[0].equals("y")) {
+                            btn_send.setBackgroundResource(R.color.whitegrey);
+                            btn_send.setEnabled(false);
+                        } else if (chatoutYn[0].equals("n")) {
+                            btn_send.setBackgroundResource(R.drawable.btn_send_or);
+                            btn_send.setEnabled(true);
+                        }
+//                        if (mAdapter.getItemCount() == )
                     }
 
                     @Override
@@ -378,49 +406,7 @@ public class ChatActivity extends AppCompatActivity {
     private void goOutFirebaseChat(String fromId, String fromUserName, String toId) {
 
         if (mAdapter.getLastType().equals("a")) {
-//            Log.e("abc", "xxxxxxxxxxxxx semaphore type " + mAdapter.getLastType());
             Query query = mDatabase.child("user-messages").child(fromId).child(toId);
-//            mDatabase.child("user-messages").child(fromId).child(toId).addChildEventListener(new ChildEventListener() {
-//                @Override
-//                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-////                    int i = count;
-////                    i++;
-//                    count[0]++;
-//                    Log.e("abc", "xxxxxxxxxxxxx semaphore 벨류 " + dataSnapshot);
-//                    Log.e("abc", "xxxxxxxxxxxxx semaphore 갯수 " + dataSnapshot.getChildrenCount());
-////                    mDatabase.child("messages").child(dataSnapshot.getValue()).removeValue();
-//
-//                    for (int i=0; i<dataSnapshot.getChildrenCount(); i++) {
-//                        Object ooo = dataSnapshot.getKey();
-//                        ooo.hashCode();
-//                        Log.e("abc", "xxxxxxxxxxxxx semaphore ooo.hashCode() " + ooo.hashCode());
-//                    }
-//
-//                    if (count[0] >= dataSnapshot.getChildrenCount())
-//                        Log.e("abc", "xxxxxxxxxxxxx semaphore 끝 " + count[0]);
-//                    //mDatabase.child("user-messages").child(fromId).child(toId).removeValue();
-//                }
-//
-//                @Override
-//                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//
-//                }
-//
-//                @Override
-//                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-//
-//                }
-//
-//                @Override
-//                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-//
-//                }
-//
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                }
-//            });
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -428,7 +414,7 @@ public class ChatActivity extends AppCompatActivity {
 
                     for (DataSnapshot child : dataSnapshot.getChildren()) {
                         i++;
-//                        child.getKey();
+
                         mDatabase.child("messages").child(child.getKey()).removeValue();
 
                         if (i >= dataSnapshot.getChildrenCount()) {
@@ -441,16 +427,6 @@ public class ChatActivity extends AppCompatActivity {
                             startActivity(intent);
                         }
                     }
-
-//                    if (count[0] >= dataSnapshot.getChildrenCount()) {
-//                        mDatabase.child("user-messages").child(fromId).child(toId).removeValue();
-//                        finish();
-//                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-//                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                        startActivity(intent);
-//                        Log.e("abc", "xxxxxxxxxxxxx semaphore 끝 ");
-//                    }
                 }
 
                 @Override
@@ -458,9 +434,6 @@ public class ChatActivity extends AppCompatActivity {
 
                 }
             });
-
-
-
         } else {
             String type = "a";
             String message = "상대방이 채팅방을 나갔습니다.";
@@ -479,35 +452,11 @@ public class ChatActivity extends AppCompatActivity {
             mDatabase.child("user-messages").child(fromId).child(toId).removeValue();
         }
 
-//        finish();
-//        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        startActivity(intent);
-    }
-
-    private void delChatMessage() throws InterruptedException {
-        Query query = mDatabase.child("user-messages").child(toId).child(fromId);
-
-        Semaphore semaphore = new Semaphore(0);
-        Log.e("abc", "xxxxxxxxxxxxx semaphore 돌아감 " + mAdapter.getLastType());
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.e("abc", "xxxxxxxxxxxxx semaphore 릴리즈 " + dataSnapshot.getKey());
-                mDatabase.child("messages").child(dataSnapshot.getKey()).removeValue();
-
-                semaphore.release();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-        Log.e("abc", "xxxxxxxxxxxxx semaphore 어콰이어 " + mAdapter.getLastType());
-        semaphore.acquire();
-        Log.e("abc", "xxxxxxxxxxxxx semaphore 던 " + mAdapter.getLastType());
+        finish();
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     private void sendMessage(String type) {
@@ -535,6 +484,9 @@ public class ChatActivity extends AppCompatActivity {
                 recyclerView.setLayoutManager(layoutManager);
                 mAdapter.notifyDataSetChanged();
                 edit_chat.setText("");
+
+                FcmData params = new FcmData(toToken, Statics.my_id, Statics.my_username, message);
+                new ChatFCMTask(httpClient).execute(params);
             }
         } else if (type.equals("a")) {
 
@@ -561,11 +513,10 @@ public class ChatActivity extends AppCompatActivity {
             recyclerView.setLayoutManager(layoutManager);
             mAdapter.notifyDataSetChanged();
             edit_chat.setText("");
-        }
 
-        Log.e("abc", "Statics.my_username = " + Statics.my_username);
-        FcmData params = new FcmData(toToken, Statics.my_username, message);
-        new ChatFCMTask(httpClient).execute(params);
+            FcmData params = new FcmData(toToken, Statics.my_id, Statics.my_username, message);
+            new ChatFCMTask(httpClient).execute(params);
+        }
     }
 
     public Spinner spinner_restName;
@@ -578,16 +529,6 @@ public class ChatActivity extends AppCompatActivity {
     private ArrayList<RestData> restList = new ArrayList<>();
 
     private void setDrawerReserv() {
-//        NavigationView nav_view = (NavigationView) findViewById(R.id.nav_view);
-//        View view = nav_view.getHeaderView(0);
-
-//        spinner_restName = (Spinner) view.findViewById(R.id.spinner_restName);
-//        img_rest = (ImageView) view.findViewById(R.id.img_rest);
-//        txt_date = (TextView) view.findViewById(R.id.txt_date);
-//        txt_clock = (TextView) view.findViewById(R.id.txt_clock);
-//        edit_comment = (EditText) view.findViewById(R.id.edit_comment);
-//        btn_reserv = (Button) view.findViewById(R.id.btn_reserv);
-
         spinner_restName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -651,12 +592,6 @@ public class ChatActivity extends AppCompatActivity {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-//        Log.e("abc", "xxxxxxxxxxxxxxxxx" + restData.getRest_id());
-//        if (restData.getRest_id() == null || restData.getRest_id().equals(null)) {
-//            Log.e("abc", "커몬레스트");
-//
-//        }
 
         Date currentTime = new Date();
 //        calendar = GregorianCalendar.getInstance();

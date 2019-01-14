@@ -10,8 +10,8 @@ android {
         applicationId "honbab.voltage.com.tete"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 9
-        versionName "1.8"
+        versionCode 11
+        versionName "1.0.2"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -84,6 +84,9 @@ dependencies {
     implementation 'com.google.android.gms:play-services-places:15.0.1'
     implementation "com.github.hotchemi:permissionsdispatcher:$permissionDispatcherVersion"
     annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:$permissionDispatcherVersion"
+
+    //badge
+    implementation 'com.github.arturogutierrez:badges:1.0.5@aar'
 
     //ByteStreams
     implementation 'com.google.guava:guava:18.0'
