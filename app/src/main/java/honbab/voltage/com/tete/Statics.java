@@ -11,4 +11,6 @@ public class Statics {
     public static String my_username;
     public static String my_gender;
     public static int i_splash = 0;
+
+    public static String to_id;
 }

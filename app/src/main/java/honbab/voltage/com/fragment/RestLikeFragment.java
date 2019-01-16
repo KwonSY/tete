@@ -12,7 +12,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -113,8 +112,10 @@ public class RestLikeFragment extends Fragment {
 
         //좋아요 레스토랑이 없을 때
         layout_rest = (LinearLayout) getActivity().findViewById(R.id.layout_rest);
-        Button btn_go_pick_rest = (Button) getActivity().findViewById(R.id.btn_go_pick_rest);
+        RelativeLayout btn_go_pick_rest = (RelativeLayout) getActivity().findViewById(R.id.btn_go_pick_rest);
         btn_go_pick_rest.setOnClickListener(mOnClickListener);
+
+
     }
 
     public View.OnClickListener mOnClickListener = new View.OnClickListener() {

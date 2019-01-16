@@ -41,7 +41,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      *
      * @param remoteMessage Object representing the message received from Firebase Cloud Messaging.
      */
+//    Context mActContext;
     int cnt_badge = 0;
+
+//    public MyFirebaseMessagingService(Context mContext) {
+//        this.mActContext = mContext;
+//    }
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -81,13 +86,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         if (remoteMessage.getNotification() != null) {
             RemoteMessage.Notification notification = remoteMessage.getNotification();
 
-            String message = remoteMessage.getNotification().getBody();
-            String click_action = remoteMessage.getNotification().getClickAction();
+//            String message = remoteMessage.getNotification().getBody();
+//            String click_action = remoteMessage.getNotification().getClickAction();
+//            Log.e("abc", "Notification Message Body: " + message);
+//            Log.e("abc", "Notification Click Action: " + click_action);
+            Log.e("abc", "Statics.to_id = " + Statics.to_id);
+            if (Statics.to_id == null || Statics.to_id.equals("")) {//앱 내 채팅밖
+                sendNotification(this, notification, data);
+            } else if (Statics.to_id.equals(data.get("toId"))) {//현재 대화창
 
-            Log.e("abc", "Notification Message Body: " + message);
-            Log.e("abc", "Notification Click Action: " + click_action);
-
-            sendNotification(this, notification, data);
+            } else {//다른 대화창
+                sendNotification(this, notification, data);
+            }
         }
     }
 
@@ -95,16 +105,17 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      * Create and show a custom notification containing the received FCM message.
      *
      * @param notification FCM notification payload received.
-     * @param data FCM data payload received.
+     * @param data         FCM data payload received.
      */
     private void sendNotification(Context context,
                                   RemoteMessage.Notification notification,
                                   Map<String, String> data) {
+
         Bitmap icon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
 //        Drawable icon = new BitmapDrawable(getResources(), icon2);
+
         Intent intent;
         if (notification.getClickAction().equals("ChatActivity")) {
-            Log.e("abc", "data.get(\"toId\") = " + data.get("toId"));
             intent = new Intent(this, ChatActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra("toId", data.get("toId"));
@@ -124,41 +135,39 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent)
                 .setContentInfo(notification.getTitle())
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.mipmap.ic_launcher)//R.mipmap.ic_launcher
 //                .setSound(defaultSoundUri)
 //                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setSound(Uri.parse("android.resource://" + context.getPackageName() + "/" + R.raw.alarm_godmuk1))
                 .setLargeIcon(icon)
                 .setPriority(Notification.PRIORITY_MAX)
-//                .setColor(Color.RED)
+                .setColor(Color.WHITE)
 //                .setLights(Color.RED, 1000, 300)
 //                .setDefaults(Notification.DEFAULT_VIBRATE);
-                .setDefaults(Notification.DEFAULT_ALL)
+//                .setDefaults(Notification.DEFAULT_ALL)
                 .setNumber(Integer.parseInt(data.get("badge_cnt")));
+        if (Statics.to_id == null || Statics.to_id.equals("")) {//앱 내 채팅 밖
+//            sendNotification(this, notification, data);
+        } else if (Statics.to_id.equals(data.get("toId"))) {//현재 대화창
+            notificationBuilder.setPriority(Notification.PRIORITY_MAX);
+        } else {//다른 채팅방
+//            sendNotification(this, notification, data);
+//            notificationBuilder.setDefaults(Notification.DEFAULT_ALL);
+//            notificationBuilder.setPriority(Notification.PRIORITY_MAX);
+        }
 
         NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
         String[] events = new String[6];
         // Sets a title for the Inbox in expanded layout
         inboxStyle.setBigContentTitle(notification.getTitle());
         // Moves events into the expanded layout
-        for (int i=0; i < events.length; i++) {
+        for (int i = 0; i < events.length; i++) {
             inboxStyle.addLine(events[i]);
         }
         // Moves the expanded layout object into the notification object.
         notificationBuilder.setStyle(inboxStyle);
 
-//        try {
-//            String picture_url = data.get("picture_url");
-//            if (user_id != null && !user_id.equals("")) {
-//                URL url = new URL(picture_url);
-//                Bitmap bigPicture = BitmapFactory.decodeStream(url.openConnection().getInputStream());
-//                notificationBuilder.setStyle(
-//                        new NotificationCompat.BigPictureStyle().bigPicture(bigPicture).setSummaryText(notification.getBody())
-//                );
-//            }
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -179,6 +188,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 //        int numMessages = 0;
 //        notificationBuilder.setNumber(++numMessages);
         notificationManager.notify(0, notificationBuilder.build());
+
+
+
+
 
 //        SharedPreferences settings = this.getSharedPreferences("LAUNCHER_BADGE", Context.MODE_PRIVATE);
 //        int currentBdg = settings.getInt("CURRENT_BADGE", 0);
@@ -245,7 +258,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     @Override
                     public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                         if (cnt_badge > 0)
-                        cnt_badge = 0;
+                            cnt_badge = 0;
 
                         Log.e("abc", "onChildChanged = " + cnt_badge);
                         Object o = dataSnapshot.getValue();

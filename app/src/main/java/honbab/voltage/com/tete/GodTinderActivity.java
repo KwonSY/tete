@@ -54,7 +54,7 @@ public class GodTinderActivity extends AppCompatActivity {
         feed_time = intent.getStringExtra("feed_time");
 
         TextView title_topbar = (TextView) findViewById(R.id.title_topbar);
-        title_topbar.setText("");
+        title_topbar.setText("음식점 선택");
         ButtonUtil.setBackButtonClickListener(this);
 
         manager = new CardStackLayoutManager(GodTinderActivity.this, mCardStackListener);

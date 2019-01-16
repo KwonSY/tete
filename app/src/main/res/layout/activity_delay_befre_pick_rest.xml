@@ -25,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="17dp"
-            android:text="아래와 같이 예약"
+            android:text="먼저,\n원하시는 식사 시간대와\n지역을 선택하세요."
             android:textColor="@color/black"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -34,28 +34,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="15dp"
-                android:text="지역"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <Spinner
-                android:id="@+id/spinner_location"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="11dp"
-            android:layout_marginBottom="15dp"
+            android:layout_marginTop="21dp"
             android:orientation="horizontal">
 
             <TextView
@@ -97,14 +76,36 @@
                 android:textSize="12sp" />
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="21dp"
+            android:layout_marginBottom="15dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="15dp"
+                android:text="지역"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/spinner_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
         <TextView
             android:id="@+id/title_reserved_rest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="3dp"
             android:text="내가 예약한 음식점"
             android:textColor="@color/black"
             android:textSize="12sp"
-            android:layout_marginLeft="43dp"
             android:visibility="visible" />
 
         <android.support.v7.widget.RecyclerView
@@ -123,7 +124,7 @@
             android:background="@drawable/btn_circle_or1"
             android:minWidth="200dp"
             android:text="@string/search_rest_in_this_area"
-            android:textColor="@color/grey"
+            android:textColor="@color/black"
             android:textSize="14sp"
             android:textStyle="bold" />
     </LinearLayout>

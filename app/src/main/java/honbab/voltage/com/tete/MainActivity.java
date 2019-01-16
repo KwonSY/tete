@@ -187,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
             new VersionTask(MainActivity.this, httpClient).execute();
         }
 
-        viewPager.setCurrentItem(tab_position);
+//        viewPager.setCurrentItem(tab_position);
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancelAll();

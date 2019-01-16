@@ -87,9 +87,9 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-
+        Log.e("abc", "ChatActivity : " + this);
+        Log.e("abc", "ChatActivity this: " + ChatActivity.this);
         httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
-//        session = new SessionManager(this.getApplicationContext());
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
         Intent intent = getIntent();
@@ -105,6 +105,7 @@ public class ChatActivity extends AppCompatActivity {
         Log.e("abc", "toUserName = " + toUserName);
         Log.e("abc", "toUserImg = " + toUserImg);
         Log.e("abc", "getRest_name = " + restData.getRest_name());
+        Statics.to_id = toId;
 
         //상단바
         title_topbar = (TextView) findViewById(R.id.title_topbar);

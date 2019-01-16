@@ -150,7 +150,7 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
                 builder.setPositiveButton(R.string.yes,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                new CancleFeedTask(mContext, httpClient, position)
+                                new CancleFeedTask(mContext, 1, position)
                                         .execute(data.getFeed_id(), listViewItemList.get(position).getRest_name());
                             }
                         });
@@ -236,7 +236,7 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
     public void removeAt(int position) {
         listViewItemList.remove(position);
         notifyItemRemoved(position);
-        notifyItemRangeChanged(position, listViewItemList.size());
+//        notifyItemRangeChanged(position, listViewItemList.size());
     }
 
     public void clearItemList() {

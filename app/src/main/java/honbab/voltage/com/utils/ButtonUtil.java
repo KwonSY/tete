@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import honbab.voltage.com.tete.R;
+import honbab.voltage.com.tete.Statics;
 
 public class ButtonUtil extends Activity {
 
@@ -22,6 +23,7 @@ public class ButtonUtil extends Activity {
             @Override
             public void onClick(View view) {
                 mActivity.onBackPressed();
+                Statics.to_id = null;
             }
         });
     }

@@ -189,7 +189,7 @@ public class MyFeedFragment extends Fragment {
                     } else {
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                         builder.setMessage("내가 원하는 시간, 음식점을 골라주세요");
-                        builder.setPositiveButton(R.string.search_godmuk_rest,
+                        builder.setPositiveButton(R.string.go_to_godmuktime,
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
                                         Intent intent = new Intent(getActivity(), DelayBefroePickRestActivity.class);

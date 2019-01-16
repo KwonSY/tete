@@ -22,14 +22,14 @@ import honbab.voltage.com.tete.R;
 import okhttp3.OkHttpClient;
 
 public class RestLikeOneDateAdapter extends RecyclerView.Adapter<RestLikeOneDateAdapter.ViewHolder> {
-    Context mContext;
-    OkHttpClient httpClient;
+    private Context mContext;
+    private OkHttpClient httpClient;
 
     public ArrayList<RestLikeData> listViewItemList = new ArrayList<>();
     String feed_time = "";
 
 //    int TYPE_HEADER = 0;
-    int TYPE_STATUS_N = 1;
+//    int TYPE_STATUS_N = 1;
 //    int TYPE_STATUS_Y = 2;
 
     public RestLikeOneDateAdapter() {
@@ -56,31 +56,15 @@ public class RestLikeOneDateAdapter extends RecyclerView.Adapter<RestLikeOneDate
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         final RestLikeData restLikeData = listViewItemList.get(position);
-        final String feed_time = restLikeData.getFeed_time();
-        ArrayList<FeedData> feedList = restLikeData.getFeedList();
 
-        try {
-            SimpleDateFormat formatter = new SimpleDateFormat("MM월 dd일 aa hh시");
-            SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-            Date date = formatter2.parse(feed_time + "");
-            Log.e("abc", "date : " + date.toString());
-            String str_feed_time = formatter.format(date);
-            Log.e("abc", "str_feed_time : " + str_feed_time);
-
-            holder.txt_feedTime.setText(str_feed_time);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        holder.mAdapter = new RestLikeListAdapter(mContext, httpClient, feedList);
-        holder.recyclerView_onedate.setAdapter(holder.mAdapter);
+        holder.bindToPost(restLikeData);
     }
 
-    @Override
-    public int getItemViewType(int position) {
-
-        return TYPE_STATUS_N;
-    }
+//    @Override
+//    public int getItemViewType(int position) {
+//
+//        return TYPE_STATUS_N;
+//    }
 
     @Override
     public int getItemCount() {
@@ -88,16 +72,16 @@ public class RestLikeOneDateAdapter extends RecyclerView.Adapter<RestLikeOneDate
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        int holderId;
+//        int holderId;
 
         public TextView txt_feedTime;
         public RecyclerView recyclerView_onedate;
-        public RestLikeListAdapter mAdapter;
+//        public RestLikeListAdapter mAdapter;
 
         public ViewHolder(View itemView, int viewType) {
             super(itemView);
 
-            holderId = TYPE_STATUS_N;
+//            holderId = TYPE_STATUS_N;
 
             txt_feedTime = itemView.findViewById(R.id.txt_feedTime);
 
@@ -107,13 +91,34 @@ public class RestLikeOneDateAdapter extends RecyclerView.Adapter<RestLikeOneDate
             recyclerView_onedate = itemView.findViewById(R.id.recyclerView_onedate);
             recyclerView_onedate.setLayoutManager(layoutManager);
         }
+
+        public void bindToPost(final RestLikeData restLikeData) {
+            final String feed_time = restLikeData.getFeed_time();
+            ArrayList<FeedData> feedList = restLikeData.getFeedList();
+
+            try {
+                SimpleDateFormat formatter = new SimpleDateFormat("MM월 dd일 aa hh시");
+                SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                Date date = formatter2.parse(feed_time + "");
+                Log.e("abc", "date : " + date.toString());
+                String str_feed_time = formatter.format(date);
+                Log.e("abc", "str_feed_time : " + str_feed_time);
+
+                txt_feedTime.setText(str_feed_time);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            RestLikeListAdapter mAdapter = new RestLikeListAdapter(mContext, httpClient, feedList);
+            recyclerView_onedate.setAdapter(mAdapter);
+        }
     }
 
-    public void removeAt(int position) {
-        listViewItemList.remove(position);
-        notifyItemRemoved(position);
-        notifyItemRangeChanged(position, listViewItemList.size());
-    }
+//    public void removeAt(int position) {
+//        listViewItemList.remove(position);
+//        notifyItemRemoved(position);
+//        notifyItemRangeChanged(position, listViewItemList.size());
+//    }
 
     public void clearItemList() {
         listViewItemList.clear();

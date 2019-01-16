@@ -114,4 +114,10 @@
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
         android:src="@drawable/icon_settting" />
+
+    <ProgressBar
+        android:id="@+id/progress_upload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
 </RelativeLayout>

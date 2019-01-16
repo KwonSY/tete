@@ -129,7 +129,7 @@ public class OneDayFeedCheckTask extends AsyncTask<String, Void, Integer> {
 
                 try {
                     SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-                    SimpleDateFormat formatter2 = new SimpleDateFormat("dd일 aa h시" + "로 아래 음식점을 예약하였습니다.");
+                    SimpleDateFormat formatter2 = new SimpleDateFormat("이미 dd일 aa h시" + "로 아래 음식점을 예약하셨습니다.\n시간을 갱신하시겠습니까?");
                     Date date = formatter1.parse(feed_time);
                     String str_feed_time = formatter2.format(date);
 

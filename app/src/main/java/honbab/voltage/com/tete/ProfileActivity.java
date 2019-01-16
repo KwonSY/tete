@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +44,7 @@ public class ProfileActivity extends AppCompatActivity {
     private OkHttpClient httpClient;
     private RequestQueue mQueue;
 
+    private ProgressBar progress_upload;
     public TextView title_topbar;
     public ImageView img_origin, img_user, icon_camera;
     public TextView txt_my_name;
@@ -65,6 +67,9 @@ public class ProfileActivity extends AppCompatActivity {
         if (user_id == null) {
             user_id = Statics.my_id;
         }
+
+        progress_upload = (ProgressBar) findViewById(R.id.progress_upload);
+        progress_upload.setVisibility(View.GONE);
 
         title_topbar = (TextView) findViewById(R.id.title_topbar);
         ImageView img_setting = (ImageView) findViewById(R.id.img_setting);
@@ -99,6 +104,13 @@ public class ProfileActivity extends AppCompatActivity {
         super.onResume();
 
         new AccountTask(ProfileActivity.this, seq).execute(user_id);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        img_user.setImageDrawable(null);
     }
 
     boolean bool_edityn = false;
@@ -177,26 +189,23 @@ public class ProfileActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == RESULT_SELECT_IMAGE && resultCode == RESULT_OK && data != null) {
-            Uri image = data.getData();
-            String path = BitmapUtil.getPath(getApplicationContext(), image);
+            Uri uriImage = data.getData();
+            String path = BitmapUtil.getPath(getApplicationContext(), uriImage);
             File f = new File(path);
 
-            img_origin.setImageURI(image);
-            Picasso.get().load(f)
-                    .placeholder(R.drawable.icon_noprofile_circle)
-                    .error(R.drawable.icon_noprofile_circle)
-                    .transform(new CircleTransform())
-                    .into(img_user);
+            img_origin.setImageURI(uriImage);
+//            Picasso.get().load(f)
+//                    .placeholder(R.drawable.icon_noprofile_circle)
+//                    .error(R.drawable.icon_noprofile_circle)
+//                    .transform(new CircleTransform())
+//                    .into(img_user);
 
             //get the current timeStamp and strore that in the time Variable
             Long tsLong = System.currentTimeMillis() / 1000;
             timestamp = tsLong.toString();
 
-//            Toast.makeText(getApplicationContext(), timestamp, Toast.LENGTH_SHORT).show();
-
-//            new Upload(img_user, "Profile_" + Statics.my_id + "_" + timestamp).execute();
             Bitmap bitImage = ((BitmapDrawable) img_origin.getDrawable()).getBitmap();
-            new UploadProfileTask(bitImage, "Profile_" + Statics.my_id + "_" + timestamp).execute(image);
+            new UploadProfileTask(bitImage, "Profile_" + Statics.my_id + "_" + timestamp).execute(uriImage);
         }
     }
 
@@ -226,6 +235,13 @@ public class ProfileActivity extends AppCompatActivity {
         public UploadProfileTask(Bitmap image, String name) {
             this.image = image;
             this.name = name;
+
+            progress_upload.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
         }
 
         @Override
@@ -285,8 +301,14 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(Uri image) {
+        protected void onPostExecute(Uri uriImage) {
+            Picasso.get().load(uriImage)
+                    .placeholder(R.drawable.icon_noprofile_circle)
+                    .error(R.drawable.icon_noprofile_circle)
+                    .transform(new CircleTransform())
+                    .into(img_user);
             //show image uploaded
+            progress_upload.setVisibility(View.GONE);
             Toast.makeText(getApplicationContext(), "프로필이 업로드 되었습니다.", Toast.LENGTH_SHORT).show();
         }
     }

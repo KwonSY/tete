@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import honbab.voltage.com.fragment.MyFeedFragment;
 import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.Statics;
+import honbab.voltage.com.widget.OkHttpClientSingleton;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -18,14 +19,16 @@ public class CancleFeedTask extends AsyncTask<String, Void, Void> {
     private Context mContext;
     private OkHttpClient httpClient;
 
-    private String rest_name;
+    private int page;
     private int position;
 
     private String result;
+    private String rest_name;
 
-    public CancleFeedTask(Context mContext, OkHttpClient httpClient, int position) {
+    public CancleFeedTask(Context mContext, int page, int position) {
         this.mContext = mContext;
-        this.httpClient = httpClient;
+        this.httpClient = OkHttpClientSingleton.getInstance().getHttpClient();;
+        this.page = page;
         this.position = position;
     }
 
@@ -50,12 +53,12 @@ public class CancleFeedTask extends AsyncTask<String, Void, Void> {
             okhttp3.Response response = httpClient.newCall(request).execute();
             if (response.isSuccessful()) {
                 String bodyStr = response.body().string();
-                Log.e("abc", "CancleFeedTask  : " + bodyStr);
+
                 JSONObject obj = new JSONObject(bodyStr);
 
                 result = obj.getString("result");
             } else {
-//                    Log.d(TAG, "Error : " + response.code() + ", " + response.message());
+//                    Log.e(TAG, "Error : " + response.code() + ", " + response.message());
             }
 
         } catch (Exception e) {
@@ -68,40 +71,23 @@ public class CancleFeedTask extends AsyncTask<String, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
 //        super.onPostExecute(result);
+        Log.e("abc", "CancleFeedTask = " + page);
 
         if (result.equals("0")) {
             String activityName = mContext.getClass().getSimpleName();
 
             if (activityName.equals("MainActivity")) {
-//                FragmentManager fm = ((MainActivity) mContext).getSupportFragmentManager();
-                Fragment fragment = ((MainActivity) mContext).getSupportFragmentManager().findFragmentByTag("page:1");
-                ((MyFeedFragment) fragment).mAdapter.removeAt(position);
+                if (page == 0) {
 
-                if (((MyFeedFragment) fragment).mAdapter.getItemCount() == 0)
-                    new MyFeedListTask(mContext).execute();
-            } else if (activityName.equals("MyFeedListActivity")) {
-//                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-//                builder.setMessage(R.string.ask_cancle_godmuk);
-//                builder.setPositiveButton(R.string.yes,
-//                        new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                Resources res = mContext.getResources();
-//                                String text = String.format(res.getString(R.string.cancle_godmuk), rest_name);
-//                                Toast.makeText(mContext.getApplicationContext(), text, Toast.LENGTH_LONG).show();
-//
-//
-//                                new MyFeedListTask2(mContext, httpClient).execute();
-//                            }
-//                        });
-//                builder.setNegativeButton(R.string.no,
-//                        new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int which) {
-//
-//                            }
-//                        });
-//                builder.show();
+                } else if (page == 1) {
+                    Fragment fragment = ((MainActivity) mContext).getSupportFragmentManager().findFragmentByTag("page:1");
+                    ((MyFeedFragment) fragment).mAdapter.removeAt(position);
+
+                    if (((MyFeedFragment) fragment).mAdapter.getItemCount() == 0)
+                        new MyFeedListTask(mContext).execute();
+                }
             }
-
         }
+
     }
 }

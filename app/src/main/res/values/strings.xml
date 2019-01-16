@@ -13,7 +13,7 @@
     <string name="applicant">신청자</string>
     <string name="ask_godmuk_with">%s님과 같이 식사를 하시겠습니까?</string>
     <string name="ask_cancle_godmuk">같먹을 취소하시겠습니까?</string>
-    <string name="ask_cancle_restlike">음식점 좋아요를 취소하시겠습니까?</string>
+    <string name="ask_cancle_restlike">같이 먹을 음식점에서 제외하겠습니까?</string>
     <string name="cancle_godmuk">%s 같먹을 취소하였습니다.</string>
     <string name="cancle">취소하기</string>
     <string name="cancellation">취소</string>
@@ -38,6 +38,7 @@
     <string name="finish_rest_like">레스토랑 좋아요를 끝냈습니다.\n같먹 약속을 잡으러 가볼까요?</string>
     <string name="go_to_chat">대화하러 가기</string>
     <string name="go_to_get_feed">같이 먹을 사람 찾아보기</string>
+    <string name="go_to_godmuktime">같이먹기 신청</string>
     <string name="go_to_my_reserved">내 예약 보러가기</string>
     <string name="go_to_reserve_godmuk">같먹 예약하러 가기</string>
     <string name="law_personal">개인정보 취급방침</string>
@@ -66,13 +67,12 @@
     <string name="reserve_new_godmuk">"새로운 같먹예약"</string>
     <string name="save">저장</string>
     <string name="search">찾아보기</string>
-    <string name="search_godmuk_rest">음식점 둘러보기 시작!</string>
-    <string name="search_rest_in_this_area">같이 먹을 음식점 골라보세요.</string>
+    <string name="search_rest_in_this_area">음식점 선택하러 가기</string>
     <string name="search_rest_this_area">이 지역에서 검색</string>
     <string name="search_near_rest">주변 음식점 검색</string>
     <string name="select_diff_day">다른 날짜선택</string>
-    <string name="tab_1_like_rest">찾기</string>
-    <string name="tab_2_my">마이</string>
+    <string name="tab_1_like_rest">같이 먹을 사람찾기</string>
+    <string name="tab_2_my">예약된 일정</string>
     <string name="update">업데이트</string>
     <string name="update_app">같이먹어요 업데이트 버전이 나왔어요. 업데이트를 해주세요.</string>
     <string name="upload_profile_complete">프로필 사진이 업로드 되었습니다.</string>

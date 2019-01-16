@@ -121,9 +121,7 @@ public class RestLikeListAdapter extends RecyclerView.Adapter<RestLikeListAdapte
                 builder.setPositiveButton(R.string.yes,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-//                                new CancleRestLikeTask(mContext, httpClient, position).execute(data.getRest_id(), data.getRest_name());
-                                new CancleFeedTask(mContext, httpClient, position).execute(data.getFeed_id(), data.getRest_name());
-                                Log.e("abc", "position = " + position);
+                                new CancleFeedTask(mContext, 0, position).execute(data.getFeed_id(), data.getRest_name());
                                 removeAt(position);
                             }
                         });
@@ -136,8 +134,6 @@ public class RestLikeListAdapter extends RecyclerView.Adapter<RestLikeListAdapte
                 builder.show();
             }
         });
-
-
 
 //        Date tmp_time = new SimpleDateFormat("yyyyy-MM-dd HH:mm:ss").parse(data.getFeed_time());
 //        String feed_time = new SimpleDateFormat("MM/dd a hh:mm").format(tmp_time);
@@ -190,9 +186,14 @@ public class RestLikeListAdapter extends RecyclerView.Adapter<RestLikeListAdapte
     }
 
     public void removeAt(int position) {
+        Log.e("abc", "rlike remove = " + position);
         listViewItemList.remove(position);
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, listViewItemList.size());
+
+        if (position == 0)
+            notifyDataSetChanged();
+//        notifyItemRangeChanged(position, listViewItemList.size());
     }
 
     public void clearItemList() {

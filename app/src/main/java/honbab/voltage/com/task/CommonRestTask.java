@@ -58,7 +58,7 @@ public class CommonRestTask extends AsyncTask<String, Void, ArrayList<RestData>>
                 String bodyStr = response.body().string();
 
                 JSONObject obj = new JSONObject(bodyStr);
-
+                Log.e("abc", "CommonRestTask obj : " + obj);
                 int cnt_common_rest = obj.getInt("cnt");
                 JSONArray rest_arr = obj.getJSONArray("rest");
                 for (int i = 0; i < rest_arr.length(); i++) {
