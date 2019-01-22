@@ -71,6 +71,7 @@ public class ReservFeedTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... params) {
+        Log.e("abc", "ReservTask date_reserv = " + params[1]);
         FormBody body = new FormBody.Builder()
                 .add("opt", "reservation")
                 .add("my_id", Statics.my_id)
@@ -95,7 +96,6 @@ public class ReservFeedTask extends AsyncTask<String, Void, String> {
             if (response.isSuccessful()) {
                 String bodyStr = response.body().string();
                 Log.e("abc", "ReservTask bodyStr = " + bodyStr);
-
                 JSONObject obj = new JSONObject(bodyStr);
 
                 result = obj.getString("result");

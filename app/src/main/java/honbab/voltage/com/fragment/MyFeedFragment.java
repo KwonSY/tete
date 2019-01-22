@@ -56,7 +56,7 @@ public class MyFeedFragment extends Fragment {
     //마이프로필
     public View line_timeline_vertical;
     public ImageView img_my;
-    public TextView txt_myName, txt_comment;
+    public TextView txt_myName, txt_comment, btn_go_my_profile;
     //마이피드
     public SwipeRefreshLayout swipeContainer_myfeed;
     public SwipeRefreshLayout swipeContainer;
@@ -141,9 +141,10 @@ public class MyFeedFragment extends Fragment {
         img_my = (ImageView) getActivity().findViewById(R.id.img_my);
         txt_myName = (TextView) getActivity().findViewById(R.id.txt_myName);
         txt_comment = (TextView) getActivity().findViewById(R.id.txt_comment);
+        btn_go_my_profile = (TextView) getActivity().findViewById(R.id.btn_go_my_profile);
         line_timeline_vertical = (View) getActivity().findViewById(R.id.line_timeline_vertical);
-
         img_my.setOnClickListener(mOnClickListener);
+        btn_go_my_profile.setOnClickListener(mOnClickListener);
 
         swipeContainer_myfeed = (SwipeRefreshLayout) getActivity().findViewById(R.id.swipeContainer_myfeed);
         swipeContainer = (SwipeRefreshLayout) getActivity().findViewById(R.id.swipeContainer_myfeed);
@@ -179,10 +180,15 @@ public class MyFeedFragment extends Fragment {
                     startActivity(intent3);
 
                     break;
+                case R.id.btn_go_my_profile:
+                    Intent intent2 = new Intent(getActivity(), ProfileActivity.class);
+                    intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent2.putExtra("user_id", Statics.my_id);
+                    startActivity(intent2);
+
+                    break;
                 case R.id.btn_go_rest_like:
-//                    Fragment fragment = ((MainActivity) getActivity()).getSupportFragmentManager().getFragments().get(0);
                     Fragment fragment = ((MainActivity) getActivity()).getSupportFragmentManager().findFragmentByTag("page:0");
-//                    Log.e("abc", "씨발존나안되네" + ((RestLikeFragment) fragment).feedList.size());
 
                     if (((RestLikeFragment) fragment).mAdapter.getItemCount() > 0) {
                         ((MainActivity) getActivity()).viewPager.setCurrentItem(0);

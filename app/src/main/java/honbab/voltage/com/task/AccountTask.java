@@ -46,7 +46,6 @@ public class AccountTask extends AsyncTask<String, Void, UserData> {
 
     @Override
     protected void onPreExecute() {
-        Log.e("abc", "AccountTask mContext = " + mContext);
         if (mContext != null) {
             activityName = mContext.getClass().getSimpleName();
 //        fragment = (Fragment) ((MainActivity) mContext).pagerAdapter.instantiateItem(((MainActivity) mContext).viewPager, 1);
@@ -82,7 +81,11 @@ public class AccountTask extends AsyncTask<String, Void, UserData> {
                 String age = user_obj.getString("age");
                 String gender = user_obj.getString("gender");
                 token = user_obj.getString("token");
-                user_img = Statics.main_url + user_obj.getString("img_url");
+                if (user_obj.getString("img_url").contains("http")) {
+                    user_img = user_obj.getString("img_url");
+                } else {
+                    user_img = Statics.main_url + user_obj.getString("img_url");
+                }
                 comment = user_obj.getString("comment");
 
                 userData = new UserData(user_id, user_name, age, gender, token, user_img, null);

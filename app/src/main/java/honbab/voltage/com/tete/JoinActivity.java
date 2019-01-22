@@ -175,16 +175,15 @@ public class JoinActivity extends AppCompatActivity {
                     String bodyStr = response.body().string();
 
                     JSONObject obj = new JSONObject(bodyStr);
-                    Log.e("abc", "Join root = " + obj);
 
                     result = obj.getString("result");
 
                     if (result.equals("0")) {
                         JSONObject obj_user = obj.getJSONObject("user");
                         Statics.my_id = obj_user.getString("sid");
-                        Statics.my_username = obj_user.getString("user_name");
-                        email = obj.getString("email");
-                        Statics.my_gender = obj.getString("gender");
+                        Statics.my_username = obj_user.getString("name");
+                        email = obj_user.getString("email");
+                        Statics.my_gender = obj_user.getString("gender");
                     }
                 }
             } catch (Exception e) {

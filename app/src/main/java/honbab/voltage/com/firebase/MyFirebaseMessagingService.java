@@ -1,8 +1,6 @@
 package honbab.voltage.com.firebase;
 
 import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +9,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
@@ -169,25 +166,26 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 
 
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        // Notification Channel is required for Android O and above
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(
-                    channelId, "channel_name", NotificationManager.IMPORTANCE_DEFAULT
-            );
-            channel.setDescription("channel description");
-            channel.setShowBadge(true);
-            channel.canShowBadge();
-            channel.enableLights(true);
-            channel.setLightColor(Color.RED);
-            channel.enableVibration(true);
-            channel.setVibrationPattern(new long[]{100, 200, 300, 400, 500});
-            notificationManager.createNotificationChannel(channel);
-        }
-//        int numMessages = 0;
-//        notificationBuilder.setNumber(++numMessages);
-        notificationManager.notify(0, notificationBuilder.build());
+//        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//
+//        // Notification Channel is required for Android O and above
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            NotificationChannel channel = new NotificationChannel(
+//                    channelId, "channel_name", NotificationManager.IMPORTANCE_DEFAULT
+//            );
+//            channel.setDescription("channel description");
+//            channel.setShowBadge(true);
+//            channel.canShowBadge();
+//            channel.enableLights(true);
+//            channel.setLightColor(Color.RED);
+//            channel.enableVibration(true);
+//            channel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+//            channel.setVibrationPattern(new long[]{100, 200, 300, 400, 500});
+//            notificationManager.createNotificationChannel(channel);
+//        }
+////        int numMessages = 0;
+////        notificationBuilder.setNumber(++numMessages);
+//        notificationManager.notify(0, notificationBuilder.build());
 
 
 

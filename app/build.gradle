@@ -10,8 +10,8 @@ android {
         applicationId "honbab.voltage.com.tete"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 13
-        versionName "1.0.4"
+        versionCode 15
+        versionName "1.0.6"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -66,14 +66,18 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
-    // Firebase
-    implementation 'com.firebase:firebase-client-android:2.3.1'
+    //facebook
+    implementation 'com.facebook.android:facebook-login:4.39.0'
 
+    // Firebase
+    implementation 'com.google.firebase:firebase-auth:16.0.4'
+    implementation 'com.firebase:firebase-client-android:2.3.1'
     //    implementation 'com.firebaseui:firebase-ui-database:4.2.1'
     implementation 'com.google.firebase:firebase-core:16.0.4'
     implementation 'com.google.firebase:firebase-database:16.0.3'
     implementation 'com.google.firebase:firebase-messaging:17.3.3'
     implementation 'com.google.firebase:firebase-storage:16.0.3'
+    implementation 'com.firebaseui:firebase-ui-auth:4.3.1'
 
     //Daum map
     implementation files('libs/libDaumMapAndroid.jar')

@@ -69,7 +69,7 @@ public class LoginTask extends AsyncTask<String, Void, String> {
                 if (result.equals("0")) {
                     JSONObject obj_user = obj.getJSONObject("user");
                     Statics.my_id = obj_user.getString("sid");
-                    Statics.my_username = obj_user.getString("user_name");
+                    Statics.my_username = obj_user.getString("name");
                     String email = obj_user.getString("email");
                     Statics.my_gender = obj_user.getString("gender");
                     age = obj_user.getString("age");

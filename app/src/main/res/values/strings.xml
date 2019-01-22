@@ -43,6 +43,7 @@
     <string name="go_to_reserve_godmuk">같먹 예약하러 가기</string>
     <string name="law_personal">개인정보 취급방침</string>
     <string name="law_privacy">이용약관</string>
+    <string name="loading">로딩중...</string>
     <string name="logout">로그아웃</string>
     <string name="make_new_godmuk">새로운 같먹을 만들어보세요.</string>
     <string name="my_poke_list">내가 콕찌른 리스트</string>
@@ -65,6 +66,7 @@
     <string name="repoke">다시 콕찌르기</string>
     <string name="reservate">예약하기</string>
     <string name="reserve_new_godmuk">"새로운 같먹예약"</string>
+    <string name="rest_like_feed_time">신청한 약속 시간 : </string>
     <string name="save">저장</string>
     <string name="search">찾아보기</string>
     <string name="search_rest_in_this_area">음식점 선택하러 가기</string>
@@ -93,8 +95,22 @@
     <string name="connect_network">인터넷 연결이 원활하지 않습니다.<br></br>LTE/WIFI 상태를 확인해주세요.</string>
     <string name="use_next_permission">다음 기능을 사용하고자 합니다.</string>
 
-    <!---->
+    <!-- google map -->
     <string name="google_maps_api_key">AIzaSyB57cM_1hIxkWNU8qN60QHfqzEleqKDE0Y</string>
+
+    <!-- facebook -->
+    <string name="facebook_app_id">2307098949524647</string>
+    <string name="fb_login_protocol_scheme">fb2307098949524647</string>
+
+
+    <string name="notification_channel_message_title">홍길동</string>
+    <string name="notification_channel_message_description">디스크립션</string>
+    <string name="notification_channel_comment_title">코멘트</string>
+    <string name="notification_channel_comment_description">코멘트디스크립션</string>
+    <string name="notification_channel_notice_title">노티스타이틀</string>
+    <string name="notification_channel_notice_description">노티스디스크립션</string>
+
+
 
     <!-- xxxxx  slidingPanel -->
     <string name="action_hide">Hide Panel</string>

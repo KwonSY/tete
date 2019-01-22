@@ -1,7 +1,11 @@
 package honbab.voltage.com.tete;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -53,6 +58,7 @@ import honbab.voltage.com.data.RestData;
 import honbab.voltage.com.task.ChatFCMTask;
 import honbab.voltage.com.task.CommonRestTask;
 import honbab.voltage.com.utils.ButtonUtil;
+import honbab.voltage.com.utils.NetworkUtil;
 import honbab.voltage.com.widget.CircleTransform;
 import honbab.voltage.com.widget.CustomTimePickerDialog;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
@@ -60,7 +66,7 @@ import okhttp3.OkHttpClient;
 
 public class ChatActivity extends AppCompatActivity {
     private OkHttpClient httpClient;
-//    private SessionManager session;
+    //    private SessionManager session;
     private DatabaseReference mDatabase;
 
     private LinearLayoutManager layoutManager;
@@ -87,81 +93,98 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-        Log.e("abc", "ChatActivity : " + this);
-        Log.e("abc", "ChatActivity this: " + ChatActivity.this);
-        httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        Intent intent = getIntent();
+        if (!NetworkUtil.isOnline(this)) {
+            //인터넷이 안 될 때
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage(R.string.connect_network);
+            builder.setPositiveButton(R.string.yes,
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent mStartActivity = new Intent(ChatActivity.this, MainActivity.class);
+                            int mPendingIntentId = 123456;
+                            PendingIntent mPendingIntent = PendingIntent.getActivity(ChatActivity.this, mPendingIntentId, mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
+                            AlarmManager mgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                            mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
+                            System.exit(0);
+                        }
+                    });
+            builder.show();
+        } else {
+
+            httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
+            mDatabase = FirebaseDatabase.getInstance().getReference();
+
+            Intent intent = getIntent();
 //        fromId = intent.getStringExtra("fromId");
 //        fromUserName = intent.getStringExtra("fromUserName");
-        toId = intent.getStringExtra("toId");
+            toId = intent.getStringExtra("toId");
 //        toToken = intent.getStringExtra("toToken");
-        if (intent.getParcelableExtra("restData") != null)
-        restData = (RestData) intent.getParcelableExtra("restData");
-        else
-            restData = new RestData();
-        Log.e("abc", "fromId = " + fromId + ", toId = " + toId);
-        Log.e("abc", "toUserName = " + toUserName);
-        Log.e("abc", "toUserImg = " + toUserImg);
-        Log.e("abc", "getRest_name = " + restData.getRest_name());
-        Statics.to_id = toId;
+            if (intent.getParcelableExtra("restData") != null)
+                restData = (RestData) intent.getParcelableExtra("restData");
+            else
+                restData = new RestData();
+            Log.e("abc", "fromId = " + fromId + ", toId = " + toId);
+            Log.e("abc", "toUserName = " + toUserName);
+            Log.e("abc", "toUserImg = " + toUserImg);
+            Log.e("abc", "getRest_name = " + restData.getRest_name());
+            Statics.to_id = toId;
 
-        //상단바
-        title_topbar = (TextView) findViewById(R.id.title_topbar);
-        topbar_img_user = (ImageView) findViewById(R.id.topbar_img_user);
-        txt_userName = (TextView) findViewById(R.id.txt_userName);
-        title_topbar.setText("");
+            //상단바
+            title_topbar = (TextView) findViewById(R.id.title_topbar);
+            topbar_img_user = (ImageView) findViewById(R.id.topbar_img_user);
+            txt_userName = (TextView) findViewById(R.id.txt_userName);
+            title_topbar.setText("");
 //        Picasso.get().load(toUserImg)
 //                .placeholder(R.drawable.icon_noprofile_circle)
 //                .error(R.drawable.icon_noprofile_circle)
 //                .transform(new CircleTransform())
 //                .into(topbar_img_user);
 //        txt_userName.setText(toUserName);
-        topbar_img_user.setOnClickListener(mOnClickListener);
+            topbar_img_user.setOnClickListener(mOnClickListener);
 
-        //채팅 없을 때
-        layout_no_chat = (LinearLayout) findViewById(R.id.layout_no_chat);
-        ImageView no_chat_img_user = (ImageView) findViewById(R.id.no_chat_img_user);
-        TextView no_chat_txt_userName = (TextView) findViewById(R.id.no_chat_txt_userName);
-        TextView no_chat_explain = (TextView) findViewById(R.id.no_chat_explain);
-        Picasso.get().load(toUserImg)
-                .placeholder(R.drawable.icon_noprofile_circle)
-                .error(R.drawable.icon_noprofile_circle)
-                .transform(new CircleTransform())
-                .into(no_chat_img_user);
-        no_chat_txt_userName.setText(toUserName);
-        String str_no_chat = String.format(getResources().getString(R.string.chat_start), toUserName);
-        no_chat_explain.setText(str_no_chat);
-        no_chat_img_user.setOnClickListener(mOnClickListener);
+            //채팅 없을 때
+            layout_no_chat = (LinearLayout) findViewById(R.id.layout_no_chat);
+            ImageView no_chat_img_user = (ImageView) findViewById(R.id.no_chat_img_user);
+            TextView no_chat_txt_userName = (TextView) findViewById(R.id.no_chat_txt_userName);
+            TextView no_chat_explain = (TextView) findViewById(R.id.no_chat_explain);
+            Picasso.get().load(toUserImg)
+                    .placeholder(R.drawable.icon_noprofile_circle)
+                    .error(R.drawable.icon_noprofile_circle)
+                    .transform(new CircleTransform())
+                    .into(no_chat_img_user);
+            no_chat_txt_userName.setText(toUserName);
+            String str_no_chat = String.format(getResources().getString(R.string.chat_start), toUserName);
+            no_chat_explain.setText(str_no_chat);
+            no_chat_img_user.setOnClickListener(mOnClickListener);
 
-        layoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
-        layoutManager.setStackFromEnd(true);
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+            layoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
+            layoutManager.setStackFromEnd(true);
+            recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 //        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(layoutManager);
-        mAdapter = new ChatAdapter(getApplicationContext());
-        recyclerView.setAdapter(mAdapter);
+            recyclerView.setLayoutManager(layoutManager);
+            mAdapter = new ChatAdapter(getApplicationContext());
+            recyclerView.setAdapter(mAdapter);
 
 //        messages = new ArrayList<>();
 
-        btn_call_rest = (Button) findViewById(R.id.btn_call_rest);
-        btn_call_rest.setText(restData.getRest_phone());
-        btn_call_rest.setOnClickListener(mOnClickListener);
-        if (restData.getRest_id() == null || restData.getRest_id().equals(null)) {
-            btn_call_rest.setVisibility(View.GONE);
+            btn_call_rest = (Button) findViewById(R.id.btn_call_rest);
+            btn_call_rest.setText(restData.getRest_phone());
+            btn_call_rest.setOnClickListener(mOnClickListener);
+            if (restData.getRest_id() == null || restData.getRest_id().equals(null)) {
+                btn_call_rest.setVisibility(View.GONE);
+            }
+
+            icon_more_dots = (ImageView) findViewById(R.id.icon_more_dots);
+            icon_more_dots.setOnClickListener(mOnClickListener);
+
+            edit_chat = (EditText) findViewById(R.id.edit_chat);
+
+            btn_send = (TextView) findViewById(R.id.btn_send_chat);
+            btn_send.setOnClickListener(mOnClickListener);
+
+            ButtonUtil.setBackButtonClickListener(this);
         }
-
-        icon_more_dots = (ImageView) findViewById(R.id.icon_more_dots);
-        icon_more_dots.setOnClickListener(mOnClickListener);
-
-        edit_chat = (EditText) findViewById(R.id.edit_chat);
-
-        btn_send = (TextView) findViewById(R.id.btn_send_chat);
-        btn_send.setOnClickListener(mOnClickListener);
-
-        ButtonUtil.setBackButtonClickListener(this);
-
 
 //        drawerLayout = (DrawerLayout) findViewById(R.id.layout_drawer);
 //        drawerLayout.addDrawerListener(mDrawerListener);
@@ -172,14 +195,16 @@ public class ChatActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        loadFirebaseDatabase(fromId, toId);
+        if (NetworkUtil.isOnline(this)) {
+            loadFirebaseDatabase(fromId, toId);
 
-        new CommonRestTask(ChatActivity.this, httpClient).execute(toId, null);
+            new CommonRestTask(ChatActivity.this, httpClient).execute(toId, null);
 
-        try {
-            Badges.setBadge(this, 0);
-        } catch (BadgesNotSupportedException e) {
-            e.printStackTrace();
+            try {
+                Badges.setBadge(this, 0);
+            } catch (BadgesNotSupportedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -326,8 +351,6 @@ public class ChatActivity extends AppCompatActivity {
 
     private void loadFirebaseDatabase(String fromId, String toId) {
         mAdapter.clearItemList();
-//        final int position = 0;
-//        final int pos_a = 0;
         final String[] chatoutYn = {"e"};
 
         mDatabase.child("user-messages").child(fromId).child(toId).addChildEventListener(new ChildEventListener() {

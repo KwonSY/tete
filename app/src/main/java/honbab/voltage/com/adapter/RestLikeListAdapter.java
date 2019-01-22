@@ -61,7 +61,7 @@ public class RestLikeListAdapter extends RecyclerView.Adapter<RestLikeListAdapte
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         final FeedData data = listViewItemList.get(position);
-        final String feed_id = data.getFeed_id();
+//        final String feed_id = data.getFeed_id();
         RestData restData = new RestData(data.getRest_id(), data.getRest_name(),
                 data.getCompound_code(), data.getLatLng(),
                 data.getPlace_id(), data.getRest_img(), data.getRest_phone(), data.getVicinity());
@@ -101,9 +101,8 @@ public class RestLikeListAdapter extends RecyclerView.Adapter<RestLikeListAdapte
         holder.txt_restName.setText(data.getRest_name());
 
 
-        Log.e("abc", "feed_id = " + feed_id);
-        final ReqFeedeeAdapter mAdapter = new ReqFeedeeAdapter(mContext, httpClient,
-                feed_id, restData, usersList);
+//        Log.e("abc", "feed_id = " + feed_id);
+        final ReqFeedeeAdapter mAdapter = new ReqFeedeeAdapter(mContext, httpClient, data.getFeed_time(), restData, usersList);
 
         if (usersList.size() == 0) {
             holder.txt_no_req.setVisibility(View.VISIBLE);

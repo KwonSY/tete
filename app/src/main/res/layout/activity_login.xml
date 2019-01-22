@@ -16,12 +16,12 @@
             android:layout_width="wrap_content"
             android:layout_height="90dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="20dp"
             android:src="@drawable/txt_logo_et" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
             android:orientation="horizontal">
 
             <TextView
@@ -70,8 +70,18 @@
             android:id="@+id/btn_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:background="@drawable/btn_circle_bk1"
             android:text="로그인" />
+
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/btn_facebook_join"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:text="페이스북 로그인"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="30dp" />
 
         <TextView
             android:id="@+id/btn_go_join"

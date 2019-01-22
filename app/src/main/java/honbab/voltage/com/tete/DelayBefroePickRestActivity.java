@@ -146,6 +146,8 @@ public class DelayBefroePickRestActivity extends AppCompatActivity {
                                 });
                         builder.show();
                     } else if(today_status.equals("n")) {
+                        DecimalFormat formatter = new DecimalFormat("00");
+
                         if (cnt_reserved > 0) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(DelayBefroePickRestActivity.this);
                             builder.setMessage(String.format(getResources().getString(R.string.already_reserved_godmuk), String.valueOf(day)));
@@ -153,7 +155,8 @@ public class DelayBefroePickRestActivity extends AppCompatActivity {
                                     new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
 //                                            String[] feed_time = {String.valueOf(year), String.valueOf(month), String.valueOf(day), String.valueOf(hour), String.valueOf(min)};
-                                            feed_time = String.valueOf(year) + "-" + String.valueOf(month) + "-" + String.valueOf(day) + " " + String.valueOf(hour) + ":" + String.valueOf(min);
+                                            feed_time = String.valueOf(year) + "-" + formatter.format(month) + "-" + String.valueOf(day) + " "
+                                                    + String.valueOf(hour) + ":" + "00:00";
 
                                             finish();
                                             Intent intent = new Intent(DelayBefroePickRestActivity.this, GodTinderActivity.class);
@@ -176,7 +179,8 @@ public class DelayBefroePickRestActivity extends AppCompatActivity {
                             builder.show();
                         } else {
 //                            String[] feed_time = {String.valueOf(year), String.valueOf(month), String.valueOf(day), String.valueOf(hour), String.valueOf(min)};
-                            feed_time = String.valueOf(year) + "-" + String.valueOf(month) + "-" + String.valueOf(day) + " " + String.valueOf(hour) + ":" + String.valueOf(min);
+                            feed_time = String.valueOf(year) + "-" + formatter.format(month) + "-" + String.valueOf(day) + " "
+                                    + String.valueOf(hour) + ":" + "00:00";
 
                             finish();
                             Intent intent = new Intent(DelayBefroePickRestActivity.this, GodTinderActivity.class);

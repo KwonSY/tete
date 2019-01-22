@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         Statics.my_username = user.get("my_username");
         Statics.my_gender = user.get("my_gender");
 
+        Log.e("abc", "MainAct my_id = " + Statics.my_id);
         Log.e("abc", "MainAct my_username = " + Statics.my_username);
         //Wifi check
 //        if (!NetworkUtil.isNetworkPresent(this)) {
@@ -98,7 +99,8 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             } else {
 
-                if (Statics.my_id == null || Statics.my_username == null) {
+                if (Statics.my_id == null || Statics.my_username == null || Statics.my_username.equals("null")) {
+                    Log.e("abc", "MainAct3 my_id = " + Statics.my_id);
                     Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
@@ -187,7 +189,8 @@ public class MainActivity extends AppCompatActivity {
             new VersionTask(MainActivity.this, httpClient).execute();
         }
 
-//        viewPager.setCurrentItem(tab_position);
+        if (tab_position == 1)
+            viewPager.setCurrentItem(tab_position);
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancelAll();
