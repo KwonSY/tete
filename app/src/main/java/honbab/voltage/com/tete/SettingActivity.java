@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import org.json.JSONObject;
 
 import honbab.voltage.com.utils.ButtonUtil;
@@ -84,6 +86,7 @@ public class SettingActivity extends AppCompatActivity {
                     break;
                 case R.id.btn_logout:
                     session.logoutUser();
+                    FirebaseAuth.getInstance().signOut();
 
                     Intent intent2 = new Intent(SettingActivity.this, MainActivity.class);
                     intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

@@ -3,6 +3,7 @@ package honbab.voltage.com.tete;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -15,10 +16,15 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 
@@ -40,7 +46,10 @@ public class JoinActivity extends AppCompatActivity {
 
     private OkHttpClient httpClient;
     private SessionManager session;
+    private FirebaseAuth firebaseAuth;
 
+    private RelativeLayout layout_progress;
+//    private ProgressBar progressBar;
     private EditText edit_email, edit_name, edit_password;
     private CheckBox chk_privacy, chk_personal;
 
@@ -53,6 +62,10 @@ public class JoinActivity extends AppCompatActivity {
 
         httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
         session = new SessionManager(getApplicationContext());
+        firebaseAuth = FirebaseAuth.getInstance();
+
+        layout_progress = (RelativeLayout) findViewById(R.id.layout_progress);
+//        progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
             @Override
@@ -117,6 +130,7 @@ public class JoinActivity extends AppCompatActivity {
                     String str_email = edit_email.getText().toString().trim();
                     String password = edit_password.getText().toString().trim();
                     Log.e("abc", "chk_privacy.isChecked() = " + chk_privacy.isChecked());
+
                     if (user_name.equals("") || user_name == null) {
                         Toast.makeText(JoinActivity.this, R.string.enter_name, Toast.LENGTH_SHORT).show();
                     } else if (str_email.equals("") || str_email == null) {
@@ -140,7 +154,9 @@ public class JoinActivity extends AppCompatActivity {
         }
     };
 
-    private class JoinTask extends AsyncTask<Void, Void, Void> {
+
+
+    private class JoinTask extends AsyncTask<String, Void, Void> {
         String user_name, email, password;
         String result;
 
@@ -155,10 +171,13 @@ public class JoinActivity extends AppCompatActivity {
             Encryption.setPassword(password);
             Encryption.encryption(password);
             password = Encryption.getPassword();
+
+//            progressBar.setVisibility(View.VISIBLE);
+            layout_progress.setVisibility(View.VISIBLE);
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Void doInBackground(String... params) {
             FormBody body = new FormBody.Builder()
                     .add("opt", "join")
                     .add("user_name", user_name.trim())
@@ -197,17 +216,36 @@ public class JoinActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             if (result.equals("0")) {
-
 //                progressDialog.setMessage("가입 중...");
 //                progressDialog.show();
 
-                session.createLoginSession(Statics.my_id, Statics.my_username, Statics.my_gender);
+                //create user
+                firebaseAuth.createUserWithEmailAndPassword(email, password)
+                        .addOnCompleteListener(JoinActivity.this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+//                                Toast.makeText(getActivity(), "createUserWithEmail:onComplete:" + task.isSuccessful(), Toast.LENGTH_SHORT).show();
 
-                Toast.makeText(JoinActivity.this, "환영합니다. 우리 이제 같이먹어요!", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getApplicationContext(), JoinActivity2.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                finish();
+                                layout_progress.setVisibility(View.GONE);
+                                Log.e("abc", "task.isSuccessful() = " + task.isSuccessful());
+                                if (!task.isSuccessful()) {
+                                    Toast.makeText(getApplicationContext(), "가입에 실패하셨습니다.", Toast.LENGTH_SHORT).show();
+                                } else {
+//                                            Toast.makeText(getApplicationContext(), "같이먹어요.에 오신 것을 환영합니다!", Toast.LENGTH_SHORT).show();
+                                    session.createLoginSession(Statics.my_id, Statics.my_username, Statics.my_gender);
+
+                                    Log.e("abc", "token = " + token);
+
+                                    Toast.makeText(JoinActivity.this, "환영합니다. 우리 이제 같이먹어요!", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(getApplicationContext(), JoinActivity2.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    intent.putExtra("token", token);
+                                    intent.putExtra("uid", firebaseAuth.getCurrentUser().getUid());
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            }
+                        });
             } else if (result.equals("1")) {
                 Toast.makeText(JoinActivity.this.getApplicationContext(), "잘못된 오류입니다. 다시 시도하세요.", Toast.LENGTH_SHORT).show();
             } else if (result.equals("2")) {

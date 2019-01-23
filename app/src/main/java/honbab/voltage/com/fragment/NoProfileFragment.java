@@ -11,7 +11,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import honbab.voltage.com.task.LoginTask;
+import com.google.firebase.auth.FirebaseAuth;
+
+import honbab.voltage.com.task.LoginByUidTask;
 import honbab.voltage.com.tete.JoinActivity;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
@@ -85,7 +87,9 @@ public class NoProfileFragment extends Fragment {
                     } else if (password.length() == 0) {
                         Toast.makeText(getActivity(), R.string.enter_password, Toast.LENGTH_SHORT).show();
                     } else {
-                        new LoginTask(getActivity(), httpClient).execute(email, password);
+//                        new LoginTask(getActivity(), httpClient).execute(email, password);
+                        //vvvvvvvvvvvvvvvvvv
+                        new LoginByUidTask(getActivity()).execute(email, FirebaseAuth.getInstance().getCurrentUser().getUid());
                     }
 
                     break;

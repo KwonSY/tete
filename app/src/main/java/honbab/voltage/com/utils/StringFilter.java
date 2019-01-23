@@ -58,15 +58,11 @@ public class StringFilter {
         StringBuilder stringBuilder = new StringBuilder(end - start);
         for (int i = start; i < end; i++) {
             char c = source.charAt(i);
-            Log.e("abc", "stringBuilder = " + stringBuilder);
-            Log.e("abc", "char c = " + c);
-            Log.e("abc", "pattern = " + pattern);
+
             if (!pattern.matcher(Character.toString(c)).matches()) {
 //            if (stringBuilder.toString().matches("[0-9|a-z|A-Z|ㄱ-ㅎ|ㅏ-ㅣ|가-힝]*")) {
-                Log.e("abc", "통과1 = " + mode);
                 stringBuilder.append(c);
             } else {
-                Log.e("abc", "통과2 = " + mode);
                 if (mode == ALLOW_ALPHANUMERIC) {
                     showToast(context.getString(R.string.input_error_alphanum));
                 } else {

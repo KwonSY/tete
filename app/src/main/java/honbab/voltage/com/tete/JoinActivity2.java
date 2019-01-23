@@ -19,10 +19,16 @@ import android.widget.ImageView;
 import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
@@ -48,13 +54,16 @@ public class JoinActivity2 extends AppCompatActivity {
     private OkHttpClient httpClient;
     private SessionManager session;
     private RequestQueue mQueue;
+    private FirebaseAuth mAuth;
 
+    private RelativeLayout layout_progress;
     private ImageView img_origin, img_user;
     private RadioGroup radio_group;
     private RadioButton radio_male, radio_female;
     private NumberPicker numberPicker;
+    private Button btn_start;
 
-    String gender = "m", age = "24", comment = "";
+    String gender = "m", age = "24", comment = "", token, uid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,10 +73,33 @@ public class JoinActivity2 extends AppCompatActivity {
         httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
         session = new SessionManager(getApplicationContext());
         mQueue = Volley.newRequestQueue(this);
+        mAuth = FirebaseAuth.getInstance();
 
         if (Statics.my_id == null) {
             HashMap<String, String> user = session.getUserDetails();
             Statics.my_id = user.get("my_id");
+        }
+
+        layout_progress = (RelativeLayout) findViewById(R.id.layout_progress);
+
+        Intent intent = getIntent();
+        token = intent.getStringExtra("token");
+        uid = intent.getStringExtra("uid");
+        Log.e("abc", "JoinActivity2 token = " + token);
+        Log.e("abc", "JoinActivity2 uid = " + uid);
+        if (token == null) {
+            FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+                @Override
+                public void onSuccess(InstanceIdResult instanceIdResult) {
+                    token = instanceIdResult.getToken();
+//                    new UpdateTokenTask(JoinActivity2.this).execute(token);
+                    Log.e("abc", "JoinActivit3 token = " + token);
+                }
+            });
+        }
+        if (uid == null) {
+            uid = mAuth.getCurrentUser().getUid();
+            Log.e("abc", "JoinActivity33 uid = " + uid);
         }
 
         img_origin = (ImageView) findViewById(R.id.img_origin);
@@ -126,7 +158,7 @@ public class JoinActivity2 extends AppCompatActivity {
             }
         });
 
-        Button btn_start = (Button) findViewById(R.id.btn_start);
+        btn_start = (Button) findViewById(R.id.btn_start);
         btn_start.setOnClickListener(mOnClickListener);
     }
 
@@ -154,9 +186,7 @@ public class JoinActivity2 extends AppCompatActivity {
                     } else if (numberPicker.getValue() == 0) {
                         Toast.makeText(getApplicationContext(), R.string.enter_age, Toast.LENGTH_SHORT).show();
                     } else {
-//                        radio_male;
-                        Log.e("abc", "xxx = " + Statics.my_id + ", " + gender + ", " + age + ", " + comment);
-                        new UpdateProfileTask().execute(gender, age, comment);
+                        new UpdateProfileTask().execute(gender, age, comment, token, uid);
                     }
 
                     break;
@@ -164,12 +194,25 @@ public class JoinActivity2 extends AppCompatActivity {
         }
     };
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        uid = currentUser.getEmail();
+        uid = currentUser.getUid();
+        uid = currentUser.getUid();
+//        updateUI(currentUser);
+    }
+
     private class UpdateProfileTask extends AsyncTask<String, String, Void> {
         String result;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+
         }
 
         @Override
@@ -180,6 +223,8 @@ public class JoinActivity2 extends AppCompatActivity {
                     .add("gender", params[0])
                     .add("age", params[1])
                     .add("comment", params[2])
+                    .add("token", params[3])
+                    .add("uid", params[4])
                     .build();
 
             Request request = new Request.Builder().url(Statics.opt_url).post(body).build();
@@ -287,6 +332,9 @@ public class JoinActivity2 extends AppCompatActivity {
         public UploadProfileTask(Bitmap image, String name) {
             this.image = image;
             this.name = name;
+
+            layout_progress.setVisibility(View.VISIBLE);
+            btn_start.setEnabled(false);
         }
 
         @Override
@@ -325,6 +373,8 @@ public class JoinActivity2 extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Uri image) {
+            layout_progress.setVisibility(View.GONE);
+            btn_start.setEnabled(true);
             Toast.makeText(getApplicationContext(), R.string.upload_profile_complete, Toast.LENGTH_SHORT).show();
         }
     }

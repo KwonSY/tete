@@ -30,6 +30,7 @@ import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.firebase.client.ServerValue;
 import com.github.arturogutierrez.Badges;
@@ -62,11 +63,12 @@ import honbab.voltage.com.utils.NetworkUtil;
 import honbab.voltage.com.widget.CircleTransform;
 import honbab.voltage.com.widget.CustomTimePickerDialog;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
+import honbab.voltage.com.widget.SessionManager;
 import okhttp3.OkHttpClient;
 
 public class ChatActivity extends AppCompatActivity {
     private OkHttpClient httpClient;
-    //    private SessionManager session;
+    private SessionManager session;
     private DatabaseReference mDatabase;
 
     private LinearLayoutManager layoutManager;
@@ -116,19 +118,24 @@ public class ChatActivity extends AppCompatActivity {
             mDatabase = FirebaseDatabase.getInstance().getReference();
 
             Intent intent = getIntent();
-//        fromId = intent.getStringExtra("fromId");
-//        fromUserName = intent.getStringExtra("fromUserName");
             toId = intent.getStringExtra("toId");
-//        toToken = intent.getStringExtra("toToken");
+            Statics.to_id = toId;
             if (intent.getParcelableExtra("restData") != null)
                 restData = (RestData) intent.getParcelableExtra("restData");
             else
                 restData = new RestData();
+            if (fromId == null) {
+                session = new SessionManager(getApplicationContext());
+                HashMap<String, String> user = session.getUserDetails();
+                Statics.my_id = user.get("my_id");
+                Statics.my_username = user.get("my_username");
+                Statics.my_gender = user.get("my_gender");
+                fromId = Statics.my_id;
+            }
             Log.e("abc", "fromId = " + fromId + ", toId = " + toId);
             Log.e("abc", "toUserName = " + toUserName);
             Log.e("abc", "toUserImg = " + toUserImg);
             Log.e("abc", "getRest_name = " + restData.getRest_name());
-            Statics.to_id = toId;
 
             //상단바
             title_topbar = (TextView) findViewById(R.id.title_topbar);
@@ -165,8 +172,6 @@ public class ChatActivity extends AppCompatActivity {
             recyclerView.setLayoutManager(layoutManager);
             mAdapter = new ChatAdapter(getApplicationContext());
             recyclerView.setAdapter(mAdapter);
-
-//        messages = new ArrayList<>();
 
             btn_call_rest = (Button) findViewById(R.id.btn_call_rest);
             btn_call_rest.setText(restData.getRest_phone());
@@ -257,6 +262,10 @@ public class ChatActivity extends AppCompatActivity {
                             switch (item.getItemId()) {
                                 case R.id.chat_out:
                                     goOutFirebaseChat(fromId, fromId, toId);
+
+                                    return true;
+                                case R.id.report:
+                                    Toast.makeText(ChatActivity.this, "베타기능에 포함됩니다. 조금만 기다려주세요.", Toast.LENGTH_SHORT).show();
 
                                     return true;
                             }

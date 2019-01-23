@@ -25,6 +25,7 @@ import android.widget.ImageView;
 
 import com.github.arturogutierrez.Badges;
 import com.github.arturogutierrez.BadgesNotSupportedException;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -99,9 +100,15 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             } else {
 
+//                FirebaseUser fireUser = FirebaseAuth.getInstance().getCurrentUser();
+//                Log.e("abc", "fireUser = " + fireUser.getUid());
                 if (Statics.my_id == null || Statics.my_username == null || Statics.my_username.equals("null")) {
-                    Log.e("abc", "MainAct3 my_id = " + Statics.my_id);
                     Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    finish();
+                } else if (FirebaseAuth.getInstance().getCurrentUser() == null || Statics.my_gender == null) {
+                    Intent intent = new Intent(MainActivity.this, JoinActivity2.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     finish();

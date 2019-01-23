@@ -87,6 +87,8 @@ public class AccountTask extends AsyncTask<String, Void, UserData> {
                     user_img = Statics.main_url + user_obj.getString("img_url");
                 }
                 comment = user_obj.getString("comment");
+                if (comment.equals("null"))
+                    comment = "";
 
                 userData = new UserData(user_id, user_name, age, gender, token, user_img, null);
                 userData.setComment(comment);

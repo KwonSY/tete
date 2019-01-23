@@ -35,23 +35,24 @@ import org.json.JSONObject;
 import java.util.concurrent.ExecutionException;
 
 import honbab.voltage.com.task.JoinCheckTask;
-import honbab.voltage.com.task.LoginTask;
+import honbab.voltage.com.task.LoginByUidTask;
+import honbab.voltage.com.widget.Encryption;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
 import honbab.voltage.com.widget.SessionManager;
 import okhttp3.OkHttpClient;
 
 public class LoginActivity extends BaseActivity {
-
     private OkHttpClient httpClient;
     private SessionManager session;
-
-    FirebaseAuth mAuth;
+    private FirebaseAuth mAuth;
     private CallbackManager mCallbackManager;
+
+    private static final int RC_SIGN_IN = 9001;
 
     private EditText edit_email, edit_password;
     private LoginButton btn_facebook_join;
 
-    String email, password;
+    private String email, password;
 
     private ProgressDialog progressDialog;
 
@@ -70,8 +71,11 @@ public class LoginActivity extends BaseActivity {
 
         edit_email = (EditText) findViewById(R.id.edit_email);
         edit_password = (EditText) findViewById(R.id.edit_password);
-
         ImageView btn_show_password = (ImageView) findViewById(R.id.btn_show_password);
+        Button btn_login = (Button) findViewById(R.id.btn_login);
+        btn_facebook_join = (LoginButton) findViewById(R.id.btn_facebook_join);
+        TextView btn_go_join = (TextView) findViewById(R.id.btn_go_join);
+
         btn_show_password.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent event) {
@@ -86,13 +90,8 @@ public class LoginActivity extends BaseActivity {
                 return true;
             }
         });
-
-        Button btn_login = (Button) findViewById(R.id.btn_login);
-        btn_facebook_join = (LoginButton) findViewById(R.id.btn_facebook_join);
         btn_login.setOnClickListener(mOnClickListener);
         btn_facebook_join.setOnClickListener(mOnClickListener);
-
-        TextView btn_go_join = (TextView) findViewById(R.id.btn_go_join);
         btn_go_join.setOnClickListener(mOnClickListener);
 
         progressDialog = new ProgressDialog(this);
@@ -111,7 +110,56 @@ public class LoginActivity extends BaseActivity {
                     } else if (password.length() == 0) {
                         Toast.makeText(LoginActivity.this, R.string.enter_password, Toast.LENGTH_SHORT).show();
                     } else {
-                        new LoginTask(LoginActivity.this, httpClient).execute(email, password);
+                        progressDialog.setMessage("같이먹으러 가는 중...");
+                        progressDialog.show();
+
+                        Encryption.setPassword(password);
+                        Encryption.encryption(password);
+                        password = Encryption.getPassword();
+                        Log.e("abc", "password :: " + password);
+//                        new LoginTask(LoginActivity.this, httpClient).execute(email, password);
+                        mAuth.signInWithEmailAndPassword(email, password)
+                                .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        if (task.isSuccessful()) {
+                                            // Sign in success, update UI with the signed-in user's information
+                                            progressDialog.dismiss();
+
+                                            FirebaseUser user = mAuth.getCurrentUser();
+                                            Log.e("abc", "signInWithEmail:success" + user.getEmail() + user.getUid());
+//                                            updateUI(user);
+                                            new LoginByUidTask(LoginActivity.this).execute(user.getEmail(), user.getUid());
+
+//                                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+//                                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                                            startActivity(intent);
+//                                            finish();
+                                        } else {
+                                            progressDialog.dismiss();
+                                            // If sign in fails, display a message to the user.
+                                            Log.e("abc", "signInWithEmail 1:failure" + task);
+                                            Log.e("abc", "signInWithEmail 2:failure" + task.getException());
+                                            Log.e("abc", "signInWithEmail 3:failure", task.getException());
+                                            Toast.makeText(LoginActivity.this, "이메일과 비밀번호를 다시 확인하세요.", Toast.LENGTH_SHORT).show();
+//                                            Toast.makeText(LoginActivity.this, "이메일과 비밀번호를 다시 확인하세요."+task.getException(), Toast.LENGTH_SHORT).show();
+//                                            updateUI(null);
+                                        }
+
+                                    }
+                                });
+
+//                        // Choose authentication providers
+//                        List<AuthUI.IdpConfig> providers = Arrays.asList(
+//                                new AuthUI.IdpConfig.EmailBuilder().build());
+//
+//                        // Create and launch sign-in intent
+//                        startActivityForResult(
+//                                AuthUI.getInstance()
+//                                        .createSignInIntentBuilder()
+//                                        .setAvailableProviders(providers)
+//                                        .build(),
+//                                RC_SIGN_IN);
                     }
 
                     break;
@@ -163,6 +211,21 @@ public class LoginActivity extends BaseActivity {
 
         // Pass the activity result back to the Facebook SDK
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RC_SIGN_IN) {
+            if (resultCode == RESULT_OK) {
+                // Sign in succeeded
+                updateUI(mAuth.getCurrentUser());
+
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+                new LoginByUidTask(LoginActivity.this).execute(user.getEmail(), user.getUid());
+            } else {
+                // Sign in failed
+                Toast.makeText(this, "Sign In Failed", Toast.LENGTH_SHORT).show();
+                updateUI(null);
+            }
+        }
     }
 
     private void handleFacebookAccessToken(AccessToken token) {
@@ -243,6 +306,5 @@ public class LoginActivity extends BaseActivity {
 //            findViewById(R.id.buttonFacebookSignout).setVisibility(View.GONE);
         }
     }
-
 
 }

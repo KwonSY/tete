@@ -1,6 +1,8 @@
 package honbab.voltage.com.task;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -19,6 +21,7 @@ import honbab.voltage.com.adapter.MyFeedListAdapter;
 import honbab.voltage.com.data.FeedData;
 import honbab.voltage.com.data.UserData;
 import honbab.voltage.com.fragment.MyFeedFragment;
+import honbab.voltage.com.tete.JoinActivity2;
 import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.tete.Statics;
@@ -168,6 +171,13 @@ public class MyFeedListTask extends AsyncTask<Void, Void, Void> {
 
             try {
                 UserData myData = new AccountTask(mContext, 0).execute(Statics.my_id).get();
+                Log.e("abc", "myData.getImg_url() : " + myData.getImg_url());
+                if (myData.getImg_url().contains("null")) {
+                    Intent intent = new Intent(mContext, JoinActivity2.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    mContext.startActivity(intent);
+                    ((Activity) mContext).finish();
+                }
 
                 Picasso.get().load(myData.getImg_url())
                         .placeholder(R.drawable.icon_noprofile_circle)
