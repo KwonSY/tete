@@ -10,6 +10,7 @@ public class RestData implements Parcelable {
     private String rest_id, rest_name, compound_code, place_id, rest_img, rest_phone, vicinity;
     private LatLng latLng;
     private double latitude, longtitue;
+    private String like_yn;
 
     public RestData() {
         this.rest_id = null;
@@ -149,6 +150,14 @@ public class RestData implements Parcelable {
 
     public void setLongtitue(double longtitue) {
         this.longtitue = longtitue;
+    }
+
+    public String getLike_yn() {
+        return like_yn;
+    }
+
+    public void setLike_yn(String like_yn) {
+        this.like_yn = like_yn;
     }
 
     @Override

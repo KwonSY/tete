@@ -18,7 +18,7 @@ import java.util.List;
 
 import honbab.voltage.com.fragment.MyFeedFragment;
 import honbab.voltage.com.fragment.NoProfileFragment;
-import honbab.voltage.com.fragment.RestLikeFragment;
+import honbab.voltage.com.fragment.SelectFeedFragment;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.tete.Statics;
 
@@ -30,7 +30,7 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
     protected int currentPosition = -1;
     protected Fragment currentFragment;
 
-    public RestLikeFragment tabFragment1;
+//    public SelectFeedFragment tabFragment1;
     public MyFeedFragment tabFragment2;
     public NoProfileFragment tabFragment2_2;
 
@@ -54,11 +54,12 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                tabFragment1 = new RestLikeFragment();
+//                tabFragment1 = new RestLikeFragment();
+//                tabFragment1 = new SelectFeedFragment();
 //                fm.pa.put(position, tabFragment1);
 //                return tabFragment1;
 //                return Fragment.instantiate(mContext, String.valueOf(fragmentList.get(position)));
-                return RestLikeFragment.newInstance(position);
+                return SelectFeedFragment.newInstance(position);
             case 1:
                 if (Statics.my_id == null) {
                     tabFragment2_2 = new NoProfileFragment();

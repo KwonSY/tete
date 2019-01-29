@@ -63,7 +63,7 @@
                 android:id="@+id/btn_show_password"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:src="@drawable/icon_noprofile_circle"/>
+                android:src="@drawable/icon_noprofile_circle" />
         </LinearLayout>
 
         <Button
@@ -79,9 +79,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
-            android:text="페이스북 로그인"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="30dp" />
+            android:layout_marginBottom="30dp"
+            android:text="페이스북 로그인"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/btn_go_join"
@@ -97,11 +98,12 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/btn_go_findpsw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_width="wrap_content"
         android:layout_marginRight="60dp"
         android:layout_marginBottom="30dp"
-        android:layout_height="wrap_content"
-        android:text="비밀번호 찾기"/>
+        android:text="비밀번호 찾기" />
 </RelativeLayout>

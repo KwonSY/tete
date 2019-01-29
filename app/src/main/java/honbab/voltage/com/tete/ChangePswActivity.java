@@ -58,6 +58,7 @@ public class ChangePswActivity extends AppCompatActivity {
                         if (str_new_psw.length() < 8 || str_new_psw.matches("[0-9|a-z|A-Z|ㄱ-ㅎ|ㅏ-ㅣ|가-힝]*")) {
                             Toast.makeText(ChangePswActivity.this, R.string.enter_at_least_8, Toast.LENGTH_SHORT).show();
                         } else {
+                            //vvvvvvvvvvvvv
                             Encryption.setPassword(str_previous_psw);
                             Encryption.encryption(str_previous_psw);
                             str_previous_psw = Encryption.getPassword();

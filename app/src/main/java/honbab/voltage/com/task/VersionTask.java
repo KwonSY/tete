@@ -100,6 +100,18 @@ public class VersionTask extends AsyncTask<Void, Void, Void> {
             } else {
 
             }
+
+            if (status.equals("y")) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setMessage(text);
+                builder.setPositiveButton(R.string.confirm,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        });
+                builder.show();
+            }
     }
 
 }

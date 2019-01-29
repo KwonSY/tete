@@ -2,6 +2,7 @@ package honbab.voltage.com.task;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 
@@ -10,8 +11,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import honbab.voltage.com.data.RestData;
+import honbab.voltage.com.data.AreaData;
+import honbab.voltage.com.fragment.SelectFeedFragment;
 import honbab.voltage.com.tete.DelayBefroePickRestActivity;
+import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.tete.Statics;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
@@ -19,11 +22,13 @@ import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
-public class AreaRestTask extends AsyncTask<String, Void, ArrayList<RestData>> {
+public class AreaRestTask extends AsyncTask<String, Void, ArrayList<AreaData>> {
     private Context mContext;
     private OkHttpClient httpClient;
 
-    private ArrayList<RestData> areaList = new ArrayList<>();
+    private Fragment fragment;
+
+    private ArrayList<AreaData> areaList = new ArrayList<>();
     private ArrayList<String> areaNameList = new ArrayList<>();
     String result;
 
@@ -36,10 +41,12 @@ public class AreaRestTask extends AsyncTask<String, Void, ArrayList<RestData>> {
     protected void onPreExecute() {
         areaList.clear();
         areaNameList.clear();
+
+        fragment = ((MainActivity) mContext).getSupportFragmentManager().findFragmentByTag("page:0");
     }
 
     @Override
-    protected ArrayList<RestData> doInBackground(String... params) {
+    protected ArrayList<AreaData> doInBackground(String... params) {
         FormBody body = new FormBody.Builder()
                 .add("opt", "rest_area")
 //                .add("pack", params[0])
@@ -57,10 +64,10 @@ public class AreaRestTask extends AsyncTask<String, Void, ArrayList<RestData>> {
                 JSONArray rest_arr = obj.getJSONArray("area");
                 for (int i = 0; i < rest_arr.length(); i++) {
                     JSONObject rest_obj = rest_arr.getJSONObject(i);
-                    String pack = rest_obj.getString("pack");
+                    String area_cd = rest_obj.getString("area_cd");
                     String area_name = rest_obj.getString("name");
 
-                    RestData restData = new RestData(pack, area_name, null, null, null, null, null, null);
+                    AreaData restData = new AreaData(area_cd, area_name);
                     areaList.add(restData);
                     areaNameList.add(area_name);
                 }
@@ -77,12 +84,22 @@ public class AreaRestTask extends AsyncTask<String, Void, ArrayList<RestData>> {
     }
 
     @Override
-    protected void onPostExecute(final ArrayList<RestData> areaList) {
+    protected void onPostExecute(final ArrayList<AreaData> areaList) {
         super.onPostExecute(areaList);
 
         String activityName = mContext.getClass().getSimpleName();
 
-        if (activityName.equals("DelayBefroePickRestActivity")) {
+        if (activityName.equals("MainActivity")) {
+            if (areaList.size() > 0) {
+                ((SelectFeedFragment) fragment).area_cd = areaList.get(0).getArea_cd();
+                ((SelectFeedFragment) fragment).areaList = areaList;
+                ((SelectFeedFragment) fragment).areaNameList = areaNameList;
+                ((SelectFeedFragment) fragment).spinnerAdapter = new ArrayAdapter(mContext, R.layout.item_row_spinner, areaNameList);
+                ((SelectFeedFragment) fragment).spinner.setAdapter(((SelectFeedFragment) fragment).spinnerAdapter);
+            } else {
+
+            }
+        } else if (activityName.equals("DelayBefroePickRestActivity")) {
             if (areaList.size() > 0) {
                 ((DelayBefroePickRestActivity) mContext).spinnerAdapter = new ArrayAdapter(mContext, R.layout.support_simple_spinner_dropdown_item, areaNameList);
                 ((DelayBefroePickRestActivity) mContext).spinner.setAdapter(((DelayBefroePickRestActivity) mContext).spinnerAdapter);

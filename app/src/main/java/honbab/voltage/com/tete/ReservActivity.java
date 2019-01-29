@@ -41,7 +41,7 @@ import java.util.Date;
 import honbab.voltage.com.adapter.GridViewNearByAdapter;
 import honbab.voltage.com.data.RestData;
 import honbab.voltage.com.task.GetNearPlacesTaskForReserv;
-import honbab.voltage.com.task.ReservFeedTask;
+import honbab.voltage.com.task.ReservFeedTask2;
 import honbab.voltage.com.utils.ButtonUtil;
 import honbab.voltage.com.utils.GoogleMapUtil;
 import honbab.voltage.com.widget.CustomTimePickerDialog;
@@ -243,7 +243,7 @@ public class ReservActivity extends AppCompatActivity {
                     long time_current = curCal.getTimeInMillis();
 
                     if (time_setting > time_current) {
-                        new ReservFeedTask(ReservActivity.this, httpClient, rData).execute("", "");
+                        new ReservFeedTask2(ReservActivity.this, rData).execute("", "");
                     } else {
                         Toast.makeText(getApplicationContext(), R.string.cannot_reserve_past, Toast.LENGTH_SHORT).show();
                     }

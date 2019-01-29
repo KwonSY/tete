@@ -22,7 +22,7 @@ import java.util.concurrent.ExecutionException;
 
 import honbab.voltage.com.card.CardStackAdapter;
 import honbab.voltage.com.data.RestData;
-import honbab.voltage.com.task.ReservFeedTask;
+import honbab.voltage.com.task.ReservFeedTask2;
 import honbab.voltage.com.task.RestaurantListTask;
 import honbab.voltage.com.utils.ButtonUtil;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
@@ -166,7 +166,7 @@ public class GodTinderActivity extends AppCompatActivity {
 
                 if (!like_yn.equals(""))
 //                    new RestLikeTask(GodTinderActivity.this, httpClient).execute(rest_id, like_yn);
-                    new ReservFeedTask(GodTinderActivity.this, httpClient, restData).execute("", feed_time);
+                    new ReservFeedTask2(GodTinderActivity.this, restData).execute("", feed_time);
 
                 if (position == restList.size())
                     cardStackView.setVisibility(View.GONE);

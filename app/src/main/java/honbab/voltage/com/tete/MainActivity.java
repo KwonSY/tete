@@ -18,7 +18,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -36,7 +35,7 @@ import java.util.List;
 import honbab.voltage.com.adapter.TabPagerAdapter;
 import honbab.voltage.com.fragment.MyFeedFragment;
 import honbab.voltage.com.fragment.NoProfileFragment;
-import honbab.voltage.com.fragment.RestLikeFragment;
+import honbab.voltage.com.fragment.SelectFeedFragment;
 import honbab.voltage.com.task.VersionTask;
 import honbab.voltage.com.utils.NetworkUtil;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
@@ -50,9 +49,10 @@ public class MainActivity extends AppCompatActivity {
     public TabPagerAdapter pagerAdapter;
     public ViewPager viewPager;
 
-    public RestLikeFragment restLikeFragment = new RestLikeFragment();
-    public MyFeedFragment myFeedFragment = new MyFeedFragment();
-    public NoProfileFragment noProfileFragment = new NoProfileFragment();
+//    public RestLikeFragment restLikeFragment = new RestLikeFragment();
+//    public SelectFeedFragment selectFeedFragment = new SelectFeedFragment();
+//    public MyFeedFragment myFeedFragment = new MyFeedFragment();
+//    public NoProfileFragment noProfileFragment = new NoProfileFragment();
 
     int tab_position = 0;
 
@@ -69,8 +69,6 @@ public class MainActivity extends AppCompatActivity {
         Statics.my_username = user.get("my_username");
         Statics.my_gender = user.get("my_gender");
 
-        Log.e("abc", "MainAct my_id = " + Statics.my_id);
-        Log.e("abc", "MainAct my_username = " + Statics.my_username);
         //Wifi check
 //        if (!NetworkUtil.isNetworkPresent(this)) {
         if (!NetworkUtil.isOnline(this)) {
@@ -146,12 +144,11 @@ public class MainActivity extends AppCompatActivity {
                 tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
                 List<Fragment> fragmentList = new ArrayList<>();
-//                fragmentList.add(new RestLikeFragment());
-                fragmentList.add(restLikeFragment);
+                fragmentList.add(new SelectFeedFragment());
                 if (Statics.my_id == null) {
-                    fragmentList.add(noProfileFragment);
+                    fragmentList.add(new NoProfileFragment());
                 } else {
-                    fragmentList.add(myFeedFragment);
+                    fragmentList.add(new MyFeedFragment());
                 }
 
                 viewPager = (ViewPager) findViewById(R.id.viewPager);

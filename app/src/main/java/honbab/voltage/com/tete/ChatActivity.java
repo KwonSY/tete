@@ -311,7 +311,7 @@ public class ChatActivity extends AppCompatActivity {
 //                    long time_current = curCal.getTimeInMillis();
 //
 //                    if (time_setting > time_current) {
-//                        new ReservFeedTask(ChatActivity.this, httpClient, date, r_data).execute(toId);
+//                        new ReservFeedTask2(ChatActivity.this, httpClient, date, r_data).execute(toId);
 //                    } else {
 //                        Toast.makeText(getApplicationContext(), R.string.cannot_reserve_past, Toast.LENGTH_SHORT).show();
 //                    }

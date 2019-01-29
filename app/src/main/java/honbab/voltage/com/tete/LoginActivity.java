@@ -1,11 +1,12 @@
 package honbab.voltage.com.tete;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.text.InputType;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -36,7 +37,6 @@ import java.util.concurrent.ExecutionException;
 
 import honbab.voltage.com.task.JoinCheckTask;
 import honbab.voltage.com.task.LoginByUidTask;
-import honbab.voltage.com.widget.Encryption;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
 import honbab.voltage.com.widget.SessionManager;
 import okhttp3.OkHttpClient;
@@ -95,6 +95,10 @@ public class LoginActivity extends BaseActivity {
         btn_go_join.setOnClickListener(mOnClickListener);
 
         progressDialog = new ProgressDialog(this);
+
+        TextView btn_go_findpsw;
+        btn_go_findpsw = (TextView) findViewById(R.id.btn_go_findpsw);
+        btn_go_findpsw.setOnClickListener(mOnClickListener);
     }
 
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
@@ -113,10 +117,9 @@ public class LoginActivity extends BaseActivity {
                         progressDialog.setMessage("같이먹으러 가는 중...");
                         progressDialog.show();
 
-                        Encryption.setPassword(password);
-                        Encryption.encryption(password);
-                        password = Encryption.getPassword();
-                        Log.e("abc", "password :: " + password);
+//                        Encryption.setPassword(password);
+//                        Encryption.encryption(password);
+//                        password = Encryption.getPassword();
 //                        new LoginTask(LoginActivity.this, httpClient).execute(email, password);
                         mAuth.signInWithEmailAndPassword(email, password)
                                 .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
@@ -127,7 +130,6 @@ public class LoginActivity extends BaseActivity {
                                             progressDialog.dismiss();
 
                                             FirebaseUser user = mAuth.getCurrentUser();
-                                            Log.e("abc", "signInWithEmail:success" + user.getEmail() + user.getUid());
 //                                            updateUI(user);
                                             new LoginByUidTask(LoginActivity.this).execute(user.getEmail(), user.getUid());
 
@@ -137,13 +139,8 @@ public class LoginActivity extends BaseActivity {
 //                                            finish();
                                         } else {
                                             progressDialog.dismiss();
-                                            // If sign in fails, display a message to the user.
-                                            Log.e("abc", "signInWithEmail 1:failure" + task);
-                                            Log.e("abc", "signInWithEmail 2:failure" + task.getException());
-                                            Log.e("abc", "signInWithEmail 3:failure", task.getException());
+
                                             Toast.makeText(LoginActivity.this, "이메일과 비밀번호를 다시 확인하세요.", Toast.LENGTH_SHORT).show();
-//                                            Toast.makeText(LoginActivity.this, "이메일과 비밀번호를 다시 확인하세요."+task.getException(), Toast.LENGTH_SHORT).show();
-//                                            updateUI(null);
                                         }
 
                                     }
@@ -174,22 +171,64 @@ public class LoginActivity extends BaseActivity {
                     btn_facebook_join.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
                         @Override
                         public void onSuccess(LoginResult loginResult) {
-                            Log.d("abc", "facebook:onSuccess:" + loginResult.getAccessToken());
+//                            Log.d("abc", "facebook:onSuccess:" + loginResult.getAccessToken());
                             handleFacebookAccessToken(loginResult.getAccessToken());
                         }
 
                         @Override
                         public void onCancel() {
-                            Log.d("abc", "facebook:onCancel");
                             updateUI(null);
                         }
 
                         @Override
                         public void onError(FacebookException error) {
-                            Log.d("abc", "facebook:onError", error);
                             updateUI(null);
                         }
                     });
+
+                    break;
+                case R.id.btn_go_findpsw:
+//                    FirebaseAuth auth = FirebaseAuth.getInstance();
+//                    String emailAddress = "funsumer@gmail.com";
+//                    edit_email.getText().toString().trim();
+
+//                    AlertDialogUtil.show(LoginActivity.this, "사용하시는 이메일 계정으로 비밀번호 재설정 안내를 전송해드립니다.", emailAddress);
+
+//                    mAuth.sendPasswordResetEmail(edit_email.getText().toString().trim())
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                    builder.setTitle("비밀번호 재설정");
+                    builder.setMessage("사용하시는 이메일 계정이 무엇인가요?");
+                    final EditText et = new EditText(LoginActivity.this);
+                    builder.setView(et);
+                    builder.setPositiveButton("재설정 메일 보내기",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    String emailAddress = et.getText().toString().trim();
+//                        Log.v(TAG, value);
+
+                                    mAuth.sendPasswordResetEmail(emailAddress)
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+                                                        Toast.makeText(getApplicationContext(), "이메일을 확인해보세요.\n비밀번호 재설정을 하실 수 있습니다.", Toast.LENGTH_SHORT).show();
+
+                                                        dialog.dismiss();
+                                                    } else {
+                                                        Toast.makeText(getApplicationContext(), "가입하지 않은 이메일입니다.", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+                                            });
+                                }
+                            });
+                    builder.setNegativeButton(R.string.no,
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+//                                holder.btn_check_feedee.setBackgroundResource(R.drawable.icon_check_n);
+                                }
+                            });
+                    builder.show();
 
                     break;
             }
@@ -201,7 +240,6 @@ public class LoginActivity extends BaseActivity {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        Log.d("abc", "facebook onStart:" + currentUser);
         updateUI(currentUser);
     }
 
@@ -229,17 +267,12 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void handleFacebookAccessToken(AccessToken token) {
-        Log.d("abc", "handleFacebookAccessToken:" + token);
-
-
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.e("abc", "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
 
@@ -267,8 +300,7 @@ public class LoginActivity extends BaseActivity {
 
 
                         } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w("abc", "signInWithCredential:failure", task.getException());
+//                            Log.w("abc", "signInWithCredential:failure", task.getException());
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                             updateUI(null);
@@ -289,14 +321,6 @@ public class LoginActivity extends BaseActivity {
     private void updateUI(FirebaseUser user) {
         hideProgressDialog();
         if (user != null) {
-            Log.e("abc", "getDisplayName = " + user.getDisplayName());
-            Log.e("abc", "user.getUid() = " + user.getUid());
-            Log.e("abc", "user.getEmail() = " + user.getEmail());
-            Log.e("abc", "user.getPhotoUrl() = " + user.getPhotoUrl());
-            Log.e("abc", "user.getProviderId() = " + user.getProviderId());
-            Log.e("abc", "user.getIdToken() = " + user.getIdToken(true));
-            Log.e("abc", "user.getMetadata() = " + user.getMetadata().toString());
-            Log.e("abc", "user.getProviders() = " + user.getProviders());
 //            Toast.makeText(this, user.getDisplayName() + user.getUid(), Toast.LENGTH_SHORT).show();
         } else {
 //            mStatusTextView.setText(R.string.signed_out);

@@ -61,7 +61,7 @@ public class LoginTask extends AsyncTask<String, Void, String> {
             okhttp3.Response response = httpClient.newCall(request).execute();
             if (response.isSuccessful()) {
                 String bodyStr = response.body().string();
-                Log.e("abc", "LoginTask = " + bodyStr);
+
                 JSONObject obj = new JSONObject(bodyStr);
 
                 result = obj.getString("result");

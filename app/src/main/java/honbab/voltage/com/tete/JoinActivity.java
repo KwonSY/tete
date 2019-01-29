@@ -35,7 +35,6 @@ import java.util.regex.Pattern;
 
 import honbab.voltage.com.utils.ButtonUtil;
 import honbab.voltage.com.utils.StringFilter;
-import honbab.voltage.com.widget.Encryption;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
 import honbab.voltage.com.widget.SessionManager;
 import okhttp3.FormBody;
@@ -129,7 +128,6 @@ public class JoinActivity extends AppCompatActivity {
                     String user_name = edit_name.getText().toString().trim();
                     String str_email = edit_email.getText().toString().trim();
                     String password = edit_password.getText().toString().trim();
-                    Log.e("abc", "chk_privacy.isChecked() = " + chk_privacy.isChecked());
 
                     if (user_name.equals("") || user_name == null) {
                         Toast.makeText(JoinActivity.this, R.string.enter_name, Toast.LENGTH_SHORT).show();
@@ -168,9 +166,9 @@ public class JoinActivity extends AppCompatActivity {
             email = edit_email.getText().toString();
             password = edit_password.getText().toString().trim();
 
-            Encryption.setPassword(password);
-            Encryption.encryption(password);
-            password = Encryption.getPassword();
+//            Encryption.setPassword(password);
+//            Encryption.encryption(password);
+//            password = Encryption.getPassword();
 
 //            progressBar.setVisibility(View.VISIBLE);
             layout_progress.setVisibility(View.VISIBLE);
@@ -224,17 +222,12 @@ public class JoinActivity extends AppCompatActivity {
                         .addOnCompleteListener(JoinActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
-//                                Toast.makeText(getActivity(), "createUserWithEmail:onComplete:" + task.isSuccessful(), Toast.LENGTH_SHORT).show();
-
                                 layout_progress.setVisibility(View.GONE);
-                                Log.e("abc", "task.isSuccessful() = " + task.isSuccessful());
+
                                 if (!task.isSuccessful()) {
                                     Toast.makeText(getApplicationContext(), "가입에 실패하셨습니다.", Toast.LENGTH_SHORT).show();
                                 } else {
-//                                            Toast.makeText(getApplicationContext(), "같이먹어요.에 오신 것을 환영합니다!", Toast.LENGTH_SHORT).show();
                                     session.createLoginSession(Statics.my_id, Statics.my_username, Statics.my_gender);
-
-                                    Log.e("abc", "token = " + token);
 
                                     Toast.makeText(JoinActivity.this, "환영합니다. 우리 이제 같이먹어요!", Toast.LENGTH_SHORT).show();
                                     Intent intent = new Intent(getApplicationContext(), JoinActivity2.class);
@@ -247,8 +240,10 @@ public class JoinActivity extends AppCompatActivity {
                             }
                         });
             } else if (result.equals("1")) {
+                layout_progress.setVisibility(View.GONE);
                 Toast.makeText(JoinActivity.this.getApplicationContext(), "잘못된 오류입니다. 다시 시도하세요.", Toast.LENGTH_SHORT).show();
             } else if (result.equals("2")) {
+                layout_progress.setVisibility(View.GONE);
                 Toast.makeText(JoinActivity.this.getApplicationContext(), "이미 가입한 이메일입니다.", Toast.LENGTH_SHORT).show();
             }
 

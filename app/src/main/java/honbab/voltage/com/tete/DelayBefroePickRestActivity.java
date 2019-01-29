@@ -27,7 +27,7 @@ import java.util.Calendar;
 import java.util.concurrent.ExecutionException;
 
 import honbab.voltage.com.adapter.OneImageAdapter;
-import honbab.voltage.com.data.RestData;
+import honbab.voltage.com.data.AreaData;
 import honbab.voltage.com.task.AreaRestTask;
 import honbab.voltage.com.task.OneDayFeedCheckTask;
 import honbab.voltage.com.utils.ButtonUtil;
@@ -45,7 +45,7 @@ public class DelayBefroePickRestActivity extends AppCompatActivity {
     public OneImageAdapter mAdapter;
     public Button btn_go_pick_rest;
 
-    ArrayList<RestData> areaList;
+    ArrayList<AreaData> areaList;
     ArrayList<String> areaNameList;
     String feed_location = "GNS1", feed_time;
     public String today_status = "n";
@@ -72,17 +72,17 @@ public class DelayBefroePickRestActivity extends AppCompatActivity {
                 int r = 0;
 
                 for (int i = 0; i < areaList.size(); i++) {
-                    if (areaList.get(i).getRest_name().equals(spinner.getSelectedItem().toString()))
+                    if (areaList.get(i).getArea_name().equals(spinner.getSelectedItem().toString()))
                         r = i;
                 }
 
-                feed_location = areaList.get(r).getRest_id();
+                feed_location = areaList.get(r).getArea_cd();
                 Log.e("abc", "onItemSelected areaCd = " + feed_location);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                feed_location = areaList.get(0).getRest_name();
+                feed_location = areaList.get(0).getArea_name();
                 Log.e("abc", "onNothingSelected areaCd = " + feed_location);
             }
         });
