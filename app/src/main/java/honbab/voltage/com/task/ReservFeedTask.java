@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 
-import honbab.voltage.com.data.RestData;
+import honbab.voltage.com.tete.ChatActivity;
 import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.tete.Statics;
@@ -23,8 +23,9 @@ public class ReservFeedTask extends AsyncTask<String, Void, String> {
     private OkHttpClient httpClient;
 
     private String result;
-    private String datetime;
-    private RestData restData;
+    private String to_id;
+//    private String datetime;
+//    private RestData restData;
 //    String lat, lng, place_id, rest_name, rest_phone, rest_img, compound_code, vicinity;
 
     public ReservFeedTask(Context mContext) {
@@ -39,7 +40,8 @@ public class ReservFeedTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... params) {
-        Log.e("abc", "ReservTask date_reserv = " + params[1]);
+        to_id = params[0];
+//        Log.e("abc", "ReservTask date_reserv = " + params[1]);
         FormBody body = new FormBody.Builder()
                 .add("opt", "reserv_feed")
                 .add("my_id", Statics.my_id)
@@ -97,16 +99,26 @@ public class ReservFeedTask extends AsyncTask<String, Void, String> {
         } else if (activityName.equals("ChatActivity")) {
             if (result.equals("0")) {
                 Toast.makeText(mContext, "식사가 예약되었습니다.", Toast.LENGTH_SHORT).show();
-
-//                Intent intent2 = new Intent(mContext, MainActivity.class);
-//                intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                mContext.startActivity(intent2);
-//                ((Activity) mContext).finish();
             } else {
                 Toast.makeText(mContext, R.string.cannot_reserve_past, Toast.LENGTH_SHORT).show();
             }
         } else if (activityName.equals("MainActivity")) {
+            if (result.equals("0")) {
+                Toast.makeText(mContext, "식사가 예약되었습니다.", Toast.LENGTH_SHORT).show();
 
+                Intent intent = new Intent(mContext, ChatActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("fromId", Statics.my_id);
+                intent.putExtra("toId", to_id);
+//                intent.putExtra("toUserName", data.getUser_name());
+//                intent.putExtra("toUserImg", data.getUser_img());
+//                intent.putExtra("toToken", data.getToken());
+//                intent.putExtra("restData", restData);
+                mContext.startActivity(intent);
+//                ((Activity) mContext).finish();
+            } else {
+                Toast.makeText(mContext, R.string.cannot_reserve, Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

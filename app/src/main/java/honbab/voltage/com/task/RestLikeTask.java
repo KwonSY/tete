@@ -10,8 +10,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import honbab.voltage.com.data.RestData;
-import honbab.voltage.com.fragment.SelectFeedFragment;
-import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.Statics;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
 import okhttp3.FormBody;
@@ -30,14 +28,13 @@ public class RestLikeTask extends AsyncTask<String, Void, String> {
 
     public RestLikeTask(Context mContext) {
         this.mContext = mContext;
-        this.httpClient = OkHttpClientSingleton.getInstance().getHttpClient();;
+        this.httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
     }
 
     @Override
     protected void onPreExecute() {
-        fragment = ((MainActivity) mContext).getSupportFragmentManager().findFragmentByTag("page:0");
-
-        feed_time = ((SelectFeedFragment) fragment).feed_time;
+//        fragment = ((MainActivity) mContext).getSupportFragmentManager().findFragmentByTag("page:0");
+//        feed_time = ((SelectFeedFragment) fragment).feed_time;
     }
 
     @Override
@@ -49,7 +46,7 @@ public class RestLikeTask extends AsyncTask<String, Void, String> {
                 .add("my_id", Statics.my_id)
                 .add("rest_id", params[0])
                 .add("like_yn", params[1])
-                .add("datetime", feed_time)
+//                .add("datetime", feed_time)
                 .build();
 
         Request request = new Request.Builder().url(Statics.opt_url).post(body).build();
@@ -99,7 +96,7 @@ public class RestLikeTask extends AsyncTask<String, Void, String> {
         String activityName = mContext.getClass().getSimpleName();
 
         if (activityName.equals("MainActivity")) {
-            ((SelectFeedFragment) fragment).area_cd = area_cd;
+//            ((SelectFeedFragment) fragment).area_cd = area_cd;
 
 //            ((SelectFeedFragment) fragment).mAdapter_rest = new SelectRestListAdapter(mContext, restList, area_cd);
 //            ((SelectFeedFragment) fragment).recyclerView_rest.setAdapter(((SelectFeedFragment) fragment).mAdapter_rest);

@@ -34,4 +34,18 @@
         android:text="@string/applicant"
         android:textSize="12sp"
         android:transitionName="txt_userName" />
+
+    <TextView
+        android:id="@+id/icon_me"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignRight="@id/img_user"
+        android:layout_alignBottom="@id/img_user"
+        android:background="@drawable/circle_or"
+        android:gravity="center"
+        android:paddingBottom="2dp"
+        android:text="me"
+        android:visibility="gone"
+        android:textColor="@color/black"
+        android:textSize="10sp" />
 </RelativeLayout>

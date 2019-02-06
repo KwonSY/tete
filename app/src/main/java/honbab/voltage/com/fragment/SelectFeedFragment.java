@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
@@ -29,6 +30,7 @@ import honbab.voltage.com.adapter.SelectDateListAdapter;
 import honbab.voltage.com.adapter.SelectRestListAdapter;
 import honbab.voltage.com.adapter.SelectUserListAdapter;
 import honbab.voltage.com.data.AreaData;
+import honbab.voltage.com.data.SelectDateData;
 import honbab.voltage.com.task.ReservFeedTask;
 import honbab.voltage.com.task.SelectFeedListTask;
 import honbab.voltage.com.tete.R;
@@ -62,6 +64,7 @@ public class SelectFeedFragment extends Fragment {
     public ArrayList<AreaData> areaList;
     public ArrayList<String> areaNameList;
 
+    public ArrayList<SelectDateData> dateLikeList = new ArrayList<>();
     public ArrayList<String> restLikeList = new ArrayList<>();
 
     public static SelectFeedFragment newInstance(int val) {
@@ -105,6 +108,7 @@ public class SelectFeedFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
+        Log.e("abc", "SelectFeedListTask onResume = ");
         new SelectFeedListTask(getActivity()).execute(feed_time, area_cd, feed_rest_id, "");
     }
 
@@ -138,6 +142,7 @@ public class SelectFeedFragment extends Fragment {
                 area_cd = areaList.get(r).getArea_cd();
                 Log.e("abc", "onItemSelected area_cd = " + area_cd);
 
+                Log.e("abc", "SelectFeedListTask spinner = ");
                 new SelectFeedListTask(getActivity()).execute(feed_time, area_cd, feed_rest_id, "");
             }
 
@@ -158,12 +163,13 @@ public class SelectFeedFragment extends Fragment {
         recyclerView_date.setLayoutManager(layoutManager);
         mAdapter_date = new SelectDateListAdapter();
         recyclerView_date.setAdapter(mAdapter_date);
-        recyclerView_date.addItemDecoration(new SpacesItemDecoration(10));
+        recyclerView_date.addItemDecoration(new SpacesItemDecoration(18));
 
         recyclerView_rest = (RecyclerView) getActivity().findViewById(R.id.recyclerView_rest);
         recyclerView_rest.setLayoutManager(layoutManager2);
         mAdapter_rest = new SelectRestListAdapter();
         recyclerView_rest.setAdapter(mAdapter_rest);
+        recyclerView_rest.addItemDecoration(new SpacesItemDecoration(18));
 
         recyclerView_user = (RecyclerView) getActivity().findViewById(R.id.recyclerView_user);
         recyclerView_user.setLayoutManager(gridLayoutManager);
@@ -192,10 +198,13 @@ public class SelectFeedFragment extends Fragment {
                 mAdapter_user.clearItemList();
 
 //                String str_date = year + String.valueOf(month) + "/" + String.valueOf(day);
+                Log.e("abc", "SelectFeedListTask swipeContainer = ");
                 new SelectFeedListTask(getActivity()).execute(feed_time, area_cd, feed_rest_id, "");
             }
         });
 
+        Button btn_reserv = (Button) getActivity().findViewById(R.id.btn_reserv);
+        btn_reserv.setOnClickListener(mOnClickListener);
     }
 
     public View.OnClickListener mOnClickListener = new View.OnClickListener() {
@@ -203,10 +212,15 @@ public class SelectFeedFragment extends Fragment {
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.btn_reserv:
-                    new ReservFeedTask(getActivity()).execute(to_id, feed_rest_id, feed_time);
-//                    Intent intent2 = new Intent(getActivity(), LoginActivity.class);
-//                    intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                    startActivity(intent2);
+                    if (feed_rest_id.equals("")) {
+                        Toast.makeText(getActivity(), "음식점을 선택해주세요.", Toast.LENGTH_SHORT).show();
+                    } else if(feed_time.equals("")) {
+                        Toast.makeText(getActivity(), "가능한 식사시간을 선택해주세요.", Toast.LENGTH_SHORT).show();
+                    } else if (to_id.equals("")) {
+                        Toast.makeText(getActivity(), "같이 식사하실 분을 선택해주세요.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        new ReservFeedTask(getActivity()).execute(to_id, feed_rest_id, feed_time);
+                    }
 
                     break;
 //                case R.id.txt_date:

@@ -35,7 +35,6 @@ import honbab.voltage.com.adapter.MyFeedListAdapter;
 import honbab.voltage.com.data.UserData;
 import honbab.voltage.com.task.AccountTask;
 import honbab.voltage.com.task.MyFeedListTask;
-import honbab.voltage.com.tete.DelayBefroePickRestActivity;
 import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.ProfileActivity;
 import honbab.voltage.com.tete.R;
@@ -188,23 +187,24 @@ public class MyFeedFragment extends Fragment {
 
                     break;
                 case R.id.btn_go_rest_like:
-                    Fragment fragment = ((MainActivity) getActivity()).getSupportFragmentManager().findFragmentByTag("page:0");
-
-                    if (((RestLikeFragment) fragment).mAdapter.getItemCount() > 0) {
-                        ((MainActivity) getActivity()).viewPager.setCurrentItem(0);
-                    } else {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        builder.setMessage("내가 원하는 시간, 음식점을 골라주세요");
-                        builder.setPositiveButton(R.string.go_to_godmuktime,
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Intent intent = new Intent(getActivity(), DelayBefroePickRestActivity.class);
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                        startActivity(intent);
-                                    }
-                                });
-                        builder.show();
-                    }
+//                    Fragment fragment = ((MainActivity) getActivity()).getSupportFragmentManager().findFragmentByTag("page:0");
+//
+//                    if (((RestLikeFragment) fragment).mAdapter.getItemCount() > 0) {
+//                        ((MainActivity) getActivity()).viewPager.setCurrentItem(0);
+//                    } else {
+//                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//                        builder.setMessage("내가 원하는 시간, 음식점을 골라주세요");
+//                        builder.setPositiveButton(R.string.go_to_godmuktime,
+//                                new DialogInterface.OnClickListener() {
+//                                    public void onClick(DialogInterface dialog, int which) {
+//                                        Intent intent = new Intent(getActivity(), DelayBefroePickRestActivity.class);
+//                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                                        startActivity(intent);
+//                                    }
+//                                });
+//                        builder.show();
+//                    }
+                    ((MainActivity) getActivity()).viewPager.setCurrentItem(0);
 
                     break;
 //                case R.id.btn_go_map:

@@ -40,11 +40,8 @@ public class RestLikeListTask extends AsyncTask<Void, Void, ArrayList<RestLikeDa
 
     @Override
     protected void onPreExecute() {
-//        fragment = ((MainActivity) mContext).getSupportFragmentManager().getFragments().get(0);
         fragment = ((MainActivity) mContext).getSupportFragmentManager().findFragmentByTag("page:0");
         fragment2 = ((MainActivity) mContext).getSupportFragmentManager().findFragmentByTag("page:1");
-        Log.e("abc","((MainActivity) mContext).getSupportFragmentManager() = " + ((MainActivity) mContext).getSupportFragmentManager().getFragments());
-        Log.e("abc","ffffffffragment = " + fragment);
 
         restLikeList.clear();
         ((RestLikeFragment) fragment).mAdapter.clearItemList();

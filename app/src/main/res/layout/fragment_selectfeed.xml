@@ -8,11 +8,9 @@
     android:gravity="bottom"
     app:umanoPanelHeight="20dp"
     app:umanoShadowHeight="0dp"
-    tools:context="honbab.voltage.com.tete.MapsActivity">
+    tools:context="honbab.voltage.com.tete.MainActivity">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
@@ -23,6 +21,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp">
+
+            <TextView
+                android:id="@+id/txt_title1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_round_drgr1_right"
+                android:padding="6dp"
+                android:text="선택한 날짜"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:textStyle="bold" />
             <!--
                     <TextView
                         android:id="@+id/txt_date"
@@ -40,97 +49,116 @@
                 android:id="@+id/recyclerView_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/txt_title1"
                 android:layout_toRightOf="@id/txt_date" />
         </RelativeLayout>
 
+
         <LinearLayout
-            android:id="@+id/layout_rest"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="10dp"
-            android:background="@color/white"
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/layout_rest"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_centerInParent="true"
+                android:background="@color/white"
+                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/title_location"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/border_round_drgr1_right"
-                    android:padding="6dp"
-                    android:text="가고 싶은 식당"
-                    android:textColor="@color/black"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
+                    android:orientation="horizontal">
 
-                <Spinner
-                    android:id="@+id/spinner_location"
-                    style="@style/spinnerItemStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="-2dp"
-                    android:layout_toRightOf="@id/title_location"
-                    android:background="@drawable/spinner_background"
-                    android:drawSelectorOnTop="true"
-                    android:dropDownWidth="match_parent"
-                    android:dropDownVerticalOffset="-53dp"
-                    android:dropDownSelector="@color/orange"
-                    android:minWidth="125dp"
-                    android:paddingTop="0dp"
-                    android:paddingBottom="0dp"
-                    android:spinnerMode="dropdown" />
+                    <TextView
+                        android:id="@+id/title_location"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/border_round_drgr1_right"
+                        android:padding="6dp"
+                        android:text="선택한 식당"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <Spinner
+                        android:id="@+id/spinner_location"
+                        style="@style/spinnerItemStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="-2dp"
+                        android:layout_toRightOf="@id/title_location"
+                        android:background="@drawable/spinner_background"
+                        android:drawSelectorOnTop="true"
+                        android:dropDownWidth="match_parent"
+                        android:dropDownVerticalOffset="-53dp"
+                        android:dropDownSelector="@color/orange"
+                        android:minWidth="125dp"
+                        android:paddingTop="0dp"
+                        android:paddingBottom="0dp"
+                        android:spinnerMode="dropdown" />
+                </LinearLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerView_rest"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
             </LinearLayout>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recyclerView_rest"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/txt_title3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/border_round_drgr1_right"
-                android:padding="6dp"
-                android:text="같이먹을 사람"
-                android:textColor="@color/black"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/txt_title3"
-                android:gravity="center_horizontal"
-                android:paddingTop="50dp"
-                android:text="가고 싶은 음식점을 선택해보세요." />
 
             <android.support.v4.widget.SwipeRefreshLayout
                 android:id="@+id/swipeContainer_feed"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/txt_title3">
+                android:layout_height="wrap_content">
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recyclerView_user"
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white" />
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/txt_title3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/border_round_drgr1_right"
+                        android:padding="6dp"
+                        android:text="신청자"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_alignBaseline="@id/txt_title3"
+                        android:layout_toRightOf="@id/txt_title3"
+                        android:textColor="@color/grey"
+                        android:text="길게 누르면 프로필을 보실 수 있습니다."
+                        android:textSize="10sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/txt_title3"
+                        android:gravity="center_horizontal"
+                        android:paddingTop="50dp"
+                        android:text="가고 싶은 음식점을 선택해보세요." />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recyclerView_user"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/txt_title3"
+                        android:background="@color/white" />
+
+                </RelativeLayout>
             </android.support.v4.widget.SwipeRefreshLayout>
-        </RelativeLayout>
+        </LinearLayout>
+
     </LinearLayout>
 
     <include

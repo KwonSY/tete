@@ -33,7 +33,7 @@
         android:layout_below="@id/layout_search" />
 
     <Button
-        android:id="@+id/btn_reserve"
+        android:id="@+id/btn_reserv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

@@ -22,7 +22,7 @@ import java.util.concurrent.ExecutionException;
 
 import honbab.voltage.com.card.CardStackAdapter;
 import honbab.voltage.com.data.RestData;
-import honbab.voltage.com.task.ReservFeedTask2;
+import honbab.voltage.com.task.RestLikeTask;
 import honbab.voltage.com.task.RestaurantListTask;
 import honbab.voltage.com.utils.ButtonUtil;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
@@ -37,8 +37,8 @@ public class GodTinderActivity extends AppCompatActivity {
     private CardStackAdapter adapter;
     private CardStackView cardStackView;
 
-    private String feed_location;
-    private String feed_time;
+//    private String feed_location, ;
+    private String area_cd;
     private ArrayList<RestData> restList = new ArrayList<>();
 
     @Override
@@ -50,8 +50,9 @@ public class GodTinderActivity extends AppCompatActivity {
         session = new SessionManager(this.getApplicationContext());
 
         Intent intent = getIntent();
-        feed_location = intent.getStringExtra("feed_location");
-        feed_time = intent.getStringExtra("feed_time");
+        area_cd = intent.getStringExtra("area_cd");
+        area_cd = "GNS1";
+//        feed_time = intent.getStringExtra("feed_time");
 
         TextView title_topbar = (TextView) findViewById(R.id.title_topbar);
         title_topbar.setText("음식점 선택");
@@ -79,7 +80,7 @@ public class GodTinderActivity extends AppCompatActivity {
         super.onResume();
 
         try {
-            restList = new RestaurantListTask(GodTinderActivity.this, httpClient).execute(feed_location).get();
+            restList = new RestaurantListTask(GodTinderActivity.this).execute(area_cd).get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
@@ -166,7 +167,8 @@ public class GodTinderActivity extends AppCompatActivity {
 
                 if (!like_yn.equals(""))
 //                    new RestLikeTask(GodTinderActivity.this, httpClient).execute(rest_id, like_yn);
-                    new ReservFeedTask2(GodTinderActivity.this, restData).execute("", feed_time);
+//                    new ReservFeedTask2(GodTinderActivity.this, restData).execute("", feed_time);
+                    new RestLikeTask(GodTinderActivity.this).execute(rest_id, like_yn);
 
                 if (position == restList.size())
                     cardStackView.setVisibility(View.GONE);

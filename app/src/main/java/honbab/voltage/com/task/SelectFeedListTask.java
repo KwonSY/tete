@@ -47,14 +47,23 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
     @Override
     protected void onPreExecute() {
         fragment = ((MainActivity) mContext).getSupportFragmentManager().findFragmentByTag("page:0");
-//        fragment2 = ((MainActivity) mContext).getSupportFragmentManager().findFragmentByTag("page:1");
 
+        dateList.clear();
+        restList.clear();
+        userList.clear();
+
+        ((SelectFeedFragment) fragment).dateLikeList.clear();
+        ((SelectFeedFragment) fragment).restLikeList.clear();
         ((SelectFeedFragment) fragment).restLikeList.clear();
     }
 
     @Override
     protected String doInBackground(String... params) {
         loadStatus = params[3];
+//        Log.e("abc", "// datetime = " + params[0]);
+//        Log.e("abc", "// area_cd = " + params[1]);
+//        Log.e("abc", "// rest_id = " + params[2]);
+//        Log.e("abc", "// loadStatus = " + params[3]);
 
         FormBody body = new FormBody.Builder()
                 .add("opt", "select_feed_list")
@@ -84,7 +93,9 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
                     String my_like_yn = time_obj.getString("my_like_yn");
 
                     SelectDateData dateData = new SelectDateData(time, cnt_time, my_like_yn);
-                    dateList.add(dateData);
+                    ((SelectFeedFragment) fragment).dateLikeList.add(dateData);
+                    if (dateData.getFeed_yn().equals("y"))
+                        dateList.add(dateData);
 
                     if (i == 0)
                         first_feedTime = time;
@@ -101,14 +112,14 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
 
                     RestData restData = new RestData(rest_id, rest_name, null, null, place_id, rest_img, null, null);
                     restData.setLike_yn(like_yn);
-                    restList.add(restData);
-
-                    if (like_yn.equals("y"))
+                    if (like_yn.equals("y")) {
+                        restList.add(restData);
                         ((SelectFeedFragment) fragment).restLikeList.add(rest_id);
+                    }
                 }
 
                 JSONArray user_arr = obj.getJSONArray("user");
-                Log.e("abc", "// user_arr = " + user_arr);
+//                Log.e("abc", "// user_arr = " + user_arr);
                 for (int i=0; i<user_arr.length(); i++) {
                     JSONObject user_obj = user_arr.getJSONObject(i);
                     String user_id = user_obj.getString("sid");
@@ -143,29 +154,22 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
         if (activityName.equals("MainActivity")) {
             ((SelectFeedFragment) fragment).split = split;
             ((SelectFeedFragment) fragment).area_cd = area_cd;
-            if (((SelectFeedFragment) fragment).feed_time.equals(""))
-                ((SelectFeedFragment) fragment).feed_time = first_feedTime;
-
-//            try {
-//                SimpleDateFormat formatter = new SimpleDateFormat("MM/dd");
-//                Date date = formatter.parse(feed_date);
-//                String str_feed_time = formatter.format(date);
-//                ((SelectFeedFragment) fragment).txt_date.setText(str_feed_time);
-//            } catch (ParseException e) {
-//                e.printStackTrace();
-//            }
 
             if (loadStatus.equals("readOnlyUser")) {
+                ((SelectFeedFragment) fragment).mAdapter_user.clearItemList();
                 ((SelectFeedFragment) fragment).mAdapter_user = new SelectUserListAdapter(mContext, userList);
                 ((SelectFeedFragment) fragment).recyclerView_user.setAdapter(((SelectFeedFragment) fragment).mAdapter_user);
                 ((SelectFeedFragment) fragment).mAdapter_user.notifyDataSetChanged();
             } else {
-                ((SelectFeedFragment) fragment).mAdapter_date = new SelectDateListAdapter(mContext, dateList, split);
+                ((SelectFeedFragment) fragment).mAdapter_date.clearItemList();
+                ((SelectFeedFragment) fragment).mAdapter_date = new SelectDateListAdapter(mContext, dateList);
                 ((SelectFeedFragment) fragment).recyclerView_date.setAdapter(((SelectFeedFragment) fragment).mAdapter_date);
 
+                ((SelectFeedFragment) fragment).mAdapter_rest.clearItemList();
                 ((SelectFeedFragment) fragment).mAdapter_rest = new SelectRestListAdapter(mContext, restList);
                 ((SelectFeedFragment) fragment).recyclerView_rest.setAdapter(((SelectFeedFragment) fragment).mAdapter_rest);
 
+                ((SelectFeedFragment) fragment).mAdapter_user.clearItemList();
                 ((SelectFeedFragment) fragment).mAdapter_user = new SelectUserListAdapter(mContext, userList);
                 ((SelectFeedFragment) fragment).recyclerView_user.setAdapter(((SelectFeedFragment) fragment).mAdapter_user);
                 ((SelectFeedFragment) fragment).mAdapter_user.notifyDataSetChanged();

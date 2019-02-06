@@ -21,6 +21,7 @@ import honbab.voltage.com.data.UserData;
 import honbab.voltage.com.fragment.SelectFeedFragment;
 import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.R;
+import honbab.voltage.com.tete.Statics;
 import honbab.voltage.com.widget.CircleTransform;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
 import okhttp3.OkHttpClient;
@@ -64,19 +65,20 @@ public class SelectUserListAdapter extends RecyclerView.Adapter<SelectUserListAd
 
     @Override
     public int getItemCount() {
-        Log.e("abc", "listViewItemList.size() = " + listViewItemList.size());
         return listViewItemList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView img_user;
         public TextView txt_userName;
+        public TextView icon_me;
 
         public ViewHolder(View itemView, int viewType) {
             super(itemView);
 
             img_user = itemView.findViewById(R.id.img_user);
             txt_userName = itemView.findViewById(R.id.txt_userName);
+            icon_me = itemView.findViewById(R.id.icon_me);
         }
 
         public void bindToPost(final UserData data) {
@@ -85,16 +87,22 @@ public class SelectUserListAdapter extends RecyclerView.Adapter<SelectUserListAd
                     .error(R.drawable.icon_noprofile_circle)
                     .transform(new CircleTransform())
                     .into(img_user);
-            img_user.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ((SelectFeedFragment) fragment).to_id = data.getUser_id();
-                    ((SelectFeedFragment) fragment).to_name = data.getUser_name();
-                    ((SelectFeedFragment) fragment).layout_slidingPanel.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
-                    ((SelectFeedFragment) fragment).txt_explain_reserv.setText(data.getUser_name() + "님을 선택하셨습니다.");
-                }
-            });
             txt_userName.setText(data.getUser_name());
+
+            if (Statics.my_id.equals(data.getUser_id())) {
+                icon_me.setVisibility(View.VISIBLE);
+            } else {
+                icon_me.setVisibility(View.GONE);
+                img_user.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ((SelectFeedFragment) fragment).to_id = data.getUser_id();
+                        ((SelectFeedFragment) fragment).to_name = data.getUser_name();
+                        ((SelectFeedFragment) fragment).layout_slidingPanel.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
+                        ((SelectFeedFragment) fragment).txt_explain_reserv.setText(data.getUser_name() + "님을 선택하셨습니다.");
+                    }
+                });
+            }
         }
     }
 

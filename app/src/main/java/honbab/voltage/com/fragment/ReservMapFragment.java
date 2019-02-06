@@ -55,7 +55,7 @@ public class ReservMapFragment extends Fragment implements OnMapReadyCallback {
     private void initControls() {
 //        mMapView = getActivity().findViewById(R.id.mapView);
 
-        btn_reserv = (Button) getActivity().findViewById(R.id.btn_reserve);
+        btn_reserv = (Button) getActivity().findViewById(R.id.btn_reserv);
         btn_reserv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

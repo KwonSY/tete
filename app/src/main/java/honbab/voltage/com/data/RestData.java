@@ -11,6 +11,8 @@ public class RestData implements Parcelable {
     private LatLng latLng;
     private double latitude, longtitue;
     private String like_yn;
+    private boolean checked = false;
+    private int position;
 
     public RestData() {
         this.rest_id = null;
@@ -158,6 +160,22 @@ public class RestData implements Parcelable {
 
     public void setLike_yn(String like_yn) {
         this.like_yn = like_yn;
+    }
+
+    public boolean isChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 
     @Override

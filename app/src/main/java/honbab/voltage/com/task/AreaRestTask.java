@@ -48,7 +48,7 @@ public class AreaRestTask extends AsyncTask<String, Void, ArrayList<AreaData>> {
     @Override
     protected ArrayList<AreaData> doInBackground(String... params) {
         FormBody body = new FormBody.Builder()
-                .add("opt", "rest_area")
+                .add("opt", "rest_area")//vvvv->area_cd
 //                .add("pack", params[0])
                 .build();
 

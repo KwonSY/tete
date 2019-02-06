@@ -26,7 +26,7 @@
         android:layout_height="30dp"
         android:layout_alignParentLeft="true"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/btn_check_or"
+        android:src="@drawable/btn_circle_check_or"
         android:visibility="gone" />
 
     <TextView
