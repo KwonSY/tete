@@ -2,6 +2,7 @@ package honbab.voltage.com.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import honbab.voltage.com.data.UserData;
 import honbab.voltage.com.fragment.SelectFeedFragment;
 import honbab.voltage.com.tete.MainActivity;
+import honbab.voltage.com.tete.ProfileActivity;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.tete.Statics;
 import honbab.voltage.com.widget.CircleTransform;
@@ -100,6 +102,17 @@ public class SelectUserListAdapter extends RecyclerView.Adapter<SelectUserListAd
                         ((SelectFeedFragment) fragment).to_name = data.getUser_name();
                         ((SelectFeedFragment) fragment).layout_slidingPanel.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
                         ((SelectFeedFragment) fragment).txt_explain_reserv.setText(data.getUser_name() + "님을 선택하셨습니다.");
+                    }
+                });
+                img_user.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        Intent intent = new Intent(mContext, ProfileActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent.putExtra("user_id", data.getUser_id());
+                        mContext.startActivity(intent);
+
+                        return false;
                     }
                 });
             }

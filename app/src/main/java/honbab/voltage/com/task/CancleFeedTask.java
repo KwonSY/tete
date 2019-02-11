@@ -19,16 +19,16 @@ public class CancleFeedTask extends AsyncTask<String, Void, Void> {
     private Context mContext;
     private OkHttpClient httpClient;
 
-    private int page;
+//    private int page;
     private int position;
 
     private String result;
     private String rest_name;
 
-    public CancleFeedTask(Context mContext, int page, int position) {
+    public CancleFeedTask(Context mContext, int position) {
         this.mContext = mContext;
         this.httpClient = OkHttpClientSingleton.getInstance().getHttpClient();;
-        this.page = page;
+//        this.page = page;
         this.position = position;
     }
 
@@ -71,21 +71,16 @@ public class CancleFeedTask extends AsyncTask<String, Void, Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
 //        super.onPostExecute(result);
-        Log.e("abc", "CancleFeedTask = " + page);
 
         if (result.equals("0")) {
             String activityName = mContext.getClass().getSimpleName();
 
             if (activityName.equals("MainActivity")) {
-                if (page == 0) {
+                Fragment fragment = ((MainActivity) mContext).getSupportFragmentManager().findFragmentByTag("page:1");
+                ((MyFeedFragment) fragment).mAdapter.removeAt(position);
 
-                } else if (page == 1) {
-                    Fragment fragment = ((MainActivity) mContext).getSupportFragmentManager().findFragmentByTag("page:1");
-                    ((MyFeedFragment) fragment).mAdapter.removeAt(position);
-
-                    if (((MyFeedFragment) fragment).mAdapter.getItemCount() == 0)
-                        new MyFeedListTask(mContext).execute();
-                }
+                if (((MyFeedFragment) fragment).mAdapter.getItemCount() == 0)
+                    new MyFeedListTask(mContext).execute();
             }
         }
 

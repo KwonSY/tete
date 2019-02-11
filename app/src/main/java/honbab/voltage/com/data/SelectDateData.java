@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class SelectDateData implements Serializable {
     private String time;
     private int cnt;
-    private String feed_yn;
+    private String status;
     private boolean checked = false;
     int position;
 
@@ -13,10 +13,10 @@ public class SelectDateData implements Serializable {
 
     }
 
-    public SelectDateData(String time, int cnt, String feed_yn) {
+    public SelectDateData(String time, int cnt, String status) {
         this.time = time;
         this.cnt = cnt;
-        this.feed_yn = feed_yn;
+        this.status = status;
     }
 
     public String getTime() {
@@ -35,12 +35,12 @@ public class SelectDateData implements Serializable {
         this.cnt = cnt;
     }
 
-    public String getFeed_yn() {
-        return feed_yn;
+    public String getStatus() {
+        return status;
     }
 
-    public void setFeed_yn(String feed_yn) {
-        this.feed_yn = feed_yn;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public boolean isChecked() {

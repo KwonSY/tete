@@ -5,13 +5,13 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -97,7 +97,7 @@ public class DialogDateListAdapter extends RecyclerView.Adapter<DialogDateListAd
             txt_date = itemView.findViewById(R.id.txt_date);
             txt_time = itemView.findViewById(R.id.txt_time);
             cnt_users = itemView.findViewById(R.id.cnt_users);
-            cnt_users.setVisibility(View.GONE);
+//            cnt_users.setVisibility(View.GONE);
             checkBox = itemView.findViewById(R.id.checkBox);
         }
 
@@ -118,21 +118,29 @@ public class DialogDateListAdapter extends RecyclerView.Adapter<DialogDateListAd
             else if (data.getTime().contains("19:00:00"))
                 txt_time.setText("저녁");
 
-            if (data.getFeed_yn().equals("y"))
+            if (data.getCnt() > 0)
+            cnt_users.setText(data.getCnt() + "명 식사가능");
+
+            if (data.getStatus().equals("y"))
                 checkBox.setChecked(true);
-            else
+            else if (data.getStatus().equals("a")) {
+                checkBox.setEnabled(false);
+                cnt_users.setText("예약완료");
+            } else
                 checkBox.setChecked(false);
 
             checkBox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.e("abc","체크표시 체크 = " + data.getFeed_yn() + data.getTime());
-                    if (data.getFeed_yn().equals("n")) {
+                    if (data.getStatus().equals("n")) {
                         checkBox.setChecked(true);
-                        data.setFeed_yn("y");
-                    } else {
+                        data.setStatus("y");
+                    } else if (data.getStatus().equals("y")) {
                         checkBox.setChecked(false);
-                        data.setFeed_yn("n");
+                        data.setStatus("n");
+                    } else {
+                        //a
+                        Toast.makeText(mContext, "이미 식사 일정이 잡혀있습니다.", Toast.LENGTH_SHORT).show();
                     }
 
                     new PickDateTask(mContext).execute(data.getTime());

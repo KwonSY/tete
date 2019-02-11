@@ -82,7 +82,7 @@ public class CommonRestTask extends AsyncTask<String, Void, ArrayList<RestData>>
 //                        defalutPos = restList.size();
 //                    }
                     RestData restData = new RestData(rest_id, rest_name,
-                            compound_code, latLng, place_id, rest_img, rest_phone, vicinity);
+                            compound_code, latLng, place_id, rest_img, rest_phone, vicinity, 0);
                     restList.add(restData);
 //                    restNameList.add(rest_name);
                 }

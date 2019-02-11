@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 import honbab.voltage.com.adapter.GridViewAdapter;
 import honbab.voltage.com.utils.ButtonUtil;
-import honbab.voltage.com.utils.SpacesItemDecoration;
+import honbab.voltage.com.widget.SpacesItemDecoration;
 
 public class GridViewActivity extends AppCompatActivity {
 

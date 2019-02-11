@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -135,13 +134,22 @@ public class SelectDateListAdapter extends RecyclerView.Adapter<SelectDateListAd
                     e.printStackTrace();
                 }
 
-                cnt_users.setText("" + String.valueOf(data.getCnt()) + "명 식사가능");
+                cnt_users.setText(String.valueOf(data.getCnt()) + "명 식사가능");
 
                 checkBox.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         ((SelectFeedFragment) fragment).feed_time = data.getTime();
-                        Log.e("abc","bindToPost feed_time = " + ((SelectFeedFragment) fragment).feed_time);
+                        ((SelectFeedFragment) fragment).feed_time = data.getTime();
+                        if (((SelectFeedFragment) fragment).feed_time.equals("")) {
+                            ((SelectFeedFragment) fragment).txt_explain_pick.setText("식사하고자 하는 시간을 선택하세요.");
+                        } else if (((SelectFeedFragment) fragment).feed_rest_id.equals("")) {
+                            ((SelectFeedFragment) fragment).txt_explain_pick.setText("가고 싶은 음식점을 선택해보세요.");
+                        } else if (((SelectFeedFragment) fragment).to_id.equals("")) {
+                            ((SelectFeedFragment) fragment).txt_explain_pick.setText("");
+                        } else {
+                            ((SelectFeedFragment) fragment).txt_explain_pick.setText("");
+                        }
 
                         try {
                             Calendar calendar = Calendar.getInstance();
@@ -160,7 +168,7 @@ public class SelectDateListAdapter extends RecyclerView.Adapter<SelectDateListAd
                                 new SelectFeedListTask(mContext).execute(((SelectFeedFragment) fragment).feed_time,
                                         ((SelectFeedFragment) fragment).area_cd,
                                         ((SelectFeedFragment) fragment).feed_rest_id,
-                                        "readOnlyUser");
+                                        "readBelowRest");
                             } else {
                                 checkBox.setVisibility(View.GONE);
                                 Toast.makeText(mContext, R.string.cannot_reserve_past, Toast.LENGTH_SHORT).show();
@@ -173,7 +181,7 @@ public class SelectDateListAdapter extends RecyclerView.Adapter<SelectDateListAd
             } else {
                 //TYPE_END
                 layout_card.setBackgroundColor(Color.parseColor("#efefef"));
-                txt_time.setText("시간 선택");
+                txt_time.setText("시간선택");
 
                 checkBox.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -187,13 +195,21 @@ public class SelectDateListAdapter extends RecyclerView.Adapter<SelectDateListAd
 
         public void setDateToView(SelectDateData data, int position) throws Exception {
 //            checkBox.setChecked(position == mSelectedItem);
+
             if (position == mSelectedItem) {
                 ((SelectFeedFragment) fragment).feed_time = data.getTime();
+                if (((SelectFeedFragment) fragment).feed_time.equals("")) {
+                    ((SelectFeedFragment) fragment).txt_explain_pick.setText("식사하고자 하는 시간을 선택하세요.");
+                } else if (((SelectFeedFragment) fragment).feed_rest_id.equals("")) {
+                    ((SelectFeedFragment) fragment).txt_explain_pick.setText("가고 싶은 음식점을 선택해보세요.");
+                } else if (((SelectFeedFragment) fragment).to_id.equals("")) {
+                    ((SelectFeedFragment) fragment).txt_explain_pick.setText("");
+                } else {
+                    ((SelectFeedFragment) fragment).txt_explain_pick.setText("");
+                }
+
                 data.setChecked(true);
                 checkBox.setChecked(data.isChecked());
-//                new SelectFeedListTask(mContext).execute(data.getTime(),
-//                        ((SelectFeedFragment) fragment).area_cd,
-//                        ((SelectFeedFragment) fragment).feed_rest_id, "readOnlyUser");
             } else {
                 data.setChecked(false);
                 checkBox.setChecked(data.isChecked());

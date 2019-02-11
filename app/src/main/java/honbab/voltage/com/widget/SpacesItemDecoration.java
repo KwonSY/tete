@@ -1,8 +1,7 @@
-package honbab.voltage.com.utils;
+package honbab.voltage.com.widget;
 
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 
 public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
@@ -27,9 +26,8 @@ public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
     public void getItemOffsets(Rect outRect, View view,
                                RecyclerView parent, RecyclerView.State state) {
 //        Log.e("abc", "space -= " + space);
-        Log.e("abc", "outRect.left = " + outRect.left);
-        Log.e("abc", "outRect.right = " + outRect.right);
-
+//        Log.e("abc", "outRect.left = " + outRect.left);
+//        Log.e("abc", "outRect.right = " + outRect.right);
         outRect.left = space;
         outRect.right = space;
 //        outRect.bottom = space;

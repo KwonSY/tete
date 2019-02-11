@@ -35,7 +35,7 @@ import honbab.voltage.com.task.ReservFeedTask;
 import honbab.voltage.com.task.SelectFeedListTask;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.tete.ReservActivity;
-import honbab.voltage.com.utils.SpacesItemDecoration;
+import honbab.voltage.com.widget.SpacesItemDecoration;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
 import okhttp3.OkHttpClient;
 
@@ -50,12 +50,10 @@ public class SelectFeedFragment extends Fragment {
     public SwipeRefreshLayout swipeContainer;
     public Spinner spinner;
     public SpinnerAdapter spinnerAdapter;
+    public TextView txt_explain_pick;
     public TextView txt_explain_reserv;
     public SlidingUpPanelLayout layout_slidingPanel;
 
-    //    private Calendar calendar;
-//    int year, month, day;
-//    public String feed_date = "";
     public int split = 2;
     public String area_cd = "GNS1";
     public String feed_time = "";
@@ -108,27 +106,13 @@ public class SelectFeedFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        Log.e("abc", "SelectFeedListTask onResume = ");
         new SelectFeedListTask(getActivity()).execute(feed_time, area_cd, feed_rest_id, "");
     }
 
     private void initControls() {
-//        calendar = Calendar.getInstance();
-//        year = calendar.get(Calendar.YEAR);
-//        month = calendar.get(Calendar.MONTH) + 1;
-//        day = calendar.get(Calendar.DAY_OF_MONTH);
-//        String str_date = String.valueOf(month) + "/" + String.valueOf(day);
-//
-//        TextView txt_date = (TextView) getActivity().findViewById(R.id.txt_date);
-//        txt_date.setText(str_date);
-//        txt_date.setOnClickListener(mOnClickListener);
-
         spinner = (Spinner) getActivity().findViewById(R.id.spinner_location);
-//        spinnerAdapter = new ArrayAdapter(getActivity(), R.layout.support_simple_spinner_dropdown_item, areaNameList);
         spinnerAdapter = new ArrayAdapter(getActivity(), R.layout.item_row_spinner, areaNameList);
-//        ((ArrayAdapter) spinnerAdapter).setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(spinnerAdapter);
-//        spinner.getBackground().setColorFilter(getResources().getColor(R.color.orange), PorterDuff.Mode.SRC_ATOP);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -163,12 +147,21 @@ public class SelectFeedFragment extends Fragment {
         recyclerView_date.setLayoutManager(layoutManager);
         mAdapter_date = new SelectDateListAdapter();
         recyclerView_date.setAdapter(mAdapter_date);
+//        DividerItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), layoutManager.getOrientation());
+        Log.e("abc", "recyclerView_date.getItemDecorationCount() = " + recyclerView_date.getItemDecorationCount());
+        while (recyclerView_date.getItemDecorationCount() > 0) {
+            recyclerView_date.removeItemDecorationAt(0);
+        }
         recyclerView_date.addItemDecoration(new SpacesItemDecoration(18));
+//        recyclerView_date.addItemDecoration(itemDecoration);
 
         recyclerView_rest = (RecyclerView) getActivity().findViewById(R.id.recyclerView_rest);
         recyclerView_rest.setLayoutManager(layoutManager2);
         mAdapter_rest = new SelectRestListAdapter();
         recyclerView_rest.setAdapter(mAdapter_rest);
+        while (recyclerView_rest.getItemDecorationCount() > 0) {
+            recyclerView_rest.removeItemDecorationAt(0);
+        }
         recyclerView_rest.addItemDecoration(new SpacesItemDecoration(18));
 
         recyclerView_user = (RecyclerView) getActivity().findViewById(R.id.recyclerView_user);
@@ -176,8 +169,9 @@ public class SelectFeedFragment extends Fragment {
         mAdapter_user = new SelectUserListAdapter();
         recyclerView_user.setAdapter(mAdapter_user);
 
+        txt_explain_pick = (TextView) getActivity().findViewById(R.id.txt_explain_pick);
 
-
+        //sliding Up Panel
         txt_explain_reserv = (TextView) getActivity().findViewById(R.id.txt_explain_reserv);
 
         layout_slidingPanel = (SlidingUpPanelLayout) getActivity().findViewById(R.id.layout_slidingPanel);
@@ -212,10 +206,11 @@ public class SelectFeedFragment extends Fragment {
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.btn_reserv:
-                    if (feed_rest_id.equals("")) {
-                        Toast.makeText(getActivity(), "음식점을 선택해주세요.", Toast.LENGTH_SHORT).show();
-                    } else if(feed_time.equals("")) {
+
+                    if(feed_time.equals("")) {
                         Toast.makeText(getActivity(), "가능한 식사시간을 선택해주세요.", Toast.LENGTH_SHORT).show();
+                    } else if (feed_rest_id.equals("")) {
+                        Toast.makeText(getActivity(), "음식점을 선택해주세요.", Toast.LENGTH_SHORT).show();
                     } else if (to_id.equals("")) {
                         Toast.makeText(getActivity(), "같이 식사하실 분을 선택해주세요.", Toast.LENGTH_SHORT).show();
                     } else {

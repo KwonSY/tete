@@ -59,7 +59,7 @@ public class MyFeedFragment extends Fragment {
     //마이피드
     public SwipeRefreshLayout swipeContainer_myfeed;
     public SwipeRefreshLayout swipeContainer;
-    public RecyclerView gridView_feed;
+    public RecyclerView recyclerView_myfeed;
     public MyFeedListAdapter mAdapter;
     //스케쥴없음
     public LinearLayout layout_no_my_schedule;
@@ -156,10 +156,10 @@ public class MyFeedFragment extends Fragment {
         });
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-        gridView_feed = (RecyclerView) getActivity().findViewById(R.id.gridView_feed);
-        gridView_feed.setLayoutManager(layoutManager);
+        recyclerView_myfeed = (RecyclerView) getActivity().findViewById(R.id.recyclerView_myfeed);
+        recyclerView_myfeed.setLayoutManager(layoutManager);
         mAdapter = new MyFeedListAdapter();
-        gridView_feed.setAdapter(mAdapter);
+        recyclerView_myfeed.setAdapter(mAdapter);
 
 
         //스케쥴없음

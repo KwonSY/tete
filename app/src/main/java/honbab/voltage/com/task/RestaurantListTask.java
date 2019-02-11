@@ -67,11 +67,7 @@ public class RestaurantListTask extends AsyncTask<String, Void, ArrayList<RestDa
                     String rest_phone = rest_obj.getString("phone");
                     String rest_img = rest_obj.getString("img_url");
 
-//                    FeedData feedData = new FeedData(feed_id,
-//                            null, null, null, null, null, null,
-//                            rest_id, rest_name, compound_code, latLng, place_id, rest_img, rest_phone, vicinity,
-//                            null, null);
-                    RestData restData = new RestData(rest_id, rest_name, compound_code, latLng, place_id, rest_img, rest_phone, vicinity);
+                    RestData restData = new RestData(rest_id, rest_name, compound_code, latLng, place_id, rest_img, rest_phone, vicinity, 0);
                     restList.add(restData);
                 }
 

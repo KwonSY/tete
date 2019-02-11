@@ -93,7 +93,7 @@ public class SelectRestListAdapter extends RecyclerView.Adapter<SelectRestListAd
         public RelativeLayout layout_card;
 
         public ImageView img_rest;
-        public TextView txt_restName;
+        public TextView txt_restName, txt_cnt;
         public RelativeLayout layout_check;
         public CheckBox checkBox;
 
@@ -104,6 +104,7 @@ public class SelectRestListAdapter extends RecyclerView.Adapter<SelectRestListAd
             layout_card = itemView.findViewById(R.id.layout_card);
             img_rest = itemView.findViewById(R.id.img_rest);
             txt_restName = itemView.findViewById(R.id.txt_restName);
+            txt_cnt = itemView.findViewById(R.id.txt_cnt);
 
             layout_check = itemView.findViewById(R.id.layout_check);
             checkBox = itemView.findViewById(R.id.checkBox);
@@ -123,7 +124,7 @@ public class SelectRestListAdapter extends RecyclerView.Adapter<SelectRestListAd
 //                        Toast.makeText(mContext, "음식점 상세를 보시려면\n음식점을 길게 누르세요.", Toast.LENGTH_SHORT).show();
 //                    }
 //                });
-                img_rest.setOnLongClickListener(new View.OnLongClickListener() {
+                checkBox.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
                         Intent intent = new Intent(mContext, OneRestaurantActivity.class);
@@ -147,6 +148,8 @@ public class SelectRestListAdapter extends RecyclerView.Adapter<SelectRestListAd
                     }
                 });
                 txt_restName.setText(data.getRest_name());
+                if (data.getCnt() > 0)
+                    txt_cnt.setText(data.getCnt() + "명");
 
                 try {
                     setDateToView(data, data.getPosition());
@@ -177,6 +180,16 @@ public class SelectRestListAdapter extends RecyclerView.Adapter<SelectRestListAd
 
             if (position == mSelectedItem) {
                 ((SelectFeedFragment) fragment).feed_rest_id = data.getRest_id();
+                if (((SelectFeedFragment) fragment).feed_time.equals("")) {
+                    ((SelectFeedFragment) fragment).txt_explain_pick.setText("식사하고자 하는 시간을 선택하세요.");
+                } else if (((SelectFeedFragment) fragment).feed_rest_id.equals("")) {
+                    ((SelectFeedFragment) fragment).txt_explain_pick.setText("가고 싶은 음식점을 선택해보세요.");
+                } else if (((SelectFeedFragment) fragment).to_id.equals("")) {
+                    ((SelectFeedFragment) fragment).txt_explain_pick.setText("");
+                } else {
+                    ((SelectFeedFragment) fragment).txt_explain_pick.setText("");
+                }
+
                 data.setChecked(true);
                 checkBox.setChecked(data.isChecked());
 

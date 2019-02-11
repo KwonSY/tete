@@ -76,19 +76,6 @@ public class GridViewNearByAdapter extends RecyclerView.Adapter<GridViewNearByAd
             public void onClick(View view) {
                 ((ReservActivity) mContext).txt_restName.setText(data.getRest_name());
 
-//                ((ReservActivity) mContext).place_id = data.getPlace_id();
-//                ((ReservActivity) mContext).rest_name = data.getRest_name();
-//                ((ReservActivity) mContext).rest_phone = data.getRest_phone();
-//                ((ReservActivity) mContext).rest_img = data.getRest_img();
-//                LatLng latLng = data.getLatLng();
-//                Double d_lat = latLng.latitude;
-//                Double d_lng = latLng.longitude;
-//                String str_lat = d_lat.toString();
-//                String str_lng = d_lng.toString();
-//                ((ReservActivity) mContext).lat = str_lat;
-//                ((ReservActivity) mContext).lng = str_lng;
-//                ((ReservActivity) mContext).compound_code = data.getCompound_code();
-//                ((ReservActivity) mContext).vicinity = data.getVicinity();
                 ((ReservActivity) mContext).restData = new RestData(
                         data.getRest_id(),
                         data.getRest_name(),
@@ -97,7 +84,8 @@ public class GridViewNearByAdapter extends RecyclerView.Adapter<GridViewNearByAd
                         data.getPlace_id(),
                         data.getRest_img(),
                         data.getRest_phone(),
-                        data.getVicinity());
+                        data.getVicinity(),
+                        0);
 
                 ((ReservActivity) mContext).layout_slidingPanel.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);
             }

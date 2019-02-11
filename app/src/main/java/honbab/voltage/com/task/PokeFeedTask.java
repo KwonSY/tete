@@ -90,7 +90,7 @@ public class PokeFeedTask extends AsyncTask<String, Void, String> {
                 String vicinity = rest_obj.getString("vicinity");
 
                 restData = new RestData(rest_id, rest_name,
-                        compound_code, latLng, place_id, rest_img, rest_phone, vicinity);
+                        compound_code, latLng, place_id, rest_img, rest_phone, vicinity, 0);
             } else {
                 Log.d("abc", "Error : " + response.code() + ", " + response.message());
             }

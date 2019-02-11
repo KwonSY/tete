@@ -20,7 +20,6 @@ public class UpdateTokenTask extends AsyncTask<String, Void, Void> {
 
     public UpdateTokenTask(Context mContext) {
         this.mContext = mContext;
-//        this.httpClient = httpClient;
         this.httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
     }
 
@@ -43,7 +42,7 @@ public class UpdateTokenTask extends AsyncTask<String, Void, Void> {
             okhttp3.Response response = httpClient.newCall(request).execute();
             if (response.isSuccessful()) {
                 String bodyStr = response.body().string();
-
+                Log.e("abc", "UpdateTokenTask : ");
                 JSONObject obj = new JSONObject(bodyStr);
 
                 result = obj.getString("result");

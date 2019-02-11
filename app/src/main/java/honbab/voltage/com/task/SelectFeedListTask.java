@@ -90,11 +90,11 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
                     JSONObject time_obj = time_arr.getJSONObject(i);
                     String time = time_obj.getString("time");
                     int cnt_time = time_obj.getInt("cnt");
-                    String my_like_yn = time_obj.getString("my_like_yn");
+                    String status = time_obj.getString("status");
 
-                    SelectDateData dateData = new SelectDateData(time, cnt_time, my_like_yn);
+                    SelectDateData dateData = new SelectDateData(time, cnt_time, status);
                     ((SelectFeedFragment) fragment).dateLikeList.add(dateData);
-                    if (dateData.getFeed_yn().equals("y"))
+                    if (dateData.getStatus().equals("y"))
                         dateList.add(dateData);
 
                     if (i == 0)
@@ -109,8 +109,9 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
                     String place_id = rest_obj.getString("place_id");
                     String rest_img = rest_obj.getString("img_url");
                     String like_yn = rest_obj.getString("like_yn");
+                    int cnt = rest_obj.getInt("cnt");
 
-                    RestData restData = new RestData(rest_id, rest_name, null, null, place_id, rest_img, null, null);
+                    RestData restData = new RestData(rest_id, rest_name, null, null, place_id, rest_img, null, null, cnt);
                     restData.setLike_yn(like_yn);
                     if (like_yn.equals("y")) {
                         restList.add(restData);
@@ -119,7 +120,6 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
                 }
 
                 JSONArray user_arr = obj.getJSONArray("user");
-//                Log.e("abc", "// user_arr = " + user_arr);
                 for (int i=0; i<user_arr.length(); i++) {
                     JSONObject user_obj = user_arr.getJSONObject(i);
                     String user_id = user_obj.getString("sid");
@@ -156,11 +156,35 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
             ((SelectFeedFragment) fragment).area_cd = area_cd;
 
             if (loadStatus.equals("readOnlyUser")) {
+                ((SelectFeedFragment) fragment).to_id = "";
+                ((SelectFeedFragment) fragment).txt_explain_reserv.setText("같이 먹을 상대를 선택해주세요.");
+
                 ((SelectFeedFragment) fragment).mAdapter_user.clearItemList();
                 ((SelectFeedFragment) fragment).mAdapter_user = new SelectUserListAdapter(mContext, userList);
                 ((SelectFeedFragment) fragment).recyclerView_user.setAdapter(((SelectFeedFragment) fragment).mAdapter_user);
                 ((SelectFeedFragment) fragment).mAdapter_user.notifyDataSetChanged();
+            } else if  (loadStatus.equals("readBelowRest")) {
+                ((SelectFeedFragment) fragment).feed_rest_id = "";
+                ((SelectFeedFragment) fragment).to_id = "";
+                ((SelectFeedFragment) fragment).txt_explain_reserv.setText("같이 먹을 상대를 선택해주세요.");
+
+                ((SelectFeedFragment) fragment).mAdapter_rest.clearItemList();
+                ((SelectFeedFragment) fragment).mAdapter_rest = new SelectRestListAdapter(mContext, restList);
+                ((SelectFeedFragment) fragment).recyclerView_rest.setAdapter(((SelectFeedFragment) fragment).mAdapter_rest);
+
+                ((SelectFeedFragment) fragment).mAdapter_user.clearItemList();
+                ((SelectFeedFragment) fragment).mAdapter_user = new SelectUserListAdapter(mContext, userList);
+                ((SelectFeedFragment) fragment).recyclerView_user.setAdapter(((SelectFeedFragment) fragment).mAdapter_user);
+                ((SelectFeedFragment) fragment).mAdapter_user.notifyDataSetChanged();
+
+                if (((SelectFeedFragment) fragment).areaNameList.size() == 1)
+                    new AreaRestTask(mContext).execute();
             } else {
+                ((SelectFeedFragment) fragment).feed_time = "";
+                ((SelectFeedFragment) fragment).feed_rest_id = "";
+                ((SelectFeedFragment) fragment).to_id = "";
+                ((SelectFeedFragment) fragment).txt_explain_reserv.setText("같이 먹을 상대를 선택해주세요.");
+
                 ((SelectFeedFragment) fragment).mAdapter_date.clearItemList();
                 ((SelectFeedFragment) fragment).mAdapter_date = new SelectDateListAdapter(mContext, dateList);
                 ((SelectFeedFragment) fragment).recyclerView_date.setAdapter(((SelectFeedFragment) fragment).mAdapter_date);

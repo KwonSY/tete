@@ -141,12 +141,13 @@
                         android:textSize="10sp" />
 
                     <TextView
+                        android:id="@+id/txt_explain_pick"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/txt_title3"
                         android:gravity="center_horizontal"
                         android:paddingTop="50dp"
-                        android:text="가고 싶은 음식점을 선택해보세요." />
+                        android:text="식사하고자 하는 시간을 선택하세요." />
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recyclerView_user"

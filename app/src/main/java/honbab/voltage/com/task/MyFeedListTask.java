@@ -147,15 +147,16 @@ public class MyFeedListTask extends AsyncTask<Void, Void, Void> {
 
         if (activityName.equals("MainActivity")) {
             ((MyFeedFragment) fragment).mAdapter = new MyFeedListAdapter(mContext, feedList);
-            ((MyFeedFragment) fragment).gridView_feed.setAdapter(((MyFeedFragment) fragment).mAdapter);
+            ((MyFeedFragment) fragment).recyclerView_myfeed.setAdapter(((MyFeedFragment) fragment).mAdapter);
             ((MyFeedFragment) fragment).mAdapter.notifyDataSetChanged();
 
             ((MyFeedFragment) fragment).swipeContainer.setRefreshing(false);
 
+            Log.e("abc", "(MyFeedFragment) mAdapter.getItemCount() = " + ((MyFeedFragment) fragment).mAdapter.getItemCount());
             if (((MyFeedFragment) fragment).mAdapter.getItemCount() == 0) {
                 ((MyFeedFragment) fragment).line_timeline_vertical.setVisibility(View.INVISIBLE);
                 ((MyFeedFragment) fragment).layout_no_my_schedule.setVisibility(View.VISIBLE);
-                ((MyFeedFragment) fragment).swipeContainer_myfeed.setVisibility(View.INVISIBLE);
+                ((MyFeedFragment) fragment).recyclerView_myfeed.setVisibility(View.INVISIBLE);
 //                ((MyFeedFragment) fragment).btn_go_rest_like.setOnClickListener(((MyFeedFragment) fragment).mOnClickListener);
 //                ((MainActivity) mContext).viewPager.setCurrentItem(0);
 //                ((MainActivity) mContext).getSupportFragmentManager().beginTransaction()
@@ -164,9 +165,10 @@ public class MyFeedListTask extends AsyncTask<Void, Void, Void> {
 //                        .addToBackStack("myfeed")
 //                        .commit();
             } else {
+                Log.e("abc", "222 mAdapter.getItemCount() = " + ((MyFeedFragment) fragment).mAdapter.getItemCount());
                 ((MyFeedFragment) fragment).line_timeline_vertical.setVisibility(View.VISIBLE);
                 ((MyFeedFragment) fragment).layout_no_my_schedule.setVisibility(View.GONE);
-                ((MyFeedFragment) fragment).swipeContainer_myfeed.setVisibility(View.VISIBLE);
+                ((MyFeedFragment) fragment).recyclerView_myfeed.setVisibility(View.VISIBLE);
             }
 
             try {

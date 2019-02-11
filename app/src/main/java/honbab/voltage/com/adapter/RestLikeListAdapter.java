@@ -61,10 +61,10 @@ public class RestLikeListAdapter extends RecyclerView.Adapter<RestLikeListAdapte
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         final FeedData data = listViewItemList.get(position);
-//        final String feed_id = data.getFeed_id();
+
         RestData restData = new RestData(data.getRest_id(), data.getRest_name(),
                 data.getCompound_code(), data.getLatLng(),
-                data.getPlace_id(), data.getRest_img(), data.getRest_phone(), data.getVicinity());
+                data.getPlace_id(), data.getRest_img(), data.getRest_phone(), data.getVicinity(), 0);
         ArrayList<UserData> usersList = data.getUsersList();
 
 
@@ -75,8 +75,6 @@ public class RestLikeListAdapter extends RecyclerView.Adapter<RestLikeListAdapte
         holder.img_rest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                ArrayList<UserData> usersList = data.getUsersList();
-
                 Intent intent = new Intent(mContext, OneRestaurantActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.putExtra("rest_name", data.getRest_name());
@@ -86,14 +84,6 @@ public class RestLikeListAdapter extends RecyclerView.Adapter<RestLikeListAdapte
                 intent.putExtra("latLng", data.getLatLng());
                 intent.putExtra("place_id", data.getPlace_id());
                 intent.putExtra("vicinity", data.getVicinity());
-//                if (usersList.size() > 0) {
-//                    UserData userData = usersList.get(0);
-//
-//                    intent.putExtra("latLng", data.getLatLng());
-//                    intent.putExtra("feeder_id", userData.getUser_id());
-//                    intent.putExtra("feeder_name", userData.getUser_name());
-//                    intent.putExtra("feeder_img", Statics.main_url + data.getUser_name());
-//                }
                 intent.putExtra("status", data.getStatus());
                 mContext.startActivity(intent);
             }
@@ -120,7 +110,7 @@ public class RestLikeListAdapter extends RecyclerView.Adapter<RestLikeListAdapte
                 builder.setPositiveButton(R.string.yes,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                new CancleFeedTask(mContext, 0, position).execute(data.getFeed_id(), data.getRest_name());
+                                new CancleFeedTask(mContext, position).execute(data.getFeed_id(), data.getRest_name());
                                 removeAt(position);
                             }
                         });

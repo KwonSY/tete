@@ -6,6 +6,7 @@ import android.content.ContentProviderOperation;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -30,6 +32,15 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        TextView txt_app_version = (TextView) findViewById(R.id.txt_app_version);
+        try {
+            PackageInfo pInfo = getPackageManager().getPackageInfo(SplashActivity.this.getPackageName(), 0);
+            String appVersion = pInfo.versionName;
+            txt_app_version.setText("v" + appVersion);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
 
         insertDummyContactWrapper();
     }

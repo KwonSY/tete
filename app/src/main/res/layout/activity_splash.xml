@@ -24,10 +24,19 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/txt_coperation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="40dp"
-        android:layout_alignParentBottom="true"
-        android:text="ⓒ 200V"/>
+        android:text="ⓒ 200V" />
+
+    <TextView
+        android:id="@+id/txt_app_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/txt_coperation"
+        android:layout_centerHorizontal="true"
+        android:text="v1.0" />
 </RelativeLayout>

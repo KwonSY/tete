@@ -24,9 +24,6 @@ public class ReservFeedTask extends AsyncTask<String, Void, String> {
 
     private String result;
     private String to_id;
-//    private String datetime;
-//    private RestData restData;
-//    String lat, lng, place_id, rest_name, rest_phone, rest_img, compound_code, vicinity;
 
     public ReservFeedTask(Context mContext) {
         this.mContext = mContext;

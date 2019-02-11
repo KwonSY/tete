@@ -8,6 +8,7 @@ import com.google.android.gms.maps.model.LatLng;
 public class RestData implements Parcelable {
 
     private String rest_id, rest_name, compound_code, place_id, rest_img, rest_phone, vicinity;
+    private int cnt;
     private LatLng latLng;
     private double latitude, longtitue;
     private String like_yn;
@@ -29,7 +30,7 @@ public class RestData implements Parcelable {
 
     // parameter 16EA
     public RestData(String rest_id, String rest_name,
-                    String compound_code, LatLng latLng, String place_id, String rest_img, String rest_phone, String vicinity) {
+                    String compound_code, LatLng latLng, String place_id, String rest_img, String rest_phone, String vicinity, int cnt) {
         this.rest_id = rest_id;
         this.rest_name = rest_name;
         this.compound_code = compound_code;
@@ -45,6 +46,7 @@ public class RestData implements Parcelable {
         this.rest_img = rest_img;
         this.rest_phone = rest_phone;
         this.vicinity = vicinity;
+        this.cnt = cnt;
     }
 
     protected RestData(Parcel in) {
@@ -160,6 +162,14 @@ public class RestData implements Parcelable {
 
     public void setLike_yn(String like_yn) {
         this.like_yn = like_yn;
+    }
+
+    public int getCnt() {
+        return cnt;
+    }
+
+    public void setCnt(int cnt) {
+        this.cnt = cnt;
     }
 
     public boolean isChecked() {

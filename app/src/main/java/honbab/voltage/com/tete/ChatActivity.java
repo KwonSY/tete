@@ -578,7 +578,7 @@ public class ChatActivity extends AppCompatActivity {
 
                 RestData pickData = restList.get(r);
                 restData = new RestData(pickData.getRest_id(), pickData.getRest_name(),
-                        pickData.getCompound_code(), pickData.getLatLng(), pickData.getPlace_id(), pickData.getRest_img(), pickData.getRest_phone(), pickData.getVicinity());
+                        pickData.getCompound_code(), pickData.getLatLng(), pickData.getPlace_id(), pickData.getRest_img(), pickData.getRest_phone(), pickData.getVicinity(), 0);
                 Log.e("abc", "rrrrr restData : " + pickData.getRest_img());
 
                 Picasso.get().load(restData.getRest_img())
