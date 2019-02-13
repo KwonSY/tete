@@ -51,7 +51,7 @@ public class SelectFeedFragment extends Fragment {
     public Spinner spinner;
     public SpinnerAdapter spinnerAdapter;
     public TextView txt_explain_pick;
-    public TextView txt_explain_reserv;
+    public TextView txt_explain_rest, txt_explain_reserv;
     public SlidingUpPanelLayout layout_slidingPanel;
 
     public int split = 2;
@@ -172,6 +172,7 @@ public class SelectFeedFragment extends Fragment {
         txt_explain_pick = (TextView) getActivity().findViewById(R.id.txt_explain_pick);
 
         //sliding Up Panel
+        txt_explain_rest = (TextView) getActivity().findViewById(R.id.txt_explain_rest);
         txt_explain_reserv = (TextView) getActivity().findViewById(R.id.txt_explain_reserv);
 
         layout_slidingPanel = (SlidingUpPanelLayout) getActivity().findViewById(R.id.layout_slidingPanel);

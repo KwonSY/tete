@@ -33,6 +33,8 @@
     <string name="enter_gender">성별을 선택해주세요.</string>
     <string name="enter_name">이름을 입력해주세요.</string>
     <string name="enter_password">비밀번호를 입력해주세요.</string>
+    <string name="explain_choose_feedee">같이 먹을 상대를 선택해주세요.</string>
+    <string name="explain_choose_rest">\&quot; %s \&quot;</string>
     <string name="explain_eat_together">아래분들이 이 곳에서 식사하기를 원합니다.</string>
     <string name="explain_reserve_godmuk">같이 먹기 예약이 없습니다. 같먹을 예약해주시겠습니까?</string>
     <string name="explain_search_godmuk_rest">맛집들이 준비되어 있어요.\n한 번 둘러보세요.</string>

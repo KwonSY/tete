@@ -121,7 +121,12 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
 //            date[1] = date[1].substring(1,2);
 
         holder.txt_date.setText(date[1]+ "\n" + date[2]);
-        holder.txt_time.setText(time[0] + ":" + time[1] + "");
+        if (time[0].equals("12"))
+            holder.txt_time.setText("점심");
+        else if (time[0].equals("19"))
+            holder.txt_time.setText("저녁");
+        else
+            holder.txt_time.setText(time[0] + ":" + time[1] + "");
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

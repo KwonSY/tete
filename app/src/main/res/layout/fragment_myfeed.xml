@@ -15,7 +15,7 @@
 
         <View
             android:id="@+id/line_timeline_vertical"
-            android:layout_width="5dp"
+            android:layout_width="3dp"
             android:layout_height="match_parent"
             android:layout_marginLeft="57.9dp"
             android:layout_marginTop="50dp"

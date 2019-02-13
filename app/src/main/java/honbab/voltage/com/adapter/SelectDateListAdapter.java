@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -140,7 +141,7 @@ public class SelectDateListAdapter extends RecyclerView.Adapter<SelectDateListAd
                     @Override
                     public void onClick(View v) {
                         ((SelectFeedFragment) fragment).feed_time = data.getTime();
-                        ((SelectFeedFragment) fragment).feed_time = data.getTime();
+
                         if (((SelectFeedFragment) fragment).feed_time.equals("")) {
                             ((SelectFeedFragment) fragment).txt_explain_pick.setText("식사하고자 하는 시간을 선택하세요.");
                         } else if (((SelectFeedFragment) fragment).feed_rest_id.equals("")) {
@@ -196,24 +197,39 @@ public class SelectDateListAdapter extends RecyclerView.Adapter<SelectDateListAd
         public void setDateToView(SelectDateData data, int position) throws Exception {
 //            checkBox.setChecked(position == mSelectedItem);
 
-            if (position == mSelectedItem) {
-                ((SelectFeedFragment) fragment).feed_time = data.getTime();
-                if (((SelectFeedFragment) fragment).feed_time.equals("")) {
-                    ((SelectFeedFragment) fragment).txt_explain_pick.setText("식사하고자 하는 시간을 선택하세요.");
-                } else if (((SelectFeedFragment) fragment).feed_rest_id.equals("")) {
-                    ((SelectFeedFragment) fragment).txt_explain_pick.setText("가고 싶은 음식점을 선택해보세요.");
-                } else if (((SelectFeedFragment) fragment).to_id.equals("")) {
-                    ((SelectFeedFragment) fragment).txt_explain_pick.setText("");
-                } else {
-                    ((SelectFeedFragment) fragment).txt_explain_pick.setText("");
-                }
+            if (mSelectedItem >= 0) {//선택이 되었으면
+                if (position == mSelectedItem) {
+                    ((SelectFeedFragment) fragment).feed_time = data.getTime();
+                    if (((SelectFeedFragment) fragment).feed_time.equals("")) {
+                        ((SelectFeedFragment) fragment).txt_explain_pick.setText("식사하고자 하는 시간을 선택하세요.");
+                    } else if (((SelectFeedFragment) fragment).feed_rest_id.equals("")) {
+                        ((SelectFeedFragment) fragment).txt_explain_pick.setText("가고 싶은 음식점을 선택해보세요.");
+                    } else if (((SelectFeedFragment) fragment).to_id.equals("")) {
+                        ((SelectFeedFragment) fragment).txt_explain_pick.setText("");
+                    } else {
+                        ((SelectFeedFragment) fragment).txt_explain_pick.setText("");
+                    }
 
-                data.setChecked(true);
-                checkBox.setChecked(data.isChecked());
-            } else {
-                data.setChecked(false);
-                checkBox.setChecked(data.isChecked());
+                    data.setChecked(true);
+                } else {
+                    data.setChecked(false);
+
+                }
+            } else {//선택이 없으나, 사전에 체크 표기
+
+                if (listViewItemList.size() == 1) {
+                    data.setChecked(true);
+                    ((SelectFeedFragment) fragment).feed_time = data.getTime();
+
+                    new SelectFeedListTask(mContext).execute(((SelectFeedFragment) fragment).feed_time,
+                            ((SelectFeedFragment) fragment).area_cd,
+                            ((SelectFeedFragment) fragment).feed_rest_id,
+                            "readBelowRest");
+                    Log.e("abc", "Select date feed_time = " + ((SelectFeedFragment) fragment).feed_time);
+                }
             }
+
+            checkBox.setChecked(data.isChecked());
         }
 
 //        @Override

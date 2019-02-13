@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -118,12 +119,8 @@ public class SelectRestListAdapter extends RecyclerView.Adapter<SelectRestListAd
                         .placeholder(R.drawable.icon_no_image)
                         .error(R.drawable.icon_no_image)
                         .into(img_rest);
-//                img_rest.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        Toast.makeText(mContext, "음식점 상세를 보시려면\n음식점을 길게 누르세요.", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
+
+//                checkBox.setChecked(data.isChecked());
                 checkBox.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
@@ -176,30 +173,49 @@ public class SelectRestListAdapter extends RecyclerView.Adapter<SelectRestListAd
         }
 
         public void setDateToView(RestData data, int position) throws Exception {
+//            Log.e("abc", "mSelectedItem = " + mSelectedItem);
+            Log.e("abc", position + " , SELECTREST data.isChecked() = " + data.isChecked() + ", mSelectedItem = " + mSelectedItem);
+
 //            checkBox.setChecked(position == mSelectedItem);
 
-            if (position == mSelectedItem) {
-                ((SelectFeedFragment) fragment).feed_rest_id = data.getRest_id();
-                if (((SelectFeedFragment) fragment).feed_time.equals("")) {
-                    ((SelectFeedFragment) fragment).txt_explain_pick.setText("식사하고자 하는 시간을 선택하세요.");
-                } else if (((SelectFeedFragment) fragment).feed_rest_id.equals("")) {
-                    ((SelectFeedFragment) fragment).txt_explain_pick.setText("가고 싶은 음식점을 선택해보세요.");
-                } else if (((SelectFeedFragment) fragment).to_id.equals("")) {
-                    ((SelectFeedFragment) fragment).txt_explain_pick.setText("");
+            if (mSelectedItem >= 0) {//선택이 되었으면
+                if (position == mSelectedItem) {
+                    ((SelectFeedFragment) fragment).feed_rest_id = data.getRest_id();
+                    ((SelectFeedFragment) fragment).txt_explain_rest.setText(String.format(mContext.getResources().getString(R.string.explain_choose_rest), data.getRest_name()));
+
+                    if (((SelectFeedFragment) fragment).feed_time.equals("")) {
+                        ((SelectFeedFragment) fragment).txt_explain_pick.setText("식사하고자 하는 시간을 선택하세요.");
+                    } else if (((SelectFeedFragment) fragment).feed_rest_id.equals("")) {
+                        ((SelectFeedFragment) fragment).txt_explain_pick.setText("가고 싶은 음식점을 선택해보세요.");
+                    } else if (((SelectFeedFragment) fragment).to_id.equals("")) {
+                        ((SelectFeedFragment) fragment).txt_explain_pick.setText("");
+                    } else {
+                        ((SelectFeedFragment) fragment).txt_explain_pick.setText("");
+                    }
+
+                    data.setChecked(true);
+//                checkBox.setChecked(data.isChecked());
+
+                    new SelectFeedListTask(mContext).execute(((SelectFeedFragment) fragment).feed_time,
+                            ((SelectFeedFragment) fragment).area_cd,
+                            ((SelectFeedFragment) fragment).feed_rest_id, "readOnlyUser");
                 } else {
-                    ((SelectFeedFragment) fragment).txt_explain_pick.setText("");
+                    data.setChecked(false);
+//                checkBox.setChecked(data.isChecked());
                 }
 
-                data.setChecked(true);
-                checkBox.setChecked(data.isChecked());
+            } else {//선택이 없으나, 사전에 체크 표기
+//                Log.e("abc", "feed_time = " + ((SelectFeedFragment) fragment).feed_time + ", feed_rest_id = "+((SelectFeedFragment) fragment).feed_rest_id);
+                if (data.isChecked()) {
+//                    ((SelectFeedFragment) fragment).feed_rest_id = data.getRest_id();
 
-                new SelectFeedListTask(mContext).execute(((SelectFeedFragment) fragment).feed_time,
-                        ((SelectFeedFragment) fragment).area_cd,
-                        ((SelectFeedFragment) fragment).feed_rest_id, "readOnlyUser");
-            } else {
-                data.setChecked(false);
-                checkBox.setChecked(data.isChecked());
+                    new SelectFeedListTask(mContext).execute(((SelectFeedFragment) fragment).feed_time,
+                            ((SelectFeedFragment) fragment).area_cd,
+                            ((SelectFeedFragment) fragment).feed_rest_id, "readOnlyUser");
+                }
             }
+
+            checkBox.setChecked(data.isChecked());
         }
 
         @Override
@@ -214,6 +230,7 @@ public class SelectRestListAdapter extends RecyclerView.Adapter<SelectRestListAd
                         Toast.makeText(mContext, "길게 누르면,\n음식점 상세를 볼 수 있습니다.", Toast.LENGTH_SHORT).show();
                         i_touch++;
                     }
+
                     break;
             }
         }
@@ -223,12 +240,6 @@ public class SelectRestListAdapter extends RecyclerView.Adapter<SelectRestListAd
         listViewItemList.clear();
         notifyDataSetChanged();
     }
-
-//    public void activateButtons(boolean activate) {
-//        this.activate = activate;
-//
-//        notifyDataSetChanged();
-//    }
 
     public void setOnItemClickListener(AdapterView.OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
