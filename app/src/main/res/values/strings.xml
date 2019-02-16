@@ -27,6 +27,7 @@
     <string name="confirm">확인</string>
 
     <string name="edit">편집</string>
+    <string name="enable_cnt_feedee">%s명 식사가능</string>
     <string name="enter_age">나이가 어떻게 되시나요?</string>
     <string name="enter_at_least_8">비밀번호를 영문 대,소문자, 숫자, 특수문자 포함 8자 이상으로 해주세요.</string>
     <string name="enter_email">이메일을 입력해주세요.</string>

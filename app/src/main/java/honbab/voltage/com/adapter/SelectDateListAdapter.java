@@ -68,7 +68,9 @@ public class SelectDateListAdapter extends RecyclerView.Adapter<SelectDateListAd
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         if (getItemViewType(position) == TYPE_TIME) {
+
             final SelectDateData data = listViewItemList.get(position);
+            Log.e("abc", position+" : " + data.getTime());
             data.setPosition(position);
 
             holder.bindToPost(data, getItemViewType(position));
@@ -128,6 +130,8 @@ public class SelectDateListAdapter extends RecyclerView.Adapter<SelectDateListAd
                     txt_time.setText("점심");
                 else if (data.getTime().contains("19:00:00"))
                     txt_time.setText("저녁");
+                else
+                    txt_time.setText(data.getTime());
 
                 try {
                     setDateToView(data, data.getPosition());
@@ -135,7 +139,10 @@ public class SelectDateListAdapter extends RecyclerView.Adapter<SelectDateListAd
                     e.printStackTrace();
                 }
 
-                cnt_users.setText(String.valueOf(data.getCnt()) + "명 식사가능");
+                if (data.getCnt() > 0)
+                    cnt_users.setText(String.format(mContext.getResources().getString(R.string.enable_cnt_feedee), String.valueOf(data.getCnt())));
+//                else
+//                    cnt_users.setText("-");
 
                 checkBox.setOnClickListener(new View.OnClickListener() {
                     @Override

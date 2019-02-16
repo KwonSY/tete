@@ -1,117 +1,182 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/layout_item_myfeed"
-    android:layout_width="wrap_content"
+    android:id="@+id/layout_item_feed"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:paddingBottom="1dp">
+    android:orientation="vertical"
+    android:paddingTop="7dp"
+    android:paddingRight="13dp"
+    android:paddingBottom="15dp">
 
-    <RelativeLayout
-        android:id="@+id/layout_rest"
-        android:layout_width="match_parent"
+    <View
+        android:id="@+id/line_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="3dp"
+        android:layout_marginLeft="60dp"
+        android:layout_marginTop="49dp"
+        android:background="@color/mainColor" />
+
+    <View
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_alignStart="@id/line_horizontal"
+        android:layout_alignTop="@id/line_horizontal"
+        android:layout_marginLeft="-5.6dp"
+        android:layout_marginTop="-4dp"
+        android:background="@drawable/circle_wh_or" />
+
+    <LinearLayout
+        android:layout_width="40dp"
         android:layout_height="wrap_content"
-        android:background="#efefef"
-        android:paddingRight="10dp">
-
-        <ImageView
-            android:id="@+id/img_rest"
-            android:layout_width="89dp"
-            android:layout_height="89dp"
-            android:src="@drawable/icon_no_image" />
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="0dp"
+        android:gravity="right"
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/txt_restName"
+            android:id="@+id/txt_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_toRightOf="@id/img_rest"
-            android:ellipsize="end"
-            android:lines="1"
-            android:maxWidth="120dp"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:text="음식점"
-            android:textSize="14sp"
+            android:gravity="right"
+            android:lineSpacingExtra="-11dp"
+            android:text="0101"
+            android:textSize="29sp"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/txt_feedTime"
+            android:id="@+id/txt_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@id/txt_restName"
-            android:layout_marginLeft="15dp"
-            android:layout_toRightOf="@id/txt_restName"
-            android:text="오후 2시"
+            android:layout_marginTop="-9dp"
+            android:layout_marginRight="2dp"
+            android:gravity="right"
+            android:text="11:11"
             android:textSize="12sp" />
+    </LinearLayout>
 
-        <TextView
-            android:id="@+id/txt_no_req"
+    <RelativeLayout
+        android:id="@+id/layout_card"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="100dp">
+
+        <View
+            android:id="@+id/stub_space"
+            android:layout_width="1dp"
+            android:layout_height="40dp" />
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/careView_rest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/txt_restName"
-            android:layout_centerHorizontal="true"
-            android:layout_margin="10dp"
-            android:text="아직 신청한 사람이 없어요." />
+            android:layout_below="@id/stub_space"
+            android:background="#00000000"
+            app:cardCornerRadius="6dp">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView_req_feedee"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/txt_restName"
-            android:layout_toRightOf="@id/img_rest"
-            android:paddingLeft="15dp"
-            android:paddingRight="49dp" />
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#00000000">
 
-        <Button
-            android:id="@+id/btn_feed_cancle"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="4dp"
-            android:layout_marginTop="13dp"
-            android:background="@drawable/icon_x_gr_m"
-            android:minHeight="0dp"
-            android:minWidth="0dp"
-            android:text=""
-            android:textColor="@color/grey"
-            android:textSize="12sp" />
+                <ImageView
+                    android:id="@+id/img_rest"
+                    android:layout_width="match_parent"
+                    android:layout_height="75dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/icon_no_image" />
 
-        <Button
-            android:id="@+id/btn_choose_feeder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignRight="@id/btn_feed_cancle"
-            android:layout_below="@id/btn_feed_cancle"
-            android:layout_marginTop="17dp"
-            android:background="@drawable/btn_circle_bk1_s"
-            android:minHeight="0dp"
-            android:minWidth="0dp"
-            android:paddingBottom="6dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="6dp"
-            android:text="@string/accept"
-            android:textColor="@color/grey"
-            android:textSize="12sp" />
-        <!--
-                <Button
-                    android:id="@+id/btn_choose_cancle"
+                <TextView
+                    android:id="@+id/txt_restName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignRight="@id/btn_choose_feeder"
-                    android:layout_below="@id/btn_choose_feeder"
-                    android:layout_marginTop="4dp"
-                    android:background="@drawable/btn_circle_bk1_s"
-                    android:minHeight="0dp"
-                    android:minWidth="0dp"
-                    android:paddingBottom="6dp"
+                    android:layout_below="@id/img_rest"
+                    android:layout_marginTop="5dp"
+                    android:ellipsize="end"
+                    android:lines="1"
                     android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:paddingTop="6dp"
-                    android:text="@string/cancellation"
-                    android:textColor="@color/grey"
-                    android:textSize="12sp" />
-                -->
+                    android:paddingTop="8dp"
+                    android:paddingBottom="12dp"
+                    android:singleLine="true"
+                    android:text="#장소"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_feedee"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@id/layout_card">
+
+        <ImageView
+            android:id="@+id/img_user"
+            android:layout_width="@dimen/profile_xm"
+            android:layout_height="@dimen/profile_xm"
+            android:layout_marginLeft="11dp"
+            android:layout_marginTop="2dp"
+            android:src="@drawable/icon_noprofile_circle" />
+
+        <TextView
+            android:id="@+id/txt_userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dp"
+            android:layout_marginTop="7dp"
+            android:layout_toRightOf="@id/img_user"
+            android:ellipsize="end"
+            android:lines="1"
+            android:singleLine="true"
+            android:text="홍길동"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txt_userInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="6dp"
+            android:layout_marginTop="22dp"
+            android:layout_toRightOf="@id/img_user"
+            android:text="30 / 남"
+            android:textColor="@color/black"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/btn_feed_accept"
+            android:layout_width="54dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="9dp"
+            android:layout_marginTop="8dp"
+            android:layout_toRightOf="@id/txt_userName"
+            android:background="@drawable/btn_circle_bk1"
+            android:minWidth="0dp"
+            android:minHeight="31dp"
+            android:paddingLeft="15dp"
+            android:paddingTop="6dp"
+            android:paddingRight="15dp"
+            android:paddingBottom="6dp"
+            android:text="수락"
+            android:textSize="12sp" />
+
+        <ImageButton
+            android:id="@+id/btn_feed_cancle"
+            android:layout_width="54dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="9dp"
+            android:layout_marginTop="8dp"
+            android:layout_toRightOf="@id/btn_feed_accept"
+            android:background="@drawable/btn_circle_bk1"
+            android:minWidth="0dp"
+            android:minHeight="31dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/icon_x_gr_m" />
     </RelativeLayout>
 </RelativeLayout>

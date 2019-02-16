@@ -62,10 +62,10 @@ public class DialogDateListAdapter extends RecyclerView.Adapter<DialogDateListAd
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
 //        if (getItemViewType(position) == TYPE_TIME) {
 //            Log.e("abc", "position = " + position + ", getItemViewType = " + getItemViewType(position));
-            final SelectDateData data = listViewItemList.get(position);
-            data.setPosition(position);
+        final SelectDateData data = listViewItemList.get(position);
+        data.setPosition(position);
 
-            holder.bindToPost(data, getItemViewType(position));
+        holder.bindToPost(data, getItemViewType(position));
     }
 
 //    @Override
@@ -119,13 +119,15 @@ public class DialogDateListAdapter extends RecyclerView.Adapter<DialogDateListAd
                 txt_time.setText("저녁");
 
             if (data.getCnt() > 0)
-            cnt_users.setText(data.getCnt() + "명 식사가능");
+                cnt_users.setText(String.format(mContext.getResources().getString(R.string.enable_cnt_feedee), String.valueOf(data.getCnt())));
 
-            if (data.getStatus().equals("y"))
+
+            if (data.getStatus().equals("y")) {
                 checkBox.setChecked(true);
-            else if (data.getStatus().equals("a")) {
+//                cnt_users.setText("예약완료");
+            } else if (data.getStatus().equals("p")) {
                 checkBox.setEnabled(false);
-                cnt_users.setText("예약완료");
+                cnt_users.setText("수락대기중");
             } else
                 checkBox.setChecked(false);
 

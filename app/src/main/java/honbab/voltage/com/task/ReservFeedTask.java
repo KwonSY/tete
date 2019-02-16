@@ -4,12 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.widget.Toast;
 
 import org.json.JSONObject;
 
-import honbab.voltage.com.tete.ChatActivity;
+import honbab.voltage.com.fragment.SelectFeedFragment;
 import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.tete.Statics;
@@ -22,6 +23,8 @@ public class ReservFeedTask extends AsyncTask<String, Void, String> {
     private Context mContext;
     private OkHttpClient httpClient;
 
+    private Fragment fragment;
+
     private String result;
     private String to_id;
 
@@ -32,13 +35,13 @@ public class ReservFeedTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPreExecute() {
-
+        fragment = (Fragment) ((MainActivity) mContext).pagerAdapter.instantiateItem(((MainActivity) mContext).viewPager, 0);
     }
 
     @Override
     protected String doInBackground(String... params) {
         to_id = params[0];
-//        Log.e("abc", "ReservTask date_reserv = " + params[1]);
+
         FormBody body = new FormBody.Builder()
                 .add("opt", "reserv_feed")
                 .add("my_id", Statics.my_id)
@@ -101,18 +104,22 @@ public class ReservFeedTask extends AsyncTask<String, Void, String> {
             }
         } else if (activityName.equals("MainActivity")) {
             if (result.equals("0")) {
-                Toast.makeText(mContext, "식사가 예약되었습니다.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "같이먹기가 신청되었습니다.", Toast.LENGTH_SHORT).show();
 
-                Intent intent = new Intent(mContext, ChatActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("fromId", Statics.my_id);
-                intent.putExtra("toId", to_id);
-//                intent.putExtra("toUserName", data.getUser_name());
-//                intent.putExtra("toUserImg", data.getUser_img());
-//                intent.putExtra("toToken", data.getToken());
-//                intent.putExtra("restData", restData);
-                mContext.startActivity(intent);
-//                ((Activity) mContext).finish();
+                ((SelectFeedFragment) fragment).feed_time = "";
+                ((SelectFeedFragment) fragment).feed_rest_id = "";
+                ((SelectFeedFragment) fragment).to_id = "";
+                ((SelectFeedFragment) fragment).txt_explain_rest.setText("-");
+                ((SelectFeedFragment) fragment).txt_explain_reserv.setText(mContext.getResources().getString(R.string.explain_choose_feedee));
+
+                ((MainActivity) mContext).viewPager.setCurrentItem(1);
+                new SelectFeedListTask(mContext).execute("", "", "", "");
+                new MyFeedListTask(mContext).execute();
+//                Intent intent = new Intent(mContext, ChatActivity.class);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                intent.putExtra("fromId", Statics.my_id);
+//                intent.putExtra("toId", to_id);
+//                mContext.startActivity(intent);
             } else {
                 Toast.makeText(mContext, R.string.cannot_reserve, Toast.LENGTH_SHORT).show();
             }

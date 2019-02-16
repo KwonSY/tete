@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -174,7 +173,7 @@ public class SelectRestListAdapter extends RecyclerView.Adapter<SelectRestListAd
 
         public void setDateToView(RestData data, int position) throws Exception {
 //            Log.e("abc", "mSelectedItem = " + mSelectedItem);
-            Log.e("abc", position + " , SELECTREST data.isChecked() = " + data.isChecked() + ", mSelectedItem = " + mSelectedItem);
+//            Log.e("abc", position + " , SELECTREST data.isChecked() = " + data.isChecked() + ", mSelectedItem = " + mSelectedItem);
 
 //            checkBox.setChecked(position == mSelectedItem);
 

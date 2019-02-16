@@ -40,20 +40,16 @@ public class MyFeedListTask extends AsyncTask<Void, Void, Void> {
     public ArrayList<FeedData> feedList = new ArrayList<>();
 
     public MyFeedListTask(Context mContext) {
-        Log.e("abc", "MyFeedListTask mContext = " + mContext);
         this.mContext = mContext;
         this.httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
     }
 
     @Override
     protected void onPreExecute() {
-//        fragment = ((MainActivity) mContext).getSupportFragmentManager().getFragments().get(1);
         fragment = (Fragment) ((MainActivity) mContext).pagerAdapter.instantiateItem(((MainActivity) mContext).viewPager, 1);
-        Log.e("abc", "fragment = " + fragment);
 
         feedList.clear();
         ((MyFeedFragment) fragment).mAdapter.clearItemList();
-//        Log.e("abc", "((MyFeedFragment) fragment).feedList.size() = " + ((MyFeedFragment) fragment).feedList.size());
     }
 
     @Override

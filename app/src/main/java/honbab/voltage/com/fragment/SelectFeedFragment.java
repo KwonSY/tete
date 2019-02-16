@@ -215,6 +215,7 @@ public class SelectFeedFragment extends Fragment {
                     } else if (to_id.equals("")) {
                         Toast.makeText(getActivity(), "같이 식사하실 분을 선택해주세요.", Toast.LENGTH_SHORT).show();
                     } else {
+                        layout_slidingPanel.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
                         new ReservFeedTask(getActivity()).execute(to_id, feed_rest_id, feed_time);
                     }
 
