@@ -82,7 +82,6 @@ public class CancleFeedTask extends AsyncTask<String, Void, Void> {
                     new MyFeedListTask(mContext).execute();
                 else {
                     Fragment fragment = ((MainActivity) mContext).getSupportFragmentManager().findFragmentByTag("page:1");
-                    Log.e("abc", "remove = " + position + " , " + ((MyFeedFragment) fragment).mAdapter.getItemCount());
                     ((MyFeedFragment) fragment).mAdapter.removeAt(position);
                 }
 //                if (((MyFeedFragment) fragment).mAdapter.getItemCount() == 0)
