@@ -39,7 +39,7 @@ public class RestaurantListTask extends AsyncTask<String, Void, ArrayList<RestDa
     protected ArrayList<RestData> doInBackground(String... params) {
         FormBody body = new FormBody.Builder()
                 .add("opt", "rest_list")
-                .add("pack", params[0])
+                .add("area_cd", params[0])
                 .build();
 
         Request request = new Request.Builder().url(Statics.opt_url).post(body).build();
@@ -48,7 +48,7 @@ public class RestaurantListTask extends AsyncTask<String, Void, ArrayList<RestDa
             okhttp3.Response response = httpClient.newCall(request).execute();
             if (response.isSuccessful()) {
                 String bodyStr = response.body().string();
-
+                Log.e("abc", "RestaurantListTask area_cd = " + bodyStr);
                 JSONObject obj = new JSONObject(bodyStr);
 
                 JSONArray rest_arr = obj.getJSONArray("rest");

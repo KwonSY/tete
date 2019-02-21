@@ -1,9 +1,14 @@
 package honbab.voltage.com.fragment;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -22,6 +27,10 @@ import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
@@ -35,11 +44,11 @@ import honbab.voltage.com.task.ReservFeedTask;
 import honbab.voltage.com.task.SelectFeedListTask;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.tete.ReservActivity;
-import honbab.voltage.com.widget.SpacesItemDecoration;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
+import honbab.voltage.com.widget.SpacesItemDecoration;
 import okhttp3.OkHttpClient;
 
-public class SelectFeedFragment extends Fragment {
+public class SelectFeedFragment extends Fragment implements LocationListener {
     private OkHttpClient httpClient;
 
     public TextView txt_date;
@@ -53,6 +62,8 @@ public class SelectFeedFragment extends Fragment {
     public TextView txt_explain_pick;
     public TextView txt_explain_rest, txt_explain_reserv;
     public SlidingUpPanelLayout layout_slidingPanel;
+    private GoogleMap mMap;
+    private FusedLocationProviderClient mFusedLocationClient;
 
     public int split = 2;
     public String area_cd = "GNS1";
@@ -61,6 +72,7 @@ public class SelectFeedFragment extends Fragment {
     public String to_id = "", to_name = "";
     public ArrayList<AreaData> areaList;
     public ArrayList<String> areaNameList;
+    private double latitude, longitude;
 
     public ArrayList<SelectDateData> dateLikeList = new ArrayList<>();
     public ArrayList<String> restLikeList = new ArrayList<>();
@@ -106,36 +118,144 @@ public class SelectFeedFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        new SelectFeedListTask(getActivity()).execute(feed_time, area_cd, feed_rest_id, "");
+
+//        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            // TODO: Consider calling
+//            //    ActivityCompat#requestPermissions
+//            // here to request the missing permissions, and then overriding
+//            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+//            //                                          int[] grantResults)
+//            // to handle the case where the user grants the permission. See the documentation
+//            // for ActivityCompat#requestPermissions for more details.
+//            return;
+//        }
+//        mFusedLocationClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+//            @Override
+//            public void onSuccess(Location location) {
+//                if (location != null) {
+//                    latitude = location.getLatitude();
+//                    longitude = location.getLongitude();
+////                    LatLng latLng = new LatLng(latitude, longitude);
+////                    Log.e("abc", "latitude = " + latitude + ", " + longitude);
+//
+//                    if (latitude > 37.517117) {
+//                        area_cd = "SDH1";
+//                        spinner.setSelection(1);
+//
+//                        new SelectFeedListTask(getActivity()).execute(feed_time, area_cd, feed_rest_id, "");
+//                    } else {
+//                        area_cd = "GNS1";
+//                        spinner.setSelection(0);
+//                    }
+//
+//                    Log.e("abc", "area_cd = " + area_cd + " , latitude = " + latitude + ", " + longitude);
+//
+//                }
+//            }
+//        });
     }
 
     private void initControls() {
+        final int first_spinner = 0;
+        final int[] first_spinner_counter = {0};
+
         spinner = (Spinner) getActivity().findViewById(R.id.spinner_location);
         spinnerAdapter = new ArrayAdapter(getActivity(), R.layout.item_row_spinner, areaNameList);
         spinner.setAdapter(spinnerAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                int r = 0;
 
-                for (int i = 0; i < areaList.size(); i++) {
-                    if (areaList.get(i).getArea_name().equals(spinner.getSelectedItem().toString()))
-                        r = i;
+                Log.e("abc", "parent.getCount() = " + parent.getCount());
+
+                if (parent.getCount() == 1) {
+                    if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        // TODO: Consider calling
+                        //    ActivityCompat#requestPermissions
+                        // here to request the missing permissions, and then overriding
+                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                        //                                          int[] grantResults)
+                        // to handle the case where the user grants the permission. See the documentation
+                        // for ActivityCompat#requestPermissions for more details.
+                        return;
+                    }
+                    mFusedLocationClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            if (location != null) {
+                                latitude = location.getLatitude();
+                                longitude = location.getLongitude();
+//                    LatLng latLng = new LatLng(latitude, longitude);
+                                Log.e("abc", "latitude = " + latitude + ", " + longitude);
+
+                                if (latitude < 37.511083) {
+                                    area_cd = "SDH1";
+//                                    spinner.setSelection(1);
+
+//                                    new SelectFeedListTask(getActivity()).execute(feed_time, area_cd, feed_rest_id, "");
+                                } else {
+                                    area_cd = "GNS1";
+//                                    spinner.setSelection(0);
+                                }
+
+                                Log.e("abc", "area_cd = " + area_cd + " , latitude = " + latitude + ", " + longitude);
+                                new SelectFeedListTask(getActivity()).execute(feed_time, area_cd, feed_rest_id, "");
+                            }
+                        }
+                    });
+                } else {
+                    int r = 0;
+
+                    for (int i = 0; i < areaList.size(); i++) {
+                        if (areaList.get(i).getArea_name().equals(spinner.getSelectedItem().toString()))
+                            r = i;
+                    }
+
+                    area_cd = areaList.get(r).getArea_cd();
+                    Log.e("abc", "onItemSelected area_cd = " + area_cd);
+                    Log.e("abc", "spinner.getSelectedItem() = " + spinner.getSelectedItem());
+
+                    new SelectFeedListTask(getActivity()).execute(feed_time, area_cd, feed_rest_id, "");
                 }
 
-                area_cd = areaList.get(r).getArea_cd();
-                Log.e("abc", "onItemSelected area_cd = " + area_cd);
+//                if (parent.getCount() == 1) {
+//
+//
+//                } else {
+//
+//
+//
+//
+//                }
 
-                Log.e("abc", "SelectFeedListTask spinner = ");
-                new SelectFeedListTask(getActivity()).execute(feed_time, area_cd, feed_rest_id, "");
+
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                area_cd = areaList.get(0).getArea_cd();
+//                area_cd = areaList.get(0).getArea_cd();
                 Log.e("abc", "onNothingSelected area_cd = " + area_cd);
+
+
+                return;
             }
         });
+
+
+//        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+//        Criteria crta = new Criteria();
+//        crta.setAccuracy(Criteria.ACCURACY_FINE);
+//        crta.setAltitudeRequired(true);
+//        crta.setBearingRequired(true);
+//        crta.setCostAllowed(true);
+//        crta.setPowerRequirement(Criteria.POWER_LOW);
+//        String provider = locationManager.getBestProvider(crta, true);
+//        Log.d("", "provider : " + provider);
+//        // String provider = LocationManager.GPS_PROVIDER;
+//        locationManager.requestLocationUpdates(provider, 1000, 0, locationListener);
+//        Location location = locationManager.getLastKnownLocation(provider);
+//        Log.e("abc", "location = " + location);
+
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager layoutManager2 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
@@ -148,7 +268,6 @@ public class SelectFeedFragment extends Fragment {
         mAdapter_date = new SelectDateListAdapter();
         recyclerView_date.setAdapter(mAdapter_date);
 //        DividerItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), layoutManager.getOrientation());
-        Log.e("abc", "recyclerView_date.getItemDecorationCount() = " + recyclerView_date.getItemDecorationCount());
         while (recyclerView_date.getItemDecorationCount() > 0) {
             recyclerView_date.removeItemDecorationAt(0);
         }
@@ -193,13 +312,16 @@ public class SelectFeedFragment extends Fragment {
                 mAdapter_user.clearItemList();
 
 //                String str_date = year + String.valueOf(month) + "/" + String.valueOf(day);
-                Log.e("abc", "SelectFeedListTask swipeContainer = ");
                 new SelectFeedListTask(getActivity()).execute(feed_time, area_cd, feed_rest_id, "");
             }
         });
 
         Button btn_reserv = (Button) getActivity().findViewById(R.id.btn_reserv);
         btn_reserv.setOnClickListener(mOnClickListener);
+
+        //현재 위치 찾기
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
+
     }
 
     public View.OnClickListener mOnClickListener = new View.OnClickListener() {
@@ -208,7 +330,7 @@ public class SelectFeedFragment extends Fragment {
             switch (view.getId()) {
                 case R.id.btn_reserv:
 
-                    if(feed_time.equals("")) {
+                    if (feed_time.equals("")) {
                         Toast.makeText(getActivity(), "가능한 식사시간을 선택해주세요.", Toast.LENGTH_SHORT).show();
                     } else if (feed_rest_id.equals("")) {
                         Toast.makeText(getActivity(), "음식점을 선택해주세요.", Toast.LENGTH_SHORT).show();
@@ -279,4 +401,23 @@ public class SelectFeedFragment extends Fragment {
         builder.show();
     }
 
+    @Override
+    public void onLocationChanged(Location location) {
+
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
 }

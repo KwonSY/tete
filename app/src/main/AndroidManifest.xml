@@ -51,12 +51,19 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+
+                <data android:scheme="@string/kakao_scheme"
+                    android:host="@string/kakaolink_host" />
             </intent-filter>
             <intent-filter>
                 <action android:name="MainActivity" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="@string/kakao_app_key" />
 
 
         <activity android:name=".SplashActivity" />
@@ -104,11 +111,6 @@
         <activity android:name=".SettingActivity" />
 
         <activity android:name=".GodTinderActivity" />
-
-
-        <meta-data
-            android:name="com.kakao.sdk.AppKey"
-            android:value="7e146f9c98e75bf4dde5b028ccd06aa4" />
 
         <!-- Facebook Configuration -->
         <meta-data

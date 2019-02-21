@@ -37,7 +37,6 @@ public class GodTinderActivity extends AppCompatActivity {
     private CardStackAdapter adapter;
     private CardStackView cardStackView;
 
-//    private String feed_location, ;
     private String area_cd;
     private ArrayList<RestData> restList = new ArrayList<>();
 
@@ -51,8 +50,8 @@ public class GodTinderActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         area_cd = intent.getStringExtra("area_cd");
-        area_cd = "GNS1";
-//        feed_time = intent.getStringExtra("feed_time");
+        if (area_cd.length() == 0)
+            area_cd = "GNS1";
 
         TextView title_topbar = (TextView) findViewById(R.id.title_topbar);
         title_topbar.setText("음식점 선택");
@@ -136,8 +135,6 @@ public class GodTinderActivity extends AppCompatActivity {
 
         @Override
         public void onCardSwiped(Direction direction) {
-            Log.e("abc", "스와이프2 = " + direction);
-
             if (direction.equals(Direction.Left)) {
                 like_yn = "n";
             } else if (direction.equals(Direction.Right)) {

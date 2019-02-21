@@ -79,7 +79,7 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
                 String bodyStr = response.body().string();
 
                 JSONObject obj = new JSONObject(bodyStr);
-
+                Log.e("abc", "SelectFeedListTask obj = " + obj);
                 area_cd = obj.getString("area_cd");
                 split = obj.getInt("split");
 

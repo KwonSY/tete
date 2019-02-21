@@ -68,8 +68,6 @@ public class GetNearPlacesTaskForMap extends AsyncTask<Object, String, String> {
 //                String value = example.get(name).toString();
 //                System.out.println(key + " " + value);
                 String xxx = googlePlace.get(key);
-
-                Log.e("abc", "show key = " + key + " : " + xxx);
             }
 
             String compound_code = googlePlace.get("compound_code");

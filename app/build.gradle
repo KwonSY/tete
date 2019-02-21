@@ -10,8 +10,8 @@ android {
         applicationId "honbab.voltage.com.tete"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 23
-        versionName "1.0.14"
+        versionCode 24
+        versionName "1.0.15"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -95,10 +95,21 @@ dependencies {
     //ByteStreams
     implementation 'com.google.guava:guava:18.0'
 
+    //circle imageview
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
+
+    //glide
+    implementation 'com.github.bumptech.glide:glide:4.4.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.4.0'
+
     //gson
     implementation 'com.google.code.gson:gson:2.8.2'
 
-    //vvvvvvvv
+    //kakao
+    implementation group: 'com.kakao.sdk', name: 'usermgmt', version: project.KAKAO_SDK_VERSION
+    implementation group: 'com.kakao.sdk', name: 'kakaolink', version: project.KAKAO_SDK_VERSION
+    implementation group: 'com.kakao.sdk', name: 'kakaotalk', version: project.KAKAO_SDK_VERSION
+    implementation group: 'com.kakao.sdk', name: 'push', version: project.KAKAO_SDK_VERSION
 
     //okhttp
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
@@ -115,23 +126,12 @@ dependencies {
     //Sliding Up Pannel
     implementation 'com.sothree.slidinguppanel:library:3.4.0'
 
-    //volley
-    implementation 'com.android.volley:volley:1.1.0'
-
-    //Horizontal ListView
-
-    //circle imageview
-    implementation 'de.hdodenhof:circleimageview:2.2.0'
-
-    //glide
-    implementation 'com.github.bumptech.glide:glide:4.4.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.4.0'
-
     //tinder
     implementation 'com.makeramen:roundedimageview:2.3.0'
     implementation 'com.yuyakaido.android:card-stack-view:2.2.0'
 
-    //mindorks 없어졌음
+    //volley
+    implementation 'com.android.volley:volley:1.1.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

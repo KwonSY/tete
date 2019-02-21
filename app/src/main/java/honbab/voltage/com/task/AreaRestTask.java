@@ -13,7 +13,6 @@ import java.util.ArrayList;
 
 import honbab.voltage.com.data.AreaData;
 import honbab.voltage.com.fragment.SelectFeedFragment;
-import honbab.voltage.com.tete.DelayBefroePickRestActivity;
 import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.tete.Statics;
@@ -91,20 +90,16 @@ public class AreaRestTask extends AsyncTask<String, Void, ArrayList<AreaData>> {
 
         if (activityName.equals("MainActivity")) {
             if (areaList.size() > 0) {
-                ((SelectFeedFragment) fragment).area_cd = areaList.get(0).getArea_cd();
+//                ((SelectFeedFragment) fragment).area_cd = areaList.get(0).getArea_cd();
                 ((SelectFeedFragment) fragment).areaList = areaList;
                 ((SelectFeedFragment) fragment).areaNameList = areaNameList;
                 ((SelectFeedFragment) fragment).spinnerAdapter = new ArrayAdapter(mContext, R.layout.item_row_spinner, areaNameList);
                 ((SelectFeedFragment) fragment).spinner.setAdapter(((SelectFeedFragment) fragment).spinnerAdapter);
-            } else {
+                if (((SelectFeedFragment) fragment).area_cd.equals("GNS1")) {
 
-            }
-        } else if (activityName.equals("DelayBefroePickRestActivity")) {
-            if (areaList.size() > 0) {
-                ((DelayBefroePickRestActivity) mContext).spinnerAdapter = new ArrayAdapter(mContext, R.layout.support_simple_spinner_dropdown_item, areaNameList);
-                ((DelayBefroePickRestActivity) mContext).spinner.setAdapter(((DelayBefroePickRestActivity) mContext).spinnerAdapter);
-
-//                cnt_reserved = doOneDayFeedCheckTask();
+                } else {
+                    ((SelectFeedFragment) fragment).spinner.setSelection(1);
+                }
             } else {
 
             }

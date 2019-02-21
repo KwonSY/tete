@@ -70,7 +70,6 @@ public class SelectDateListAdapter extends RecyclerView.Adapter<SelectDateListAd
         if (getItemViewType(position) == TYPE_TIME) {
 
             final SelectDateData data = listViewItemList.get(position);
-            Log.e("abc", position+" : " + data.getTime());
             data.setPosition(position);
 
             holder.bindToPost(data, getItemViewType(position));

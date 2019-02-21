@@ -89,7 +89,12 @@ public class SelectUserListAdapter extends RecyclerView.Adapter<SelectUserListAd
                     .error(R.drawable.icon_noprofile_circle)
                     .transform(new CircleTransform())
                     .into(img_user);
-            txt_userName.setText(data.getUser_name());
+            String str_gender = ", ";
+            if (data.getGender().equals("m"))
+                str_gender += "남";
+            else
+                str_gender += "여";
+            txt_userName.setText(data.getUser_name() + ", " + data.getAge() + str_gender);
 
             if (Statics.my_id.equals(data.getUser_id())) {
                 icon_me.setVisibility(View.VISIBLE);
