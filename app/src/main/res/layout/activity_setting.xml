@@ -12,85 +12,139 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <LinearLayout
-        android:layout_width="260dp"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:orientation="vertical">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/layout_topbar"
+        android:paddingLeft="63dp"
+        android:paddingRight="63dp"
+        android:paddingBottom="28dp">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_centerInParent="true"
+            android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/title_alarm"
-                android:layout_width="60dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:text="알림"
-                android:textSize="14sp" />
-
-            <RadioGroup
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:baselineAligned="true"
                 android:orientation="horizontal">
 
-                <RadioButton
-                    android:id="@+id/radio_y"
-                    android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/title_alarm"
+                    android:layout_width="60dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="13dp"
-                    android:buttonTint="#F1594A"
-                    android:text="on"
+                    android:layout_gravity="center_vertical"
+                    android:text="알림"
                     android:textSize="14sp" />
 
-                <RadioButton
-                    android:id="@+id/radio_n"
+                <RadioGroup
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:buttonTint="#F1594A"
-                    android:text="off"
-                    android:textSize="14sp" />
-            </RadioGroup>
+                    android:baselineAligned="true"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/radio_y"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="13dp"
+                        android:buttonTint="#F1594A"
+                        android:text="on"
+                        android:textSize="14sp" />
+
+                    <RadioButton
+                        android:id="@+id/radio_n"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:buttonTint="#F1594A"
+                        android:text="off"
+                        android:textSize="14sp" />
+                </RadioGroup>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/btn_kakao_invite"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/btn_circle_bk1"
+                    android:onClick="shareKakao"
+                    android:text="카톡으로 친구초대"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_change_psw"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/btn_circle_bk1"
+                android:text="비밀번호 변경" />
+
+            <Button
+                android:id="@+id/btn_logout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_marginTop="40dp"
+                android:background="@drawable/btn_circle_bk1"
+                android:text="로그아웃"
+                android:textSize="14sp" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="50dp" />
         </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical">
 
-            <Button
-                android:id="@+id/btn_kakao_invite"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/btn_circle_bk1"
-                android:onClick="shareKakao"
-                android:text="카톡으로 친구초대"
-                android:visibility="gone" />
+
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/link_privacy"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:linksClickable="true"
+                    android:text="@string/law_privacy" />
+
+                <TextView
+                    android:id="@+id/link_personal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/law_personal" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txt_app_version"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/txt_coperation"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:text="v1.0" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btn_change_psw"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/btn_circle_bk1"
-            android:text="비밀번호 변경" />
+    </RelativeLayout>
 
-        <Button
-            android:id="@+id/btn_logout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginTop="40dp"
-            android:background="@drawable/btn_circle_bk1"
-            android:text="로그아웃"
-            android:textSize="14sp" />
 
-        <View
-            android:layout_width="wrap_content"
-            android:layout_height="50dp" />
-    </LinearLayout>
 </RelativeLayout>

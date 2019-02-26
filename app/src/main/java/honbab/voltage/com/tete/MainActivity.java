@@ -1,5 +1,6 @@
 package honbab.voltage.com.tete;
 
+import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -18,6 +19,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -38,6 +40,7 @@ import honbab.voltage.com.fragment.NoProfileFragment;
 import honbab.voltage.com.fragment.SelectFeedFragment;
 import honbab.voltage.com.task.VersionTask;
 import honbab.voltage.com.utils.NetworkUtil;
+import honbab.voltage.com.widget.MyService;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
 import honbab.voltage.com.widget.SessionManager;
 import okhttp3.OkHttpClient;
@@ -98,8 +101,6 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             } else {
 
-//                FirebaseUser fireUser = FirebaseAuth.getInstance().getCurrentUser();
-//                Log.e("abc", "fireUser = " + fireUser.getUid());
                 if (Statics.my_id == null || Statics.my_username == null || Statics.my_username.equals("null")) {
                     Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -110,6 +111,9 @@ public class MainActivity extends AppCompatActivity {
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     finish();
+                } else {
+                    Intent intent = getIntent();
+                    tab_position = intent.getIntExtra("position", 0);
                 }
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -171,18 +175,31 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 });
-//                pagerAdapter.setPrimaryItem(pagerAdapter.getC);
-//                pagerAdapter.getFragmentTag(0x7f0901fe, 0);
 
                 ImageView btn_go_tinder = (ImageView) findViewById(R.id.btn_go_tinder);
                 btn_go_tinder.setOnClickListener(mOnClickListener);
 
-                Intent intent = getIntent();
-                tab_position = intent.getIntExtra("position", 0);
+
             }
 
         }
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+//        startAndCheck(null);
+//        startAndCheck(ForegroundService.ACTION_NORMAL);
+//        startAndCheck(ForegroundService.ACTION_NO_ID);
+//        Intent startIntent = new Intent(MainActivity.this, MyService.class);
+//        startService(startIntent);
+
+        if (isMyServiceRunning(MyService.class)) return;
+        Intent startIntent = new Intent(this, MyService.class);
+        startIntent.setAction("start");
+        startService(startIntent);
     }
 
     @Override
@@ -193,6 +210,7 @@ public class MainActivity extends AppCompatActivity {
             new VersionTask(MainActivity.this, httpClient).execute();
         }
 
+        Log.e("abc", "tab_position" + tab_position);
         if (tab_position == 1)
             viewPager.setCurrentItem(tab_position);
 
@@ -237,4 +255,14 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     };
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

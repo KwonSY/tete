@@ -79,7 +79,8 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
                 String bodyStr = response.body().string();
 
                 JSONObject obj = new JSONObject(bodyStr);
-                Log.e("abc", "SelectFeedListTask obj = " + obj);
+                Log.e("abc", "SelectFeedListTask obj : " + obj);
+
                 area_cd = obj.getString("area_cd");
                 split = obj.getInt("split");
 
@@ -142,7 +143,7 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
                 }
 
             } else {
-//                    Log.d(TAG, "Error : " + response.code() + ", " + response.message());
+                    Log.e("abc", "Error : " + response.code() + ", " + response.message());
             }
 
         } catch (Exception e) {
@@ -156,7 +157,7 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
     protected void onPostExecute(final String area_cd) {
         super.onPostExecute(area_cd);
 //        Log.e("abc", loadStatus + " : " + ((SelectFeedFragment) fragment).feed_time + ", feed_rest_id = " + ((SelectFeedFragment) fragment).feed_rest_id);
-
+        Log.e("abc", "SelectFeedListTask mContext = " + mContext);
         String activityName = mContext.getClass().getSimpleName();
 
         if (activityName.equals("MainActivity")) {
@@ -181,12 +182,6 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
                 ((SelectFeedFragment) fragment).mAdapter_rest.clearItemList();
                 ((SelectFeedFragment) fragment).mAdapter_rest = new SelectRestListAdapter(mContext, restList);
                 ((SelectFeedFragment) fragment).recyclerView_rest.setAdapter(((SelectFeedFragment) fragment).mAdapter_rest);
-
-                //SelectRestListAdapter 안에서 readOnlyUser 돌아감
-//                ((SelectFeedFragment) fragment).mAdapter_user.clearItemList();
-//                ((SelectFeedFragment) fragment).mAdapter_user = new SelectUserListAdapter(mContext, userList);
-//                ((SelectFeedFragment) fragment).recyclerView_user.setAdapter(((SelectFeedFragment) fragment).mAdapter_user);
-//                ((SelectFeedFragment) fragment).mAdapter_user.notifyDataSetChanged();
 
                 if (((SelectFeedFragment) fragment).areaNameList.size() == 1)
                     new AreaRestTask(mContext).execute();

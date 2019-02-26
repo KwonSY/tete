@@ -2,6 +2,7 @@ package honbab.voltage.com.widget;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -12,17 +13,22 @@ import java.util.ArrayList;
 
 import honbab.voltage.com.adapter.DialogDateListAdapter;
 import honbab.voltage.com.data.SelectDateData;
+import honbab.voltage.com.fragment.SelectFeedFragment;
 import honbab.voltage.com.task.SelectFeedListTask;
+import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.R;
 
 public class PickDateDialog {
 
     private Context mContext;
+    private Fragment fragment;
+
     RecyclerView recyclerView;
     DialogDateListAdapter mAdapter;
 
     public PickDateDialog(Context mContext) {
         this.mContext = mContext;
+        fragment = ((MainActivity) mContext).getSupportFragmentManager().findFragmentByTag("page:0");
     }
 
     // 호출할 다이얼로그 함수를 정의한다.
@@ -45,7 +51,10 @@ public class PickDateDialog {
         btn_cancle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new SelectFeedListTask(mContext).execute("", "", "", "");
+                new SelectFeedListTask(mContext).execute(((SelectFeedFragment) fragment).feed_time,
+                        ((SelectFeedFragment) fragment).area_cd,
+                        ((SelectFeedFragment) fragment).feed_rest_id,
+                        "");
 
                 dlg.dismiss();
             }

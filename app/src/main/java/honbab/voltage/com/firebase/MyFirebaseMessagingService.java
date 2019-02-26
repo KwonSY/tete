@@ -88,7 +88,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 //            Log.e("abc", "Notification Message Body: " + message);
 //            Log.e("abc", "Notification Click Action: " + click_action);
             Log.e("abc", "Statics.to_id = " + Statics.to_id);
-            if (Statics.to_id == null || Statics.to_id.equals("")) {//앱 내 채팅밖
+            if (Statics.to_id == null || Statics.to_id.equals("") || Statics.to_id.equals("null")) {//앱 내 채팅밖
                 sendNotification(this, notification, data);
             } else if (Statics.to_id.equals(data.get("toId"))) {//현재 대화창
 
@@ -145,9 +145,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setNumber(Integer.parseInt(data.get("badge_cnt")));
         if (Statics.to_id == null || Statics.to_id.equals("")) {//앱 내 채팅 밖
 //            sendNotification(this, notification, data);
-        } else if (Statics.to_id.equals(data.get("toId"))) {//현재 대화창
+        } else if (Statics.to_id.equals(data.get("toId"))) {
+            //현재 대화창
             notificationBuilder.setPriority(Notification.PRIORITY_MAX);
-        } else {//다른 채팅방
+        } else {
+            //다른 채팅방
 //            sendNotification(this, notification, data);
 //            notificationBuilder.setDefaults(Notification.DEFAULT_ALL);
 //            notificationBuilder.setPriority(Notification.PRIORITY_MAX);

@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -30,6 +31,7 @@ import android.widget.Toast;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
@@ -118,6 +120,11 @@ public class SelectFeedFragment extends Fragment implements LocationListener {
     public void onResume() {
         super.onResume();
 
+        Log.e("abc", "longitude " + longitude);
+        if (longitude == 0) {
+            Log.e("abc", "돌자 " + longitude);
+            new SelectFeedListTask(getActivity()).execute(feed_time, area_cd, feed_rest_id, "");
+        }
 
 //        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 //            // TODO: Consider calling
@@ -188,7 +195,7 @@ public class SelectFeedFragment extends Fragment implements LocationListener {
 //                    LatLng latLng = new LatLng(latitude, longitude);
                                 Log.e("abc", "latitude = " + latitude + ", " + longitude);
 
-                                if (latitude < 37.511083) {
+                                if (latitude > 37.511083) {
                                     area_cd = "SDH1";
 //                                    spinner.setSelection(1);
 
@@ -201,6 +208,12 @@ public class SelectFeedFragment extends Fragment implements LocationListener {
                                 Log.e("abc", "area_cd = " + area_cd + " , latitude = " + latitude + ", " + longitude);
                                 new SelectFeedListTask(getActivity()).execute(feed_time, area_cd, feed_rest_id, "");
                             }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.e("abc", "addOnFailureListener = " + e);
+                            new SelectFeedListTask(getActivity()).execute(feed_time, area_cd, feed_rest_id, "");
                         }
                     });
                 } else {
@@ -217,17 +230,6 @@ public class SelectFeedFragment extends Fragment implements LocationListener {
 
                     new SelectFeedListTask(getActivity()).execute(feed_time, area_cd, feed_rest_id, "");
                 }
-
-//                if (parent.getCount() == 1) {
-//
-//
-//                } else {
-//
-//
-//
-//
-//                }
-
 
             }
 

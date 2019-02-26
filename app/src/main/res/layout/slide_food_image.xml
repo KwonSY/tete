@@ -21,4 +21,12 @@
         android:textColor="#ffffff"
         android:textSize="16sp"
         android:visibility="gone" />
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="20dp"
+        android:layout_alignBottom="@id/img_food"
+        android:scaleType="fitStart"
+        android:layout_marginLeft="10dp"
+        android:src="@drawable/powered_by_google_on_non_white" />
 </RelativeLayout>

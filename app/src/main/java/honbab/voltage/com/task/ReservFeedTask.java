@@ -113,7 +113,10 @@ public class ReservFeedTask extends AsyncTask<String, Void, String> {
                 ((SelectFeedFragment) fragment).txt_explain_reserv.setText(mContext.getResources().getString(R.string.explain_choose_feedee));
 
                 ((MainActivity) mContext).viewPager.setCurrentItem(1);
-                new SelectFeedListTask(mContext).execute("", "", "", "");
+                new SelectFeedListTask(mContext).execute(((SelectFeedFragment) fragment).feed_time,
+                        ((SelectFeedFragment) fragment).area_cd,
+                        ((SelectFeedFragment) fragment).feed_rest_id,
+                        "");
                 new MyFeedListTask(mContext).execute();
 //                Intent intent = new Intent(mContext, ChatActivity.class);
 //                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

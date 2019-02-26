@@ -43,23 +43,25 @@
             android:value="default_channel_id" />
 
         <activity
-            android:name=".MainActivity"
+            android:name="honbab.voltage.com.tete.MainActivity"
             android:excludeFromRecents="false"
             android:exported="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize">
+        </activity>
+        
+        <activity-alias
+            android:name="LauncherActivity"
+            android:targetActivity="honbab.voltage.com.tete.MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-
-                <data android:scheme="@string/kakao_scheme"
-                    android:host="@string/kakaolink_host" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
             <intent-filter>
                 <action android:name="MainActivity" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-        </activity>
+        </activity-alias>
 
         <meta-data
             android:name="com.kakao.sdk.AppKey"

@@ -1,13 +1,17 @@
 package honbab.voltage.com.tete;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.kakao.kakaolink.KakaoLink;
@@ -15,6 +19,9 @@ import com.kakao.kakaolink.KakaoTalkLinkMessageBuilder;
 import com.kakao.util.KakaoParameterException;
 
 import org.json.JSONObject;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import honbab.voltage.com.utils.ButtonUtil;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
@@ -70,6 +77,27 @@ public class SettingActivity extends AppCompatActivity {
 //        ImageButton btn_back = (ImageButton) findViewById(R.id.btn_back);
 //        btn_back.setOnClickListener(mOnClickListener);
 //        btn_back.setOnTouchListener(mOnTouchListener);
+
+        TextView link_privacy = (TextView) findViewById(R.id.link_privacy);
+        TextView link_personal = (TextView) findViewById(R.id.link_personal);
+        Linkify.TransformFilter mTransform = new Linkify.TransformFilter() {
+            @Override
+            public String transformUrl(Matcher match, String url) {
+                return "";
+            }
+        };
+        Pattern pattern = Pattern.compile("");
+        Linkify.addLinks(link_privacy, pattern, Statics.main_url + "law/privacy/", null, mTransform);
+        Linkify.addLinks(link_personal, pattern, Statics.main_url + "law/personal/", null, mTransform);
+
+        TextView txt_app_version = (TextView) findViewById(R.id.txt_app_version);
+        try {
+            PackageInfo pInfo = getPackageManager().getPackageInfo(this.getPackageName(), 0);
+            String appVersion = pInfo.versionName;
+            txt_app_version.setText("v" + appVersion);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
 
         ButtonUtil.setBackButtonClickListener(this);
     }

@@ -17,7 +17,7 @@
             android:layout_width="85dp"
             android:layout_height="85dp"
             android:gravity="center"
-            android:text="이 지&#10;음식점&#10;보기"
+            android:text="이 지역&#10;음식점&#10;보기"
             android:textColor="@color/black" />
 
         <ImageView
