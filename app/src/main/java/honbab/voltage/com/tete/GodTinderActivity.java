@@ -139,8 +139,6 @@ public class GodTinderActivity extends AppCompatActivity {
                 like_yn = "n";
             } else if (direction.equals(Direction.Right)) {
                 like_yn = "y";
-
-
             }
         }
 
@@ -159,12 +157,9 @@ public class GodTinderActivity extends AppCompatActivity {
             Log.e("abc", "스와이프5 = " + position);
             if (position != 0) {
                 RestData restData = restList.get(position - 1);
-//                String rest_id = String.valueOf(restList.get(position - 1).getRest_id());
                 String rest_id = restData.getRest_id();
 
                 if (!like_yn.equals(""))
-//                    new RestLikeTask(GodTinderActivity.this, httpClient).execute(rest_id, like_yn);
-//                    new ReservFeedTask2(GodTinderActivity.this, restData).execute("", feed_time);
                     new RestLikeTask(GodTinderActivity.this).execute(rest_id, like_yn);
 
                 if (position == restList.size())

@@ -1,8 +1,11 @@
 package honbab.voltage.com.task;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -19,6 +22,7 @@ import honbab.voltage.com.data.RestData;
 import honbab.voltage.com.data.SelectDateData;
 import honbab.voltage.com.data.UserData;
 import honbab.voltage.com.fragment.SelectFeedFragment;
+import honbab.voltage.com.tete.GodTinderActivity;
 import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.tete.Statics;
@@ -34,6 +38,7 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
     private Fragment fragment;
 
     private int split;
+    private int cnt_rest_arr;
     private String area_cd;
     private String first_feedTime;
     private String loadStatus = "";
@@ -79,7 +84,6 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
                 String bodyStr = response.body().string();
 
                 JSONObject obj = new JSONObject(bodyStr);
-                Log.e("abc", "SelectFeedListTask obj : " + obj);
 
                 area_cd = obj.getString("area_cd");
                 split = obj.getInt("split");
@@ -93,7 +97,7 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
 
                     SelectDateData dateData = new SelectDateData(time, cnt_time, status);
                     ((SelectFeedFragment) fragment).dateLikeList.add(dateData);
-                    if (dateData.getStatus().equals("y") || dateData.getStatus().equals("a"))
+                    if (dateData.getStatus().equals("y"))
                         dateList.add(dateData);
 
                     if (i == 0)
@@ -101,6 +105,7 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
                 }
 
                 JSONArray rest_arr = obj.getJSONArray("rest");
+                cnt_rest_arr = rest_arr.length();
                 for (int i = 0; i < rest_arr.length(); i++) {
                     JSONObject rest_obj = rest_arr.getJSONObject(i);
                     String rest_id = rest_obj.getString("sid");
@@ -114,7 +119,6 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
                     String rest_img = rest_obj.getString("img_url");
                     String like_yn = rest_obj.getString("like_yn");
                     int cnt = rest_obj.getInt("cnt");
-//                    Log.e("abc", i + ", ((SelectFeedFragment) fragment).feed_rest_id = " + ((SelectFeedFragment) fragment).feed_rest_id + " / " + rest_id);
 
                     RestData restData = new RestData(rest_id, rest_name, compound_code, new LatLng(lat, lng), place_id, rest_img, phone, vicinity, cnt);
                     if (((SelectFeedFragment) fragment).feed_rest_id.equals(rest_id))
@@ -156,13 +160,37 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(final String area_cd) {
         super.onPostExecute(area_cd);
-//        Log.e("abc", loadStatus + " : " + ((SelectFeedFragment) fragment).feed_time + ", feed_rest_id = " + ((SelectFeedFragment) fragment).feed_rest_id);
-        Log.e("abc", "SelectFeedListTask mContext = " + mContext);
+
         String activityName = mContext.getClass().getSimpleName();
 
         if (activityName.equals("MainActivity")) {
             ((SelectFeedFragment) fragment).area_cd = area_cd;
             ((SelectFeedFragment) fragment).split = split;
+            Log.e("abc", "((SelectFeedFragment) fragment).spinnerAdapter.getCount() = " + ((SelectFeedFragment) fragment).spinnerAdapter.getCount());
+            if (cnt_rest_arr == 0 && ((SelectFeedFragment) fragment).spinnerAdapter.getCount() > 1) {
+                Log.e("abc", "((SelectFeedFragment) fragment).area_cd = " + ((SelectFeedFragment) fragment).area_cd);
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                builder.setMessage("원하시는 음식점을 골라보시겠어요?");
+                builder.setPositiveButton("음식점 둘러보기",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent intent = new Intent(mContext, GodTinderActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                intent.putExtra("area_cd", ((SelectFeedFragment) fragment).area_cd);
+                                mContext.startActivity(intent);
+                            }
+                        });
+//                builder.setNegativeButton(R.string.no,
+//                        new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int which) {
+////                                holder.btn_check_feedee.setBackgroundResource(R.drawable.icon_check_n);
+//                            }
+//                        });
+                builder.show();
+
+
+            }
 
             if (loadStatus.equals("readOnlyUser")) {
                 ((SelectFeedFragment) fragment).to_id = "";

@@ -24,6 +24,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.github.arturogutierrez.Badges;
 import com.github.arturogutierrez.BadgesNotSupportedException;
 import com.google.firebase.auth.FirebaseAuth;
@@ -63,6 +65,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
 
         httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
 

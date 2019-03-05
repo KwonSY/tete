@@ -217,16 +217,16 @@ public class SelectFeedFragment extends Fragment implements LocationListener {
                         }
                     });
                 } else {
-                    int r = 0;
-
-                    for (int i = 0; i < areaList.size(); i++) {
-                        if (areaList.get(i).getArea_name().equals(spinner.getSelectedItem().toString()))
-                            r = i;
-                    }
-
-                    area_cd = areaList.get(r).getArea_cd();
-                    Log.e("abc", "onItemSelected area_cd = " + area_cd);
-                    Log.e("abc", "spinner.getSelectedItem() = " + spinner.getSelectedItem());
+//                    int r = 0;
+//
+//                    for (int i = 0; i < areaList.size(); i++) {
+//                        if (areaList.get(i).getArea_name().equals(spinner.getSelectedItem().toString()))
+//                            r = i;
+//                    }
+//
+//                    area_cd = areaList.get(r).getArea_cd();
+//                    Log.e("abc", "onItemSelected area_cd = " + area_cd);
+//                    Log.e("abc", "spinner.getSelectedItem() = " + spinner.getSelectedItem());
 
                     new SelectFeedListTask(getActivity()).execute(feed_time, area_cd, feed_rest_id, "");
                 }
@@ -278,7 +278,7 @@ public class SelectFeedFragment extends Fragment implements LocationListener {
 
         recyclerView_rest = (RecyclerView) getActivity().findViewById(R.id.recyclerView_rest);
         recyclerView_rest.setLayoutManager(layoutManager2);
-        mAdapter_rest = new SelectRestListAdapter();
+        mAdapter_rest = new SelectRestListAdapter(getActivity());
         recyclerView_rest.setAdapter(mAdapter_rest);
         while (recyclerView_rest.getItemDecorationCount() > 0) {
             recyclerView_rest.removeItemDecorationAt(0);

@@ -130,6 +130,9 @@ public class DialogDateListAdapter extends RecyclerView.Adapter<DialogDateListAd
             } else if (data.getStatus().equals("p")) {
                 checkBox.setEnabled(false);
                 cnt_users.setText("수락대기중");
+            } else if (data.getStatus().equals("a")) {
+                checkBox.setEnabled(false);
+                cnt_users.setText("예약완료");
             } else
                 checkBox.setChecked(false);
 

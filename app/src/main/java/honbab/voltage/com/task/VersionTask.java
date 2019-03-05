@@ -51,6 +51,7 @@ public class VersionTask extends AsyncTask<Void, Void, Void> {
 
             if (response.isSuccessful()) {
                 String bodyStr = response.body().string();
+
                 JSONObject obj = new JSONObject(bodyStr);
 
                 vCd = obj.getInt("vCd");

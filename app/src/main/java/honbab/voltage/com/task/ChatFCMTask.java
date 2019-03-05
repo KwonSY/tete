@@ -10,11 +10,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
 public class ChatFCMTask extends AsyncTask<FcmData, Void, Void> {
-//    private Context mContext;
     private OkHttpClient httpClient;
 
     public ChatFCMTask(OkHttpClient httpClient) {
-//        this.mContext = mContext;
         this.httpClient = httpClient;
     }
 

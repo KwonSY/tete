@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,8 +43,8 @@ public class SelectRestListAdapter extends RecyclerView.Adapter<SelectRestListAd
     private int mSelectedItem = -1;
     private AdapterView.OnItemClickListener onItemClickListener;
 
-    public SelectRestListAdapter() {
-
+    public SelectRestListAdapter(Context mContext) {
+        this.mContext = mContext;
     }
 
     public SelectRestListAdapter(Context mContext, ArrayList<RestData> listViewItemList) {
@@ -67,6 +66,7 @@ public class SelectRestListAdapter extends RecyclerView.Adapter<SelectRestListAd
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+
         if (getItemViewType(position) == TYPE_REST) {
             final RestData data = listViewItemList.get(position);
             data.setPosition(position);
@@ -153,6 +153,7 @@ public class SelectRestListAdapter extends RecyclerView.Adapter<SelectRestListAd
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
             } else {
                 // TYPE_END
 //                layout_card.setBackgroundColor(Color.parseColor("#efefef"));
@@ -162,7 +163,6 @@ public class SelectRestListAdapter extends RecyclerView.Adapter<SelectRestListAd
                 checkBox.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.e("abc", "SelectRestListAdapter mContext = " + mContext);
                         Intent intent = new Intent(mContext, GodTinderActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

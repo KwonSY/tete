@@ -41,7 +41,8 @@ public class OneRestaurantActivity extends AppCompatActivity implements OnMapRea
 
     private Calendar calendar;
 
-    private String feed_id, rest_name,
+    public String rest_name;
+    private String feed_id,
             compound_code, place_id, rest_phone, feed_time, vicinity,
             feeder_id, feeder_img, feeder_name;
     private LatLng latLng;
@@ -84,10 +85,10 @@ public class OneRestaurantActivity extends AppCompatActivity implements OnMapRea
         Log.e("abc", "OneRestaurant rest_phone = " + rest_phone);
         Log.e("abc", "OneRestaurant latLng = " + latLng);
         Log.e("abc", "OneRestaurant feed_time = " + feed_time);
-        Log.e("abc", "OneRestaurant feeder_id = " + feeder_id);
+//        Log.e("abc", "OneRestaurant feeder_id = " + feeder_id);
         Log.e("abc", "OneRestaurant vicinity = " + vicinity);
-        Log.e("abc", "OneRestaurant feeder_id = " + feeder_id);
-        Log.e("abc", "OneRestaurant feeder_img = " + feeder_img);
+//        Log.e("abc", "OneRestaurant feeder_id = " + feeder_id);
+//        Log.e("abc", "OneRestaurant feeder_img = " + feeder_img);
 
         TextView title_topbar = (TextView) findViewById(R.id.title_topbar);
         title_topbar.setText(rest_name);

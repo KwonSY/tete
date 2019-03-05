@@ -16,7 +16,6 @@ import java.util.HashMap;
 import honbab.voltage.com.adapter.ViewPagerAdapter;
 import honbab.voltage.com.data.FeedData;
 import honbab.voltage.com.network.OnTaskCompleted;
-import honbab.voltage.com.tete.DelayHandlerActivity;
 import honbab.voltage.com.tete.OneRestaurantActivity;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.utils.GoogleMapUtil;
@@ -66,7 +65,6 @@ public class GetPhotoTask extends AsyncTask<Object, String, String> {
 
     @Override
     protected String doInBackground(Object... objects) {
-//        mContext = (Context) objects[0];
         url = (String) objects[0];
 
         DownloadUrl downloadUrl = new DownloadUrl();
@@ -88,23 +86,26 @@ public class GetPhotoTask extends AsyncTask<Object, String, String> {
         HashMap<String, Object> placeDetailList = null;
         PhotoParser parser = new PhotoParser();
         placeDetailList = parser.parse(googlePlacesData);
+
         if (activityName.equals("OneRestaurantActivity")) {
             showPlacePhotos(placeDetailList);
 
 //            return null;
-        } else if (activityName.equals("DelayHandlerActivity")) {
-//            showPlacePhotos2(placeDetailList);
-            String formatted_phone_number = showPlacePhotos2(placeDetailList);
-
-            ((DelayHandlerActivity) mContext).formatted_phone_number = formatted_phone_number;
-
-            new UpdateRestPhoneTask(mContext, httpClient).execute(rest_id, formatted_phone_number);
-
-            if (mCallback != null)
-                mCallback.onTaskCompleted(formatted_phone_number);
         } else {
 //            return null;
         }
+
+//        else if (activityName.equals("DelayHandlerActivity")) {
+////            showPlacePhotos2(placeDetailList);
+//            String formatted_phone_number = showPlacePhotos2(placeDetailList);
+//
+//            ((DelayHandlerActivity) mContext).formatted_phone_number = formatted_phone_number;
+//
+//            new UpdateRestPhoneTask(mContext, httpClient).execute(rest_id, formatted_phone_number);
+//
+//            if (mCallback != null)
+//                mCallback.onTaskCompleted(formatted_phone_number);
+//        }
     }
 
     private void showPlacePhotos(HashMap<String, Object> placeDetailList) {

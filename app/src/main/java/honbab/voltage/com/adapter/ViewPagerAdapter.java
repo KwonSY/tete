@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 import honbab.voltage.com.tete.GridViewActivity;
 import honbab.voltage.com.tete.OneImageActivity;
+import honbab.voltage.com.tete.OneRestaurantActivity;
 import honbab.voltage.com.tete.R;
 
 public class ViewPagerAdapter extends PagerAdapter {
@@ -74,6 +75,7 @@ public class ViewPagerAdapter extends PagerAdapter {
                 public void onClick(View view) {
                         Intent intent = new Intent(mContext, GridViewActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        intent.putExtra("rest_name", ((OneRestaurantActivity) mContext).rest_name);
                         intent.putExtra("arrayList", imgAllArr);
                         mContext.startActivity(intent);
 

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,14 +37,13 @@ public class GridViewAdapter extends RecyclerView.Adapter<GridViewAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         String rest_img_url = listViewitemList.get(position);
-        Log.e("abc", "선택되었음");
 
         if (rest_img_url.isEmpty()) {
             holder.image.setImageResource(R.drawable.icon_no_image);
         } else {
             Picasso.get().load(listViewitemList.get(position))
-                    .resize(100, 100)
-                    .centerCrop()
+//                    .resize(100, 100)
+//                    .centerCrop()
                     .placeholder(R.drawable.icon_no_image)
                     .error(R.drawable.icon_no_image)
                     .into(holder.image);

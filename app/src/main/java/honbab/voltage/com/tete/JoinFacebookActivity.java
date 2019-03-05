@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 import com.squareup.picasso.Picasso;
@@ -45,7 +46,6 @@ import java.util.regex.Pattern;
 import honbab.voltage.com.utils.BitmapUtil;
 import honbab.voltage.com.utils.KeyboardUtil;
 import honbab.voltage.com.widget.CircleTransform;
-import honbab.voltage.com.widget.Encryption;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
 import honbab.voltage.com.widget.SessionManager;
 import okhttp3.FormBody;
@@ -83,13 +83,25 @@ public class JoinFacebookActivity extends AppCompatActivity {
         my_email = intent.getStringExtra("my_email");
         my_img = intent.getStringExtra("my_img");
         my_password = intent.getStringExtra("my_password");
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
 //        my_token = intent.getStringExtra("my_token");
         FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
             @Override
             public void onSuccess(InstanceIdResult instanceIdResult) {
                 my_token = instanceIdResult.getToken();
+                Log.e("abc","tokne2 -= " + my_token);
+
+                my_uid = mAuth.getCurrentUser().getUid();
             }
         });
+        Log.e("abc","my_uid = " + my_uid);
+        Log.e("abc","my_name = " + my_name);
+        Log.e("abc","my_email = " + my_email);
+        Log.e("abc","my_img = " + my_img);
+        Log.e("abc","tokne1 = " + my_token);
+        Log.e("abc","my_password = " + my_password);
+        Log.e("abc","my_uid = " + my_uid);
+
 
 
         TextView link_privacy = (TextView) findViewById(R.id.link_privacy);
@@ -234,7 +246,7 @@ public class JoinFacebookActivity extends AppCompatActivity {
                     } else if (!chk_personal.isChecked()) {
                         Toast.makeText(JoinFacebookActivity.this, R.string.agree_personal, Toast.LENGTH_SHORT).show();
                     } else if (isValidEmail(str_email)) {
-                        new JoinFaceBookTask().execute();
+                        new JoinFaceBookTask().execute(user_name, str_email);
                     } else {
                         Toast.makeText(JoinFacebookActivity.this.getApplicationContext(), R.string.not_a_valid_email_format, Toast.LENGTH_SHORT).show();
                     }
@@ -244,7 +256,7 @@ public class JoinFacebookActivity extends AppCompatActivity {
         }
     };
 
-    private class JoinFaceBookTask extends AsyncTask<Void, Void, Void> {
+    private class JoinFaceBookTask extends AsyncTask<String, Void, Void> {
         String user_name, email, password = "facebook";
         String result;
 
@@ -252,21 +264,24 @@ public class JoinFacebookActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
 
-            user_name = edit_name.getText().toString();
-            email = my_email;
+//            user_name = edit_name.getText().toString();
+//            email = my_email;
 //            password = edit_password.getText().toString().trim();
 
-            Encryption.setPassword(password);
-            Encryption.encryption(password);
-            password = Encryption.getPassword();
+//            Encryption.setPassword(password);
+//            Encryption.encryption(password);
+//            password = Encryption.getPassword();
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Void doInBackground(String... params) {
+            Log.e("abc", "user_name = " + params[0]);
+            Log.e("abc", "token = " + my_token);
+
             FormBody body = new FormBody.Builder()
                     .add("opt", "join_facebook")
-                    .add("user_name", user_name.trim())
-                    .add("email", email.trim())
+                    .add("user_name", params[0])
+                    .add("email", params[1])
                     .add("password", password)
                     .add("gender", gender)
                     .add("age", age)
@@ -283,6 +298,7 @@ public class JoinFacebookActivity extends AppCompatActivity {
 
                 if (response.isSuccessful()) {
                     String bodyStr = response.body().string();
+                    Log.e("abc", "JoinFaceBookTask bodyStr : " + bodyStr);
                     JSONObject obj = new JSONObject(bodyStr);
 
                     result = obj.getString("result");
@@ -314,7 +330,7 @@ public class JoinFacebookActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             } else if (result.equals("1")) {
-                Toast.makeText(JoinFacebookActivity.this.getApplicationContext(), "잘못된 오류입니다. 다시 시도하세요.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(JoinFacebookActivity.this.getApplicationContext(), "다시 입력해보세요.", Toast.LENGTH_SHORT).show();
             } else if (result.equals("2")) {
                 session.createLoginSession(Statics.my_id, Statics.my_username, Statics.my_gender);
 

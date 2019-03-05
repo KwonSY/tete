@@ -1,6 +1,7 @@
 package honbab.voltage.com.firebase;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
@@ -23,6 +25,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+
+import org.json.JSONObject;
 
 import java.util.Map;
 
@@ -62,6 +66,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 //            Log.e("abc", "key = " + key + " , value = " + value);
 //        }
 
+        Log.e("abc", "remoteMessage.getMessageId = " + remoteMessage.getMessageId());
         Log.e("abc", "remoteMessage.getData().size() = " + remoteMessage.getData().size());
         if (remoteMessage.getData().size() > 0) {
             Log.e("abc", "Message data payload: " + remoteMessage.getData());
@@ -85,11 +90,37 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 //            String message = remoteMessage.getNotification().getBody();
 //            String click_action = remoteMessage.getNotification().getClickAction();
-//            Log.e("abc", "Notification Message Body: " + message);
+            Log.e("abc", "notification = " + notification);
+            Log.e("abc", "Notification Message getTitle: " + remoteMessage.getNotification().getTitle());
+            Log.e("abc", "Notification Message Body: " + remoteMessage.getNotification().getBody());
 //            Log.e("abc", "Notification Click Action: " + click_action);
             Log.e("abc", "Statics.to_id = " + Statics.to_id);
             if (Statics.to_id == null || Statics.to_id.equals("") || Statics.to_id.equals("null")) {//앱 내 채팅밖
-                sendNotification(this, notification, data);
+//                sendNotification(this, notification, data);
+
+//                Map<String, String> params = remoteMessage.getData();
+                JSONObject object = new JSONObject(data);
+                Log.e("abc", object.toString());
+                String title = object.optString("title","");
+                String actionCode = object.optString("action_code", "");
+                String msg = object.optString("body", "");
+                if (remoteMessage.getData().containsKey("badge")) {
+                    int badge = Integer.parseInt(remoteMessage.getData().get("badge"));
+                    //Log.d("notificationNUmber", ":" + badge);
+//                    setBadge(getApplicationContext(), badge);
+                    try {
+                        Badges.setBadge(this, 1);
+                    } catch (BadgesNotSupportedException e) {
+                        e.printStackTrace();
+                    }
+//                    Prefs.putBoolean(Constant.HAS_BADGE,true);
+                }
+                if (!(title.equals("") && msg.equals("") && actionCode.equals(""))) {
+                    createNotification(actionCode, msg, title);
+                }
+                else {
+                    //Log.e("Notification", "Invalid Data");
+                }
             } else if (Statics.to_id.equals(data.get("toId"))) {//현재 대화창
 
             } else {//다른 대화창
@@ -110,6 +141,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         Bitmap icon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
 //        Drawable icon = new BitmapDrawable(getResources(), icon2);
+        Log.e("abc", "notification.getClickAction() = " + notification.getClickAction());
 
         Intent intent;
         if (notification.getClickAction().equals("ChatActivity")) {
@@ -122,7 +154,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);//PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Log.e("abc", "data.get(\"badge_cnt\") = " + data.get("badge_cnt"));
+//        Log.e("abc", "data.get(\"badge_cnt\") = " + data.get("badge_cnt"));
+        Log.e("abc", "notification.getTitle() = " + notification.getTitle());
+        Log.e("abc", "notification.getBody() = " + notification.getBody());
         String channelId = getString(R.string.default_notification_channel_id);
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, channelId)
@@ -143,8 +177,21 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 //                .setDefaults(Notification.DEFAULT_VIBRATE);
 //                .setDefaults(Notification.DEFAULT_ALL)
                 .setNumber(Integer.parseInt(data.get("badge_cnt")));
+
+//        notification = new NotificationCompat.Builder(getApplicationContext())
+//                .setContentTitle("hahaha")
+//                .setTicker("Runnndini")
+//                .setContentText("Click")
+//                .setSmallIcon(R.mipmap.ic_launcher)
+//                .setContentIntent(pendingIntent)
+//                .setOngoing(true).build();
+
         if (Statics.to_id == null || Statics.to_id.equals("")) {//앱 내 채팅 밖
 //            sendNotification(this, notification, data);
+            notificationBuilder.setPriority(Notification.PRIORITY_MAX);
+
+            startForeground(1, notificationBuilder.build());
+//            startForeground(Constants.NOTIFICATION_ID_FOREGROUND_SERVICE, notificationBuilder.build());
         } else if (Statics.to_id.equals(data.get("toId"))) {
             //현재 대화창
             notificationBuilder.setPriority(Notification.PRIORITY_MAX);
@@ -214,6 +261,65 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             e.printStackTrace();
         }
 
+    }
+
+    // NEW!!
+    public void createNotification(String action_code, String msg, String title) {
+        String channelId = getString(R.string.default_notification_channel_id);
+
+        Intent intent = null;
+        intent = new Intent(this, ChatActivity.class);
+//        intent.putExtra(Constants.ACTION_CODE, action_code);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel androidChannel = new NotificationChannel(channelId, title, android.app.NotificationManager.IMPORTANCE_DEFAULT);
+            // Sets whether notifications posted to this channel should display notification lights
+            androidChannel.enableLights(true);
+            // Sets whether notification posted to this channel should vibrate.
+            androidChannel.enableVibration(true);
+            // Sets the notification light color for notifications posted to this channel
+            androidChannel.setLightColor(Color.GREEN);
+
+            // Sets whether notifications posted to this channel appear on the lockscreen or not
+            androidChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+//            getManager().createNotificationChannel(androidChannel);
+            Notification.Builder nb = new Notification.Builder(getApplicationContext(), channelId)
+                    .setContentTitle(title)
+                    .setContentText(msg)
+                    .setTicker(title)
+                    .setShowWhen(true)
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setLargeIcon(BitmapFactory.decodeResource(this.getResources(),
+                            R.mipmap.ic_launcher_round))
+                    .setAutoCancel(true)
+                    .setContentIntent(contentIntent);
+
+//            getManager().notify(101, nb.build());
+
+        } else {
+//            try {
+//
+//                @SuppressLint({"NewApi", "LocalSuppress"}) android.support.v4.app.NotificationCompat.Builder notificationBuilder = new android.support.v4.app.NotificationCompat.Builder(this).setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
+//                        .setSmallIcon(R.mipmap.ic_launcher)
+//                        .setLargeIcon(BitmapFactory.decodeResource(this.getResources(),
+//                                R.mipmap.ic_launcher_round))
+//                        .setContentTitle(title)
+//                        .setTicker(title)
+//                        .setContentText(msg)
+//                        .setShowWhen(true)
+//                        .setContentIntent(contentIntent)
+//                        .setLights(0xFF760193, 300, 1000)
+//                        .setAutoCancel(true).setVibrate(new long[]{200, 400});
+//                            /*.setSound(Uri.parse("android.resource://"
+//                                    + getApplicationContext().getPackageName() + "/" + R.raw.tone));*/
+//
+//
+//                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//                notificationManager.notify((int) System.currentTimeMillis() /* ID of notification */, notificationBuilder.build());
+//            } catch (SecurityException se) {
+//                se.printStackTrace();
+//            }
+        }
     }
 
     @Override

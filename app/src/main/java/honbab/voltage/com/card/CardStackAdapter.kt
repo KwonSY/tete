@@ -1,14 +1,15 @@
 package honbab.voltage.com.card;
 
+import android.content.Intent
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import com.bumptech.glide.Glide
 import honbab.voltage.com.data.RestData
+import honbab.voltage.com.tete.OneRestaurantActivity
 import honbab.voltage.com.tete.R
 
 class CardStackAdapter(
@@ -28,7 +29,17 @@ class CardStackAdapter(
                 .load(data.rest_img)
                 .into(holder.image)
         holder.itemView.setOnClickListener { v ->
-            Toast.makeText(v.context, data.rest_name, Toast.LENGTH_SHORT).show()
+//            Toast.makeText(v.context, data.rest_name, Toast.LENGTH_SHORT).show()
+            val intent = Intent(v.context, OneRestaurantActivity::class.java)
+            intent.putExtra("rest_name", data.rest_name)
+            intent.putExtra("compound_code", data.compound_code)
+            intent.putExtra("rest_phone", data.rest_phone)
+            intent.putExtra("feed_time", "")
+            intent.putExtra("latLng", data.latLng)
+            intent.putExtra("place_id", data.place_id)
+            intent.putExtra("vicinity", data.vicinity)
+            intent.putExtra("status", "")
+            v.context.startActivity(intent)
         }
     }
 

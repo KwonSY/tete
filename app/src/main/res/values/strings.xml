@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">같이먹어요</string>
-    <string name="default_notification_channel_id">chatActivity</string>
-    <string name="default_notification_channel_name">chatActivity</string>
+    <string name="default_notification_channel_id">honbab.voltage.com.tete</string>
+    <string name="default_notification_channel_name">ChatActivity</string>
 
     <string name="accept">수락하기</string>
     <string name="acceptance">수락</string>
@@ -106,8 +106,14 @@
     <string name="google_maps_api_key">AIzaSyB57cM_1hIxkWNU8qN60QHfqzEleqKDE0Y</string>
 
     <!-- facebook -->
+    2307098949524647
+    2307098949524647
     <string name="facebook_app_id">2307098949524647</string>
     <string name="fb_login_protocol_scheme">fb2307098949524647</string>
+    <!--<string name="app_name">같이먹어요</string>-->
+    <!--<string name="FACEBOOK_APP_ID">2307098949524647</string>-->
+    <string name="ACCOUNT_KIT_CLIENT_TOKEN">[ACCOUNT_KIT_CLIENT_TOKEN]</string>
+
 
 
     <string name="notification_channel_message_title">홍길동</string>
