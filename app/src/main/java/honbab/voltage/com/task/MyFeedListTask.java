@@ -21,6 +21,7 @@ import honbab.voltage.com.adapter.MyFeedListAdapter;
 import honbab.voltage.com.data.FeedData;
 import honbab.voltage.com.data.UserData;
 import honbab.voltage.com.fragment.MyFeedFragment;
+import honbab.voltage.com.tete.AfterEatingActivity;
 import honbab.voltage.com.tete.JoinActivity2;
 import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.R;
@@ -38,6 +39,8 @@ public class MyFeedListTask extends AsyncTask<Void, Void, Void> {
     private Fragment fragment;
 
     public ArrayList<FeedData> feedList = new ArrayList<>();
+    private int cnt_after = 0;
+    private String after_feed_id, after_user_id, after_user_name, after_user_img;
 
     public MyFeedListTask(Context mContext) {
         this.mContext = mContext;
@@ -124,6 +127,18 @@ public class MyFeedListTask extends AsyncTask<Void, Void, Void> {
                     feedList.add(feedData);
                 }
 
+                JSONArray after_arr = obj.getJSONArray("after");
+                for (int i = 0; i < after_arr.length(); i++) {
+                    JSONObject obj2 = after_arr.getJSONObject(i);
+                    after_feed_id = obj2.getString("sid");
+                    JSONObject user_obj = obj2.getJSONObject("users");
+                    after_user_id = user_obj.getString("sid");
+                    after_user_name = user_obj.getString("name");
+                    after_user_img = Statics.main_url + user_obj.getString("img_url");
+
+                    cnt_after++;
+                }
+
             } else {
 //                    Log.d(TAG, "Error : " + response.code() + ", " + response.message());
             }
@@ -148,7 +163,17 @@ public class MyFeedListTask extends AsyncTask<Void, Void, Void> {
 
             ((MyFeedFragment) fragment).swipeContainer.setRefreshing(false);
 
-            Log.e("abc", "(MyFeedFragment) mAdapter.getItemCount() = " + ((MyFeedFragment) fragment).mAdapter.getItemCount());
+            if (cnt_after > 0) {
+                Intent intent = new Intent(mContext, AfterEatingActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("after_feed_id", after_feed_id);
+                intent.putExtra("toId", after_user_id);
+                intent.putExtra("after_user_name", after_user_name);
+                intent.putExtra("after_user_img", after_user_img);
+                mContext.startActivity(intent);
+                ((Activity) mContext).finish();
+            }
+
             if (((MyFeedFragment) fragment).mAdapter.getItemCount() == 0) {
                 ((MyFeedFragment) fragment).line_timeline_vertical.setVisibility(View.INVISIBLE);
                 ((MyFeedFragment) fragment).layout_no_my_schedule.setVisibility(View.VISIBLE);
@@ -169,7 +194,7 @@ public class MyFeedListTask extends AsyncTask<Void, Void, Void> {
 
             try {
                 UserData myData = new AccountTask(mContext, 0).execute(Statics.my_id).get();
-                Log.e("abc", "myData.getImg_url() : " + myData.getImg_url());
+
                 if (myData.getImg_url().contains("null")) {
                     Intent intent = new Intent(mContext, JoinActivity2.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

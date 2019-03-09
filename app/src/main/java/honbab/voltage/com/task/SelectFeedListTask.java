@@ -84,6 +84,7 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
                 String bodyStr = response.body().string();
 
                 JSONObject obj = new JSONObject(bodyStr);
+                Log.e("abc", "SelectFeedListTask obj : " + obj);
 
                 area_cd = obj.getString("area_cd");
                 split = obj.getInt("split");
@@ -170,7 +171,7 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
             if (cnt_rest_arr == 0 && ((SelectFeedFragment) fragment).spinnerAdapter.getCount() > 1) {
                 Log.e("abc", "((SelectFeedFragment) fragment).area_cd = " + ((SelectFeedFragment) fragment).area_cd);
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                builder.setMessage("원하시는 음식점을 골라보시겠어요?");
+                builder.setMessage("이 지역 음식점을 둘러보시겠어요?");
                 builder.setPositiveButton("음식점 둘러보기",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
@@ -211,8 +212,8 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
                 ((SelectFeedFragment) fragment).mAdapter_rest = new SelectRestListAdapter(mContext, restList);
                 ((SelectFeedFragment) fragment).recyclerView_rest.setAdapter(((SelectFeedFragment) fragment).mAdapter_rest);
 
-                if (((SelectFeedFragment) fragment).areaNameList.size() == 1)
-                    new AreaRestTask(mContext).execute();
+//                if (((SelectFeedFragment) fragment).areaNameList.size() == 1)
+//                    new AreaRestTask(mContext).execute();
             } else {
                 ((SelectFeedFragment) fragment).feed_time = "";
                 ((SelectFeedFragment) fragment).feed_rest_id = "";
@@ -235,8 +236,8 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
 
                 ((SelectFeedFragment) fragment).swipeContainer.setRefreshing(false);
 
-                if (((SelectFeedFragment) fragment).areaNameList.size() == 1)
-                    new AreaRestTask(mContext).execute();
+//                if (((SelectFeedFragment) fragment).areaNameList.size() == 1)
+//                    new AreaRestTask(mContext).execute();
             }
         }
     }

@@ -1,9 +1,6 @@
 package honbab.voltage.com.fragment;
 
 import android.Manifest;
-import android.app.Activity;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -12,7 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,6 +27,8 @@ import android.widget.Toast;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
@@ -42,15 +40,17 @@ import honbab.voltage.com.adapter.SelectRestListAdapter;
 import honbab.voltage.com.adapter.SelectUserListAdapter;
 import honbab.voltage.com.data.AreaData;
 import honbab.voltage.com.data.SelectDateData;
+import honbab.voltage.com.task.AreaRestTask;
 import honbab.voltage.com.task.ReservFeedTask;
 import honbab.voltage.com.task.SelectFeedListTask;
 import honbab.voltage.com.tete.R;
-import honbab.voltage.com.tete.ReservActivity;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
 import honbab.voltage.com.widget.SpacesItemDecoration;
 import okhttp3.OkHttpClient;
 
-public class SelectFeedFragment extends Fragment implements LocationListener {
+public class SelectFeedFragment extends Fragment implements LocationListener,
+        OnMapReadyCallback,
+        GoogleMap.OnMyLocationChangeListener {
     private OkHttpClient httpClient;
 
     public TextView txt_date;
@@ -120,11 +120,10 @@ public class SelectFeedFragment extends Fragment implements LocationListener {
     public void onResume() {
         super.onResume();
 
-        Log.e("abc", "longitude " + longitude);
-        if (longitude == 0) {
-            Log.e("abc", "돌자 " + longitude);
-            new SelectFeedListTask(getActivity()).execute(feed_time, area_cd, feed_rest_id, "");
-        }
+        Log.e("abc", "longitude = " + longitude);
+//        if (longitude == 0) {
+//            new SelectFeedListTask(getActivity()).execute(feed_time, area_cd, feed_rest_id, "");
+//        }
 
 //        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 //            // TODO: Consider calling
@@ -166,6 +165,8 @@ public class SelectFeedFragment extends Fragment implements LocationListener {
         final int first_spinner = 0;
         final int[] first_spinner_counter = {0};
 
+        Log.e("abc", "initControls = ");
+
         spinner = (Spinner) getActivity().findViewById(R.id.spinner_location);
         spinnerAdapter = new ArrayAdapter(getActivity(), R.layout.item_row_spinner, areaNameList);
         spinner.setAdapter(spinnerAdapter);
@@ -195,18 +196,60 @@ public class SelectFeedFragment extends Fragment implements LocationListener {
 //                    LatLng latLng = new LatLng(latitude, longitude);
                                 Log.e("abc", "latitude = " + latitude + ", " + longitude);
 
-                                if (latitude > 37.511083) {
-                                    area_cd = "SDH1";
-//                                    spinner.setSelection(1);
+                                LatLng llGangNam = new LatLng(37.4979462, 127.025427);//강남역
+                                LatLng llEulJiRo = new LatLng(37.5660602, 126.980468);//을지로입구역
+                                LatLng llSinChon = new LatLng(37.5597212, 126.9403285);//신촌역
+                                LatLng llSeoulUni = new LatLng(37.4812142, 126.950518);//서울대입구역
+                                LatLng llNoRyang = new LatLng(37.513567, 126.9393334);//노량진역
 
-//                                    new SelectFeedListTask(getActivity()).execute(feed_time, area_cd, feed_rest_id, "");
-                                } else {
-                                    area_cd = "GNS1";
-//                                    spinner.setSelection(0);
+                                LatLng llJamSil = new LatLng(37.5153934, 127.10273);//잠실역
+                                LatLng llGunDae = new LatLng(37.5392502, 127.0691476);//건대입구역
+                                LatLng llHaeHwa = new LatLng(37.5820842, 126.9997033);//혜화역
+                                LatLng llSeoMyeon = new LatLng(35.1568282, 129.057955);//부산 서면역
+                                LatLng llHaeUnDae = new LatLng(35.1647738, 129.1379978);//부산 해운대역
+
+                                LatLng[] stationLLGroup = new LatLng[]{llGangNam, llEulJiRo, llSinChon, llSeoulUni, llNoRyang};
+                                //, llJamSil, llGunDae, llHaeHwa,
+                                // llSeoMyeon, llHaeUnDae
+
+                                int i = 0;
+                                Location target = new Location("target");
+                                for (LatLng point : stationLLGroup) {
+                                    target.setLatitude(point.latitude);
+                                    target.setLongitude(point.longitude);
+                                    if (location.distanceTo(target) < 1700) {
+                                        // bingo!
+                                        Log.e("abc", "bingo" + point.latitude + point.longitude);
+
+                                        if (i == 0)
+                                            area_cd = "GNS1";
+                                        else if (i == 1)
+                                            area_cd = "JGS1";
+                                        else if (i == 2)
+                                            area_cd = "SDH1";
+                                        else if (i == 3)
+                                            area_cd = "GAS1";
+                                        else if (i == 4)
+                                            area_cd = "DJS1";
+                                        else
+                                            area_cd = "GNS1";
+                                    }
+
+                                    i++;
                                 }
 
-                                Log.e("abc", "area_cd = " + area_cd + " , latitude = " + latitude + ", " + longitude);
-                                new SelectFeedListTask(getActivity()).execute(feed_time, area_cd, feed_rest_id, "");
+//                                if (latitude > 37.511083) {
+//                                    area_cd = "SDH1";
+////                                    spinner.setSelection(1);
+//
+////                                    new SelectFeedListTask(getActivity()).execute(feed_time, area_cd, feed_rest_id, "");
+//                                } else {
+//                                    area_cd = "GNS1";
+////                                    spinner.setSelection(0);
+//                                }
+
+                                new AreaRestTask(getActivity()).execute();
+//                                new SelectFeedListTask(getActivity()).execute(feed_time, area_cd, feed_rest_id, "");
                             }
                         }
                     }).addOnFailureListener(new OnFailureListener() {
@@ -217,14 +260,14 @@ public class SelectFeedFragment extends Fragment implements LocationListener {
                         }
                     });
                 } else {
-//                    int r = 0;
-//
-//                    for (int i = 0; i < areaList.size(); i++) {
-//                        if (areaList.get(i).getArea_name().equals(spinner.getSelectedItem().toString()))
-//                            r = i;
-//                    }
-//
-//                    area_cd = areaList.get(r).getArea_cd();
+                    int r = 0;
+
+                    for (int i = 0; i < areaList.size(); i++) {
+                        if (areaList.get(i).getArea_name().equals(spinner.getSelectedItem().toString()))
+                            r = i;
+                    }
+
+                    area_cd = areaList.get(r).getArea_cd();
 //                    Log.e("abc", "onItemSelected area_cd = " + area_cd);
 //                    Log.e("abc", "spinner.getSelectedItem() = " + spinner.getSelectedItem());
 
@@ -324,6 +367,8 @@ public class SelectFeedFragment extends Fragment implements LocationListener {
         //현재 위치 찾기
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
+//        mMap.setMyLocationEnabled(true);
+//        mMap.setOnMyLocationChangeListener(this);
     }
 
     public View.OnClickListener mOnClickListener = new View.OnClickListener() {
@@ -378,30 +423,30 @@ public class SelectFeedFragment extends Fragment implements LocationListener {
 //        }
 //    };
 
-    public void alertShow(final Activity mActivity) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//        builder.setTitle("AlertDialog Title");
-        builder.setMessage(R.string.already_reserved_godmuk);
-        builder.setPositiveButton(R.string.yes,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-//                        Intent intent = new Intent(getActivity(), MyFeedListActivity.class);
-                        Intent intent = new Intent(getActivity(), mActivity.getClass());
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        getActivity().startActivity(intent);
-                    }
-                });
-        builder.setNegativeButton(R.string.reserve_new_godmuk,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(getActivity().getApplicationContext(), R.string.make_new_godmuk, Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(getActivity(), ReservActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        getActivity().startActivity(intent);
-                    }
-                });
-        builder.show();
-    }
+//    public void alertShow(final Activity mActivity) {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+////        builder.setTitle("AlertDialog Title");
+//        builder.setMessage(R.string.already_reserved_godmuk);
+//        builder.setPositiveButton(R.string.yes,
+//                new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+////                        Intent intent = new Intent(getActivity(), MyFeedListActivity.class);
+//                        Intent intent = new Intent(getActivity(), mActivity.getClass());
+//                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                        getActivity().startActivity(intent);
+//                    }
+//                });
+//        builder.setNegativeButton(R.string.reserve_new_godmuk,
+//                new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        Toast.makeText(getActivity().getApplicationContext(), R.string.make_new_godmuk, Toast.LENGTH_LONG).show();
+//                        Intent intent = new Intent(getActivity(), ReservActivity.class);
+//                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                        getActivity().startActivity(intent);
+//                    }
+//                });
+//        builder.show();
+//    }
 
     @Override
     public void onLocationChanged(Location location) {
@@ -421,5 +466,30 @@ public class SelectFeedFragment extends Fragment implements LocationListener {
     @Override
     public void onProviderDisabled(String provider) {
 
+    }
+
+    //onMyLocationChange
+    @Override
+    public void onMyLocationChange(Location location) {
+        LatLng POINTA = new LatLng(37.4979462, 127.025427);//강남역
+        LatLng POINTB = new LatLng(37.5660602, 126.980468);//을지로입구역
+        LatLng POINTC = new LatLng(37.5597212, 126.9403285);//신촌역
+        LatLng POINTD = new LatLng(37.4812142, 126.950518);//서울대입구역
+
+        Location target = new Location("target");
+        for (LatLng point : new LatLng[]{POINTA, POINTB, POINTC, POINTD}) {
+            target.setLatitude(point.latitude);
+            target.setLongitude(point.longitude);
+            if (location.distanceTo(target) < 5000) {
+                // bingo!
+                Log.e("abc", "bingo" + point.latitude + point.longitude);
+            }
+        }
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+//        setUpMap();
     }
 }

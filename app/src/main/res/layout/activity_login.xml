@@ -82,7 +82,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="30dp"
             android:text="페이스북 로그인"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/btn_go_join"

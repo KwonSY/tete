@@ -81,6 +81,7 @@
             android:name=".JoinFacebookActivity"
             android:windowSoftInputMode="adjustResize" />
 
+        <activity android:name="AfterEatingActivity" />
         <activity
             android:name=".ChangePswActivity"
             android:windowSoftInputMode="adjustResize" />

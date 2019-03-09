@@ -47,8 +47,7 @@ public class AreaRestTask extends AsyncTask<String, Void, ArrayList<AreaData>> {
     @Override
     protected ArrayList<AreaData> doInBackground(String... params) {
         FormBody body = new FormBody.Builder()
-                .add("opt", "rest_area")//vvvv->area_cd
-//                .add("pack", params[0])
+                .add("opt", "area_cd_list")//vvvv->area_cd
                 .build();
 
         Request request = new Request.Builder().url(Statics.opt_url).post(body).build();
@@ -95,11 +94,21 @@ public class AreaRestTask extends AsyncTask<String, Void, ArrayList<AreaData>> {
                 ((SelectFeedFragment) fragment).areaNameList = areaNameList;
                 ((SelectFeedFragment) fragment).spinnerAdapter = new ArrayAdapter(mContext, R.layout.item_row_spinner, areaNameList);
                 ((SelectFeedFragment) fragment).spinner.setAdapter(((SelectFeedFragment) fragment).spinnerAdapter);
-                if (((SelectFeedFragment) fragment).area_cd.equals("GNS1")) {
-
-                } else {
-                    ((SelectFeedFragment) fragment).spinner.setSelection(1);
+//                if (((SelectFeedFragment) fragment).area_cd.equals("GNS1")) {
+//
+//                } else {
+                Log.e("abc", "area_cd : " + ((SelectFeedFragment) fragment).area_cd);
+                for (AreaData areaData : areaList) {
+                    if (areaData.getArea_cd().equals(((SelectFeedFragment) fragment).area_cd)) {
+                        int seq = areaNameList.indexOf(areaData.getArea_name());
+                        Log.e("abc", "seq area_cd : " + areaList.indexOf(((SelectFeedFragment) fragment).area_cd));
+                        ((SelectFeedFragment) fragment).spinner.setSelection(seq);
+                    }
                 }
+
+//                int seq = areaNameList.indexOf(new AreaData(((SelectFeedFragment) fragment).area_cd));
+//                    ((SelectFeedFragment) fragment).spinner.setSelection(seq);
+//                }
             } else {
 
             }

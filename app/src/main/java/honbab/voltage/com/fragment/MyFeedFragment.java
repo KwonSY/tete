@@ -279,7 +279,6 @@ public class MyFeedFragment extends Fragment {
                         if (chatListHash.size() > mAdapter_cb.getItemCount()) {
                             try {
                                 UserData userData = new AccountTask(getActivity(), 0).execute(toId).get();
-                                Log.e("abc", "AccountTask userData = " + userData.getUser_name());
                                 userData.setStatus(chatListHash.get(toId).toString());
 
                                 mAdapter_cb.addItem(userData);

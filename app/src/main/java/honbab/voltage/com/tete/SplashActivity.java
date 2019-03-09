@@ -158,7 +158,6 @@ public class SplashActivity extends AppCompatActivity {
                         "__DUMMY CONTACT from runtime permissions sample");
         operations.add(op.build());
 
-        Log.e("abc", "operations = " + operations.size());
         Handler hd = new Handler();
         hd.postDelayed(new splashhandler(operations), 3000); // 3초 후에 hd Handler 실행
     }
