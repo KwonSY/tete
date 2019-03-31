@@ -275,6 +275,17 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
                     mContext.startActivity(intent);
                 }
             });
+            img_user.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    Intent intent = new Intent(mContext, ProfileActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.putExtra("user_id", data.getUser_id());
+                    mContext.startActivity(intent);
+
+                    return false;
+                }
+            });
 
             Picasso.get().load(data.getRest_img())
                     .resize(400,400)

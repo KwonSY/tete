@@ -75,8 +75,11 @@
                 android:layout_toRightOf="@id/title_comment"
                 android:layout_weight="3"
                 android:background="@drawable/border_round_gr1"
-                android:padding="10dp"
-                android:text="내 소개 읽어오는 중..."
+                android:paddingLeft="10dp"
+                android:paddingTop="10dp"
+                android:paddingRight="58dp"
+                android:paddingBottom="10dp"
+                android:text="내 소개 읽어오는 중.."
                 android:textColor="#afafaf"
                 android:textColorHint="#afafaf"
                 android:textSize="12sp" />
@@ -105,15 +108,45 @@
             android:text="나이를 수정하시려면 본인 인증을 하셔야 합니다." />
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/img_setting"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/topbar"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
-        android:src="@drawable/icon_settting" />
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/explain_req_fr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="6dp"
+            android:text=""
+            android:textColor="@color/white"
+            android:textSize="10sp" />
+
+        <Button
+            android:id="@+id/btn_add_fr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:layout_marginRight="7dp"
+            android:background="@drawable/btn_circle_gr1"
+            android:minWidth="55dp"
+            android:minHeight="0dp"
+            android:padding="7dp"
+            android:text="+ 친구추가"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            android:visibility="invisible" />
+
+        <ImageView
+            android:id="@+id/img_setting"
+            android:layout_width="29dp"
+            android:layout_height="29dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/icon_setting_wh"
+            android:visibility="invisible" />
+    </LinearLayout>
 
     <ProgressBar
         android:id="@+id/progress_upload"

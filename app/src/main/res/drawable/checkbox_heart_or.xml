@@ -1,0 +1,10 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 체크박스 해제상태 -->
+    <item android:drawable="@drawable/stub_image" android:state_checked="false" />
+    <!-- 체크박스 선택상태 -->
+    <item android:drawable="@drawable/icon_heart_or_in_bk" android:state_checked="true" />
+    <item android:drawable="@drawable/icon_heart_or_in_bk" android:state_pressed="true" />
+    <item android:drawable="@drawable/stub_image" android:state_pressed="false" />
+    <!-- default state -->
+    <item android:drawable="@drawable/stub_image" />
+</selector>

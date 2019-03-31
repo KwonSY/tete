@@ -145,8 +145,8 @@ public class JoinActivity2 extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 //                tv.setText(String.valueOf(s.toString().length()));
-                if (edit_comment.getText().toString().length() >= 139) {
-                    Toast.makeText(JoinActivity2.this, "자기소개는 140이내로 해주세요.", Toast.LENGTH_SHORT).show();
+                if (edit_comment.getText().toString().length() >= 35) {
+                    Toast.makeText(JoinActivity2.this, "자기소개는 35이내로 해주세요.", Toast.LENGTH_SHORT).show();
                 }
 
                 comment = edit_comment.getText().toString().trim();

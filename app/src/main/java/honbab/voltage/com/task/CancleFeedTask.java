@@ -42,12 +42,12 @@ public class CancleFeedTask extends AsyncTask<String, Void, Void> {
         rest_name = objects[1];
 
         FormBody body = new FormBody.Builder()
-                .add("opt", "cancle_feed")
+                .add("opt", "cancel_feed")
                 .add("my_id", Statics.my_id)
                 .add("feed_id", objects[0])
                 .build();
 
-        Request request = new Request.Builder().url(Statics.opt_url).post(body).build();
+        Request request = new Request.Builder().url(Statics.optUrl + "tab2/index.php").post(body).build();
 
         try {
             okhttp3.Response response = httpClient.newCall(request).execute();

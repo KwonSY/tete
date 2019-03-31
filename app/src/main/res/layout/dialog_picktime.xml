@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="70dp"
+        android:paddingLeft="18dp"
+        android:paddingRight="18dp"
+        android:paddingBottom="20dp">
+
+        <TextView
+            android:id="@+id/btn_lunch"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_margin="6dp"
+            android:minWidth="360dp"
+            android:layout_weight="1"
+            android:background="@drawable/border_round_gr1"
+            android:gravity="center"
+            android:padding="9dp"
+            android:text="점심"
+            android:textColor="@color/black"
+            android:textSize="16dp" />
+
+        <TextView
+            android:id="@+id/btn_dinner"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_margin="6dp"
+            android:layout_weight="1"
+            android:background="@drawable/border_round_gr1"
+            android:gravity="center"
+            android:padding="9dp"
+            android:minWidth="360dp"
+            android:text="저녁"
+            android:textColor="@color/black"
+            android:textSize="16dp" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/btn_cancle"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/icon_x_gr_m" />
+</RelativeLayout>

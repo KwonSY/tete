@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.View;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -35,7 +36,7 @@ public class AccountTask extends AsyncTask<String, Void, UserData> {
 
     private String user_id;
     private int seq;
-    private String user_name, user_img, comment, token;
+    private String user_name, user_img, comment, token, fr_status;
 
     public AccountTask(Context mContext, int seq) {
         this.mContext = mContext;
@@ -62,10 +63,11 @@ public class AccountTask extends AsyncTask<String, Void, UserData> {
 
         FormBody body = new FormBody.Builder()
                 .add("opt", "account")
+                .add("my_id", Statics.my_id)
                 .add("user_id", objects[0])
                 .build();
 
-        Request request = new Request.Builder().url(Statics.opt_url).post(body).build();
+        Request request = new Request.Builder().url(Statics.optUrl + "tab2/index.php").post(body).build();
 
         try {
             okhttp3.Response response = httpClient.newCall(request).execute();
@@ -73,6 +75,7 @@ public class AccountTask extends AsyncTask<String, Void, UserData> {
                 String bodyStr = response.body().string();
 
                 JSONObject obj = new JSONObject(bodyStr);
+                Log.e("abc", "AccountTask = " + obj);
 
                 JSONObject user_obj = obj.getJSONObject("user");
 //                user_id = user_obj.getString("sid");
@@ -84,11 +87,14 @@ public class AccountTask extends AsyncTask<String, Void, UserData> {
                 if (user_obj.getString("img_url").contains("http")) {
                     user_img = user_obj.getString("img_url");
                 } else {
-                    user_img = Statics.main_url + user_obj.getString("img_url");
+                    user_img = user_obj.getString("img_url");
                 }
                 comment = user_obj.getString("comment");
                 if (comment.equals("null"))
                     comment = "";
+
+                //fr_req
+                fr_status = obj.getString("fr_status");
 
                 userData = new UserData(user_id, user_name, age, gender, token, user_img, null);
                 userData.setComment(comment);
@@ -123,20 +129,7 @@ public class AccountTask extends AsyncTask<String, Void, UserData> {
         if (activityName == null) {
 
         } else if (activityName.equals("MainActivity")) {
-//            Picasso.get().load(userData.getImg_url())
-//                    .placeholder(R.drawable.icon_noprofile_circle)
-//                    .error(R.drawable.icon_noprofile_circle)
-//                    .transform(new CircleTransform())
-//                    .into(((MyFeedFragment) fragment).img_my);
-//            ((MyFeedFragment) fragment).txt_myName.setText(userData.getUser_name());
-//            ((MyFeedFragment) fragment).txt_comment.setText(userData.getComment());
 
-//            userData.setStatus(chatListHash.get(user_id).toString());
-//
-//            ((MyFeedFragment) fragment).mAdapter_cb.addItem(userData);
-//            ((MyFeedFragment) fragment).recyclerView_cb.setAdapter(((MyFeedFragment) fragment).mAdapter_cb);
-//
-//            ((MyFeedFragment) fragment).title_chatlist.setVisibility(View.VISIBLE);
         } else if (activityName.equals("ProfileActivity")) {
             if (seq == 0) {
                 ((ProfileActivity) mContext).title_topbar.setText(user_name + mContext.getResources().getString(R.string.whose_profile));
@@ -149,10 +142,9 @@ public class AccountTask extends AsyncTask<String, Void, UserData> {
 
                 ((ProfileActivity) mContext).txt_my_name.setText(user_name);
 
-                if (comment==null || comment.equals("null"))
+                if (comment == null || comment.equals("null"))
                     comment = "";
                 ((ProfileActivity) mContext).edit_comment.setText(comment);
-//            ((ProfileActivity) mContext).edit_comment.setEnabled(false);
 
                 if (user_id.equals(Statics.my_id)) {
                     if (comment.length() == 0) {
@@ -168,6 +160,28 @@ public class AccountTask extends AsyncTask<String, Void, UserData> {
             }
 
             ((ProfileActivity) mContext).seq++;
+
+            ((ProfileActivity) mContext).fr_status = fr_status;
+            ((ProfileActivity) mContext).btn_add_fr.setEnabled(false);
+            if (fr_status.equals("already_fr")) {
+                ((ProfileActivity) mContext).btn_add_fr.setText("친구");
+                ((ProfileActivity) mContext).btn_add_fr.setEnabled(false);
+            } else if (fr_status.equals("i_required")) {
+                ((ProfileActivity) mContext).btn_add_fr.setText("요청중");
+                ((ProfileActivity) mContext).btn_add_fr.setEnabled(false);
+            } else if (fr_status.equals("wait_accept")) {
+                ((ProfileActivity) mContext).explain_req_fr.setText(user_name + "님께서\n친구 요청중");
+                ((ProfileActivity) mContext).btn_add_fr.setText("수락");
+                ((ProfileActivity) mContext).btn_add_fr.setEnabled(true);
+            } else if (fr_status.equals("no_fr")) {
+                ((ProfileActivity) mContext).btn_add_fr.setText("+친구 추가");
+                ((ProfileActivity) mContext).btn_add_fr.setEnabled(true);
+            } else {
+                ((ProfileActivity) mContext).btn_add_fr.setVisibility(View.GONE);
+                ((ProfileActivity) mContext).btn_add_fr.setText("");
+                ((ProfileActivity) mContext).btn_add_fr.setEnabled(false);
+            }
+
         } else if (activityName.equals("ChatActivity")) {
             ((ChatActivity) mContext).toUserName = user_name;
             ((ChatActivity) mContext).toUserImg = user_img;

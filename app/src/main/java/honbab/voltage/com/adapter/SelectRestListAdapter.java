@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,11 +24,13 @@ import java.util.ArrayList;
 import honbab.voltage.com.data.RestData;
 import honbab.voltage.com.fragment.SelectFeedFragment;
 import honbab.voltage.com.task.SelectFeedListTask;
-import honbab.voltage.com.tete.GodTinderActivity;
+import honbab.voltage.com.tete.LoginActivity;
 import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.OneRestaurantActivity;
 import honbab.voltage.com.tete.R;
+import honbab.voltage.com.tete.Statics;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
+import honbab.voltage.com.widget.PickRestDialog;
 import okhttp3.OkHttpClient;
 
 public class SelectRestListAdapter extends RecyclerView.Adapter<SelectRestListAdapter.ViewHolder> {
@@ -163,18 +166,42 @@ public class SelectRestListAdapter extends RecyclerView.Adapter<SelectRestListAd
                 checkBox.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(mContext, GodTinderActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.putExtra("area_cd", ((SelectFeedFragment) fragment).area_cd);
-                        mContext.startActivity(intent);
+                        if (Integer.parseInt(Statics.my_id) < 1) {
+                            Intent intent = new Intent(mContext, LoginActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            mContext.startActivity(intent);
+                        } else {
+//                            Intent intent = new Intent(mContext, GodTinderActivity.class);
+//                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                            intent.putExtra("area_cd", ((SelectFeedFragment) fragment).area_cd);
+//                            mContext.startActivity(intent);
+
+                            PickRestDialog dialog = new PickRestDialog(mContext);
+//                            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+//                            lp.copyFrom(getWindow().getAttributes());
+//                            lp.copyFrom(((Activity) mContext).getWindow().getAttributes());
+//                            lp.copyFrom(((PickRestDialog) mContext).getWindow().getAttributes());
+//                            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+//                            lp.height = WindowManager.LayoutParams.MATCH_PARENT;
+                            dialog.callFunction(null);
+
+//                            mNamingDialog = new NamingDialog(MainActivity.this);
+//                            mNamingDialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+//                            mNamingDialog.show();
+//                            mNamingDialog.getWindow().getDecorView().setSystemUiVisibility(MainActivity.this.getWindow().getDecorView().getSystemUiVisibility());
+//                            mNamingDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+
+
+                        }
                     }
                 });
             }
         }
 
         public void setDateToView(RestData data, int position) throws Exception {
-//            Log.e("abc", "mSelectedItem = " + mSelectedItem);
+            Log.e("abc", "mSelectedItem = " + mSelectedItem);
 //            Log.e("abc", position + " , SELECTREST data.isChecked() = " + data.isChecked() + ", mSelectedItem = " + mSelectedItem);
 
 //            checkBox.setChecked(position == mSelectedItem);
@@ -185,9 +212,9 @@ public class SelectRestListAdapter extends RecyclerView.Adapter<SelectRestListAd
                     ((SelectFeedFragment) fragment).txt_explain_rest.setText(String.format(mContext.getResources().getString(R.string.explain_choose_rest), data.getRest_name()));
 
                     if (((SelectFeedFragment) fragment).feed_time.equals("")) {
-                        ((SelectFeedFragment) fragment).txt_explain_pick.setText("식사하고자 하는 시간을 선택하세요.");
+                        ((SelectFeedFragment) fragment).txt_explain_pick.setText(R.string.select_feed_time);
                     } else if (((SelectFeedFragment) fragment).feed_rest_id.equals("")) {
-                        ((SelectFeedFragment) fragment).txt_explain_pick.setText("가고 싶은 음식점을 선택해보세요.");
+                        ((SelectFeedFragment) fragment).txt_explain_pick.setText(R.string.select_feed_rest);
                     } else if (((SelectFeedFragment) fragment).to_id.equals("")) {
                         ((SelectFeedFragment) fragment).txt_explain_pick.setText("");
                     } else {

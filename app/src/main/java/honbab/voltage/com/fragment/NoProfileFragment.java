@@ -1,7 +1,9 @@
 package honbab.voltage.com.fragment;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +13,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import honbab.voltage.com.task.LoginByUidTask;
 import honbab.voltage.com.tete.JoinActivity;
@@ -20,10 +26,11 @@ import honbab.voltage.com.widget.OkHttpClientSingleton;
 import okhttp3.OkHttpClient;
 
 public class NoProfileFragment extends Fragment {
-
     private OkHttpClient httpClient;
+    private FirebaseAuth mAuth;
 
-    EditText edit_email, edit_password;
+    private EditText edit_email, edit_password;
+    private ProgressDialog progressDialog;
 
     public static NoProfileFragment newInstance(int val) {
         NoProfileFragment fragment = new NoProfileFragment();
@@ -40,6 +47,7 @@ public class NoProfileFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_noprofile, container, false);
 
         httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
+        mAuth = FirebaseAuth.getInstance();
 
         return rootView;
     }
@@ -60,6 +68,8 @@ public class NoProfileFragment extends Fragment {
 
         Button btn_go_login = (Button) getActivity().findViewById(R.id.btn_go_login);
         btn_go_login.setOnClickListener(mOnClickListener);
+
+        progressDialog = new ProgressDialog(getActivity());
     }
 
     @Override
@@ -89,7 +99,29 @@ public class NoProfileFragment extends Fragment {
                     } else {
 //                        new LoginTask(getActivity(), httpClient).execute(email, password);
                         //vvvvvvvvvvvvvvvvvv
-                        new LoginByUidTask(getActivity()).execute(email, FirebaseAuth.getInstance().getCurrentUser().getUid());
+//                        new LoginByUidTask(getActivity()).execute(email, FirebaseAuth.getInstance().getCurrentUser().getUid());
+                        progressDialog.setMessage("같이먹으러 가는 중...");
+                        progressDialog.show();
+
+                        mAuth.signInWithEmailAndPassword(email, password)
+                                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        if (task.isSuccessful()) {
+                                            // Sign in success, update UI with the signed-in user's information
+                                            progressDialog.dismiss();
+
+                                            FirebaseUser user = mAuth.getCurrentUser();
+//                                            updateUI(user);
+                                            new LoginByUidTask(getActivity()).execute(user.getEmail(), user.getUid());
+                                        } else {
+                                            progressDialog.dismiss();
+
+                                            Toast.makeText(getActivity(), "이메일과 비밀번호를 다시 확인하세요.", Toast.LENGTH_SHORT).show();
+                                        }
+
+                                    }
+                                });
                     }
 
                     break;

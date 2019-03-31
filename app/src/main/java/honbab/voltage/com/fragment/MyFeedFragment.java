@@ -35,6 +35,7 @@ import honbab.voltage.com.adapter.MyFeedListAdapter;
 import honbab.voltage.com.data.UserData;
 import honbab.voltage.com.task.AccountTask;
 import honbab.voltage.com.task.MyFeedListTask;
+import honbab.voltage.com.tete.BabFriendsActivity;
 import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.ProfileActivity;
 import honbab.voltage.com.tete.R;
@@ -55,7 +56,7 @@ public class MyFeedFragment extends Fragment {
     //마이프로필
     public View line_timeline_vertical;
     public ImageView img_my;
-    public TextView txt_myName, txt_comment, btn_go_my_profile;
+    public TextView txt_myName, txt_comment, btn_go_babfrlist, btn_go_my_profile;
     //마이피드
     public SwipeRefreshLayout swipeContainer_myfeed;
     public SwipeRefreshLayout swipeContainer;
@@ -64,9 +65,6 @@ public class MyFeedFragment extends Fragment {
     //스케쥴없음
     public LinearLayout layout_no_my_schedule;
     public Button btn_go_rest_like;
-
-//    public ArrayList<FeedData> feedList = new ArrayList<>();
-    private String my_id = Statics.my_id;
 
     public static MyFeedFragment newInstance(int val) {
         MyFeedFragment fragment = new MyFeedFragment();
@@ -84,8 +82,8 @@ public class MyFeedFragment extends Fragment {
 
         httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
 
-        if (my_id == null)
-            my_id = "-1";
+//        if (my_id == null)
+//            my_id = "-1";
     }
 
     @Override
@@ -106,7 +104,9 @@ public class MyFeedFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        new MyFeedListTask(getActivity()).execute();
+        Log.e("abc", "Statics.my_id.length = " + Statics.my_id.length());
+        if (Statics.my_id != null || Statics.my_id.length() > 0)
+            new MyFeedListTask(getActivity()).execute();
 //        try {
 //            UserData myData = new AccountTask(getActivity(), httpClient, 0).execute(my_id).get();
 //
@@ -140,9 +140,11 @@ public class MyFeedFragment extends Fragment {
         img_my = (ImageView) getActivity().findViewById(R.id.img_my);
         txt_myName = (TextView) getActivity().findViewById(R.id.txt_myName);
         txt_comment = (TextView) getActivity().findViewById(R.id.txt_comment);
+        btn_go_babfrlist = (TextView) getActivity().findViewById(R.id.btn_go_babfrlist);
         btn_go_my_profile = (TextView) getActivity().findViewById(R.id.btn_go_my_profile);
         line_timeline_vertical = (View) getActivity().findViewById(R.id.line_timeline_vertical);
         img_my.setOnClickListener(mOnClickListener);
+        btn_go_babfrlist.setOnClickListener(mOnClickListener);
         btn_go_my_profile.setOnClickListener(mOnClickListener);
 
         swipeContainer_myfeed = (SwipeRefreshLayout) getActivity().findViewById(R.id.swipeContainer_myfeed);
@@ -177,6 +179,13 @@ public class MyFeedFragment extends Fragment {
                     intent3.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent3.putExtra("user_id", Statics.my_id);
                     startActivity(intent3);
+
+                    break;
+                case R.id.btn_go_babfrlist:
+                    Intent intent = new Intent(getActivity(), BabFriendsActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                    intent2.putExtra("user_id", Statics.my_id);
+                    startActivity(intent);
 
                     break;
                 case R.id.btn_go_my_profile:

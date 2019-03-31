@@ -1,6 +1,8 @@
 package honbab.voltage.com.fragment;
 
 import android.Manifest;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -9,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,7 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
@@ -31,6 +34,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
@@ -43,7 +47,11 @@ import honbab.voltage.com.data.SelectDateData;
 import honbab.voltage.com.task.AreaRestTask;
 import honbab.voltage.com.task.ReservFeedTask;
 import honbab.voltage.com.task.SelectFeedListTask;
+import honbab.voltage.com.tete.JoinActivity;
+import honbab.voltage.com.tete.JoinActivity2;
+import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.R;
+import honbab.voltage.com.tete.Statics;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
 import honbab.voltage.com.widget.SpacesItemDecoration;
 import okhttp3.OkHttpClient;
@@ -62,7 +70,7 @@ public class SelectFeedFragment extends Fragment implements LocationListener,
     public Spinner spinner;
     public SpinnerAdapter spinnerAdapter;
     public TextView txt_explain_pick;
-    public TextView txt_explain_rest, txt_explain_reserv;
+    public TextView txt_explain_time, txt_explain_rest, txt_explain_reserv;
     public SlidingUpPanelLayout layout_slidingPanel;
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationClient;
@@ -120,9 +128,10 @@ public class SelectFeedFragment extends Fragment implements LocationListener,
     public void onResume() {
         super.onResume();
 
-        Log.e("abc", "longitude = " + longitude);
+//        Log.e("abc", "longitude = " + longitude);
 //        if (longitude == 0) {
-//            new SelectFeedListTask(getActivity()).execute(feed_time, area_cd, feed_rest_id, "");
+//            new AreaRestTask(getActivity()).execute();
+////            new SelectFeedListTask(getActivity()).execute(feed_time, area_cd, feed_rest_id, "");
 //        }
 
 //        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -162,11 +171,6 @@ public class SelectFeedFragment extends Fragment implements LocationListener,
     }
 
     private void initControls() {
-        final int first_spinner = 0;
-        final int[] first_spinner_counter = {0};
-
-        Log.e("abc", "initControls = ");
-
         spinner = (Spinner) getActivity().findViewById(R.id.spinner_location);
         spinnerAdapter = new ArrayAdapter(getActivity(), R.layout.item_row_spinner, areaNameList);
         spinner.setAdapter(spinnerAdapter);
@@ -304,7 +308,7 @@ public class SelectFeedFragment extends Fragment implements LocationListener,
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager layoutManager2 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 3);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
 
         txt_date = (TextView) getActivity().findViewById(R.id.txt_date);
 
@@ -332,10 +336,15 @@ public class SelectFeedFragment extends Fragment implements LocationListener,
         recyclerView_user.setLayoutManager(gridLayoutManager);
         mAdapter_user = new SelectUserListAdapter();
         recyclerView_user.setAdapter(mAdapter_user);
+        while (recyclerView_user.getItemDecorationCount() > 0) {
+            recyclerView_user.removeItemDecorationAt(0);
+        }
+        recyclerView_user.addItemDecoration(new SpacesItemDecoration(26));
 
         txt_explain_pick = (TextView) getActivity().findViewById(R.id.txt_explain_pick);
 
         //sliding Up Panel
+        txt_explain_time = (TextView) getActivity().findViewById(R.id.txt_explain_time);
         txt_explain_rest = (TextView) getActivity().findViewById(R.id.txt_explain_rest);
         txt_explain_reserv = (TextView) getActivity().findViewById(R.id.txt_explain_reserv);
 
@@ -361,7 +370,7 @@ public class SelectFeedFragment extends Fragment implements LocationListener,
             }
         });
 
-        Button btn_reserv = (Button) getActivity().findViewById(R.id.btn_reserv);
+        ImageButton btn_reserv = (ImageButton) getActivity().findViewById(R.id.btn_reserv);
         btn_reserv.setOnClickListener(mOnClickListener);
 
         //현재 위치 찾기
@@ -377,15 +386,67 @@ public class SelectFeedFragment extends Fragment implements LocationListener,
             switch (view.getId()) {
                 case R.id.btn_reserv:
 
-                    if (feed_time.equals("")) {
+                    if (Statics.my_id == null || Statics.my_username == null || Statics.my_username.equals("null") || Integer.parseInt(Statics.my_id) < 1) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setMessage("로그인을 해야 같이먹기가 가능합니다.");
+                        builder.setPositiveButton(R.string.go_to_login,
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        ((MainActivity) getActivity()).viewPager.setCurrentItem(1);
+//                                            Intent intent = new Intent(getActivity(), LoginActivity.class);
+//                                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                                            startActivity(intent);
+//                                            getActivity().finish();
+                                    }
+                                });
+                        builder.setNegativeButton(R.string.join,
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        Intent intent = new Intent(getActivity(), JoinActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        startActivity(intent);
+//                                        getActivity().finish();
+                                    }
+                                });
+//                        AlertDialog alert = builder.create();
+                        builder.show();
+//                        Button nbutton = alert.getButton(DialogInterface.BUTTON_NEGATIVE);
+//                        nbutton.setBackgroundResource(R.color.black);
+                    }
+                    else if (feed_time.equals("")) {
                         Toast.makeText(getActivity(), "가능한 식사시간을 선택해주세요.", Toast.LENGTH_SHORT).show();
                     } else if (feed_rest_id.equals("")) {
                         Toast.makeText(getActivity(), "음식점을 선택해주세요.", Toast.LENGTH_SHORT).show();
                     } else if (to_id.equals("")) {
                         Toast.makeText(getActivity(), "같이 식사하실 분을 선택해주세요.", Toast.LENGTH_SHORT).show();
                     } else {
-                        layout_slidingPanel.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
-                        new ReservFeedTask(getActivity()).execute(to_id, feed_rest_id, feed_time);
+//                        if (Statics.my_id == null || Statics.my_username == null || Statics.my_username.equals("null") || Integer.parseInt(Statics.my_id) < 1) {
+//                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//                            builder.setMessage("로그인을 하셔야 같이먹기가 가능합니다.");
+//                            builder.setPositiveButton(R.string.go_to_login,
+//                                    new DialogInterface.OnClickListener() {
+//                                        public void onClick(DialogInterface dialog, int which) {
+//                                            ((MainActivity) getActivity()).viewPager.setCurrentItem(1);
+////                                            Intent intent = new Intent(getActivity(), LoginActivity.class);
+////                                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+////                                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+////                                            startActivity(intent);
+////                                            getActivity().finish();
+//                                        }
+//                                    });
+//                            builder.show();
+//                        } else
+                            if (FirebaseAuth.getInstance().getCurrentUser() == null || Statics.my_gender == null) {
+                            Intent intent = new Intent(getActivity(), JoinActivity2.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+                            getActivity().finish();
+                        } else {
+                            layout_slidingPanel.setPanelState(SlidingUpPanelLayout.PanelState.HIDDEN);
+                            new ReservFeedTask(getActivity()).execute(to_id, feed_rest_id, feed_time);
+                        }
                     }
 
                     break;
@@ -422,31 +483,6 @@ public class SelectFeedFragment extends Fragment implements LocationListener,
 //            }
 //        }
 //    };
-
-//    public void alertShow(final Activity mActivity) {
-//        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-////        builder.setTitle("AlertDialog Title");
-//        builder.setMessage(R.string.already_reserved_godmuk);
-//        builder.setPositiveButton(R.string.yes,
-//                new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int which) {
-////                        Intent intent = new Intent(getActivity(), MyFeedListActivity.class);
-//                        Intent intent = new Intent(getActivity(), mActivity.getClass());
-//                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                        getActivity().startActivity(intent);
-//                    }
-//                });
-//        builder.setNegativeButton(R.string.reserve_new_godmuk,
-//                new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        Toast.makeText(getActivity().getApplicationContext(), R.string.make_new_godmuk, Toast.LENGTH_LONG).show();
-//                        Intent intent = new Intent(getActivity(), ReservActivity.class);
-//                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                        getActivity().startActivity(intent);
-//                    }
-//                });
-//        builder.show();
-//    }
 
     @Override
     public void onLocationChanged(Location location) {

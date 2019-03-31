@@ -2,7 +2,6 @@ package honbab.voltage.com.tete;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -65,8 +64,10 @@ public class GodTinderActivity extends AppCompatActivity {
         cardStackView.setLayoutManager(manager);
         cardStackView.setAdapter(adapter);
 
-        FloatingActionButton skip_button = (FloatingActionButton) findViewById(R.id.skip_button);
-        FloatingActionButton like_button = (FloatingActionButton) findViewById(R.id.like_button);
+//        FloatingActionButton skip_button = (FloatingActionButton) findViewById(R.id.skip_button);
+        TextView skip_button = (TextView) findViewById(R.id.skip_button);
+//        FloatingActionButton like_button = (FloatingActionButton) findViewById(R.id.like_button);
+        TextView like_button = (TextView) findViewById(R.id.like_button);
         skip_button.setOnClickListener(mOnClickListener);
         like_button.setOnClickListener(mOnClickListener);
 

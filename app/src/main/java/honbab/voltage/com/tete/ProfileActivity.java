@@ -1,5 +1,6 @@
 package honbab.voltage.com.tete;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -8,9 +9,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -31,6 +35,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import honbab.voltage.com.task.AccountTask;
+import honbab.voltage.com.task.AddFrTask;
 import honbab.voltage.com.task.EditCommentTask;
 import honbab.voltage.com.utils.BitmapUtil;
 import honbab.voltage.com.utils.ButtonUtil;
@@ -45,14 +50,14 @@ public class ProfileActivity extends AppCompatActivity {
     private RequestQueue mQueue;
 
     private ProgressBar progress_upload;
-    public TextView title_topbar;
+    public TextView title_topbar, txt_my_name, explain_req_fr;
     public ImageView img_origin, img_user, icon_camera;
-    public TextView txt_my_name;
     public EditText edit_comment;
-    public Button btn_edit_comment;
+    public Button btn_edit_comment, btn_add_fr;
 
     public int seq = 0;
     private String user_id;
+    public String fr_status = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,17 +77,41 @@ public class ProfileActivity extends AppCompatActivity {
         progress_upload.setVisibility(View.GONE);
 
         title_topbar = (TextView) findViewById(R.id.title_topbar);
-        ImageView img_setting = (ImageView) findViewById(R.id.img_setting);
         img_origin = (ImageView) findViewById(R.id.img_origin);
         img_user = (ImageView) findViewById(R.id.img_user);
-        icon_camera = (ImageView) findViewById(R.id.icon_camera);
         txt_my_name = (TextView) findViewById(R.id.txt_my_name);
+        // when MY PROFILE
+        ImageView img_setting = (ImageView) findViewById(R.id.img_setting);
+        icon_camera = (ImageView) findViewById(R.id.icon_camera);
+        // when NOT MY PROFILE
+        explain_req_fr = (TextView) findViewById(R.id.explain_req_fr);
+        btn_add_fr = (Button) findViewById(R.id.btn_add_fr);
 
         img_user.setOnClickListener(mOnClickListener);
         img_setting.setOnClickListener(mOnClickListener);
+        btn_add_fr.setOnClickListener(mOnClickListener);
 
         edit_comment = (EditText) findViewById(R.id.edit_comment);
         edit_comment.setEnabled(false);
+        edit_comment.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                if (s.length() > 35) {
+                    Toast.makeText(ProfileActivity.this, "35자 이내로 작성해주세요.", Toast.LENGTH_SHORT).show();
+//                    edit_comment.setText(s.subSequence(0, 35));
+                }
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         btn_edit_comment = (Button) findViewById(R.id.btn_edit_comment);
         btn_edit_comment.setOnClickListener(mOnClickListener);
 
@@ -90,9 +119,11 @@ public class ProfileActivity extends AppCompatActivity {
         if (user_id.equals(Statics.my_id)) {
             img_setting.setVisibility(View.VISIBLE);
             icon_camera.setVisibility(View.VISIBLE);
+            btn_add_fr.setVisibility(View.GONE);
         } else {
             img_setting.setVisibility(View.GONE);
             icon_camera.setVisibility(View.GONE);
+            btn_add_fr.setVisibility(View.VISIBLE);
             btn_edit_comment.setVisibility(View.GONE);
         }
 
@@ -124,20 +155,36 @@ public class ProfileActivity extends AppCompatActivity {
 
                     break;
                 case R.id.btn_edit_comment:
-                    if (bool_edityn) {
-                        String comment = edit_comment.getText().toString();
-                        //수정중
-                        bool_edityn = false;
-                        edit_comment.setEnabled(false);
-//                        edit_comment.setSelection(comment.length());
-                        edit_comment.setTextColor(getResources().getColor(R.color.grey));
-                        edit_comment.setBackgroundResource(R.drawable.border_round_gr1);
-                        btn_edit_comment.setText(R.string.edit);
+                    String comment = edit_comment.getText().toString();
+                    Log.e("abc", "상태 = " + bool_edityn);
 
-                        new EditCommentTask(ProfileActivity.this, httpClient, comment, seq).execute();
+                    if (bool_edityn) {
+                        //편집 -> 저장
+
+
+                        if (comment.length() > 35)
+                            Toast.makeText(ProfileActivity.this, "저장되지 않았습니다. 35자 이내로 내 소개를 작성해주세요.", Toast.LENGTH_SHORT).show();
+                        else {
+                            //수정중
+                            bool_edityn = false;
+                            edit_comment.setEnabled(false);
+//                        edit_comment.setSelection(comment.length());
+                            edit_comment.setTextColor(getResources().getColor(R.color.grey));
+                            edit_comment.setBackgroundResource(R.drawable.border_round_gr1);
+                            btn_edit_comment.setText(R.string.edit);
+
+                            new EditCommentTask(ProfileActivity.this, httpClient, comment, seq).execute();
+                        }
                     } else {
                         //default only showing
-                        String comment = edit_comment.getText().toString();
+                        //저장 -> 편집
+//                        String comment = edit_comment.getText().toString();
+                        edit_comment.setFocusable(true);
+//                        edit_comment.requestFocus();
+//                        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+                        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.showSoftInput(edit_comment, InputMethodManager.SHOW_IMPLICIT);
+//                        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
 
                         bool_edityn = true;
                         edit_comment.setEnabled(true);
@@ -146,7 +193,8 @@ public class ProfileActivity extends AppCompatActivity {
                         edit_comment.setBackgroundResource(R.drawable.border_round_bk1);
                         btn_edit_comment.setText(R.string.save);
 
-                        new EditCommentTask(ProfileActivity.this, httpClient, comment, seq).execute();
+
+//                            new EditCommentTask(ProfileActivity.this, httpClient, comment, seq).execute();
                     }
 
                     break;
@@ -154,6 +202,17 @@ public class ProfileActivity extends AppCompatActivity {
                     Intent intent2 = new Intent(getApplicationContext(), SettingActivity.class);
                     intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent2);
+
+                    break;
+                case R.id.btn_add_fr:
+                    if (fr_status.equals("wait_accept")) {
+                        btn_add_fr.setText("친구");
+                    } else {
+                        btn_add_fr.setText("요청중");
+                    }
+                    btn_add_fr.setEnabled(false);
+
+                    new AddFrTask(ProfileActivity.this).execute(user_id);
 
                     break;
             }

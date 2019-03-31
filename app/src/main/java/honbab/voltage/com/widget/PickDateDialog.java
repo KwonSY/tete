@@ -7,6 +7,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
@@ -45,12 +46,28 @@ public class PickDateDialog {
         recyclerView.setLayoutManager(layoutManager);
         mAdapter = new DialogDateListAdapter(mContext, dateLikeList);
         recyclerView.setAdapter(mAdapter);
+        while (recyclerView.getItemDecorationCount() > 0) {
+            recyclerView.removeItemDecorationAt(0);
+        }
         recyclerView.addItemDecoration(new SpacesItemDecoration(18));
 
-        final ImageView btn_cancle = (ImageView) dlg.findViewById(R.id.btn_cancle);
+        ImageView btn_cancle = (ImageView) dlg.findViewById(R.id.btn_cancle);
         btn_cancle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                new SelectFeedListTask(mContext).execute(((SelectFeedFragment) fragment).feed_time,
+                        ((SelectFeedFragment) fragment).area_cd,
+                        ((SelectFeedFragment) fragment).feed_rest_id,
+                        "");
+
+                dlg.dismiss();
+            }
+        });
+
+        Button btn_go_return = (Button) dlg.findViewById(R.id.btn_go_return);
+        btn_go_return.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 new SelectFeedListTask(mContext).execute(((SelectFeedFragment) fragment).feed_time,
                         ((SelectFeedFragment) fragment).area_cd,
                         ((SelectFeedFragment) fragment).feed_rest_id,

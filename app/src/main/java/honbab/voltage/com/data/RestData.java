@@ -13,7 +13,7 @@ public class RestData implements Parcelable {
     private double latitude, longtitue;
     private String like_yn;
     private boolean checked = false;
-    private int position;
+    private int position = -1;
 
     public RestData() {
         this.rest_id = null;

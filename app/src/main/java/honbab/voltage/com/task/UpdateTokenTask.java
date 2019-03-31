@@ -30,6 +30,7 @@ public class UpdateTokenTask extends AsyncTask<String, Void, Void> {
 
     @Override
     protected Void doInBackground(String... params) {
+        Log.e("abc", "UpdateTokenTask params[0] = " + params[0]);
         FormBody body = new FormBody.Builder()
                 .add("opt", "update_token")
                 .add("my_id", Statics.my_id)

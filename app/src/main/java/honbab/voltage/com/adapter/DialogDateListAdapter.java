@@ -4,18 +4,20 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import honbab.voltage.com.data.SelectDateData;
@@ -34,6 +36,9 @@ public class DialogDateListAdapter extends RecyclerView.Adapter<DialogDateListAd
 //    int TYPE_END = 2;
 
     private Fragment fragment;
+    Calendar curCal;
+    Date curDate;
+    Date d_time;
 
     public ArrayList<SelectDateData> listViewItemList = new ArrayList<>();
 
@@ -47,6 +52,9 @@ public class DialogDateListAdapter extends RecyclerView.Adapter<DialogDateListAd
         this.listViewItemList = listViewItemList;
 
         fragment = ((MainActivity) mContext).getSupportFragmentManager().findFragmentByTag("page:0");
+
+        curCal = Calendar.getInstance();
+        curDate = curCal.getTime();
     }
 
     @NonNull
@@ -82,11 +90,14 @@ public class DialogDateListAdapter extends RecyclerView.Adapter<DialogDateListAd
 
     @Override
     public int getItemCount() {
+        if (listViewItemList.size() > 10)
+            return 10;
+
         return listViewItemList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public RelativeLayout layout_card;
+        public CardView layout_card;
         public CheckBox checkBox;
         public TextView txt_date, txt_time, cnt_users;
 
@@ -105,8 +116,9 @@ public class DialogDateListAdapter extends RecyclerView.Adapter<DialogDateListAd
             try {
                 SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
                 SimpleDateFormat formatter2 = new SimpleDateFormat("M월 d일");
-                Date date = formatter1.parse(data.getTime());
-                String str_feed_time = formatter2.format(date);
+//                Date date = formatter1.parse(data.getTime());
+                d_time = formatter1.parse(data.getTime());
+                String str_feed_time = formatter2.format(d_time);
 
                 txt_date.setText(str_feed_time);
             } catch (ParseException e) {
@@ -123,34 +135,72 @@ public class DialogDateListAdapter extends RecyclerView.Adapter<DialogDateListAd
             if (data.getCnt() > 0)
                 cnt_users.setText(String.format(mContext.getResources().getString(R.string.enable_cnt_feedee), String.valueOf(data.getCnt())));
 
+            if(d_time.before(curDate)) {
+                checkBox.setEnabled(false);
+//                checkBox.setChecked(true);
+                layout_card.setBackgroundResource(R.drawable.border_round_drgr9);
+                layout_card.setVisibility(View.INVISIBLE);
+            }
+
 
             if (data.getStatus().equals("y")) {
                 checkBox.setChecked(true);
 //                cnt_users.setText("예약완료");
             } else if (data.getStatus().equals("p")) {
                 checkBox.setEnabled(false);
+                checkBox.setChecked(true);
                 cnt_users.setText("수락대기중");
             } else if (data.getStatus().equals("a")) {
                 checkBox.setEnabled(false);
+                checkBox.setChecked(true);
                 cnt_users.setText("예약완료");
-            } else
+            } else {
+                //n
                 checkBox.setChecked(false);
+            }
+
+            layout_card.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (data.getStatus().equals("n")) {
+                        // n -> y
+                        checkBox.setChecked(true);
+                        data.setStatus("y");
+
+                        new PickDateTask(mContext).execute(data.getTime());
+                    } else if (data.getStatus().equals("y")) {
+                        // y -> n
+                        checkBox.setChecked(false);
+                        data.setStatus("n");
+
+                        new PickDateTask(mContext).execute(data.getTime());
+                    } else {
+                        //a
+                        Toast.makeText(mContext, "이미 진행한 일정입니다.", Toast.LENGTH_SHORT).show();
+                    }
+
+
+                }
+            });
 
             checkBox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Log.e("abc", "checkBox = " +data.getStatus());
                     if (data.getStatus().equals("n")) {
                         checkBox.setChecked(true);
                         data.setStatus("y");
+
+                        new PickDateTask(mContext).execute(data.getTime());
                     } else if (data.getStatus().equals("y")) {
                         checkBox.setChecked(false);
                         data.setStatus("n");
+
+                        new PickDateTask(mContext).execute(data.getTime());
                     } else {
                         //a
-                        Toast.makeText(mContext, "이미 식사 일정이 잡혀있습니다.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "이미 진행한 일정입니다.", Toast.LENGTH_SHORT).show();
                     }
-
-                    new PickDateTask(mContext).execute(data.getTime());
                 }
             });
         }

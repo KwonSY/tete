@@ -28,7 +28,6 @@ import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.github.arturogutierrez.Badges;
 import com.github.arturogutierrez.BadgesNotSupportedException;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -73,9 +72,13 @@ public class MainActivity extends AppCompatActivity {
 
         session = new SessionManager(getApplicationContext());
         HashMap<String, String> user = session.getUserDetails();
-        Statics.my_id = user.get("my_id");
+        if (user.get("my_id") == null || user.get("my_id").equals(null))
+            Statics.my_id = "-1";
+        else
+            Statics.my_id = user.get("my_id");
         Statics.my_username = user.get("my_username");
         Statics.my_gender = user.get("my_gender");
+        Log.e("abc", "my_id = " + Statics.my_id);
 
         //Wifi check
 //        if (!NetworkUtil.isNetworkPresent(this)) {
@@ -106,20 +109,20 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             } else {
 
-                if (Statics.my_id == null || Statics.my_username == null || Statics.my_username.equals("null")) {
-                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    finish();
-                } else if (FirebaseAuth.getInstance().getCurrentUser() == null || Statics.my_gender == null) {
-                    Intent intent = new Intent(MainActivity.this, JoinActivity2.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    finish();
-                } else {
+//                if (Statics.my_id == null || Statics.my_username == null || Statics.my_username.equals("null")) {
+//                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                    startActivity(intent);
+//                    finish();
+//                } else if (FirebaseAuth.getInstance().getCurrentUser() == null || Statics.my_gender == null) {
+//                    Intent intent = new Intent(MainActivity.this, JoinActivity2.class);
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                    startActivity(intent);
+//                    finish();
+//                } else {
                     Intent intent = getIntent();
                     tab_position = intent.getIntExtra("position", 0);
-                }
+//                }
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     // Create channel to show notifications.

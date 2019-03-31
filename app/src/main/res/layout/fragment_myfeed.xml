@@ -10,8 +10,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
 
         <View
             android:id="@+id/line_timeline_vertical"
@@ -50,9 +50,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
-                    android:text="프로필 읽어오는 중..."
+                    android:text="프로필 로딩중.."
                     android:textSize="20sp"
                     android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/btn_go_babfrlist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@id/txt_myName"
+                    android:layout_marginLeft="17dp"
+                    android:layout_toRightOf="@id/txt_myName"
+                    android:textSize="12sp"
+                    android:text="친구 0" />
 
                 <TextView
                     android:id="@+id/txt_comment"
@@ -73,9 +83,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignBaseline="@id/txt_myName"
-                    android:text="정보수정"
                     android:layout_alignParentRight="true"
-                    android:textSize="12sp"/>
+                    android:text="수정"
+                    android:textSize="12sp" />
             </RelativeLayout>
         </RelativeLayout>
 
@@ -157,8 +167,8 @@
             android:id="@+id/recyclerView_chat_before"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/title_chatlist"
             android:background="@color/white"
-            android:paddingTop="5dp"
-            android:layout_below="@id/title_chatlist" />
+            android:paddingTop="5dp" />
     </LinearLayout>
 </LinearLayout>

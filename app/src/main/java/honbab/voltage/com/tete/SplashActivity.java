@@ -55,6 +55,10 @@ public class SplashActivity extends AppCompatActivity {
             permissionsNeeded.add("READ_EXTERNAL_STORAGE");
         if (!addPermission(permissionsList, android.Manifest.permission.ACCESS_FINE_LOCATION))
             permissionsNeeded.add("ACCESS_FINE_LOCATION");
+//        if (!addPermission(permissionsList, android.Manifest.permission.READ_CONTACTS))
+//            permissionsNeeded.add("READ_PHONE_STATE");
+//        if (!addPermission(permissionsList, Manifest.permission.WRITE_CONTACTS))
+//            permissionsNeeded.add("WRITE_CONTACTS");
 
         if (permissionsList.size() > 0) {
             if (permissionsNeeded.size() > 0) {

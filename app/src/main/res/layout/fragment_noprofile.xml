@@ -28,7 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
-            android:hint="hong@voltage.com"
+            android:hint="email@200volt.com"
             android:inputType="textEmailAddress"
             android:textSize="14sp" />
 

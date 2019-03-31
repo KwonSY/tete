@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 
+import honbab.voltage.com.fragment.SelectFeedFragment;
 import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.tete.Statics;
@@ -35,12 +36,12 @@ public class PickDateTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... params) {
+        String feed_time = params[0];
 //        datetime = params[1];
         Log.e("abc", "PickDateTask datetime = " + params[0]);
         FormBody body = new FormBody.Builder()
                 .add("opt", "pick_date")
                 .add("my_id", Statics.my_id)
-//                .add("rest_ids", params[0])
                 .add("datetime", params[0])
                 .build();
 
@@ -55,7 +56,8 @@ public class PickDateTask extends AsyncTask<String, Void, String> {
                 JSONObject obj = new JSONObject(bodyStr);
 
                 result = obj.getString("result");
-                status = obj.getString("status");
+                if (result.equals("0"))
+                    status = obj.getString("status");
             } else {
                 Log.d("abc", "Error : " + response.code() + ", " + response.message());
             }
@@ -64,12 +66,12 @@ public class PickDateTask extends AsyncTask<String, Void, String> {
             e.printStackTrace();
         }
 
-        return result;
+        return feed_time;
     }
 
     @Override
-    protected void onPostExecute(String result) {
-        super.onPostExecute(result);
+    protected void onPostExecute(String feed_time) {
+        super.onPostExecute(feed_time);
 
         String activityName = mContext.getClass().getSimpleName();
         if (activityName.equals("MainActivity")) {
@@ -90,6 +92,13 @@ public class PickDateTask extends AsyncTask<String, Void, String> {
 //                    ((SelectFeedFragment) fragment).mAdapter_date.updateData(myNewData);  //update adapter's data
 //                    ((SelectFeedFragment) fragment).mAdapter_date.notifyDataSetChanged(); //notifies any View reflecting data to refresh
 //                }
+
+//                ((SelectFeedFragment) fragment).feed_time = feed_time;
+
+                new SelectFeedListTask(mContext).execute(((SelectFeedFragment) fragment).feed_time,
+                        ((SelectFeedFragment) fragment).area_cd,
+                        ((SelectFeedFragment) fragment).feed_rest_id,
+                        "");//readBelowRest
             } else if (result.equals("1")) {
                 Toast.makeText(mContext, R.string.cannot_reserve_past, Toast.LENGTH_SHORT).show();
             } else {

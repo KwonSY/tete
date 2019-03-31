@@ -139,7 +139,7 @@
                         android:layout_height="wrap_content"
                         android:background="@drawable/underbar_or_3"
                         android:padding="6dp"
-                        android:text="신청자"
+                        android:text="식사 가능하신 분"
                         android:textColor="@color/black"
                         android:textSize="14sp"
                         android:textStyle="bold" />

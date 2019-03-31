@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import honbab.voltage.com.data.RestData;
 import honbab.voltage.com.data.UserData;
 import honbab.voltage.com.tete.ChatActivity;
+import honbab.voltage.com.tete.ProfileActivity;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.tete.Statics;
 import honbab.voltage.com.widget.CircleTransform;
@@ -106,6 +107,18 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ViewHo
                     intent.putExtra("toToken", data.getToken());
                     intent.putExtra("restData", new RestData());
                     mContext.startActivity(intent);
+                }
+            });
+            img_user.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    Intent intent = new Intent(mContext, ProfileActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("user_id", data.getUser_id());
+                    mContext.startActivity(intent);
+
+                    return false;
                 }
             });
         }

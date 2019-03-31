@@ -82,6 +82,7 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity android:name="AfterEatingActivity" />
+        <activity android:name=".BabFriendsActivity" />
         <activity
             android:name=".ChangePswActivity"
             android:windowSoftInputMode="adjustResize" />
@@ -110,7 +111,8 @@
         <activity android:name=".OneImageActivity" />
         <activity android:name=".OneRestaurantActivity" />
 
-        <activity android:name=".ProfileActivity" />
+        <activity android:name=".ProfileActivity"
+            android:windowSoftInputMode="stateHidden"/>
         <activity android:name=".SettingActivity" />
 
         <activity android:name=".GodTinderActivity" />

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 import honbab.voltage.com.data.UserData;
 import honbab.voltage.com.fragment.SelectFeedFragment;
+import honbab.voltage.com.tete.LoginActivity;
 import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.ProfileActivity;
 import honbab.voltage.com.tete.R;
@@ -73,7 +74,7 @@ public class SelectUserListAdapter extends RecyclerView.Adapter<SelectUserListAd
     public class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView img_user;
         public TextView txt_userName;
-        public TextView icon_me;
+        public TextView icon_me, txt_comment;
 
         public ViewHolder(View itemView, int viewType) {
             super(itemView);
@@ -81,6 +82,7 @@ public class SelectUserListAdapter extends RecyclerView.Adapter<SelectUserListAd
             img_user = itemView.findViewById(R.id.img_user);
             txt_userName = itemView.findViewById(R.id.txt_userName);
             icon_me = itemView.findViewById(R.id.icon_me);
+            txt_comment = itemView.findViewById(R.id.txt_comment);
         }
 
         public void bindToPost(final UserData data) {
@@ -112,15 +114,24 @@ public class SelectUserListAdapter extends RecyclerView.Adapter<SelectUserListAd
                 img_user.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        Intent intent = new Intent(mContext, ProfileActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        intent.putExtra("user_id", data.getUser_id());
-                        mContext.startActivity(intent);
+                        if (Integer.parseInt(Statics.my_id) < 1) {
+                            Intent intent = new Intent(mContext, LoginActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            mContext.startActivity(intent);
+                        } else {
+                            Intent intent = new Intent(mContext, ProfileActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            intent.putExtra("user_id", data.getUser_id());
+                            mContext.startActivity(intent);
+                        }
 
                         return false;
                     }
                 });
             }
+
+            txt_comment.setText(data.getComment());
         }
     }
 

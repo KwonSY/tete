@@ -67,6 +67,18 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/btn_go_babfrs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="밥친구 리스트"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <Button
@@ -112,7 +124,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:orientation="horizontal">
 
                 <TextView
@@ -143,8 +154,5 @@
                 android:gravity="center"
                 android:text="v1.0" />
         </LinearLayout>
-
     </RelativeLayout>
-
-
 </RelativeLayout>

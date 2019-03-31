@@ -10,8 +10,8 @@ android {
         applicationId "honbab.voltage.com.tete"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 33
-        versionName "1.0.24"
+        versionCode 38
+        versionName "1.0.29"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -95,6 +95,9 @@ dependencies {
     //ByteStreams
     implementation 'com.google.guava:guava:18.0'
 
+    //CalendarView
+    implementation 'com.github.prolificinteractive:material-calendarview:1.4.3'
+
     //circle imageview
     implementation 'de.hdodenhof:circleimageview:2.2.0'
 
@@ -125,6 +128,9 @@ dependencies {
 
     //Sliding Up Pannel
     implementation 'com.sothree.slidinguppanel:library:3.4.0'
+
+    //segmented-control
+    implementation 'info.hoang8f:android-segmented:1.0.6'
 
     //tinder
     implementation 'com.makeramen:roundedimageview:2.3.0'

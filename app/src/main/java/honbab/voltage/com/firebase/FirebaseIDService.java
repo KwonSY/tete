@@ -22,8 +22,9 @@ public class FirebaseIDService extends FirebaseInstanceIdService {
     }
 
     private void sendRegistrationToServer(String token) {
+        Log.e("abc", "tokan = " + token);
         // Add custom implementation, as needed.
         if (Statics.my_id != null)
-        new UpdateTokenTask(getApplicationContext()).execute(token);
+            new UpdateTokenTask(getApplicationContext()).execute(token);
     }
 }

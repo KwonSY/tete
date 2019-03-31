@@ -66,7 +66,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginRight="36dp"
             android:background="@drawable/btn_circle_bk1"
-            android:text="평가완료" />
+            android:text="후기 별점" />
     </LinearLayout>
 
 </RelativeLayout>

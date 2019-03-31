@@ -8,20 +8,34 @@
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="53dp"
         android:gravity="center_vertical"
         android:paddingLeft="15dp"
         android:text="같이 먹을 시간을 선택해주세요."
         android:textColor="@color/black"
-        android:textSize="16dp" />
+        android:textSize="16dp"
+        android:textStyle="bold" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
         android:layout_height="wrap_content"
-        android:layout_below="@id/title" />
+        android:layout_below="@id/title"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:paddingTop="0dp"
+        android:paddingBottom="10dp" />
+
+    <Button
+        android:id="@+id/btn_go_return"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/recyclerView"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/btn_round_gr"
+        android:text="돌아가기" />
 
     <ImageView
         android:id="@+id/btn_cancle"

@@ -67,11 +67,11 @@ public class SettingActivity extends AppCompatActivity {
 
 //        Button btn_kakao_invite = (Button) findViewById(R.id.btn_kakao_invite);
 //        btn_kakao_invite.setOnClickListener(mOnClickListener);
-
         Button btn_change_psw = (Button) findViewById(R.id.btn_change_psw);
-        btn_change_psw.setOnClickListener(mOnClickListener);
-
+        TextView btn_go_babfrs = (TextView) findViewById(R.id.btn_go_babfrs);
         Button btn_logout = (Button) findViewById(R.id.btn_logout);
+        btn_change_psw.setOnClickListener(mOnClickListener);
+        btn_go_babfrs.setOnClickListener(mOnClickListener);
         btn_logout.setOnClickListener(mOnClickListener);
 
 //        ImageButton btn_back = (ImageButton) findViewById(R.id.btn_back);
@@ -117,6 +117,12 @@ public class SettingActivity extends AppCompatActivity {
                     Intent intent = new Intent(SettingActivity.this, ChangePswActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
+
+                    break;
+                case R.id.btn_go_babfrs:
+                    Intent intent3 = new Intent(SettingActivity.this, BabFriendsActivity.class);
+                    intent3.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent3);
 
                     break;
                 case R.id.btn_logout:

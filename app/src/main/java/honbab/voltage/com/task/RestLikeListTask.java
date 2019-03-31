@@ -50,7 +50,8 @@ public class RestLikeListTask extends AsyncTask<Void, Void, ArrayList<RestLikeDa
     @Override
     protected ArrayList<RestLikeData> doInBackground(Void... params) {
         FormBody body = new FormBody.Builder()
-                .add("opt", "rest_like_list")
+//                .add("opt", "rest_like_list")
+                .add("opt", "user_rest_like_list")
                 .add("my_id", Statics.my_id)
                 .build();
 

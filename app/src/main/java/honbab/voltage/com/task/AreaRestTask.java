@@ -89,22 +89,30 @@ public class AreaRestTask extends AsyncTask<String, Void, ArrayList<AreaData>> {
 
         if (activityName.equals("MainActivity")) {
             if (areaList.size() > 0) {
-//                ((SelectFeedFragment) fragment).area_cd = areaList.get(0).getArea_cd();
                 ((SelectFeedFragment) fragment).areaList = areaList;
                 ((SelectFeedFragment) fragment).areaNameList = areaNameList;
+
+                Log.e("abc", "areaNameList : " + areaNameList.size());
+
                 ((SelectFeedFragment) fragment).spinnerAdapter = new ArrayAdapter(mContext, R.layout.item_row_spinner, areaNameList);
                 ((SelectFeedFragment) fragment).spinner.setAdapter(((SelectFeedFragment) fragment).spinnerAdapter);
 //                if (((SelectFeedFragment) fragment).area_cd.equals("GNS1")) {
 //
 //                } else {
-                Log.e("abc", "area_cd : " + ((SelectFeedFragment) fragment).area_cd);
+
                 for (AreaData areaData : areaList) {
                     if (areaData.getArea_cd().equals(((SelectFeedFragment) fragment).area_cd)) {
                         int seq = areaNameList.indexOf(areaData.getArea_name());
                         Log.e("abc", "seq area_cd : " + areaList.indexOf(((SelectFeedFragment) fragment).area_cd));
                         ((SelectFeedFragment) fragment).spinner.setSelection(seq);
+
+//                        new SelectFeedListTask(mContext).execute(
+//                                ((SelectFeedFragment) fragment).feed_time,
+//                                ((SelectFeedFragment) fragment).area_cd,
+//                                ((SelectFeedFragment) fragment).feed_rest_id, "");
                     }
                 }
+
 
 //                int seq = areaNameList.indexOf(new AreaData(((SelectFeedFragment) fragment).area_cd));
 //                    ((SelectFeedFragment) fragment).spinner.setSelection(seq);

@@ -1,7 +1,6 @@
 package honbab.voltage.com.firebase;
 
 import android.app.Notification;
-import android.app.NotificationChannel;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -10,19 +9,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.github.arturogutierrez.Badges;
 import com.github.arturogutierrez.BadgesNotSupportedException;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -34,7 +25,8 @@ import honbab.voltage.com.tete.ChatActivity;
 import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.tete.Statics;
-import honbab.voltage.com.utils.BadgeUtil;
+
+import static honbab.voltage.com.utils.BadgeUtil.setBadge;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     /**
@@ -43,11 +35,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      * @param remoteMessage Object representing the message received from Firebase Cloud Messaging.
      */
 //    Context mActContext;
-    int cnt_badge = 0;
-
-//    public MyFirebaseMessagingService(Context mContext) {
-//        this.mActContext = mContext;
-//    }
+//    int cnt_badge = 0;
+//    private NotificationManager mManager;
+    private static final int NOTIFICATION_MAX_CHARACTERS = 30;
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -90,44 +80,122 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 //            String message = remoteMessage.getNotification().getBody();
 //            String click_action = remoteMessage.getNotification().getClickAction();
-            Log.e("abc", "notification = " + notification);
-            Log.e("abc", "Notification Message getTitle: " + remoteMessage.getNotification().getTitle());
-            Log.e("abc", "Notification Message Body: " + remoteMessage.getNotification().getBody());
+//            Log.e("abc", "notification = " + notification);
+            Log.e("abc", "notification getTitle: " + notification.getTitle());
+            Log.e("abc", "notification Body: " + notification.getBody());
 //            Log.e("abc", "Notification Click Action: " + click_action);
             Log.e("abc", "Statics.to_id = " + Statics.to_id);
-            if (Statics.to_id == null || Statics.to_id.equals("") || Statics.to_id.equals("null")) {//앱 내 채팅밖
+            if (Statics.to_id == null || Statics.to_id.equals("") || Statics.to_id.equals("null")) {
+                //앱 내 채팅밖
 //                sendNotification(this, notification, data);
-
+                Log.e("abc", "data = " + data.toString());
 //                Map<String, String> params = remoteMessage.getData();
                 JSONObject object = new JSONObject(data);
                 Log.e("abc", object.toString());
-                String title = object.optString("title","");
-                String actionCode = object.optString("action_code", "");
-                String msg = object.optString("body", "");
+//                String title = object.optString("title","");
+//                String actionCode = object.optString("action_code", "");
+//                String msg = object.optString("body", "");
+
+                String title = notification.getTitle();
+                String msg = notification.getBody();
+                Log.e("abc", "title = " + title + ", "+ msg);
+
                 if (remoteMessage.getData().containsKey("badge")) {
                     int badge = Integer.parseInt(remoteMessage.getData().get("badge"));
                     //Log.d("notificationNUmber", ":" + badge);
-//                    setBadge(getApplicationContext(), badge);
-                    try {
-                        Badges.setBadge(this, 1);
-                    } catch (BadgesNotSupportedException e) {
-                        e.printStackTrace();
-                    }
+                    setBadge(getApplicationContext(), badge);
 //                    Prefs.putBoolean(Constant.HAS_BADGE,true);
+//                    try {
+//                        Badges.setBadge(this, 1);
+//                    } catch (BadgesNotSupportedException e) {
+//                        e.printStackTrace();
+//                    }
                 }
-                if (!(title.equals("") && msg.equals("") && actionCode.equals(""))) {
-                    createNotification(actionCode, msg, title);
-                }
-                else {
-                    //Log.e("Notification", "Invalid Data");
-                }
+//                if (!(title.equals("") && msg.equals("") && actionCode.equals(""))) {
+//                if (!(title.equals("") && msg.equals(""))) {
+//                    Log.e("abc", "createNotification = ");
+//                    createNotification(null, msg, title);
+//                }
+//                else {
+//                    //Log.e("Notification", "Invalid Data");
+//                }
+
+//                startForegroundService();
+                Log.d("abc", "Message Notification Body: " + remoteMessage.getNotification().getBody());
+                sendNotification(this, notification);
+
             } else if (Statics.to_id.equals(data.get("toId"))) {//현재 대화창
 
             } else {//다른 대화창
-                sendNotification(this, notification, data);
+//                sendNotification(this, notification, data);
             }
         }
     }
+
+//    private void startForegroundService() {
+//        Intent notificationIntent = new Intent(this, MainActivity.class);
+//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+//
+//        RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.notification_service);
+//
+//        NotificationCompat.Builder builder;
+//        if (Build.VERSION.SDK_INT >= 26) {
+//            String CHANNEL_ID = "snwodeer_service_channel";
+//            NotificationChannel channel = new NotificationChannel(CHANNEL_ID,
+//                    "SnowDeer Service Channel",
+//                    NotificationManager.IMPORTANCE_DEFAULT);
+//
+//            ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE))
+//                    .createNotificationChannel(channel);
+//
+//            builder = new Builder(this, CHANNEL_ID);
+//        } else {
+//            builder = new Builder(this);
+//        }
+//        builder.setSmallIcon(R.mipmap.ic_launcher)
+//                .setContent(remoteViews)
+//                .setContentIntent(pendingIntent);
+//
+//        startForeground(1, builder.build());
+//    }
+
+
+
+    private void sendNotification(Context mContext, RemoteMessage.Notification notification) {
+//        RemoteMessage.Notification notification =
+
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        // Create the pending intent to launch the activity
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent, PendingIntent.FLAG_ONE_SHOT);
+
+//        String author = data.get(JSON_KEY_AUTHOR);
+//        String message = data.get(JSON_KEY_MESSAGE);
+        String author = notification.getTitle();
+        String message = notification.getBody();
+
+        // If the message is longer than the max number of characters we want in our
+        // notification, truncate it and add the unicode character for ellipsis
+        if (message.length() > NOTIFICATION_MAX_CHARACTERS) {
+            message = message.substring(0, NOTIFICATION_MAX_CHARACTERS) + "\u2026";
+        }
+
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.mipmap.ic_launcher)
+//                .setContentTitle(String.format(getString(R.string.notification_message), author))
+                .setContentTitle(notification.getTitle())
+                .setContentText(message)
+                .setAutoCancel(true)
+                .setSound(defaultSoundUri)
+                .setContentIntent(pendingIntent);
+
+//        NotificationManager notificationManager = (NotificationManager) mContext.getSystemService(Context.NOTIFICATION_SERVICE);
+//        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
+    }
+
+
+
 
     /**
      * Create and show a custom notification containing the received FCM message.
@@ -135,7 +203,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      * @param notification FCM notification payload received.
      * @param data         FCM data payload received.
      */
-    private void sendNotification(Context context,
+    private void sendNotificationxxxx(Context context,
                                   RemoteMessage.Notification notification,
                                   Map<String, String> data) {
 
@@ -213,113 +281,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // Moves the expanded layout object into the notification object.
         notificationBuilder.setStyle(inboxStyle);
 
-
-
-//        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//
-//        // Notification Channel is required for Android O and above
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            NotificationChannel channel = new NotificationChannel(
-//                    channelId, "channel_name", NotificationManager.IMPORTANCE_DEFAULT
-//            );
-//            channel.setDescription("channel description");
-//            channel.setShowBadge(true);
-//            channel.canShowBadge();
-//            channel.enableLights(true);
-//            channel.setLightColor(Color.RED);
-//            channel.enableVibration(true);
-//            channel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
-//            channel.setVibrationPattern(new long[]{100, 200, 300, 400, 500});
-//            notificationManager.createNotificationChannel(channel);
-//        }
-////        int numMessages = 0;
-////        notificationBuilder.setNumber(++numMessages);
-//        notificationManager.notify(0, notificationBuilder.build());
-
-
-
-
-
-//        SharedPreferences settings = this.getSharedPreferences("LAUNCHER_BADGE", Context.MODE_PRIVATE);
-//        int currentBdg = settings.getInt("CURRENT_BADGE", 0);
-//        BadgeProviderFactory badgeFactory = new BadgeProviderFactory(context);
-//        BadgeProvider badgeProvider = badgeFactory.getBadgeProvider();
-//        badgeProvider.setBadge(Integer.parseInt(data.get("badge_cnt")));
-//        try {
-//
-//        } catch (UnsupportedOperationException exception) {
-//            throw new BadgesNotSupportedException();
-//        }
-//        Log.e("abc", "currentBdg: " + currentBdg);
-//        BadgeUtil.setBadge(context, currentBdg+1);
-
-
-//        loadFirebaseCntUnread(this);
         try {
             Badges.setBadge(this, 1);
         } catch (BadgesNotSupportedException e) {
             e.printStackTrace();
         }
 
-    }
-
-    // NEW!!
-    public void createNotification(String action_code, String msg, String title) {
-        String channelId = getString(R.string.default_notification_channel_id);
-
-        Intent intent = null;
-        intent = new Intent(this, ChatActivity.class);
-//        intent.putExtra(Constants.ACTION_CODE, action_code);
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel androidChannel = new NotificationChannel(channelId, title, android.app.NotificationManager.IMPORTANCE_DEFAULT);
-            // Sets whether notifications posted to this channel should display notification lights
-            androidChannel.enableLights(true);
-            // Sets whether notification posted to this channel should vibrate.
-            androidChannel.enableVibration(true);
-            // Sets the notification light color for notifications posted to this channel
-            androidChannel.setLightColor(Color.GREEN);
-
-            // Sets whether notifications posted to this channel appear on the lockscreen or not
-            androidChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
-//            getManager().createNotificationChannel(androidChannel);
-            Notification.Builder nb = new Notification.Builder(getApplicationContext(), channelId)
-                    .setContentTitle(title)
-                    .setContentText(msg)
-                    .setTicker(title)
-                    .setShowWhen(true)
-                    .setSmallIcon(R.mipmap.ic_launcher)
-                    .setLargeIcon(BitmapFactory.decodeResource(this.getResources(),
-                            R.mipmap.ic_launcher_round))
-                    .setAutoCancel(true)
-                    .setContentIntent(contentIntent);
-
-//            getManager().notify(101, nb.build());
-
-        } else {
-//            try {
-//
-//                @SuppressLint({"NewApi", "LocalSuppress"}) android.support.v4.app.NotificationCompat.Builder notificationBuilder = new android.support.v4.app.NotificationCompat.Builder(this).setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
-//                        .setSmallIcon(R.mipmap.ic_launcher)
-//                        .setLargeIcon(BitmapFactory.decodeResource(this.getResources(),
-//                                R.mipmap.ic_launcher_round))
-//                        .setContentTitle(title)
-//                        .setTicker(title)
-//                        .setContentText(msg)
-//                        .setShowWhen(true)
-//                        .setContentIntent(contentIntent)
-//                        .setLights(0xFF760193, 300, 1000)
-//                        .setAutoCancel(true).setVibrate(new long[]{200, 400});
-//                            /*.setSound(Uri.parse("android.resource://"
-//                                    + getApplicationContext().getPackageName() + "/" + R.raw.tone));*/
-//
-//
-//                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//                notificationManager.notify((int) System.currentTimeMillis() /* ID of notification */, notificationBuilder.build());
-//            } catch (SecurityException se) {
-//                se.printStackTrace();
-//            }
-        }
     }
 
     @Override
@@ -335,7 +302,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // TODO: Implement this method to send token to your app server.
     }
 
-    private int loadFirebaseCntUnread(Context context) {
+    /*
+    private int loadFirebaseCntUnread(Context mContext) {
         Log.e("abc", "loadFirebaseCntUnread = " + cnt_badge);
 //        cnt_badge = 0;
 //        HashMap<String, Integer> chatListHash = new HashMap<>();
@@ -358,7 +326,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             cnt_badge++;
 
                         Log.e("abc", "badge_cnt = " + cnt_badge);
-                        BadgeUtil.setBadge(context, cnt_badge);
+                        setBadge(mContext, cnt_badge);
                     }
 
                     @Override
@@ -374,7 +342,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         if (plus > 0)
                             cnt_badge++;
 
-                        BadgeUtil.setBadge(context, cnt_badge);
+                        setBadge(mContext, cnt_badge);
                     }
 
                     @Override
@@ -419,4 +387,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         return cnt_badge;
     }
+    */
+
+//    private NotificationManager getManager() {
+//        if (mManager == null) {
+//            mManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//        }
+//        return mManager;
+//    }
 }

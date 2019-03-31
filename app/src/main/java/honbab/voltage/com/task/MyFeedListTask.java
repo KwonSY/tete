@@ -15,11 +15,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 import honbab.voltage.com.adapter.MyFeedListAdapter;
 import honbab.voltage.com.data.FeedData;
-import honbab.voltage.com.data.UserData;
 import honbab.voltage.com.fragment.MyFeedFragment;
 import honbab.voltage.com.tete.AfterEatingActivity;
 import honbab.voltage.com.tete.JoinActivity2;
@@ -40,7 +38,9 @@ public class MyFeedListTask extends AsyncTask<Void, Void, Void> {
 
     public ArrayList<FeedData> feedList = new ArrayList<>();
     private int cnt_after = 0;
-    private String after_feed_id, after_user_id, after_user_name, after_user_img;
+    private String cnt_babfr;
+    private String my_name, my_img, my_comment;
+    private String after_feed_id, host_id, host_name, host_img, guest_id, guest_name, guest_img;
 
     public MyFeedListTask(Context mContext) {
         this.mContext = mContext;
@@ -62,7 +62,7 @@ public class MyFeedListTask extends AsyncTask<Void, Void, Void> {
                 .add("my_id", Statics.my_id)
                 .build();
 
-        Request request = new Request.Builder().url(Statics.opt_url).post(body).build();
+        Request request = new Request.Builder().url(Statics.optUrl + "tab2/index.php").post(body).build();
 
         try {
             okhttp3.Response response = httpClient.newCall(request).execute();
@@ -70,6 +70,13 @@ public class MyFeedListTask extends AsyncTask<Void, Void, Void> {
                 String bodyStr = response.body().string();
 
                 JSONObject obj = new JSONObject(bodyStr);
+
+                cnt_babfr = obj.getString("cnt_babfr");
+
+                JSONObject myProfile = obj.getJSONObject("my");
+                my_name = myProfile.getString("name");
+                my_img = myProfile.getString("img_url");
+                my_comment = myProfile.getString("comment");
 
                 JSONArray hash_arr = obj.getJSONArray("feed");
                 for (int i = 0; i < hash_arr.length(); i++) {
@@ -83,7 +90,7 @@ public class MyFeedListTask extends AsyncTask<Void, Void, Void> {
                     JSONObject host_obj = obj2.getJSONObject("host");
                     String host_id = host_obj.getString("sid");
                     String host_name = host_obj.getString("name");
-                    String host_img = Statics.main_url + host_obj.getString("img_url");
+                    String host_img = host_obj.getString("img_url");
                     String host_age = host_obj.getString("age");
                     String host_gender = host_obj.getString("gender");
                     String host_token = host_obj.getString("token");
@@ -107,7 +114,7 @@ public class MyFeedListTask extends AsyncTask<Void, Void, Void> {
                     JSONObject user_obj = obj2.getJSONArray("users").getJSONObject(0);
                     String user_id = user_obj.getString("sid");
                     String user_name = user_obj.getString("name");
-                    String user_img = Statics.main_url + user_obj.getString("img_url");
+                    String user_img = user_obj.getString("img_url");
                     String user_age = user_obj.getString("age");
                     String user_gender = user_obj.getString("gender");
                     String user_token = user_obj.getString("token");
@@ -128,13 +135,20 @@ public class MyFeedListTask extends AsyncTask<Void, Void, Void> {
                 }
 
                 JSONArray after_arr = obj.getJSONArray("after");
-                for (int i = 0; i < after_arr.length(); i++) {
-                    JSONObject obj2 = after_arr.getJSONObject(i);
-                    after_feed_id = obj2.getString("sid");
-                    JSONObject user_obj = obj2.getJSONObject("users");
-                    after_user_id = user_obj.getString("sid");
-                    after_user_name = user_obj.getString("name");
-                    after_user_img = Statics.main_url + user_obj.getString("img_url");
+                if (after_arr.length() > 0) {
+                    //
+                    JSONObject after_ar0 = after_arr.getJSONObject(0);
+                    after_feed_id = after_ar0.getString("sid");
+                    //
+                    JSONObject obj_host = after_ar0.getJSONObject("host");
+                    host_id = obj_host.getString("sid");
+                    host_name = obj_host.getString("name");
+                    host_img = obj_host.getString("img_url");
+                    //
+                    JSONObject obj_guest = after_ar0.getJSONObject("guest");
+                    guest_id = obj_guest.getString("sid");
+                    guest_name = obj_guest.getString("name");
+                    guest_img = obj_guest.getString("img_url");
 
                     cnt_after++;
                 }
@@ -163,13 +177,21 @@ public class MyFeedListTask extends AsyncTask<Void, Void, Void> {
 
             ((MyFeedFragment) fragment).swipeContainer.setRefreshing(false);
 
+            ((MyFeedFragment) fragment).btn_go_babfrlist.setText("친구 " + cnt_babfr);
+
             if (cnt_after > 0) {
                 Intent intent = new Intent(mContext, AfterEatingActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.putExtra("after_feed_id", after_feed_id);
-                intent.putExtra("toId", after_user_id);
-                intent.putExtra("after_user_name", after_user_name);
-                intent.putExtra("after_user_img", after_user_img);
+                if (host_id.equals(Statics.my_id)) {
+                    intent.putExtra("toId", guest_id);
+                    intent.putExtra("after_user_name", guest_name);
+                    intent.putExtra("after_user_img", guest_img);
+                } else {
+                    intent.putExtra("toId", host_id);
+                    intent.putExtra("after_user_name", host_name);
+                    intent.putExtra("after_user_img", host_img);
+                }
                 mContext.startActivity(intent);
                 ((Activity) mContext).finish();
             }
@@ -186,34 +208,54 @@ public class MyFeedListTask extends AsyncTask<Void, Void, Void> {
 //                        .addToBackStack("myfeed")
 //                        .commit();
             } else {
-                Log.e("abc", "222 mAdapter.getItemCount() = " + ((MyFeedFragment) fragment).mAdapter.getItemCount());
                 ((MyFeedFragment) fragment).line_timeline_vertical.setVisibility(View.VISIBLE);
                 ((MyFeedFragment) fragment).layout_no_my_schedule.setVisibility(View.GONE);
                 ((MyFeedFragment) fragment).recyclerView_myfeed.setVisibility(View.VISIBLE);
             }
 
-            try {
-                UserData myData = new AccountTask(mContext, 0).execute(Statics.my_id).get();
-
-                if (myData.getImg_url().contains("null")) {
-                    Intent intent = new Intent(mContext, JoinActivity2.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    mContext.startActivity(intent);
-                    ((Activity) mContext).finish();
-                }
-
-                Picasso.get().load(myData.getImg_url())
+            if (my_img == null || my_img.contains("null")) {
+                Log.e("abc", "222 이미지 없음 = " + my_img);
+                Intent intent = new Intent(mContext, JoinActivity2.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                mContext.startActivity(intent);
+                ((Activity) mContext).finish();
+            } else {
+                Picasso.get().load(my_img)
                         .placeholder(R.drawable.icon_noprofile_circle)
                         .error(R.drawable.icon_noprofile_circle)
                         .transform(new CircleTransform())
                         .into(((MyFeedFragment) fragment).img_my);
-                ((MyFeedFragment) fragment).txt_myName.setText(myData.getUser_name());
-                ((MyFeedFragment) fragment).txt_comment.setText(myData.getComment());
-            } catch (ExecutionException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
+
+            ((MyFeedFragment) fragment).txt_myName.setText(my_name);
+            ((MyFeedFragment) fragment).txt_comment.setText(my_comment);
+
+//            try {
+////                UserData myData = new AccountTask(mContext, 0).execute(Statics.my_id).get();
+//
+//                Log.e("abc", "222 myData.getImg_url() = " + my_img);
+////                if (myData.getImg_url() == null || myData.getImg_url().contains("null")) {
+//                if (my_img == null || my_img.contains("null")) {
+//                    Log.e("abc", "222 이미지 없음 = " + my_img);
+//                    Intent intent = new Intent(mContext, JoinActivity2.class);
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                    mContext.startActivity(intent);
+//                    ((Activity) mContext).finish();
+//                } else {
+//                    Picasso.get().load(my_img)
+//                            .placeholder(R.drawable.icon_noprofile_circle)
+//                            .error(R.drawable.icon_noprofile_circle)
+//                            .transform(new CircleTransform())
+//                            .into(((MyFeedFragment) fragment).img_my);
+//                }
+//
+//                ((MyFeedFragment) fragment).txt_myName.setText(my_name);
+//                ((MyFeedFragment) fragment).txt_comment.setText(my_comment);
+//            } catch (ExecutionException e) {
+//                e.printStackTrace();
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
         }
     }
 

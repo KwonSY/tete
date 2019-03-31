@@ -27,7 +27,7 @@
     <string name="confirm">확인</string>
 
     <string name="edit">편집</string>
-    <string name="enable_cnt_feedee">%s명 식사가능</string>
+    <string name="enable_cnt_feedee">%s명</string>
     <string name="enter_age">나이가 어떻게 되시나요?</string>
     <string name="enter_at_least_8">비밀번호를 영문 대,소문자, 숫자, 특수문자 포함 8자 이상으로 해주세요.</string>
     <string name="enter_email">이메일을 입력해주세요.</string>
@@ -45,8 +45,10 @@
     <string name="go_to_chat">대화하러 가기</string>
     <string name="go_to_get_feed">같이 먹을 사람 찾아보기</string>
     <string name="go_to_godmuktime">같이먹기 신청</string>
+    <string name="go_to_login">로그인</string>
     <string name="go_to_my_reserved">내 예약 보러가기</string>
     <string name="go_to_reserve_godmuk">같먹 예약하러 가기</string>
+    <string name="join">회원가입</string>
     <string name="law_personal">개인정보 취급방침</string>
     <string name="law_privacy">이용약관</string>
     <string name="loading">로딩중...</string>
@@ -80,6 +82,9 @@
     <string name="search_rest_this_area">이 지역에서 검색</string>
     <string name="search_near_rest">주변 음식점 검색</string>
     <string name="select_diff_day">다른 날짜선택</string>
+    <string name="select_feed_rest">가고 싶은 음식점을 선택해보세요.</string>
+    <string name="select_feed_time">식사하고자 하는 시간을 선택하세요.</string>
+
     <string name="tab_1_like_rest">같이 먹을 사람찾기</string>
     <string name="tab_2_my">예약된 일정</string>
     <string name="update">업데이트</string>

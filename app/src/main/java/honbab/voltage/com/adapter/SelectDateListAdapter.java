@@ -2,11 +2,11 @@ package honbab.voltage.com.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,8 +25,10 @@ import java.util.Date;
 import honbab.voltage.com.data.SelectDateData;
 import honbab.voltage.com.fragment.SelectFeedFragment;
 import honbab.voltage.com.task.SelectFeedListTask;
+import honbab.voltage.com.tete.LoginActivity;
 import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.R;
+import honbab.voltage.com.tete.Statics;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
 import honbab.voltage.com.widget.PickDateDialog;
 import okhttp3.OkHttpClient;
@@ -94,14 +96,15 @@ public class SelectDateListAdapter extends RecyclerView.Adapter<SelectDateListAd
 
         public RelativeLayout layout_card;
         public CheckBox checkBox;
-        public TextView txt_date, txt_time, cnt_users;
+//        public TextView txt_date, txt_time, cnt_users;
+        public TextView txt_day_of_week, txt_time, cnt_users;
 
         public ViewHolder(View itemView, int viewType, final SelectDateListAdapter mAdapter) {
             super(itemView);
             this.mAdapter = mAdapter;
 
             layout_card = itemView.findViewById(R.id.layout_card);
-            txt_date = itemView.findViewById(R.id.txt_date);
+            txt_day_of_week = itemView.findViewById(R.id.txt_day_of_week);
             txt_time = itemView.findViewById(R.id.txt_time);
             cnt_users = itemView.findViewById(R.id.cnt_users);
             checkBox = itemView.findViewById(R.id.checkBox);
@@ -114,23 +117,25 @@ public class SelectDateListAdapter extends RecyclerView.Adapter<SelectDateListAd
 
         public void bindToPost(final SelectDateData data, int viewType) {
             if (viewType == TYPE_TIME) {
+                txt_day_of_week.setText(data.getDay_of_week());
+
                 try {
                     SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-                    SimpleDateFormat formatter2 = new SimpleDateFormat("M월 d일");
+                    SimpleDateFormat formatter2 = new SimpleDateFormat("d일");
                     Date date = formatter1.parse(data.getTime());
                     String str_feed_time = formatter2.format(date);
 
-                    txt_date.setText(str_feed_time);
+                    txt_time.setText(str_feed_time + " " + data.getTimeName());
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
 
-                if (data.getTime().contains("12:00:00") || data.getTime().contains("13:00:00") || data.getTime().contains("14:00:00") || data.getTime().contains("15:00:00"))
-                    txt_time.setText("점심");
-                else if (data.getTime().contains("17:00:00") || data.getTime().contains("18:00:00") || data.getTime().contains("19:00:00") || data.getTime().contains("20:00:00") || data.getTime().contains("21:00:00"))
-                    txt_time.setText("저녁");
-                else
-                    txt_time.setText(data.getTime());
+//                if (data.getTime().contains("12:00:00") || data.getTime().contains("13:00:00") || data.getTime().contains("14:00:00") || data.getTime().contains("15:00:00"))
+//                    txt_time.setText("점심");
+//                else if (data.getTime().contains("17:00:00") || data.getTime().contains("18:00:00") || data.getTime().contains("19:00:00") || data.getTime().contains("20:00:00") || data.getTime().contains("21:00:00"))
+//                    txt_time.setText("저녁");
+//                else
+//                    txt_time.setText(data.getTime());
 
                 try {
                     setDateToView(data, data.getPosition());
@@ -193,8 +198,15 @@ public class SelectDateListAdapter extends RecyclerView.Adapter<SelectDateListAd
                 checkBox.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        PickDateDialog pickDateDialog = new PickDateDialog(mContext);
-                        pickDateDialog.callFunction(((SelectFeedFragment) fragment).dateLikeList);
+                        if (Integer.parseInt(Statics.my_id) < 1) {
+                            Intent intent = new Intent(mContext, LoginActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            mContext.startActivity(intent);
+                        } else {
+                            PickDateDialog pickDateDialog = new PickDateDialog(mContext);
+                            pickDateDialog.callFunction(((SelectFeedFragment) fragment).dateLikeList);
+                        }
                     }
                 });
             }
@@ -206,6 +218,12 @@ public class SelectDateListAdapter extends RecyclerView.Adapter<SelectDateListAd
             if (mSelectedItem >= 0) {//선택이 되었으면
                 if (position == mSelectedItem) {
                     ((SelectFeedFragment) fragment).feed_time = data.getTime();
+                    SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                    SimpleDateFormat formatter2 = new SimpleDateFormat("M/d E요일");
+                    Date date = formatter1.parse(data.getTime());
+                    String str_feed_time = formatter2.format(date);
+                    ((SelectFeedFragment) fragment).txt_explain_time.setText(str_feed_time + " , ");
+
                     if (((SelectFeedFragment) fragment).feed_time.equals("")) {
                         ((SelectFeedFragment) fragment).txt_explain_pick.setText("식사하고자 하는 시간을 선택하세요.");
                     } else if (((SelectFeedFragment) fragment).feed_rest_id.equals("")) {
@@ -224,14 +242,33 @@ public class SelectDateListAdapter extends RecyclerView.Adapter<SelectDateListAd
             } else {//선택이 없으나, 사전에 체크 표기
 
                 if (listViewItemList.size() == 1) {
-                    data.setChecked(true);
                     ((SelectFeedFragment) fragment).feed_time = data.getTime();
+                    ((SelectFeedFragment) fragment).feed_time = data.getTime();
+                    SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                    SimpleDateFormat formatter2 = new SimpleDateFormat("M/d E요일");
+                    Date date = formatter1.parse(data.getTime());
+                    String str_feed_time = formatter2.format(date);
+                    ((SelectFeedFragment) fragment).txt_explain_time.setText(str_feed_time + " , ");
 
-                    new SelectFeedListTask(mContext).execute(((SelectFeedFragment) fragment).feed_time,
-                            ((SelectFeedFragment) fragment).area_cd,
-                            ((SelectFeedFragment) fragment).feed_rest_id,
-                            "readBelowRest");
-                    Log.e("abc", "Select date feed_time = " + ((SelectFeedFragment) fragment).feed_time);
+                    data.setChecked(true);
+
+//                    new SelectFeedListTask(mContext).execute(((SelectFeedFragment) fragment).feed_time,
+//                            ((SelectFeedFragment) fragment).area_cd,
+//                            ((SelectFeedFragment) fragment).feed_rest_id,
+//                            "readBelowRest");
+//                    Log.e("abc", "Select date feed_time = " + ((SelectFeedFragment) fragment).feed_time);
+                } else {
+//                    if (listViewItemList.size() == position + 1) {
+                    if (position ==  0) {
+                        ((SelectFeedFragment) fragment).feed_time = data.getTime();
+                        SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                        SimpleDateFormat formatter2 = new SimpleDateFormat("M/d E요일");
+                        Date date = formatter1.parse(data.getTime());
+                        String str_feed_time = formatter2.format(date);
+                        ((SelectFeedFragment) fragment).txt_explain_time.setText(str_feed_time + " , ");
+
+                        data.setChecked(true);
+                    }
                 }
             }
 

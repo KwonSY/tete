@@ -27,14 +27,11 @@
             android:scaleType="centerCrop"
             android:src="@drawable/icon_no_image" />
 
-        <RelativeLayout
-            android:id="@+id/layout_dark_alpha"
+        <View
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#88000000"
-            android:visibility="invisible">
-
-        </RelativeLayout>
+            android:background="#22000000"
+            android:visibility="visible"/>
 
         <RelativeLayout
             android:id="@+id/layout_check"

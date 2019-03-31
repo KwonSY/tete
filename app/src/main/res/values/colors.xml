@@ -15,7 +15,7 @@
 
     <!--dots-->
     <color name="dot_active">#f9a953</color>
-    <color name="dot_inactive">#F6E1CB</color>
+    <color name="dot_inactive">#ffead5</color>
     <!-- dots active colors -->
     <color name="dot_light_screen1">#f98da5</color>
     <color name="dot_light_screen2">#8cf9eb</color>

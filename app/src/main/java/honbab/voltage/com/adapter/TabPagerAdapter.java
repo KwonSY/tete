@@ -61,7 +61,8 @@ public class TabPagerAdapter extends FragmentStatePagerAdapter {
 //                return Fragment.instantiate(mContext, String.valueOf(fragmentList.get(position)));
                 return SelectFeedFragment.newInstance(position);
             case 1:
-                if (Statics.my_id == null) {
+                Log.e("abc", "TabAdapter = " + Statics.my_id);
+                if (Statics.my_id == null || Integer.parseInt(Statics.my_id) < 1) {
                     tabFragment2_2 = new NoProfileFragment();
 //                    return tabFragment2_2;
 //                    return Fragment.instantiate(mContext, String.valueOf(fragmentList.get(position)));

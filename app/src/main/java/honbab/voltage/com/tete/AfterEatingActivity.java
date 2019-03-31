@@ -64,11 +64,6 @@ public class AfterEatingActivity extends AppCompatActivity {
 
             switch (view.getId()) {
                 case R.id.btn_close:
-//                    Intent intent = new Intent(AfterEatingActivity.this, MainActivity.class);
-//                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                    startActivity(intent);
-//                    finish();
-
                     // status == skip
                     new EvaluateFeedTask(AfterEatingActivity.this).execute(user_id, feed_id, s_rating, "s");
 
