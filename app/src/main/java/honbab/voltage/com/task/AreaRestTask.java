@@ -96,7 +96,7 @@ public class AreaRestTask extends AsyncTask<String, Void, ArrayList<AreaData>> {
 
                 ((SelectFeedFragment) fragment).spinnerAdapter = new ArrayAdapter(mContext, R.layout.item_row_spinner, areaNameList);
                 ((SelectFeedFragment) fragment).spinner.setAdapter(((SelectFeedFragment) fragment).spinnerAdapter);
-//                if (((SelectFeedFragment) fragment).area_cd.equals("GNS1")) {
+//                if (((SelectFeedFragment) fragment).area_cd.equals("SUGNS1")) {
 //
 //                } else {
 

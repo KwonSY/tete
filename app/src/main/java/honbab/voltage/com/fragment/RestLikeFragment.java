@@ -81,7 +81,7 @@ public class RestLikeFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        new RestLikeListTask(getActivity(), httpClient).execute();
+        new RestLikeListTask(getActivity()).execute();
     }
 
     private void initControls() {
@@ -94,7 +94,7 @@ public class RestLikeFragment extends Fragment {
             @Override
             public void onRefresh() {
                 mAdapter.clearItemList();
-                new RestLikeListTask(getActivity(), httpClient).execute();
+                new RestLikeListTask(getActivity()).execute();
             }
         });
 

@@ -14,6 +14,7 @@ import org.json.JSONObject;
 
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.tete.Statics;
+import honbab.voltage.com.widget.OkHttpClientSingleton;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -27,9 +28,9 @@ public class VersionTask extends AsyncTask<Void, Void, Void> {
     String appVersion;
     int appVCd = 0;
 
-    public VersionTask(Context mContext, OkHttpClient httpClient) {
+    public VersionTask(Context mContext) {
         this.mContext = mContext;
-        this.httpClient = httpClient;
+        this.httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
     }
 
     @Override

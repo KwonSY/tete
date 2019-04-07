@@ -76,7 +76,7 @@ public class SelectFeedFragment extends Fragment implements LocationListener,
     private FusedLocationProviderClient mFusedLocationClient;
 
     public int split = 2;
-    public String area_cd = "GNS1";
+    public String area_cd = "SUGNS1";
     public String feed_time = "";
     public String feed_rest_id = "";
     public String to_id = "", to_name = "";
@@ -117,7 +117,7 @@ public class SelectFeedFragment extends Fragment implements LocationListener,
 
         areaList = new ArrayList<>();
         areaNameList = new ArrayList<>();
-        AreaData areaData = new AreaData("GNS1", "강남역");
+        AreaData areaData = new AreaData("SUGNS1", "강남역");
         areaList.add(areaData);
         areaNameList.add("강남역");
 
@@ -177,7 +177,6 @@ public class SelectFeedFragment extends Fragment implements LocationListener,
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
                 Log.e("abc", "parent.getCount() = " + parent.getCount());
 
                 if (parent.getCount() == 1) {
@@ -200,6 +199,12 @@ public class SelectFeedFragment extends Fragment implements LocationListener,
 //                    LatLng latLng = new LatLng(latitude, longitude);
                                 Log.e("abc", "latitude = " + latitude + ", " + longitude);
 
+                                //시별
+                                LatLng citySeoul = new LatLng(37.515022, 126.982819);//서울시
+                                LatLng cityYangyang = new LatLng(38.080205, 128.624549);//양양시
+                                LatLng cityBusan = new LatLng(35.156710, 129.059425);//부산시
+                                LatLng cityJeju = new LatLng(33.505210, 126.497644);//제주시
+
                                 LatLng llGangNam = new LatLng(37.4979462, 127.025427);//강남역
                                 LatLng llEulJiRo = new LatLng(37.5660602, 126.980468);//을지로입구역
                                 LatLng llSinChon = new LatLng(37.5597212, 126.9403285);//신촌역
@@ -212,31 +217,58 @@ public class SelectFeedFragment extends Fragment implements LocationListener,
                                 LatLng llSeoMyeon = new LatLng(35.1568282, 129.057955);//부산 서면역
                                 LatLng llHaeUnDae = new LatLng(35.1647738, 129.1379978);//부산 해운대역
 
+                                LatLng llJaeJu = new LatLng(33.505210, 126.497644);//제주공항
+
+
+
+                                LatLng[] cityLLGroup = new LatLng[]{citySeoul, cityYangyang, cityBusan, cityJeju};
                                 LatLng[] stationLLGroup = new LatLng[]{llGangNam, llEulJiRo, llSinChon, llSeoulUni, llNoRyang};
                                 //, llJamSil, llGunDae, llHaeHwa,
                                 // llSeoMyeon, llHaeUnDae
 
                                 int i = 0;
                                 Location target = new Location("target");
+//                                String city_name = "";
+//                                for (LatLng point : cityLLGroup) {
+//                                    target.setLatitude(point.latitude);
+//                                    target.setLongitude(point.longitude);
+//                                    if (location.distanceTo(target) < 20000) {
+//                                        if (i == 0)
+//                                            city_name = "seoul";
+//                                        else if (i == 1)
+//                                            city_name = "yangyang";
+//                                        else if (i == 2)
+//                                            city_name = "busan";
+//                                        else if (i == 3)
+//                                            city_name = "jeju";
+//                                        else
+//                                            area_cd = "seoul";
+//                                    }
+//
+//                                    i++;
+//                                }
+
+
+
                                 for (LatLng point : stationLLGroup) {
                                     target.setLatitude(point.latitude);
                                     target.setLongitude(point.longitude);
                                     if (location.distanceTo(target) < 1700) {
                                         // bingo!
-                                        Log.e("abc", "bingo" + point.latitude + point.longitude);
+//                                        Log.e("abc", "bingo" + point.latitude + point.longitude);
 
                                         if (i == 0)
-                                            area_cd = "GNS1";
+                                            area_cd = "SUGNS1";
                                         else if (i == 1)
-                                            area_cd = "JGS1";
+                                            area_cd = "SUJGS1";
                                         else if (i == 2)
-                                            area_cd = "SDH1";
+                                            area_cd = "SUSDH1";
                                         else if (i == 3)
-                                            area_cd = "GAS1";
+                                            area_cd = "SUGAS1";
                                         else if (i == 4)
-                                            area_cd = "DJS1";
+                                            area_cd = "SUDJS1";
                                         else
-                                            area_cd = "GNS1";
+                                            area_cd = "SUGNS1";
                                     }
 
                                     i++;
@@ -248,7 +280,7 @@ public class SelectFeedFragment extends Fragment implements LocationListener,
 //
 ////                                    new SelectFeedListTask(getActivity()).execute(feed_time, area_cd, feed_rest_id, "");
 //                                } else {
-//                                    area_cd = "GNS1";
+//                                    area_cd = "SUGNS1";
 ////                                    spinner.setSelection(0);
 //                                }
 

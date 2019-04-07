@@ -42,12 +42,10 @@ import honbab.voltage.com.fragment.SelectFeedFragment;
 import honbab.voltage.com.task.VersionTask;
 import honbab.voltage.com.utils.NetworkUtil;
 import honbab.voltage.com.widget.MyService;
-import honbab.voltage.com.widget.OkHttpClientSingleton;
 import honbab.voltage.com.widget.SessionManager;
-import okhttp3.OkHttpClient;
 
 public class MainActivity extends AppCompatActivity {
-    private OkHttpClient httpClient;
+//    private OkHttpClient httpClient;
     private SessionManager session;
 
     public TabPagerAdapter pagerAdapter;
@@ -68,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
 
-        httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
+//        httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
 
         session = new SessionManager(getApplicationContext());
         HashMap<String, String> user = session.getUserDetails();
@@ -215,7 +213,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
         if (NetworkUtil.isOnline(this)) {
-            new VersionTask(MainActivity.this, httpClient).execute();
+            new VersionTask(MainActivity.this).execute();
         }
 
         Log.e("abc", "tab_position" + tab_position);
@@ -226,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
         notificationManager.cancelAll();
 
         try {
-            Badges.setBadge(this, 0);
+            Badges.setBadge(MainActivity.this, 0);
         } catch (BadgesNotSupportedException e) {
             e.printStackTrace();
         }

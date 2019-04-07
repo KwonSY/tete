@@ -47,7 +47,7 @@ public class DelayBefroePickRestActivity extends AppCompatActivity {
 
     ArrayList<AreaData> areaList;
     ArrayList<String> areaNameList;
-    String feed_location = "GNS1", feed_time;
+    String feed_location = "SUGNS1", feed_time;
     public String today_status = "n";
     int cnt_reserved = 0;
 

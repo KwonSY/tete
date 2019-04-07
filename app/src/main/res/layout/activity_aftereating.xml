@@ -67,6 +67,15 @@
             android:layout_marginRight="36dp"
             android:background="@drawable/btn_circle_bk1"
             android:text="후기 별점" />
+
+        <TextView
+            android:id="@+id/btn_report"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="17dp"
+            android:layout_marginLeft="36dp"
+            android:textSize="14sp"
+            android:text="신고하기"/>
     </LinearLayout>
 
 </RelativeLayout>

@@ -45,7 +45,6 @@ import honbab.voltage.com.widget.OkHttpClientSingleton;
 import okhttp3.OkHttpClient;
 
 public class ProfileActivity extends AppCompatActivity {
-
     private OkHttpClient httpClient;
     private RequestQueue mQueue;
 
@@ -156,7 +155,6 @@ public class ProfileActivity extends AppCompatActivity {
                     break;
                 case R.id.btn_edit_comment:
                     String comment = edit_comment.getText().toString();
-                    Log.e("abc", "상태 = " + bool_edityn);
 
                     if (bool_edityn) {
                         //편집 -> 저장
@@ -173,7 +171,7 @@ public class ProfileActivity extends AppCompatActivity {
                             edit_comment.setBackgroundResource(R.drawable.border_round_gr1);
                             btn_edit_comment.setText(R.string.edit);
 
-                            new EditCommentTask(ProfileActivity.this, httpClient, comment, seq).execute();
+                            new EditCommentTask(ProfileActivity.this, comment, seq).execute();
                         }
                     } else {
                         //default only showing
@@ -229,7 +227,7 @@ public class ProfileActivity extends AppCompatActivity {
 ////        startActivityForResult(Intent.createChooser(intent, "Select Picture"), GALLERY_PHOTO);
 //    }
 
-    public String SERVER = Statics.opt_url;
+//    public String SERVER = Statics.opt_url;
     public String timestamp;
     private static final int RESULT_SELECT_IMAGE = 1;
 
@@ -264,7 +262,8 @@ public class ProfileActivity extends AppCompatActivity {
             timestamp = tsLong.toString();
 
             Bitmap bitImage = ((BitmapDrawable) img_origin.getDrawable()).getBitmap();
-            new UploadProfileTask(bitImage, "Profile_" + Statics.my_id + "_" + timestamp).execute(uriImage);
+            //"Profile_" + Statics.my_id + "_" + timestamp
+            new UploadProfileTask(bitImage).execute(uriImage);
         }
     }
 
@@ -289,11 +288,11 @@ public class ProfileActivity extends AppCompatActivity {
     //async task to upload image
     private class UploadProfileTask extends AsyncTask<Uri, Void, Uri> {
         private Bitmap image;
-        private String name;
+//        private String name;
 
-        public UploadProfileTask(Bitmap image, String name) {
+        public UploadProfileTask(Bitmap image) {
             this.image = image;
-            this.name = name;
+//            this.name = name;
 
             progress_upload.setVisibility(View.VISIBLE);
         }
@@ -325,12 +324,12 @@ public class ProfileActivity extends AppCompatActivity {
                 detail.put("opt", "upload_profile");
                 detail.put("my_id", Statics.my_id);
                 detail.put("image", encodeImage);
-                detail.put("name", name);
+//                detail.put("name", name);
 
                 //convert this HashMap to encodedUrl to send to php file
                 String dataToSend = hashMapToUrl(detail);
                 //make a Http request and send data to saveImage.php file
-                String response = Request.post(SERVER, dataToSend);
+                String response = Request.post(Statics.optUrl + "profile/index.php", dataToSend);
                 Log.e("abc", "response = " + response);
 
                 //return the response

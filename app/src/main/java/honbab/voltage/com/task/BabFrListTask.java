@@ -76,7 +76,6 @@ public class BabFrListTask extends AsyncTask<String, Void, Void> {
                     user_img = Statics.main_url + user_obj.getString("img_url");
 
                     userData = new UserData(user_id, user_name, age, gender, token, user_img, null);
-
                     userList.add(userData);
                 }
 

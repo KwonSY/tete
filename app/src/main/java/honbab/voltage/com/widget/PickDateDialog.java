@@ -20,7 +20,6 @@ import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.R;
 
 public class PickDateDialog {
-
     private Context mContext;
     private Fragment fragment;
 

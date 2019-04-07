@@ -7,24 +7,23 @@ import android.util.Log;
 import org.json.JSONObject;
 
 import honbab.voltage.com.tete.Statics;
+import honbab.voltage.com.widget.OkHttpClientSingleton;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 
 public class EditCommentTask extends AsyncTask<Void, Void, String> {
-
-    private OkHttpClient httpClient;
     private Context mContext;
+    private OkHttpClient httpClient;
 
-    int seq;
+//    int seq;
     String comment;
 
-    public EditCommentTask(Context mContext, OkHttpClient httpClient,
-                           String comment, int seq) {
+    public EditCommentTask(Context mContext, String comment, int seq) {
         this.mContext = mContext;
-        this.httpClient = httpClient;
+        this.httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
         this.comment = comment;
-        this.seq = seq;
+//        this.seq = seq;
     }
 
     @Override
@@ -42,7 +41,7 @@ public class EditCommentTask extends AsyncTask<Void, Void, String> {
                 .add("comment", comment)
                 .build();
 
-        Request request = new Request.Builder().url(Statics.opt_url).post(body).build();
+        Request request = new Request.Builder().url(Statics.optUrl + "profile/index.php").post(body).build();
 
         try {
             okhttp3.Response response = httpClient.newCall(request).execute();

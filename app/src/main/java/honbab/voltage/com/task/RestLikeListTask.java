@@ -20,6 +20,7 @@ import honbab.voltage.com.data.UserData;
 import honbab.voltage.com.fragment.RestLikeFragment;
 import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.Statics;
+import honbab.voltage.com.widget.OkHttpClientSingleton;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -33,9 +34,9 @@ public class RestLikeListTask extends AsyncTask<Void, Void, ArrayList<RestLikeDa
     private ArrayList<RestLikeData> restLikeList = new ArrayList<>();
     String result;
 
-    public RestLikeListTask(Context mContext, OkHttpClient httpClient) {
+    public RestLikeListTask(Context mContext) {
         this.mContext = mContext;
-        this.httpClient = httpClient;
+        this.httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
     }
 
     @Override

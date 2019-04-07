@@ -46,6 +46,9 @@ public class AfterEatingActivity extends AppCompatActivity {
                 .transform(new CircleTransform())
                 .into(img_user);
         txt_userName.setText(user_name + "님과의 식사 괜찮으셨나요?");
+
+        TextView btn_report = (TextView) findViewById(R.id.btn_report);
+        btn_report.setOnClickListener(mOnClickListener);
     }
 
     @Override
@@ -71,6 +74,15 @@ public class AfterEatingActivity extends AppCompatActivity {
                 case R.id.btn_go_main:
                     // status == finish
                     new EvaluateFeedTask(AfterEatingActivity.this).execute(user_id, feed_id, s_rating, "f");
+
+                    break;
+                case R.id.btn_report:
+
+                    Intent intent = new Intent(AfterEatingActivity.this, ReportActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.putExtra("user_id", user_id);
+                    intent.putExtra("feed_id", feed_id);
+                    startActivity(intent);
 
                     break;
             }
