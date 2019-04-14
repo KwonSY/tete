@@ -18,19 +18,22 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/layout_topbar">
 
-        <EditText
+        <AutoCompleteTextView
             android:id="@+id/edit_search_babfr"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="친구 ID 검색"
+            android:layout_height="58dp"
+            android:completionThreshold="1"
+            android:hint="친구 이름 검색"
             android:textSize="12sp" />
 
         <ImageButton
             android:id="@+id/btn_search_babfr"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="65dp"
+            android:layout_height="58dp"
+            android:scaleType="centerCrop"
+            android:tint="#efefef"
             android:layout_alignParentRight="true"
-            android:src="@drawable/icon_settting" />
+            android:src="@drawable/icon_glass_gr" />
     </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView

@@ -53,6 +53,32 @@
                 android:layout_toRightOf="@id/txt_date" />
         </RelativeLayout>
 
+<!--
+        <RelativeLayout
+            android:id="@+id/layout_pick_area"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/explain_pick_area"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_round_gr1"
+                android:gravity="center"
+                android:paddingLeft="6dp"
+                android:paddingTop="4dp"
+                android:visibility="gone"
+                android:paddingRight="6dp"
+                android:paddingBottom="4dp"
+                android:text="지역선택" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView_area"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible" />
+        </RelativeLayout>
+-->
 
         <LinearLayout
             android:layout_width="match_parent"

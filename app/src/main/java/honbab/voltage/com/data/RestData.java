@@ -8,6 +8,7 @@ import com.google.android.gms.maps.model.LatLng;
 public class RestData implements Parcelable {
 
     private String rest_id, rest_name, compound_code, place_id, rest_img, rest_phone, vicinity;
+//    private String type;
     private int cnt;
     private LatLng latLng;
     private double latitude, longtitue;
@@ -124,6 +125,14 @@ public class RestData implements Parcelable {
         this.rest_phone = rest_phone;
     }
 
+//    public String getType() {
+//        return type;
+//    }
+//
+//    public void setType(String type) {
+//        this.type = type;
+//    }
+
     public String getVicinity() {
         return vicinity;
     }
@@ -201,6 +210,7 @@ public class RestData implements Parcelable {
         dest.writeString(place_id);
         dest.writeString(rest_img);
         dest.writeString(rest_phone);
+//        dest.writeString(type);
         dest.writeString(vicinity);
         dest.writeParcelable(latLng, flags);
         dest.writeDouble(latitude);
@@ -214,6 +224,7 @@ public class RestData implements Parcelable {
         place_id = in.readString();
         rest_img = in.readString();
         rest_phone = in.readString();
+//        type = in.readString();
         vicinity = in.readString();
 //        latLng = in.read;
         latitude = in.readInt();

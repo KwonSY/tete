@@ -114,7 +114,7 @@ public class ReservFeedTask extends AsyncTask<String, Void, String> {
 
                 ((MainActivity) mContext).viewPager.setCurrentItem(1);
                 new SelectFeedListTask(mContext).execute(((SelectFeedFragment) fragment).feed_time,
-                        ((SelectFeedFragment) fragment).area_cd,
+//                        ((SelectFeedFragment) fragment).area_cd,
                         ((SelectFeedFragment) fragment).feed_rest_id,
                         "");
                 new MyFeedListTask(mContext).execute();

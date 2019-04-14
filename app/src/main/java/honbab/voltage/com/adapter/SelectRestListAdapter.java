@@ -27,10 +27,10 @@ import honbab.voltage.com.task.SelectFeedListTask;
 import honbab.voltage.com.tete.LoginActivity;
 import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.OneRestaurantActivity;
+import honbab.voltage.com.tete.PickRestLikeActivity;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.tete.Statics;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
-import honbab.voltage.com.widget.PickRestDialog;
 import okhttp3.OkHttpClient;
 
 public class SelectRestListAdapter extends RecyclerView.Adapter<SelectRestListAdapter.ViewHolder> {
@@ -172,20 +172,25 @@ public class SelectRestListAdapter extends RecyclerView.Adapter<SelectRestListAd
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             mContext.startActivity(intent);
                         } else {
-//                            Intent intent = new Intent(mContext, GodTinderActivity.class);
-//                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                            intent.putExtra("area_cd", ((SelectFeedFragment) fragment).area_cd);
-//                            mContext.startActivity(intent);
+                            Intent intent = new Intent(mContext, PickRestLikeActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.putExtra("timelike_id", ((SelectFeedFragment) fragment).timelike_id);
+                            ((MainActivity) mContext).overridePendingTransition(R.anim.slide_down, R.anim.slide_up);
+                            mContext.startActivity(intent);
 
-                            PickRestDialog dialog = new PickRestDialog(mContext);
+
+
+//                            PickRestDialog dialog = new PickRestDialog(mContext);
+//                            dialog.callFunction();
+
 //                            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
 //                            lp.copyFrom(getWindow().getAttributes());
 //                            lp.copyFrom(((Activity) mContext).getWindow().getAttributes());
 //                            lp.copyFrom(((PickRestDialog) mContext).getWindow().getAttributes());
 //                            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
 //                            lp.height = WindowManager.LayoutParams.MATCH_PARENT;
-                            dialog.callFunction(null);
+
 
 //                            mNamingDialog = new NamingDialog(MainActivity.this);
 //                            mNamingDialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
@@ -201,7 +206,7 @@ public class SelectRestListAdapter extends RecyclerView.Adapter<SelectRestListAd
         }
 
         public void setDateToView(RestData data, int position) throws Exception {
-            Log.e("abc", "mSelectedItem = " + mSelectedItem);
+            Log.e("abc", "Rest mSelectedItem = " + mSelectedItem);
 //            Log.e("abc", position + " , SELECTREST data.isChecked() = " + data.isChecked() + ", mSelectedItem = " + mSelectedItem);
 
 //            checkBox.setChecked(position == mSelectedItem);
@@ -225,8 +230,9 @@ public class SelectRestListAdapter extends RecyclerView.Adapter<SelectRestListAd
 //                checkBox.setChecked(data.isChecked());
 
                     new SelectFeedListTask(mContext).execute(((SelectFeedFragment) fragment).feed_time,
-                            ((SelectFeedFragment) fragment).area_cd,
-                            ((SelectFeedFragment) fragment).feed_rest_id, "readOnlyUser");
+//                            ((SelectFeedFragment) fragment).area_cd,
+                            ((SelectFeedFragment) fragment).feed_rest_id,
+                            "readOnlyUser");
                 } else {
                     data.setChecked(false);
 //                checkBox.setChecked(data.isChecked());
@@ -238,8 +244,9 @@ public class SelectRestListAdapter extends RecyclerView.Adapter<SelectRestListAd
 //                    ((SelectFeedFragment) fragment).feed_rest_id = data.getRest_id();
 
                     new SelectFeedListTask(mContext).execute(((SelectFeedFragment) fragment).feed_time,
-                            ((SelectFeedFragment) fragment).area_cd,
-                            ((SelectFeedFragment) fragment).feed_rest_id, "readOnlyUser");
+//                            ((SelectFeedFragment) fragment).area_cd,
+                            ((SelectFeedFragment) fragment).feed_rest_id,
+                            "readOnlyUser");
                 }
             }
 

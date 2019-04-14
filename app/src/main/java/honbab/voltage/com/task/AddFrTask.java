@@ -41,7 +41,7 @@ public class AddFrTask extends AsyncTask<String, Void, Void> {
                 .add("to_id", params[0])
                 .build();
 
-        Request request = new Request.Builder().url(Statics.opt_url).post(body).build();
+        Request request = new Request.Builder().url(Statics.optUrl + "babfr/index.php").post(body).build();
 
         try {
             okhttp3.Response response = httpClient.newCall(request).execute();

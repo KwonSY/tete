@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context=".PickRestLikeActivity">
+
+    <RelativeLayout
+        android:id="@+id/layout_title"
+        android:layout_width="match_parent"
+        android:paddingLeft="10dp"
+        android:gravity="center_vertical"
+        android:layout_height="48dp">
+
+        <TextView
+            android:id="@+id/explain_select_restlike"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="가고 싶은 음식점을 선택해보세요."
+            android:textColor="@color/black"
+            android:textSize="13sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/explain_select_restlike"
+            android:layout_marginTop="-2dp"
+            android:text="(음식점 상세를 보시려면 길게 꾸욱 눌러주세요.)"
+            android:textColor="@color/black"
+            android:textSize="10sp" />
+    </RelativeLayout>
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/layout_title"
+        android:background="@color/white"
+        android:minHeight="?attr/actionBarSize"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:theme="@style/ThemeOverlay.AppCompat.Light"
+        app:tabTextColor="@color/mainColor" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:layout_below="@id/tabLayout" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/pager">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView_rest"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
+            android:paddingBottom="82dp"
+            app:layout_constraintHeight_default="wrap"
+            app:layout_constraintHeight_max="480dp" />
+
+        <ProgressBar
+            android:id="@+id/progressBar_rest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:paddingBottom="160dp"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+
+    <Button
+        android:id="@+id/btn_go_return"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/btn_round_gr"
+        android:text="돌아가기" />
+
+    <ImageView
+        android:id="@+id/btn_cancle"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:src="@drawable/icon_x_gr_m"
+        android:text="취소"
+        android:textColor="@color/black" />
+</RelativeLayout>

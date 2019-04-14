@@ -16,7 +16,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 import honbab.voltage.com.adapter.SelectDateListAdapter;
-import honbab.voltage.com.adapter.SelectRestListAdapter;
 import honbab.voltage.com.adapter.SelectUserListAdapter;
 import honbab.voltage.com.data.RestData;
 import honbab.voltage.com.data.SelectDateData;
@@ -26,7 +25,6 @@ import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.tete.Statics;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
-import honbab.voltage.com.widget.PickRestDialog;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -39,10 +37,11 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
 
     private int split;
     private int cnt_rest_arr;
-    private String area_cd;
+//    private ArrayList<String> areasList;
+//    private String area_cd;
     private String loadStatus = "";
     private ArrayList<SelectDateData> datePickedList = new ArrayList<>();
-    private ArrayList<RestData> restList = new ArrayList<>();
+//    private ArrayList<RestData> restList = new ArrayList<>();
     private ArrayList<UserData> userList = new ArrayList<>();
 
     public SelectFeedListTask(Context mContext) {
@@ -55,18 +54,17 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
         fragment = ((MainActivity) mContext).getSupportFragmentManager().findFragmentByTag("page:0");
 
         datePickedList.clear();
-        restList.clear();
+//        restList.clear();
         userList.clear();
 
-        ((SelectFeedFragment) fragment).dateLikeList.clear();
-        ((SelectFeedFragment) fragment).restLikeList.clear();
-        ((SelectFeedFragment) fragment).restLikeList.clear();
+        ((SelectFeedFragment) fragment).dateAllList.clear();
+//        ((SelectFeedFragment) fragment).restLikeList.clear();
+//        ((SelectFeedFragment) fragment).userLikeList.clear();
     }
 
     @Override
     protected String doInBackground(String... params) {
-        loadStatus = params[3];
-        Log.e("abc", "SelectFeedListTask Statics.my_id = " + Statics.my_id);
+        loadStatus = params[2];
 
         Calendar curCal = Calendar.getInstance();
         Date curDate = curCal.getTime();
@@ -74,15 +72,14 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
         SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
         FormBody body = new FormBody.Builder()
-                .add("opt", "select_feed_list")
+                .add("opt", "select_feed_list4")
                 .add("my_id", Statics.my_id)
                 .add("datetime", params[0])
-                .add("area_cd", params[1])
-                .add("rest_id", params[2])
+//                .add("area_cd", params[1])
+                .add("rest_id", params[1])
                 .build();
 
         Request request = new Request.Builder().url(Statics.optUrl + "tab1/index.php").post(body).build();
-//        Request request = new Request.Builder().url(Statics.opt_url).post(body).build();
 
         try {
             okhttp3.Response response = httpClient.newCall(request).execute();
@@ -90,14 +87,21 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
                 String bodyStr = response.body().string();
 
                 JSONObject obj = new JSONObject(bodyStr);
-                Log.e("abc", "SelectFeedListTask obj : " + obj);
+//                Log.e("abc", "SelectFeedListTask obj : " + obj);
 
-                area_cd = obj.getString("area_cd");
+//                JSONArray areasList = obj.getJSONArray("area_cds");
+//                for (int i = 0; i<areasList.length(); i++) {
+//                    String area_cd = areasList.get(i);
+//                }
+
+//                area_cd = obj.getString("area_cds");
                 split = obj.getInt("split");
 
+                // 예약시간
                 JSONArray time_arr = obj.getJSONArray("times");
                 for (int i = 0; i < time_arr.length(); i++) {
                     JSONObject time_obj = time_arr.getJSONObject(i);
+                    String timelike_id = time_obj.getString("sid");
                     String time = time_obj.getString("time");
                     Date d_time = formatter1.parse(time);
                     String[] timeArr = time.split(" ");
@@ -125,43 +129,43 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
                     else
                         day_of_week = "";
                     int cnt_time = time_obj.getInt("cnt");
+
+                    // 예약 음식점
+                    JSONArray restArr = time_obj.getJSONArray("rests");
+                    Log.e("abc", "SelectFeedListTask restArr : " + restArr.toString());
+                    ArrayList<RestData> restList = new ArrayList<>();
+
+                    for (int j=0; j<restArr.length(); j++) {
+                        JSONObject rest_obj = restArr.getJSONObject(j);
+                        String rest_id = rest_obj.getString("sid");
+                        String rest_name = rest_obj.getString("name");
+                        String compound_code = rest_obj.getString("compound_code");
+                        String vicinity = rest_obj.getString("vicinity");
+                        String place_id = rest_obj.getString("place_id");
+                        String lat = rest_obj.getString("lat");
+                        String lng = rest_obj.getString("lng");
+                        Double db_lat = Double.parseDouble(lat);
+                        Double db_lng = Double.parseDouble(lng);
+                        LatLng latLng = new LatLng(db_lat, db_lng);
+                        String rest_phone = rest_obj.getString("phone");
+                        String rest_img = rest_obj.getString("img_url");
+                        int cnt = rest_obj.getInt("cnt");
+
+                        RestData restData = new RestData(rest_id, rest_name, compound_code, latLng, place_id, rest_img, rest_phone, vicinity, cnt);
+                        restList.add(restData);
+                    }
+
                     String status = time_obj.getString("status");
 
-                    SelectDateData dateData = new SelectDateData(time, timeName, day_of_week, cnt_time, status);
-                    ((SelectFeedFragment) fragment).dateLikeList.add(dateData);
+                    SelectDateData dateData = new SelectDateData(timelike_id, time, timeName, day_of_week, restList, cnt_time, status);
+                    ((SelectFeedFragment) fragment).dateAllList.add(dateData);
                     if (dateData.getStatus().equals("y") && d_time.after(curDate))
                         datePickedList.add(dateData);
                 }
 
-                JSONArray rest_arr = obj.getJSONArray("rests");
-                cnt_rest_arr = rest_arr.length();
-                for (int i = 0; i < rest_arr.length(); i++) {
-                    JSONObject rest_obj = rest_arr.getJSONObject(i);
-                    String rest_id = rest_obj.getString("sid");
-                    String rest_name = rest_obj.getString("name");
-                    String compound_code = rest_obj.getString("compound_code");
-                    String vicinity = rest_obj.getString("vicinity");
-                    String place_id = rest_obj.getString("place_id");
-                    double lat = rest_obj.getDouble("lat");
-                    double lng = rest_obj.getDouble("lng");
-                    String phone = rest_obj.getString("phone");
-                    String rest_img = rest_obj.getString("img_url");
-                    String like_yn = rest_obj.getString("like_yn");
-                    int cnt = rest_obj.getInt("cnt");
-
-                    RestData restData = new RestData(rest_id, rest_name, compound_code, new LatLng(lat, lng), place_id, rest_img, phone, vicinity, cnt);
-                    if (((SelectFeedFragment) fragment).feed_rest_id.equals(rest_id))
-                        restData.setChecked(true);
-                    else
-                        restData.setChecked(false);
-                    restData.setLike_yn(like_yn);
-                    if (like_yn.equals("y")) {
-                        restList.add(restData);
-                        ((SelectFeedFragment) fragment).restLikeList.add(rest_id);
-                    }
-                }
-
+                // 예약 대기 사용자
                 JSONArray user_arr = obj.getJSONArray("users");
+                Log.e("abc", "SelectFeedListTask user_arr : " + user_arr.toString());
                 for (int i = 0; i < user_arr.length(); i++) {
                     JSONObject user_obj = user_arr.getJSONObject(i);
                     String user_id = user_obj.getString("sid");
@@ -172,7 +176,7 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
                     String user_img = user_obj.getString("img_url");
                     String comment = user_obj.getString("comment");
 
-                    UserData userData = new UserData(user_id, user_name, age, gender, token, user_img, null);
+                    UserData userData = new UserData(user_id, user_name, age, gender, token, user_img, null, null);
                     userData.setComment(comment);
                     userList.add(userData);
                 }
@@ -185,7 +189,7 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
             Log.e("abc", "Error : " + e.getMessage());
             e.printStackTrace();
         }
-        return area_cd;
+        return "GNS1";
     }
 
     @Override
@@ -195,35 +199,15 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
         String activityName = mContext.getClass().getSimpleName();
 
         if (activityName.equals("MainActivity")) {
-            ((SelectFeedFragment) fragment).area_cd = area_cd;
+//            ((SelectFeedFragment) fragment).area_cd = area_cd;
             ((SelectFeedFragment) fragment).split = split;
-            Log.e("abc", "((SelectFeedFragment) fragment).spinnerAdapter.getCount() = " + ((SelectFeedFragment) fragment).spinnerAdapter.getCount());
+//            Log.e("abc", "((SelectFeedFragment) fragment).spinnerAdapter.getCount() = " + ((SelectFeedFragment) fragment).spinnerAdapter.getCount());
+//
+//            if (cnt_rest_arr == 0 && ((SelectFeedFragment) fragment).spinnerAdapter.getCount() > 1) {
+//                PickRestDialog dialog = new PickRestDialog(mContext);
+//                dialog.callFunction(null);
+//            }
 
-            if (cnt_rest_arr == 0 && ((SelectFeedFragment) fragment).spinnerAdapter.getCount() > 1) {
-                PickRestDialog dialog = new PickRestDialog(mContext);
-                dialog.callFunction(null);
-
-//                Log.e("abc", "((SelectFeedFragment) fragment).area_cd = " + ((SelectFeedFragment) fragment).area_cd);
-//                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-//                builder.setMessage("이 지역 음식점을 둘러보시겠어요?");
-//                builder.setPositiveButton("음식점 둘러보기",
-//                        new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int which) {
-//                                Intent intent = new Intent(mContext, GodTinderActivity.class);
-//                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                                intent.putExtra("area_cd", ((SelectFeedFragment) fragment).area_cd);
-//                                mContext.startActivity(intent);
-//                            }
-//                        });
-////                builder.setNegativeButton(R.string.no,
-////                        new DialogInterface.OnClickListener() {
-////                            public void onClick(DialogInterface dialog, int which) {
-//////                                holder.btn_check_feedee.setBackgroundResource(R.drawable.icon_check_n);
-////                            }
-////                        });
-//                builder.show();
-            }
 
             if (loadStatus.equals("readOnlyUser")) {
                 if (((SelectFeedFragment) fragment).feed_time.equals(""))
@@ -242,10 +226,10 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
                 ((SelectFeedFragment) fragment).to_id = "";
                 ((SelectFeedFragment) fragment).txt_explain_reserv.setText(R.string.explain_choose_feedee);
 
-                ((SelectFeedFragment) fragment).mAdapter_rest.clearItemList();
-                ((SelectFeedFragment) fragment).mAdapter_rest = new SelectRestListAdapter(mContext, restList);
-                ((SelectFeedFragment) fragment).recyclerView_rest.setAdapter(((SelectFeedFragment) fragment).mAdapter_rest);
-                ((SelectFeedFragment) fragment).mAdapter_rest.notifyDataSetChanged();
+//                ((SelectFeedFragment) fragment).mAdapter_rest.clearItemList();
+//                ((SelectFeedFragment) fragment).mAdapter_rest = new SelectRestListAdapter(mContext, restList);
+//                ((SelectFeedFragment) fragment).recyclerView_rest.setAdapter(((SelectFeedFragment) fragment).mAdapter_rest);
+//                ((SelectFeedFragment) fragment).mAdapter_rest.notifyDataSetChanged();
 
                 ((SelectFeedFragment) fragment).mAdapter_user.clearItemList();
                 ((SelectFeedFragment) fragment).mAdapter_user = new SelectUserListAdapter(mContext, userList);
@@ -264,10 +248,10 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
                 ((SelectFeedFragment) fragment).recyclerView_date.setAdapter(((SelectFeedFragment) fragment).mAdapter_date);
                 ((SelectFeedFragment) fragment).mAdapter_date.notifyDataSetChanged();
 
-                ((SelectFeedFragment) fragment).mAdapter_rest.clearItemList();
-                ((SelectFeedFragment) fragment).mAdapter_rest = new SelectRestListAdapter(mContext, restList);
-                ((SelectFeedFragment) fragment).recyclerView_rest.setAdapter(((SelectFeedFragment) fragment).mAdapter_rest);
-                ((SelectFeedFragment) fragment).mAdapter_rest.notifyDataSetChanged();
+//                ((SelectFeedFragment) fragment).mAdapter_rest.clearItemList();
+//                ((SelectFeedFragment) fragment).mAdapter_rest = new SelectRestListAdapter(mContext, restList);
+//                ((SelectFeedFragment) fragment).recyclerView_rest.setAdapter(((SelectFeedFragment) fragment).mAdapter_rest);
+//                ((SelectFeedFragment) fragment).mAdapter_rest.notifyDataSetChanged();
 
                 ((SelectFeedFragment) fragment).mAdapter_user.clearItemList();
                 ((SelectFeedFragment) fragment).mAdapter_user = new SelectUserListAdapter(mContext, userList);

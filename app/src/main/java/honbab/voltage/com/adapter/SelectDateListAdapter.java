@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -178,7 +179,7 @@ public class SelectDateListAdapter extends RecyclerView.Adapter<SelectDateListAd
                                 mAdapter.onItemHolderClick(ViewHolder.this);
 
                                 new SelectFeedListTask(mContext).execute(((SelectFeedFragment) fragment).feed_time,
-                                        ((SelectFeedFragment) fragment).area_cd,
+//                                        ((SelectFeedFragment) fragment).area_cd,
                                         ((SelectFeedFragment) fragment).feed_rest_id,
                                         "readBelowRest");
                             } else {
@@ -205,7 +206,7 @@ public class SelectDateListAdapter extends RecyclerView.Adapter<SelectDateListAd
                             mContext.startActivity(intent);
                         } else {
                             PickDateDialog pickDateDialog = new PickDateDialog(mContext);
-                            pickDateDialog.callFunction(((SelectFeedFragment) fragment).dateLikeList);
+                            pickDateDialog.callFunction(((SelectFeedFragment) fragment).dateAllList);
                         }
                     }
                 });
@@ -214,10 +215,13 @@ public class SelectDateListAdapter extends RecyclerView.Adapter<SelectDateListAd
 
         public void setDateToView(SelectDateData data, int position) throws Exception {
 //            checkBox.setChecked(position == mSelectedItem);
+            Log.e("abc", position + ", mSelectedItem = " + mSelectedItem);
 
             if (mSelectedItem >= 0) {//선택이 되었으면
                 if (position == mSelectedItem) {
+                    ((SelectFeedFragment) fragment).timelike_id = data.getTimelike_id();
                     ((SelectFeedFragment) fragment).feed_time = data.getTime();
+//                    ((SelectFeedFragment) fragment).areaList = data.getAreasList();
                     SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
                     SimpleDateFormat formatter2 = new SimpleDateFormat("M/d E요일");
                     Date date = formatter1.parse(data.getTime());
@@ -235,15 +239,26 @@ public class SelectDateListAdapter extends RecyclerView.Adapter<SelectDateListAd
                     }
 
                     data.setChecked(true);
+
+//                    Log.e("abc", position + ", data.getAreasList() = " + data.getAreasList());
+//                    ((SelectFeedFragment) fragment).mAdapter_area.clearItemList();
+//                    ((SelectFeedFragment) fragment).mAdapter_area = new SelectAreaListAdapter(mContext, data.getAreasList());
+//                    ((SelectFeedFragment) fragment).recyclerView_area.setAdapter(((SelectFeedFragment) fragment).mAdapter_area);
+//                    ((SelectFeedFragment) fragment).mAdapter_area.notifyDataSetChanged();
+                    Log.e("abc", position + ", data.getRestList() = " + data.getRestList().size());
+//                    ((SelectFeedFragment) fragment).mAdapter_rest.clearItemList();
+                    ((SelectFeedFragment) fragment).mAdapter_rest = new SelectRestListAdapter(mContext, data.getRestList());
+                    ((SelectFeedFragment) fragment).recyclerView_rest.setAdapter(((SelectFeedFragment) fragment).mAdapter_rest);
+                    ((SelectFeedFragment) fragment).mAdapter_rest.notifyDataSetChanged();
                 } else {
                     data.setChecked(false);
-
                 }
             } else {//선택이 없으나, 사전에 체크 표기
 
                 if (listViewItemList.size() == 1) {
+                    ((SelectFeedFragment) fragment).timelike_id = data.getTimelike_id();
                     ((SelectFeedFragment) fragment).feed_time = data.getTime();
-                    ((SelectFeedFragment) fragment).feed_time = data.getTime();
+//                    ((SelectFeedFragment) fragment).areaList = data.getAreasList();
                     SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
                     SimpleDateFormat formatter2 = new SimpleDateFormat("M/d E요일");
                     Date date = formatter1.parse(data.getTime());
@@ -252,15 +267,16 @@ public class SelectDateListAdapter extends RecyclerView.Adapter<SelectDateListAd
 
                     data.setChecked(true);
 
-//                    new SelectFeedListTask(mContext).execute(((SelectFeedFragment) fragment).feed_time,
-//                            ((SelectFeedFragment) fragment).area_cd,
-//                            ((SelectFeedFragment) fragment).feed_rest_id,
-//                            "readBelowRest");
-//                    Log.e("abc", "Select date feed_time = " + ((SelectFeedFragment) fragment).feed_time);
+                    ((SelectFeedFragment) fragment).mAdapter_rest.clearItemList();
+                    ((SelectFeedFragment) fragment).mAdapter_rest = new SelectRestListAdapter(mContext, data.getRestList());
+                    ((SelectFeedFragment) fragment).recyclerView_rest.setAdapter(((SelectFeedFragment) fragment).mAdapter_rest);
+                    ((SelectFeedFragment) fragment).mAdapter_rest.notifyDataSetChanged();
                 } else {
 //                    if (listViewItemList.size() == position + 1) {
                     if (position ==  0) {
+                        ((SelectFeedFragment) fragment).timelike_id = data.getTimelike_id();
                         ((SelectFeedFragment) fragment).feed_time = data.getTime();
+//                        ((SelectFeedFragment) fragment).restLikeList = data.getRestList();
                         SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
                         SimpleDateFormat formatter2 = new SimpleDateFormat("M/d E요일");
                         Date date = formatter1.parse(data.getTime());
@@ -268,6 +284,14 @@ public class SelectDateListAdapter extends RecyclerView.Adapter<SelectDateListAd
                         ((SelectFeedFragment) fragment).txt_explain_time.setText(str_feed_time + " , ");
 
                         data.setChecked(true);
+
+//                        ((SelectFeedFragment) fragment).mAdapter_area.clearItemList();
+//                        ((SelectFeedFragment) fragment).mAdapter_area = new SelectAreaListAdapter(mContext, data.getAreasList());
+//                        ((SelectFeedFragment) fragment).recyclerView_area.setAdapter(((SelectFeedFragment) fragment).mAdapter_area);
+                        ((SelectFeedFragment) fragment).mAdapter_rest.clearItemList();
+                        ((SelectFeedFragment) fragment).mAdapter_rest = new SelectRestListAdapter(mContext, data.getRestList());
+                        ((SelectFeedFragment) fragment).recyclerView_rest.setAdapter(((SelectFeedFragment) fragment).mAdapter_rest);
+                        ((SelectFeedFragment) fragment).mAdapter_rest.notifyDataSetChanged();
                     }
                 }
             }

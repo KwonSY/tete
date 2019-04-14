@@ -1,14 +1,10 @@
 package honbab.voltage.com.fragment;
 
-import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -19,9 +15,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
@@ -32,13 +27,12 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
 
+import honbab.voltage.com.adapter.SelectAreaListAdapter;
 import honbab.voltage.com.adapter.SelectDateListAdapter;
 import honbab.voltage.com.adapter.SelectRestListAdapter;
 import honbab.voltage.com.adapter.SelectUserListAdapter;
@@ -62,8 +56,10 @@ public class SelectFeedFragment extends Fragment implements LocationListener,
     private OkHttpClient httpClient;
 
     public TextView txt_date;
-    public RecyclerView recyclerView_date, recyclerView_rest, recyclerView_user;
+    public RecyclerView recyclerView_date, recyclerView_area, recyclerView_rest, recyclerView_user;
+    public RelativeLayout layout_pick_area;
     public SelectDateListAdapter mAdapter_date;
+    public SelectAreaListAdapter mAdapter_area;
     public SelectRestListAdapter mAdapter_rest;
     public SelectUserListAdapter mAdapter_user;
     public SwipeRefreshLayout swipeContainer;
@@ -76,16 +72,17 @@ public class SelectFeedFragment extends Fragment implements LocationListener,
     private FusedLocationProviderClient mFusedLocationClient;
 
     public int split = 2;
-    public String area_cd = "SUGNS1";
+    public String area_cd = "GNS1";
+//    public ArrayList<String> area_cds = new ArrayList<String>();
+    public String timelike_id = "";
     public String feed_time = "";
     public String feed_rest_id = "";
     public String to_id = "", to_name = "";
-    public ArrayList<AreaData> areaList;
-    public ArrayList<String> areaNameList;
-    private double latitude, longitude;
+    public ArrayList<AreaData> areaAllList;//xx
 
-    public ArrayList<SelectDateData> dateLikeList = new ArrayList<>();
-    public ArrayList<String> restLikeList = new ArrayList<>();
+    public ArrayList<SelectDateData> dateAllList = new ArrayList<>();
+//    public ArrayList<RestData> restLikeList = new ArrayList<>();
+//    public ArrayList<String> restLikeList = new ArrayList<>();
 
     public static SelectFeedFragment newInstance(int val) {
         SelectFeedFragment fragment = new SelectFeedFragment();
@@ -115,11 +112,13 @@ public class SelectFeedFragment extends Fragment implements LocationListener,
     public void onStart() {
         super.onStart();
 
-        areaList = new ArrayList<>();
-        areaNameList = new ArrayList<>();
-        AreaData areaData = new AreaData("SUGNS1", "강남역");
-        areaList.add(areaData);
-        areaNameList.add("강남역");
+//        areaList = new ArrayList<>();
+//        areaNameList = new ArrayList<>();
+//        AreaData areaData = new AreaData("GNS1", "강남역");
+//        areaList.add(areaData);
+//        areaNameList.add("강남역");
+
+
 
         initControls();
     }
@@ -128,10 +127,24 @@ public class SelectFeedFragment extends Fragment implements LocationListener,
     public void onResume() {
         super.onResume();
 
+        new SelectFeedListTask(getActivity()).execute(feed_time, feed_rest_id, "");
+
+
 //        Log.e("abc", "longitude = " + longitude);
 //        if (longitude == 0) {
 //            new AreaRestTask(getActivity()).execute();
 ////            new SelectFeedListTask(getActivity()).execute(feed_time, area_cd, feed_rest_id, "");
+//        }
+
+        new AreaRestTask(getActivity()).execute();
+//        try {
+//            areaList.clear();
+//            areaList = new AreaRestTask(getActivity()).execute().get();
+//            Log.e("abc", "areaList = " + areaList.size());
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
 //        }
 
 //        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -171,156 +184,156 @@ public class SelectFeedFragment extends Fragment implements LocationListener,
     }
 
     private void initControls() {
-        spinner = (Spinner) getActivity().findViewById(R.id.spinner_location);
-        spinnerAdapter = new ArrayAdapter(getActivity(), R.layout.item_row_spinner, areaNameList);
-        spinner.setAdapter(spinnerAdapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Log.e("abc", "parent.getCount() = " + parent.getCount());
-
-                if (parent.getCount() == 1) {
-                    if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                        // TODO: Consider calling
-                        //    ActivityCompat#requestPermissions
-                        // here to request the missing permissions, and then overriding
-                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                        //                                          int[] grantResults)
-                        // to handle the case where the user grants the permission. See the documentation
-                        // for ActivityCompat#requestPermissions for more details.
-                        return;
-                    }
-                    mFusedLocationClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
-                        @Override
-                        public void onSuccess(Location location) {
-                            if (location != null) {
-                                latitude = location.getLatitude();
-                                longitude = location.getLongitude();
-//                    LatLng latLng = new LatLng(latitude, longitude);
-                                Log.e("abc", "latitude = " + latitude + ", " + longitude);
-
-                                //시별
-                                LatLng citySeoul = new LatLng(37.515022, 126.982819);//서울시
-                                LatLng cityYangyang = new LatLng(38.080205, 128.624549);//양양시
-                                LatLng cityBusan = new LatLng(35.156710, 129.059425);//부산시
-                                LatLng cityJeju = new LatLng(33.505210, 126.497644);//제주시
-
-                                LatLng llGangNam = new LatLng(37.4979462, 127.025427);//강남역
-                                LatLng llEulJiRo = new LatLng(37.5660602, 126.980468);//을지로입구역
-                                LatLng llSinChon = new LatLng(37.5597212, 126.9403285);//신촌역
-                                LatLng llSeoulUni = new LatLng(37.4812142, 126.950518);//서울대입구역
-                                LatLng llNoRyang = new LatLng(37.513567, 126.9393334);//노량진역
-
-                                LatLng llJamSil = new LatLng(37.5153934, 127.10273);//잠실역
-                                LatLng llGunDae = new LatLng(37.5392502, 127.0691476);//건대입구역
-                                LatLng llHaeHwa = new LatLng(37.5820842, 126.9997033);//혜화역
-                                LatLng llSeoMyeon = new LatLng(35.1568282, 129.057955);//부산 서면역
-                                LatLng llHaeUnDae = new LatLng(35.1647738, 129.1379978);//부산 해운대역
-
-                                LatLng llJaeJu = new LatLng(33.505210, 126.497644);//제주공항
-
-
-
-                                LatLng[] cityLLGroup = new LatLng[]{citySeoul, cityYangyang, cityBusan, cityJeju};
-                                LatLng[] stationLLGroup = new LatLng[]{llGangNam, llEulJiRo, llSinChon, llSeoulUni, llNoRyang};
-                                //, llJamSil, llGunDae, llHaeHwa,
-                                // llSeoMyeon, llHaeUnDae
-
-                                int i = 0;
-                                Location target = new Location("target");
-//                                String city_name = "";
-//                                for (LatLng point : cityLLGroup) {
+//        spinner = (Spinner) getActivity().findViewById(R.id.spinner_location);
+//        spinnerAdapter = new ArrayAdapter(getActivity(), R.layout.item_row_spinner, areaNameList);
+//        spinner.setAdapter(spinnerAdapter);
+//        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                Log.e("abc", "parent.getCount() = " + parent.getCount());
+//
+//                if (parent.getCount() == 1) {
+//                    if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                        // TODO: Consider calling
+//                        //    ActivityCompat#requestPermissions
+//                        // here to request the missing permissions, and then overriding
+//                        //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+//                        //                                          int[] grantResults)
+//                        // to handle the case where the user grants the permission. See the documentation
+//                        // for ActivityCompat#requestPermissions for more details.
+//                        return;
+//                    }
+//                    mFusedLocationClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
+//                        @Override
+//                        public void onSuccess(Location location) {
+//                            if (location != null) {
+//                                latitude = location.getLatitude();
+//                                longitude = location.getLongitude();
+////                    LatLng latLng = new LatLng(latitude, longitude);
+//                                Log.e("abc", "latitude = " + latitude + ", " + longitude);
+//
+//                                //시별
+//                                LatLng citySeoul = new LatLng(37.515022, 126.982819);//서울시
+//                                LatLng cityYangyang = new LatLng(38.080205, 128.624549);//양양시
+//                                LatLng cityBusan = new LatLng(35.156710, 129.059425);//부산시
+//                                LatLng cityJeju = new LatLng(33.505210, 126.497644);//제주시
+//
+//                                LatLng llGangNam = new LatLng(37.4979462, 127.025427);//강남역
+//                                LatLng llEulJiRo = new LatLng(37.5660602, 126.980468);//을지로입구역
+//                                LatLng llSinChon = new LatLng(37.5597212, 126.9403285);//신촌역
+//                                LatLng llSeoulUni = new LatLng(37.4812142, 126.950518);//서울대입구역
+//                                LatLng llNoRyang = new LatLng(37.513567, 126.9393334);//노량진역
+//
+//                                LatLng llJamSil = new LatLng(37.5153934, 127.10273);//잠실역
+//                                LatLng llGunDae = new LatLng(37.5392502, 127.0691476);//건대입구역
+//                                LatLng llHaeHwa = new LatLng(37.5820842, 126.9997033);//혜화역
+//                                LatLng llSeoMyeon = new LatLng(35.1568282, 129.057955);//부산 서면역
+//                                LatLng llHaeUnDae = new LatLng(35.1647738, 129.1379978);//부산 해운대역
+//
+//                                LatLng llJaeJu = new LatLng(33.505210, 126.497644);//제주공항
+//
+//
+//
+//                                LatLng[] cityLLGroup = new LatLng[]{citySeoul, cityYangyang, cityBusan, cityJeju};
+//                                LatLng[] stationLLGroup = new LatLng[]{llGangNam, llEulJiRo, llSinChon, llSeoulUni, llNoRyang};
+//                                //, llJamSil, llGunDae, llHaeHwa,
+//                                // llSeoMyeon, llHaeUnDae
+//
+//                                int i = 0;
+//                                Location target = new Location("target");
+////                                String city_name = "";
+////                                for (LatLng point : cityLLGroup) {
+////                                    target.setLatitude(point.latitude);
+////                                    target.setLongitude(point.longitude);
+////                                    if (location.distanceTo(target) < 20000) {
+////                                        if (i == 0)
+////                                            city_name = "seoul";
+////                                        else if (i == 1)
+////                                            city_name = "yangyang";
+////                                        else if (i == 2)
+////                                            city_name = "busan";
+////                                        else if (i == 3)
+////                                            city_name = "jeju";
+////                                        else
+////                                            area_cd = "seoul";
+////                                    }
+////
+////                                    i++;
+////                                }
+//
+//
+//
+//                                for (LatLng point : stationLLGroup) {
 //                                    target.setLatitude(point.latitude);
 //                                    target.setLongitude(point.longitude);
-//                                    if (location.distanceTo(target) < 20000) {
+//                                    if (location.distanceTo(target) < 1700) {
+//                                        // bingo!
+////                                        Log.e("abc", "bingo" + point.latitude + point.longitude);
+//
 //                                        if (i == 0)
-//                                            city_name = "seoul";
+//                                            area_cd = "SUGNS1";
 //                                        else if (i == 1)
-//                                            city_name = "yangyang";
+//                                            area_cd = "SUJGS1";
 //                                        else if (i == 2)
-//                                            city_name = "busan";
+//                                            area_cd = "SUSDH1";
 //                                        else if (i == 3)
-//                                            city_name = "jeju";
+//                                            area_cd = "SUGAS1";
+//                                        else if (i == 4)
+//                                            area_cd = "SUDJS1";
 //                                        else
-//                                            area_cd = "seoul";
+//                                            area_cd = "SUGNS1";
 //                                    }
 //
 //                                    i++;
 //                                }
-
-
-
-                                for (LatLng point : stationLLGroup) {
-                                    target.setLatitude(point.latitude);
-                                    target.setLongitude(point.longitude);
-                                    if (location.distanceTo(target) < 1700) {
-                                        // bingo!
-//                                        Log.e("abc", "bingo" + point.latitude + point.longitude);
-
-                                        if (i == 0)
-                                            area_cd = "SUGNS1";
-                                        else if (i == 1)
-                                            area_cd = "SUJGS1";
-                                        else if (i == 2)
-                                            area_cd = "SUSDH1";
-                                        else if (i == 3)
-                                            area_cd = "SUGAS1";
-                                        else if (i == 4)
-                                            area_cd = "SUDJS1";
-                                        else
-                                            area_cd = "SUGNS1";
-                                    }
-
-                                    i++;
-                                }
-
-//                                if (latitude > 37.511083) {
-//                                    area_cd = "SDH1";
-////                                    spinner.setSelection(1);
 //
-////                                    new SelectFeedListTask(getActivity()).execute(feed_time, area_cd, feed_rest_id, "");
-//                                } else {
-//                                    area_cd = "SUGNS1";
-////                                    spinner.setSelection(0);
-//                                }
-
-                                new AreaRestTask(getActivity()).execute();
-//                                new SelectFeedListTask(getActivity()).execute(feed_time, area_cd, feed_rest_id, "");
-                            }
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.e("abc", "addOnFailureListener = " + e);
-                            new SelectFeedListTask(getActivity()).execute(feed_time, area_cd, feed_rest_id, "");
-                        }
-                    });
-                } else {
-                    int r = 0;
-
-                    for (int i = 0; i < areaList.size(); i++) {
-                        if (areaList.get(i).getArea_name().equals(spinner.getSelectedItem().toString()))
-                            r = i;
-                    }
-
-                    area_cd = areaList.get(r).getArea_cd();
-//                    Log.e("abc", "onItemSelected area_cd = " + area_cd);
-//                    Log.e("abc", "spinner.getSelectedItem() = " + spinner.getSelectedItem());
-
-                    new SelectFeedListTask(getActivity()).execute(feed_time, area_cd, feed_rest_id, "");
-                }
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-//                area_cd = areaList.get(0).getArea_cd();
-                Log.e("abc", "onNothingSelected area_cd = " + area_cd);
-
-
-                return;
-            }
-        });
+////                                if (latitude > 37.511083) {
+////                                    area_cd = "SDH1";
+//////                                    spinner.setSelection(1);
+////
+//////                                    new SelectFeedListTask(getActivity()).execute(feed_time, area_cd, feed_rest_id, "");
+////                                } else {
+////                                    area_cd = "SUGNS1";
+//////                                    spinner.setSelection(0);
+////                                }
+//
+//                                new AreaRestTask(getActivity()).execute();
+////                                new SelectFeedListTask(getActivity()).execute(feed_time, area_cd, feed_rest_id, "");
+//                            }
+//                        }
+//                    }).addOnFailureListener(new OnFailureListener() {
+//                        @Override
+//                        public void onFailure(@NonNull Exception e) {
+//                            Log.e("abc", "addOnFailureListener = " + e);
+//                            new SelectFeedListTask(getActivity()).execute(feed_time, area_cd, feed_rest_id, "");
+//                        }
+//                    });
+//                } else {
+//                    int r = 0;
+//
+//                    for (int i = 0; i < areaList.size(); i++) {
+//                        if (areaList.get(i).getArea_name().equals(spinner.getSelectedItem().toString()))
+//                            r = i;
+//                    }
+//
+//                    area_cd = areaList.get(r).getArea_cd();
+////                    Log.e("abc", "onItemSelected area_cd = " + area_cd);
+////                    Log.e("abc", "spinner.getSelectedItem() = " + spinner.getSelectedItem());
+//
+//                    new SelectFeedListTask(getActivity()).execute(feed_time, area_cd, feed_rest_id, "");
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+////                area_cd = areaList.get(0).getArea_cd();
+//                Log.e("abc", "onNothingSelected area_cd = " + area_cd);
+//
+//
+//                return;
+//            }
+//        });
 
 
 //        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
@@ -340,10 +353,12 @@ public class SelectFeedFragment extends Fragment implements LocationListener,
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager layoutManager2 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+//        LinearLayoutManager layoutManager3 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
 
         txt_date = (TextView) getActivity().findViewById(R.id.txt_date);
 
+        //날짜
         recyclerView_date = (RecyclerView) getActivity().findViewById(R.id.recyclerView_date);
         recyclerView_date.setLayoutManager(layoutManager);
         mAdapter_date = new SelectDateListAdapter();
@@ -355,6 +370,34 @@ public class SelectFeedFragment extends Fragment implements LocationListener,
         recyclerView_date.addItemDecoration(new SpacesItemDecoration(18));
 //        recyclerView_date.addItemDecoration(itemDecoration);
 
+//        //지역
+//        layout_pick_area = (RelativeLayout) getActivity().findViewById(R.id.layout_pick_area);
+//        recyclerView_area = (RecyclerView) getActivity().findViewById(R.id.recyclerView_area);
+//        recyclerView_area.setLayoutManager(layoutManager3);
+//        mAdapter_area = new SelectAreaListAdapter(getActivity());
+//        recyclerView_area.setAdapter(mAdapter_area);
+//        while (recyclerView_area.getItemDecorationCount() > 0) {
+//            recyclerView_area.removeItemDecorationAt(0);
+//        }
+//        recyclerView_area.addItemDecoration(new SpacesItemDecoration(18));
+
+//        try {
+//            areaList = new AreaRestTask(getActivity()).execute().get();
+//            mAdapter_area = new SelectAreaListAdapter(getActivity(), areaList);
+//            recyclerView_area.setAdapter(mAdapter_area);
+//
+//            while (recyclerView_area.getItemDecorationCount() > 0) {
+//                recyclerView_area.removeItemDecorationAt(0);
+//            }
+//            recyclerView_area.addItemDecoration(new SpacesItemDecoration(18));
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+
+
+        //음식점
         recyclerView_rest = (RecyclerView) getActivity().findViewById(R.id.recyclerView_rest);
         recyclerView_rest.setLayoutManager(layoutManager2);
         mAdapter_rest = new SelectRestListAdapter(getActivity());
@@ -398,7 +441,8 @@ public class SelectFeedFragment extends Fragment implements LocationListener,
                 mAdapter_user.clearItemList();
 
 //                String str_date = year + String.valueOf(month) + "/" + String.valueOf(day);
-                new SelectFeedListTask(getActivity()).execute(feed_time, area_cd, feed_rest_id, "");
+//                new SelectFeedListTask(getActivity()).execute(feed_time, area_cd, feed_rest_id, "");
+                new SelectFeedListTask(getActivity()).execute(feed_time, feed_rest_id, "");
             }
         });
 

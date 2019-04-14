@@ -96,7 +96,7 @@ public class PickDateTask extends AsyncTask<String, Void, String> {
 //                ((SelectFeedFragment) fragment).feed_time = feed_time;
 
                 new SelectFeedListTask(mContext).execute(((SelectFeedFragment) fragment).feed_time,
-                        ((SelectFeedFragment) fragment).area_cd,
+//                        ((SelectFeedFragment) fragment).area_cd,
                         ((SelectFeedFragment) fragment).feed_rest_id,
                         "");//readBelowRest
             } else if (result.equals("1")) {

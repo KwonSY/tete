@@ -32,7 +32,7 @@ public class PickDateDialog {
     }
 
     // 호출할 다이얼로그 함수를 정의한다.
-    public void callFunction(ArrayList<SelectDateData> dateLikeList) {
+    public void callFunction(ArrayList<SelectDateData> dateAllList) {
         final Dialog dlg = new Dialog(mContext);
 
         // 액티비티의 타이틀바를 숨긴다.
@@ -43,7 +43,7 @@ public class PickDateDialog {
         GridLayoutManager layoutManager = new GridLayoutManager(mContext, 2, GridLayoutManager.VERTICAL, false);
         recyclerView = (RecyclerView) dlg.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(layoutManager);
-        mAdapter = new DialogDateListAdapter(mContext, dateLikeList);
+        mAdapter = new DialogDateListAdapter(mContext, dateAllList);
         recyclerView.setAdapter(mAdapter);
         while (recyclerView.getItemDecorationCount() > 0) {
             recyclerView.removeItemDecorationAt(0);
@@ -55,7 +55,7 @@ public class PickDateDialog {
             @Override
             public void onClick(View view) {
                 new SelectFeedListTask(mContext).execute(((SelectFeedFragment) fragment).feed_time,
-                        ((SelectFeedFragment) fragment).area_cd,
+//                        ((SelectFeedFragment) fragment).area_cd,
                         ((SelectFeedFragment) fragment).feed_rest_id,
                         "");
 
@@ -68,7 +68,7 @@ public class PickDateDialog {
             @Override
             public void onClick(View v) {
                 new SelectFeedListTask(mContext).execute(((SelectFeedFragment) fragment).feed_time,
-                        ((SelectFeedFragment) fragment).area_cd,
+//                        ((SelectFeedFragment) fragment).area_cd,
                         ((SelectFeedFragment) fragment).feed_rest_id,
                         "");
 

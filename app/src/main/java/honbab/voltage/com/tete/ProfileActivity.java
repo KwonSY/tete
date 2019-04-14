@@ -1,6 +1,7 @@
 package honbab.voltage.com.tete;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -8,6 +9,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -36,6 +38,7 @@ import java.util.Map;
 
 import honbab.voltage.com.task.AccountTask;
 import honbab.voltage.com.task.AddFrTask;
+import honbab.voltage.com.task.DelFrTask;
 import honbab.voltage.com.task.EditCommentTask;
 import honbab.voltage.com.utils.BitmapUtil;
 import honbab.voltage.com.utils.ButtonUtil;
@@ -203,14 +206,32 @@ public class ProfileActivity extends AppCompatActivity {
 
                     break;
                 case R.id.btn_add_fr:
-                    if (fr_status.equals("wait_accept")) {
-                        btn_add_fr.setText("친구");
-                    } else {
-                        btn_add_fr.setText("요청중");
-                    }
-                    btn_add_fr.setEnabled(false);
+                    if (fr_status.equals("fr")) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(ProfileActivity.this);
+                        builder.setMessage("친구를 취소하시겠습니까?");
+                        builder.setPositiveButton(R.string.yes,
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        new DelFrTask(ProfileActivity.this).execute(user_id);
+                                    }
+                                });
+                        builder.setNegativeButton(R.string.no,
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
 
-                    new AddFrTask(ProfileActivity.this).execute(user_id);
+                                    }
+                                });
+                        builder.show();
+                    } else {
+                        if (fr_status.equals("wait_accept")) {
+                            btn_add_fr.setText("친구");
+                        } else {
+                            btn_add_fr.setText("요청중");
+                        }
+                        btn_add_fr.setEnabled(false);
+
+                        new AddFrTask(ProfileActivity.this).execute(user_id);
+                    }
 
                     break;
             }

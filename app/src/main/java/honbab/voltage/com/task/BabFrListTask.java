@@ -28,7 +28,7 @@ public class BabFrListTask extends AsyncTask<String, Void, Void> {
     ArrayList<UserData> userList = new ArrayList<>();
 //    HashMap<String, Integer> chatListHash = new HashMap<>();
 
-    private String user_id, user_name, user_img, comment, token, fr_status;
+    private String user_id, user_name, user_img, comment, token, fr_status, status, status_name;
 
     public BabFrListTask(Context mContext) {
         this.mContext = mContext;
@@ -48,14 +48,14 @@ public class BabFrListTask extends AsyncTask<String, Void, Void> {
 
     @Override
     protected Void doInBackground(String... objects) {
-        UserData userData = new UserData();
+//        UserData userData = new UserData();
 
         FormBody body = new FormBody.Builder()
                 .add("opt", "bab_fr_list")
                 .add("my_id", Statics.my_id)
                 .build();
 
-        Request request = new Request.Builder().url(Statics.opt_url).post(body).build();
+        Request request = new Request.Builder().url(Statics.optUrl + "babfr/index.php").post(body).build();
 
         try {
             okhttp3.Response response = httpClient.newCall(request).execute();
@@ -73,9 +73,11 @@ public class BabFrListTask extends AsyncTask<String, Void, Void> {
                     String age = user_obj.getString("age");
                     String gender = user_obj.getString("gender");
                     token = user_obj.getString("token");
-                    user_img = Statics.main_url + user_obj.getString("img_url");
+                    user_img = user_obj.getString("img_url");
+                    status = user_obj.getString("status");
+                    status_name = user_obj.getString("status_name");
 
-                    userData = new UserData(user_id, user_name, age, gender, token, user_img, null);
+                    UserData userData = new UserData(user_id, user_name, age, gender, token, user_img, status, status_name);
                     userList.add(userData);
                 }
 
@@ -101,6 +103,7 @@ public class BabFrListTask extends AsyncTask<String, Void, Void> {
         } else if (activityName.equals("BabFriendsActivity")) {
             ((BabFriendsActivity) mContext).mAdapter = new BabFriendsAdapter(mContext, userList);
             ((BabFriendsActivity) mContext).recyclerView_fr.setAdapter(((BabFriendsActivity) mContext).mAdapter);
+            ((BabFriendsActivity) mContext).mAdapter.notifyDataSetChanged();
         } else {
 
         }

@@ -107,7 +107,7 @@ public class RestLikeListTask extends AsyncTask<Void, Void, ArrayList<RestLikeDa
 
                             UserData userData = new UserData(
                                     user_id, user_name,
-                                    age, gender, token, user_img, null);
+                                    age, gender, token, user_img, null, null);
                             usersList.add(userData);
                         }
 

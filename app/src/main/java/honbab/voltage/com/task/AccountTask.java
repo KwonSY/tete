@@ -67,7 +67,7 @@ public class AccountTask extends AsyncTask<String, Void, UserData> {
                 .add("user_id", objects[0])
                 .build();
 
-        Request request = new Request.Builder().url(Statics.optUrl + "tab2/index.php").post(body).build();
+        Request request = new Request.Builder().url(Statics.optUrl + "profile/index.php").post(body).build();
 
         try {
             okhttp3.Response response = httpClient.newCall(request).execute();
@@ -94,9 +94,9 @@ public class AccountTask extends AsyncTask<String, Void, UserData> {
                     comment = "";
 
                 //fr_req
-                fr_status = obj.getString("fr_status");
+                fr_status = user_obj.getString("fr_status");
 
-                userData = new UserData(user_id, user_name, age, gender, token, user_img, null);
+                userData = new UserData(user_id, user_name, age, gender, token, user_img, null, null);
                 userData.setComment(comment);
             } else {
 //                    Log.d(TAG, "Error : " + response.code() + ", " + response.message());
@@ -163,9 +163,9 @@ public class AccountTask extends AsyncTask<String, Void, UserData> {
 
             ((ProfileActivity) mContext).fr_status = fr_status;
             ((ProfileActivity) mContext).btn_add_fr.setEnabled(false);
-            if (fr_status.equals("already_fr")) {
+            if (fr_status.equals("fr")) {
                 ((ProfileActivity) mContext).btn_add_fr.setText("친구");
-                ((ProfileActivity) mContext).btn_add_fr.setEnabled(false);
+                ((ProfileActivity) mContext).btn_add_fr.setEnabled(true);
             } else if (fr_status.equals("i_required")) {
                 ((ProfileActivity) mContext).btn_add_fr.setText("요청중");
                 ((ProfileActivity) mContext).btn_add_fr.setEnabled(false);
@@ -174,7 +174,7 @@ public class AccountTask extends AsyncTask<String, Void, UserData> {
                 ((ProfileActivity) mContext).btn_add_fr.setText("수락");
                 ((ProfileActivity) mContext).btn_add_fr.setEnabled(true);
             } else if (fr_status.equals("no_fr")) {
-                ((ProfileActivity) mContext).btn_add_fr.setText("+친구 추가");
+                ((ProfileActivity) mContext).btn_add_fr.setText("+친구맺기");
                 ((ProfileActivity) mContext).btn_add_fr.setEnabled(true);
             } else {
                 ((ProfileActivity) mContext).btn_add_fr.setVisibility(View.GONE);

@@ -3,7 +3,6 @@ package honbab.voltage.com.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,8 +18,8 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import honbab.voltage.com.data.RestData;
-import honbab.voltage.com.task.RestLikeTask;
-import honbab.voltage.com.tete.MainActivity;
+import honbab.voltage.com.task.PickRestTask;
+import honbab.voltage.com.tete.PickRestLikeActivity;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
 import okhttp3.OkHttpClient;
@@ -29,7 +28,7 @@ public class DialogRestListAdapter extends RecyclerView.Adapter<DialogRestListAd
     private Context mContext;
     private OkHttpClient httpClient;
 
-    private Fragment fragment;
+//    private Fragment fragment;
 
     public ArrayList<RestData> listViewItemList = new ArrayList<>();
 
@@ -42,7 +41,7 @@ public class DialogRestListAdapter extends RecyclerView.Adapter<DialogRestListAd
         this.httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
         this.listViewItemList = listViewItemList;
 
-        fragment = ((MainActivity) mContext).getSupportFragmentManager().findFragmentByTag("page:0");
+//        fragment = ((MainActivity) mContext).getSupportFragmentManager().findFragmentByTag("page:0");
     }
 
     @NonNull
@@ -96,23 +95,25 @@ public class DialogRestListAdapter extends RecyclerView.Adapter<DialogRestListAd
         }
 
         public void bindToPost(final RestData data, int viewType) {
-
             Picasso.get().load(data.getRest_img())
+                    .placeholder(R.drawable.icon_no_image)
+                    .error(R.drawable.icon_no_image)
                     .into(img);
 
             txt_restName.setText(data.getRest_name());
 
+            Log.e("abc", "첫로딩 checkBox = " +data.getLike_yn());
             if (data.getLike_yn() == null || data.getLike_yn().equals("n"))
                 checkBox.setChecked(false);
             else
                 checkBox.setChecked(true);
 
-            cardView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                }
-            });
+//            cardView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//
+//                }
+//            });
 
             checkBox.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -131,7 +132,8 @@ public class DialogRestListAdapter extends RecyclerView.Adapter<DialogRestListAd
                         data.setChecked(false);
                     }
 
-                    new RestLikeTask(mContext).execute(data.getRest_id(), data.getLike_yn());
+//                    new RestLikeTask(mContext).execute(data.getRest_id(), data.getLike_yn());
+                    new PickRestTask(mContext).execute(((PickRestLikeActivity) mContext).timelike_id, data.getRest_id());
                 }
             });
         }

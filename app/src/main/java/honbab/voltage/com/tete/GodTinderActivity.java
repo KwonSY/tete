@@ -50,7 +50,7 @@ public class GodTinderActivity extends AppCompatActivity {
         Intent intent = getIntent();
         area_cd = intent.getStringExtra("area_cd");
         if (area_cd.length() == 0)
-            area_cd = "SUGNS1";
+            area_cd = "GNS1";
 
         TextView title_topbar = (TextView) findViewById(R.id.title_topbar);
         title_topbar.setText("음식점 선택");

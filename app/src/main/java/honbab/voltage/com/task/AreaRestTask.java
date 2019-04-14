@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -14,7 +13,6 @@ import java.util.ArrayList;
 import honbab.voltage.com.data.AreaData;
 import honbab.voltage.com.fragment.SelectFeedFragment;
 import honbab.voltage.com.tete.MainActivity;
-import honbab.voltage.com.tete.R;
 import honbab.voltage.com.tete.Statics;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
 import okhttp3.FormBody;
@@ -89,29 +87,20 @@ public class AreaRestTask extends AsyncTask<String, Void, ArrayList<AreaData>> {
 
         if (activityName.equals("MainActivity")) {
             if (areaList.size() > 0) {
-                ((SelectFeedFragment) fragment).areaList = areaList;
-                ((SelectFeedFragment) fragment).areaNameList = areaNameList;
+                ((SelectFeedFragment) fragment).areaAllList = areaList;
+//                ((SelectFeedFragment) fragment).areaNameList = areaNameList;
 
-                Log.e("abc", "areaNameList : " + areaNameList.size());
-
-                ((SelectFeedFragment) fragment).spinnerAdapter = new ArrayAdapter(mContext, R.layout.item_row_spinner, areaNameList);
-                ((SelectFeedFragment) fragment).spinner.setAdapter(((SelectFeedFragment) fragment).spinnerAdapter);
+//                ((SelectFeedFragment) fragment).spinnerAdapter = new ArrayAdapter(mContext, R.layout.item_row_spinner, areaNameList);
+//                ((SelectFeedFragment) fragment).spinner.setAdapter(((SelectFeedFragment) fragment).spinnerAdapter);
 //                if (((SelectFeedFragment) fragment).area_cd.equals("SUGNS1")) {
 //
 //                } else {
 
-                for (AreaData areaData : areaList) {
-                    if (areaData.getArea_cd().equals(((SelectFeedFragment) fragment).area_cd)) {
-                        int seq = areaNameList.indexOf(areaData.getArea_name());
-                        Log.e("abc", "seq area_cd : " + areaList.indexOf(((SelectFeedFragment) fragment).area_cd));
-                        ((SelectFeedFragment) fragment).spinner.setSelection(seq);
-
-//                        new SelectFeedListTask(mContext).execute(
-//                                ((SelectFeedFragment) fragment).feed_time,
-//                                ((SelectFeedFragment) fragment).area_cd,
-//                                ((SelectFeedFragment) fragment).feed_rest_id, "");
-                    }
-                }
+//                for (AreaData areaData : areaList) {
+//                    if (areaData.getArea_cd().equals(((SelectFeedFragment) fragment).area_cd)) {
+//                        int seq = areaNameList.indexOf(areaData.getArea_name());
+//                    }
+//                }
 
 
 //                int seq = areaNameList.indexOf(new AreaData(((SelectFeedFragment) fragment).area_cd));

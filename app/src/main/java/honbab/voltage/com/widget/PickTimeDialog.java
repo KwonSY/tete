@@ -39,7 +39,7 @@ public class PickTimeDialog {
                 String datetime = data  + " " + "15:00:00";
                 new PickDateTask(mContext).execute(datetime);
                 new SelectFeedListTask(mContext).execute(((SelectFeedFragment) fragment).feed_time,
-                        ((SelectFeedFragment) fragment).area_cd,
+//                        ((SelectFeedFragment) fragment).area_cd,
                         ((SelectFeedFragment) fragment).feed_rest_id,
                         "");
 
@@ -52,7 +52,7 @@ public class PickTimeDialog {
                 String datetime = data  + " " + "21:00:00";
                 new PickDateTask(mContext).execute(datetime);
                 new SelectFeedListTask(mContext).execute(((SelectFeedFragment) fragment).feed_time,
-                        ((SelectFeedFragment) fragment).area_cd,
+//                        ((SelectFeedFragment) fragment).area_cd,
                         ((SelectFeedFragment) fragment).feed_rest_id,
                         "");
 

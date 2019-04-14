@@ -15,6 +15,7 @@ public class UserData implements Serializable {
     private String token;
     //req
     private String status;
+    private String status_name;
     private String password;
 
     public UserData() {
@@ -23,7 +24,7 @@ public class UserData implements Serializable {
 
     //req
     public UserData(String user_id, String user_name,
-                    String age, String gender, String token, String img_url, String status) {
+                    String age, String gender, String token, String img_url, String status, String status_name) {
         this.user_id = user_id;
         this.user_name = user_name;
         this.age = age;
@@ -31,6 +32,7 @@ public class UserData implements Serializable {
         this.token = token;
         this.img_url = img_url;
         this.status = status;
+        this.status_name = status_name;
     }
 
     public String getUser_id() {
@@ -103,6 +105,14 @@ public class UserData implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getStatus_name() {
+        return status_name;
+    }
+
+    public void setStatus_name(String status_name) {
+        this.status_name = status_name;
     }
 
     public String getToken() {

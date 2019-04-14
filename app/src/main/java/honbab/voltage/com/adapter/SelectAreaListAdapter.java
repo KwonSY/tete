@@ -12,24 +12,23 @@ import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import honbab.voltage.com.data.AreaData;
 import honbab.voltage.com.fragment.SelectFeedFragment;
-import honbab.voltage.com.task.PickAreaTask;
 import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
+import honbab.voltage.com.widget.PickAreaDialog;
 import okhttp3.OkHttpClient;
 
 public class SelectAreaListAdapter extends RecyclerView.Adapter<SelectAreaListAdapter.ViewHolder> {
     private Context mContext;
     private OkHttpClient httpClient;
 
-    //    int TYPE_TIME = 1;
-//    int TYPE_END = 2;
+    int TYPE_CONTENT = 1;
+    int TYPE_END = 2;
     int i_touch = 0;
 
     private Fragment fragment;
@@ -38,8 +37,10 @@ public class SelectAreaListAdapter extends RecyclerView.Adapter<SelectAreaListAd
     private int mSelectedItem = -1;
     private AdapterView.OnItemClickListener onItemClickListener;
 
-    public SelectAreaListAdapter() {
-//        this.mContext = mContext;
+    public SelectAreaListAdapter(Context mContext) {
+        this.mContext = mContext;
+
+        fragment = ((MainActivity) mContext).getSupportFragmentManager().findFragmentByTag("page:0");
     }
 
     public SelectAreaListAdapter(Context mContext, ArrayList<AreaData> listViewItemList) {
@@ -61,51 +62,62 @@ public class SelectAreaListAdapter extends RecyclerView.Adapter<SelectAreaListAd
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
-//        if (getItemViewType(position) == TYPE_TIME) {
+        if (getItemViewType(position) == TYPE_CONTENT) {
+            final AreaData data = listViewItemList.get(position);
+            data.setPosition(position);
 
-        final AreaData data = listViewItemList.get(position);
-        data.setPosition(position);
-
-        holder.bindToPost(data, getItemViewType(position));
-//        } else {
-//            //TYPE_END
-//            holder.bindToPost(null, getItemViewType(position));
-//        }
+            holder.bindToPost(data, getItemViewType(position));
+        } else {
+            //TYPE_END
+            holder.bindToPost(null, getItemViewType(position));
+        }
     }
 
-//    @Override
-//    public int getItemViewType(int position) {
-////        return listViewItemList.size() == position ? TYPE_END : TYPE_TIME;
+    @Override
+    public int getItemViewType(int position) {
+        return listViewItemList.size() == position ? TYPE_END : TYPE_CONTENT;
 //        return position;
-//    }
+    }
 
     @Override
     public int getItemCount() {
-        return listViewItemList.size();
+        return listViewItemList.size() + 1;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private SelectAreaListAdapter mAdapter;
+    public class ViewHolder extends RecyclerView.ViewHolder {
+//        private SelectAreaListAdapter mAdapter;
 
         public RelativeLayout layout_card;
         public TextView txt_area;
         public CheckBox checkBox;
 
-
         public ViewHolder(View itemView, int viewType, final SelectAreaListAdapter mAdapter) {
             super(itemView);
-            this.mAdapter = mAdapter;
+//            this.mAdapter = mAdapter;
 
             layout_card = itemView.findViewById(R.id.layout_card);
             checkBox = itemView.findViewById(R.id.checkBox);
             txt_area = itemView.findViewById(R.id.txt_area);
-            layout_card.setOnClickListener(this);
-            checkBox.setOnClickListener(this);
         }
 
         public void bindToPost(final AreaData data, int viewType) {
 
-            txt_area.setText(data.getArea_name());
+            if (viewType == TYPE_CONTENT) {
+                txt_area.setText(data.getArea_name());
+            } else {
+                if (listViewItemList.size() == 0)
+                    txt_area.setText("지역선택");
+                else
+                    txt_area.setText("+");
+
+                checkBox.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        PickAreaDialog pickAreaDialog = new PickAreaDialog(mContext);
+                        pickAreaDialog.callFunction(((SelectFeedFragment) fragment).areaAllList);
+                    }
+                });
+            }
 
             try {
                 setDateToView(data, data.getPosition());
@@ -120,22 +132,22 @@ public class SelectAreaListAdapter extends RecyclerView.Adapter<SelectAreaListAd
             if (mSelectedItem >= 0) {//선택이 되었으면
                 if (position == mSelectedItem) {
                     ((SelectFeedFragment) fragment).area_cd = data.getArea_cd();
-                    if (((SelectFeedFragment) fragment).feed_time.equals("")) {
-                        ((SelectFeedFragment) fragment).txt_explain_pick.setText(R.string.select_feed_time);
-                    } else if (((SelectFeedFragment) fragment).feed_rest_id.equals("")) {
-                        ((SelectFeedFragment) fragment).txt_explain_pick.setText(R.string.select_feed_rest);
-                    } else if (((SelectFeedFragment) fragment).to_id.equals("")) {
-                        ((SelectFeedFragment) fragment).txt_explain_pick.setText("");
-                    } else {
-                        ((SelectFeedFragment) fragment).txt_explain_pick.setText("");
-                    }
-
+//                    if (((SelectFeedFragment) fragment).feed_time.equals("")) {
+//                        ((SelectFeedFragment) fragment).txt_explain_pick.setText(R.string.select_feed_time);
+//                    } else if (((SelectFeedFragment) fragment).feed_rest_id.equals("")) {
+//                        ((SelectFeedFragment) fragment).txt_explain_pick.setText(R.string.select_feed_rest);
+//                    } else if (((SelectFeedFragment) fragment).to_id.equals("")) {
+//                        ((SelectFeedFragment) fragment).txt_explain_pick.setText("");
+//                    } else {
+//                        ((SelectFeedFragment) fragment).txt_explain_pick.setText("");
+//                    }
+//
                     data.setChecked(true);
 
 //                    new SelectFeedListTask(mContext).execute(((SelectFeedFragment) fragment).feed_time,
 //                            ((SelectFeedFragment) fragment).area_cd,
 //                            ((SelectFeedFragment) fragment).feed_rest_id, "readOnlyUser");
-                    new PickAreaTask(mContext).execute();
+//                    new PickAreaTask(mContext).execute();
                 } else {
                     data.setChecked(false);
 
@@ -152,27 +164,28 @@ public class SelectAreaListAdapter extends RecyclerView.Adapter<SelectAreaListAd
 //                            "readBelowRest");
 //                    Log.e("abc", "Select date feed_time = " + ((SelectFeedFragment) fragment).feed_time);
 //                }
+
             }
 
             checkBox.setChecked(data.isChecked());
         }
 
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.checkBox:
-                    mSelectedItem = getAdapterPosition();
-                    notifyItemRangeChanged(0, listViewItemList.size());
-                    mAdapter.onItemHolderClick(SelectAreaListAdapter.ViewHolder.this);
-
-                    if (i_touch == 0) {
-                        Toast.makeText(mContext, "길게 누르면,\n음식점 상세를 볼 수 있습니다.", Toast.LENGTH_SHORT).show();
-                        i_touch++;
-                    }
-
-                    break;
-            }
-        }
+//        @Override
+//        public void onClick(View v) {
+//            switch (v.getId()) {
+//                case R.id.checkBox:
+//                    mSelectedItem = getAdapterPosition();
+//                    notifyItemRangeChanged(0, listViewItemList.size());
+//                    mAdapter.onItemHolderClick(SelectAreaListAdapter.ViewHolder.this);
+//
+////                    if (i_touch == 0) {
+////                        Toast.makeText(mContext, "길게 누르면,\n음식점 상세를 볼 수 있습니다.", Toast.LENGTH_SHORT).show();
+////                        i_touch++;
+////                    }
+//
+//                    break;
+//            }
+//        }
     }
 
 //    public void removeAt(int position) {

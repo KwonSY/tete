@@ -2,7 +2,9 @@ package honbab.voltage.com.widget;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -11,44 +13,33 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
-
 import honbab.voltage.com.adapter.DialogRestListAdapter;
-import honbab.voltage.com.data.RestData;
 import honbab.voltage.com.fragment.SelectFeedFragment;
 import honbab.voltage.com.task.SelectFeedListTask;
-import honbab.voltage.com.task.UserRestLikeListTask;
 import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.R;
 
 public class PickRestDialog {
-
     private Context mContext;
+    public Dialog dlg;
     private Fragment fragment;
 
-    private RecyclerView recyclerView;
-    private DialogRestListAdapter mAdapter;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+    //    public RecyclerView recyclerView_city, recyclerView_area, recyclerView_rest;
+    public RecyclerView recyclerView_rest;
+//    private DialogCityListAdapter mAdapter_city;
+    //    public DialogAreaListAdapter mAdapter_area;
+    private DialogRestListAdapter mAdapter_rest;
 
     public PickRestDialog(Context mContext) {
         this.mContext = mContext;
         fragment = ((MainActivity) mContext).getSupportFragmentManager().findFragmentByTag("page:0");
     }
 
-    public void callFunction(ArrayList<RestData> restList) {
+    public void callFunction() {
         final Dialog dlg = new Dialog(mContext);
-
-//        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-//        lp.copyFrom(dlg.getWindow().getAttributes());
-//        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-//        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-
-        //xxxxx
-//        mNamingDialog = new NamingDialog(MainActivity.this);
-//        mNamingDialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
-//        mNamingDialog.show();
-//        mNamingDialog.getWindow().getDecorView().setSystemUiVisibility(MainActivity.this.getWindow().getDecorView().getSystemUiVisibility());
-//        mNamingDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+//        Dialog dlg = new Dialog(mContext);
 
         dlg.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dlg.setContentView(R.layout.dialog_pickrest);
@@ -56,35 +47,105 @@ public class PickRestDialog {
         params.width = WindowManager.LayoutParams.MATCH_PARENT;
         params.height = WindowManager.LayoutParams.MATCH_PARENT;
         dlg.getWindow().setAttributes(params);
-//        dlg.getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
-//        dlg.getWindow().getAttributes().width = WindowManager.LayoutParams.MATCH_PARENT;
-//        dlg.getWindow().getAttributes().height = WindowManager.LayoutParams.MATCH_PARENT;
-
         dlg.show();
-        //
-//        dlg.getWindow().getDecorView().setSystemUiVisibility(dlg.getWindow().getDecorView().getSystemUiVisibility());
-//        dlg.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE);
+
+//        FragmentManager fragmentManager = ((MainActivity) mContext).getSupportFragmentManager();
+//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//        fragmentTransaction.replace();
 
 
-        GridLayoutManager layoutManager = new GridLayoutManager(mContext, 3, GridLayoutManager.VERTICAL, false);
-        recyclerView = (RecyclerView) dlg.findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(layoutManager);
-        try {
-            restList = new UserRestLikeListTask(mContext).execute(((SelectFeedFragment) fragment).area_cd).get();
 
-            mAdapter = new DialogRestListAdapter(mContext, restList);
-            recyclerView.setAdapter(mAdapter);
-            while (recyclerView.getItemDecorationCount() > 0) {
-                recyclerView.removeItemDecorationAt(0);
-            }
-            recyclerView.measure(WindowManager.LayoutParams.MATCH_PARENT, 350);
-            recyclerView.addItemDecoration(new SpacesItemDecoration(1));
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        tabLayout = (TabLayout) dlg.findViewById(R.id.tabLayout_city);
+//        tabLayout.addTab(tabLayout.newTab().setText("Tab One"));
+//        tabLayout.addTab(tabLayout.newTab().setText("Tab Two"));
+//        tabLayout.addTab(tabLayout.newTab().setText("Tab Three"));
+//        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
+//        try {
+//            ArrayList<CityData> cityList;
+//            cityList = new OneFeedRestLikeListTask(mContext).execute("").get();
+//
+//            for (int i = 0; i < cityList.size(); i++) {
+//                tabLayout.addTab(tabLayout.newTab().setText(cityList.get(i).getCity_name()));
+//            }
+//            tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
+
+            viewPager = (ViewPager) dlg.findViewById(R.id.viewPager_area);
+
+
+//            TabPagerAdapterTest pagerAdapter = new TabPagerAdapterTest(((MainActivity) mContext).getSupportFragmentManager(), tabLayout.getTabCount());
+//            viewPager.setAdapter(pagerAdapter);
+//            viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+//            TabPagerAreaAdapter tabPagerAreaAdapter = new TabPagerAreaAdapter(((MainActivity) mContext).getSupportFragmentManager(), mContext, cityList);
+//            DialogAreaFragment dialogAreaFragment = new DialogAreaFragment();
+//            tabPagerAreaAdapter.addFragment(dialogAreaFragment, "ssSss");
+//            viewPager.setAdapter(tabPagerAreaAdapter);
+            viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+//            tabLayout.setupWithViewPager(viewPager);
+            tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+                    viewPager.setCurrentItem(tab.getPosition());
+                }
+
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {
+
+                }
+
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
+
+                }
+            });
+//            tabLayout.addOnTabSelectedListener(new TabLayout.BaseOnTabSelectedListener() {
+//                @Override
+//                public void onTabSelected(TabLayout.Tab tab) {
+//                    viewPager.setCurrentItem(tab.getPosition());
+////                    int pos = tab.getPosition() ;
+////                    changeView(pos) ;
+//                }
+//
+//                @Override
+//                public void onTabUnselected(TabLayout.Tab tab) {
+//
+//                }
+//
+//                @Override
+//                public void onTabReselected(TabLayout.Tab tab) {
+//
+//                }
+//            });
+
+//            FragmentManager fragmentManager = ((MainActivity) mContext).getSupportFragmentManager();
+//            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//            fragmentTransaction.replace(R.id.cancel_button, DialogAreaFragment.newInstance(cityList));
+//            fragmentTransaction.commit();
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+
+
+//        LinearLayoutManager layoutManager = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
+//        LinearLayoutManager layoutManager2 = new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false);
+        GridLayoutManager layoutManager3 = new GridLayoutManager(mContext, 3, GridLayoutManager.VERTICAL, false);
+
+
+
+        //음식점
+        recyclerView_rest = (RecyclerView) dlg.findViewById(R.id.recyclerView_rest);
+        recyclerView_rest.setLayoutManager(layoutManager3);
+        mAdapter_rest = new DialogRestListAdapter();
+        recyclerView_rest.setAdapter(mAdapter_rest);
+        while (recyclerView_rest.getItemDecorationCount() > 0) {
+            recyclerView_rest.removeItemDecorationAt(0);
         }
-
+        recyclerView_rest.measure(WindowManager.LayoutParams.MATCH_PARENT, 350);
+        recyclerView_rest.addItemDecoration(new SpacesItemDecoration(1));
 
 
         ImageView btn_cancle = (ImageView) dlg.findViewById(R.id.btn_cancle);
@@ -92,7 +153,7 @@ public class PickRestDialog {
             @Override
             public void onClick(View view) {
                 new SelectFeedListTask(mContext).execute(((SelectFeedFragment) fragment).feed_time,
-                        ((SelectFeedFragment) fragment).area_cd,
+//                        ((SelectFeedFragment) fragment).area_cd,
                         ((SelectFeedFragment) fragment).feed_rest_id,
                         "");
 
@@ -105,7 +166,7 @@ public class PickRestDialog {
             @Override
             public void onClick(View v) {
                 new SelectFeedListTask(mContext).execute(((SelectFeedFragment) fragment).feed_time,
-                        ((SelectFeedFragment) fragment).area_cd,
+//                        ((SelectFeedFragment) fragment).area_cd,
                         ((SelectFeedFragment) fragment).feed_rest_id,
                         "");
 

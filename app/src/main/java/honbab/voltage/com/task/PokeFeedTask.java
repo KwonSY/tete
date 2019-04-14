@@ -75,7 +75,7 @@ public class PokeFeedTask extends AsyncTask<String, Void, String> {
                 } else {
                     user_img = Statics.main_url + user_obj.getString("img_url");
                 }
-                userData = new UserData(user_id, user_name, user_age, user_gender, user_token, user_img, "");
+                userData = new UserData(user_id, user_name, user_age, user_gender, user_token, user_img, "", "");
 
                 JSONObject rest_obj = obj.getJSONObject("rest");
                 String rest_id = rest_obj.getString("sid");
