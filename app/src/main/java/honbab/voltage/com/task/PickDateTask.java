@@ -12,6 +12,7 @@ import honbab.voltage.com.fragment.SelectFeedFragment;
 import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.tete.Statics;
+import honbab.voltage.com.widget.Encryption;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -41,11 +42,12 @@ public class PickDateTask extends AsyncTask<String, Void, String> {
         Log.e("abc", "PickDateTask datetime = " + params[0]);
         FormBody body = new FormBody.Builder()
                 .add("opt", "pick_date")
+                .add("auth", Encryption.voltAuth())
                 .add("my_id", Statics.my_id)
                 .add("datetime", params[0])
                 .build();
 
-        Request request = new Request.Builder().url(Statics.opt_url).post(body).build();
+        Request request = new Request.Builder().url(Statics.optUrl + "tab1.php").post(body).build();
 
         try {
             okhttp3.Response response = httpClient.newCall(request).execute();

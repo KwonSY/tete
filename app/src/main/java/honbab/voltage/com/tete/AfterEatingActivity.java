@@ -80,8 +80,9 @@ public class AfterEatingActivity extends AppCompatActivity {
 
                     Intent intent = new Intent(AfterEatingActivity.this, ReportActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.putExtra("user_id", user_id);
+                    intent.putExtra("title", "신고하기");
                     intent.putExtra("feed_id", feed_id);
+                    intent.putExtra("to_id", user_id);
                     startActivity(intent);
 
                     break;

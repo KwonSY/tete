@@ -7,6 +7,7 @@ import android.util.Log;
 import org.json.JSONObject;
 
 import honbab.voltage.com.tete.Statics;
+import honbab.voltage.com.widget.Encryption;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -35,12 +36,13 @@ public class PickRestTask extends AsyncTask<String, Void, String> {
         Log.e("abc", "PickDateTask datetime = " + params[0]);
         FormBody body = new FormBody.Builder()
                 .add("opt", "pick_rest")
+                .add("auth", Encryption.voltAuth())
                 .add("my_id", Statics.my_id)
                 .add("timelike_id", params[0])
                 .add("rest_id", params[1])
                 .build();
 
-        Request request = new Request.Builder().url(Statics.optUrl + "tab1/index.php").post(body).build();
+        Request request = new Request.Builder().url(Statics.optUrl + "tab1.php").post(body).build();
 
         try {
             okhttp3.Response response = httpClient.newCall(request).execute();

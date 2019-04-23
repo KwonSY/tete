@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.Statics;
+import honbab.voltage.com.widget.Encryption;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -21,7 +22,7 @@ public class ReportTask extends AsyncTask<String, Void, Void> {
     private OkHttpClient httpClient;
 
     private Fragment fragment;
-    private String activityName;
+//    private String activityName;
 
     public ReportTask(Context mContext) {
         this.mContext = mContext;
@@ -37,12 +38,14 @@ public class ReportTask extends AsyncTask<String, Void, Void> {
     protected Void doInBackground(String... objects) {
         FormBody body = new FormBody.Builder()
                 .add("opt", "report")
-                .add("user_id", objects[0])
+                .add("auth", Encryption.voltAuth())
+                .add("my_id", Statics.my_id)
+                .add("to_id", objects[0])
                 .add("feed_id", objects[1])
                 .add("message", objects[2])
                 .build();
 
-        Request request = new Request.Builder().url(Statics.opt_url).post(body).build();
+        Request request = new Request.Builder().url(Statics.optUrl + "report.php").post(body).build();
 
         try {
             okhttp3.Response response = httpClient.newCall(request).execute();
@@ -50,7 +53,7 @@ public class ReportTask extends AsyncTask<String, Void, Void> {
                 String bodyStr = response.body().string();
 
                 JSONObject obj = new JSONObject(bodyStr);
-//                Log.e("abc", "obj : " + obj);
+
                 String result = obj.getString("result");
             } else {
 //                    Log.d(TAG, "Error : " + response.code() + ", " + response.message());
@@ -67,14 +70,14 @@ public class ReportTask extends AsyncTask<String, Void, Void> {
     protected void onPostExecute(Void aVoid) {
 //        super.onPostExecute(aVoid);
 
-//        String activityName = mContext.getClass().getSimpleName();
+        String activityName = mContext.getClass().getSimpleName();
 
-//        if (activityName.equals("ReportActivity")) {
+        if (activityName.equals("ReportActivity")) {
             Intent intent = new Intent(mContext, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             mContext.startActivity(intent);
             ((Activity) mContext).finish();
-//        }
+        }
 
     }
 

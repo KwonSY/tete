@@ -24,7 +24,9 @@ import honbab.voltage.com.fragment.SelectFeedFragment;
 import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.tete.Statics;
+import honbab.voltage.com.widget.Encryption;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
+import me.toptas.fancyshowcase.FancyShowCaseView;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -72,14 +74,14 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
         SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
         FormBody body = new FormBody.Builder()
-                .add("opt", "select_feed_list4")
+                .add("opt", "select_feed_list")
+                .add("auth", Encryption.voltAuth())
                 .add("my_id", Statics.my_id)
                 .add("datetime", params[0])
-//                .add("area_cd", params[1])
                 .add("rest_id", params[1])
                 .build();
 
-        Request request = new Request.Builder().url(Statics.optUrl + "tab1/index.php").post(body).build();
+        Request request = new Request.Builder().url(Statics.optUrl + "tab1.php").post(body).build();
 
         try {
             okhttp3.Response response = httpClient.newCall(request).execute();
@@ -245,6 +247,13 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
 
                 ((SelectFeedFragment) fragment).mAdapter_date.clearItemList();
                 ((SelectFeedFragment) fragment).mAdapter_date = new SelectDateListAdapter(mContext, datePickedList);
+                if (((SelectFeedFragment) fragment).mAdapter_date.getItemCount() == 1) {
+                    new FancyShowCaseView.Builder(((MainActivity) mContext))
+                            .title("시간을 선택해보세요.")
+                            .focusOn(((SelectFeedFragment) fragment).recyclerView_date.getChildAt(0))
+                            .build()
+                            .show();
+                }
                 ((SelectFeedFragment) fragment).recyclerView_date.setAdapter(((SelectFeedFragment) fragment).mAdapter_date);
                 ((SelectFeedFragment) fragment).mAdapter_date.notifyDataSetChanged();
 

@@ -23,18 +23,32 @@
             android:layout_width="match_parent"
             android:layout_height="58dp"
             android:completionThreshold="1"
-            android:hint="친구 이름 검색"
+            android:hint="친구 이름을 아시나요? 밥친구를 추가해보세요."
             android:textSize="12sp" />
 
         <ImageButton
             android:id="@+id/btn_search_babfr"
-            android:layout_width="65dp"
-            android:layout_height="58dp"
+            android:layout_width="52dp"
+            android:layout_height="34dp"
             android:scaleType="centerCrop"
-            android:tint="#efefef"
+            android:tint="#bfbfbf"
+            android:layout_marginRight="6dp"
+            android:layout_marginTop="10dp"
+            android:padding="15dp"
+            android:minWidth="20dp"
+            android:background="@drawable/btn_circle_or1"
             android:layout_alignParentRight="true"
-            android:src="@drawable/icon_glass_gr" />
+            android:src="@drawable/icon_glass_bk" />
     </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:padding="10dp"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layout_search"
+        android:textColor="@color/grey"
+        android:text="정확한 친구 이름을 검색해주세요."/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView_fr"

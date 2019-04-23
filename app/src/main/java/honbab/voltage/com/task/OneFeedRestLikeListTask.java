@@ -19,6 +19,7 @@ import honbab.voltage.com.data.OneTimeRestLikeListData;
 import honbab.voltage.com.data.RestData;
 import honbab.voltage.com.tete.PickRestLikeActivity;
 import honbab.voltage.com.tete.Statics;
+import honbab.voltage.com.widget.Encryption;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -57,17 +58,18 @@ public class OneFeedRestLikeListTask extends AsyncTask<String, Void, OneTimeRest
 
     @Override
     protected OneTimeRestLikeListData doInBackground(String... params) {
+        Log.e("abc", "OneFeedRestTask = " + params[0] + ", " + params[1]);
         OneTimeRestLikeListData data = new OneTimeRestLikeListData();
-        Log.e("abc", "timelike_id = " + params[0] + " /  " + params[1]);
 
         FormBody body = new FormBody.Builder()
                 .add("opt", "one_time_rest_like_list")
+                .add("auth", Encryption.voltAuth())
                 .add("my_id", Statics.my_id)
                 .add("timelike_id", params[0])
                 .add("area_cd", params[1])
                 .build();
 
-        Request request = new Request.Builder().url(Statics.optUrl + "tab1/index.php").post(body).build();
+        Request request = new Request.Builder().url(Statics.optUrl + "tab1.php").post(body).build();
 
         try {
             okhttp3.Response response = httpClient.newCall(request).execute();
@@ -117,9 +119,11 @@ public class OneFeedRestLikeListTask extends AsyncTask<String, Void, OneTimeRest
                     String rest_img = restObj.getString("img_url");
                     String vicinity = restObj.getString("vicinity");
                     String like_yn = restObj.getString("like_yn");
+                    int cnt = restObj.getInt("cnt");
+                    Log.e("abc", "OneFeedRestLikeListTask cnt = " + cnt);
 
                     RestData restData = new RestData(rest_id, rest_name,
-                            compound_code, latLng, place_id, rest_img, rest_phone, vicinity, 0);
+                            compound_code, latLng, place_id, rest_img, rest_phone, vicinity, cnt);
                     restData.setLike_yn(like_yn);
 //                    restData.setType(rest_type);
                     restList.add(restData);

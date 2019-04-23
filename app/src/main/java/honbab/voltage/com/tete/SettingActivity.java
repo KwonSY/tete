@@ -1,10 +1,12 @@
 package honbab.voltage.com.tete;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.util.Linkify;
 import android.util.Log;
@@ -12,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.kakao.kakaolink.KakaoLink;
@@ -23,6 +26,7 @@ import org.json.JSONObject;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import honbab.voltage.com.task.LeaveTask;
 import honbab.voltage.com.utils.ButtonUtil;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
 import honbab.voltage.com.widget.SessionManager;
@@ -43,10 +47,11 @@ public class SettingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
-//        Log.e("abc", "key= " + getKeyHash(this));
-
         httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
         session = new SessionManager(this.getApplicationContext());
+
+        TextView title_topbar = (TextView) findViewById(R.id.title_topbar);
+        title_topbar.setText("세팅");
 
         radio_y = (RadioButton) findViewById(R.id.radio_y);
         radio_n = (RadioButton) findViewById(R.id.radio_n);
@@ -68,10 +73,14 @@ public class SettingActivity extends AppCompatActivity {
 //        Button btn_kakao_invite = (Button) findViewById(R.id.btn_kakao_invite);
 //        btn_kakao_invite.setOnClickListener(mOnClickListener);
         Button btn_change_psw = (Button) findViewById(R.id.btn_change_psw);
-        TextView btn_go_babfrs = (TextView) findViewById(R.id.btn_go_babfrs);
+        Button btn_go_babfrs = (Button) findViewById(R.id.btn_go_babfrs);
+        Button btn_ask = (Button) findViewById(R.id.btn_ask);
+        Button btn_leave = (Button) findViewById(R.id.btn_leave);
         Button btn_logout = (Button) findViewById(R.id.btn_logout);
         btn_change_psw.setOnClickListener(mOnClickListener);
         btn_go_babfrs.setOnClickListener(mOnClickListener);
+        btn_ask.setOnClickListener(mOnClickListener);
+        btn_leave.setOnClickListener(mOnClickListener);
         btn_logout.setOnClickListener(mOnClickListener);
 
 //        ImageButton btn_back = (ImageButton) findViewById(R.id.btn_back);
@@ -123,6 +132,36 @@ public class SettingActivity extends AppCompatActivity {
                     Intent intent3 = new Intent(SettingActivity.this, BabFriendsActivity.class);
                     intent3.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent3);
+
+                    break;
+                case R.id.btn_ask:
+                    Intent intent4 = new Intent(SettingActivity.this, ReportActivity.class);
+                    intent4.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent4.putExtra("title", "문의하기");
+                    intent4.putExtra("feed_id", "-11");
+                    intent4.putExtra("to_id", "ask_for_app");
+                    startActivity(intent4);
+
+                    break;
+                case R.id.btn_leave:
+                    AlertDialog.Builder builder = new AlertDialog.Builder(SettingActivity.this);
+                    builder.setTitle("탈퇴하기");
+                    builder.setMessage("'같이먹어요'를 탈퇴하시겠습니까?");
+                    builder.setPositiveButton(R.string.yes,
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    new LeaveTask(SettingActivity.this).execute();
+
+                                    Toast.makeText(getApplicationContext(), "'같이 먹어요'를 이용해주셔서 감사합니다.", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                    builder.setNegativeButton(R.string.no,
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+//                                holder.btn_check_feedee.setBackgroundResource(R.drawable.icon_check_n);
+                                }
+                            });
+                    builder.show();
 
                     break;
                 case R.id.btn_logout:

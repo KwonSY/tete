@@ -1,7 +1,12 @@
 package honbab.voltage.com.widget;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+
+import honbab.voltage.com.tete.Statics;
 
 public class Encryption {
 
@@ -48,5 +53,36 @@ public class Encryption {
 
     public static String getPassword() {
         return userPassword;
+    }
+
+    // SHA256
+    public static String sha256(String msg)  throws NoSuchAlgorithmException {
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
+        md.update(msg.getBytes());
+
+        return Encryption.byteToHexString(md.digest());
+    }
+
+    public static String byteToHexString(byte[] data) {
+        StringBuilder sb = new StringBuilder();
+        for(byte b : data) {
+            sb.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
+        }
+        return sb.toString();
+    }
+
+    public static String voltAuth() {
+        String auth = "";
+
+        if (Integer.parseInt(Statics.my_id) > 0 && Statics.my_id.length() > 0) {
+            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+            try {
+                auth = Statics.my_id + "ooooo" + Encryption.sha256(firebaseUser.getUid().substring(5) + "madeBy@ksy");
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return auth;
     }
 }

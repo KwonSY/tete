@@ -7,6 +7,7 @@ import android.util.Log;
 import org.json.JSONObject;
 
 import honbab.voltage.com.tete.Statics;
+import honbab.voltage.com.widget.Encryption;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -37,11 +38,13 @@ public class AddFrTask extends AsyncTask<String, Void, Void> {
 
         FormBody body = new FormBody.Builder()
                 .add("opt", "req_friend")
+                .add("auth", Encryption.voltAuth())
+                .add("my_id", Statics.my_id)
                 .add("from_id", Statics.my_id)
                 .add("to_id", params[0])
                 .build();
 
-        Request request = new Request.Builder().url(Statics.optUrl + "babfr/index.php").post(body).build();
+        Request request = new Request.Builder().url(Statics.optUrl + "babfr.php").post(body).build();
 
         try {
             okhttp3.Response response = httpClient.newCall(request).execute();

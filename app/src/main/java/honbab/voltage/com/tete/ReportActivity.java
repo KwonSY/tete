@@ -7,13 +7,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import honbab.voltage.com.task.ReportTask;
 
 public class ReportActivity extends AppCompatActivity {
     private EditText edit_report;
 
-    private String feed_id, user_id, user_name, user_img;
+    private String s_title, feed_id, to_id, user_name, user_img;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,8 +22,13 @@ public class ReportActivity extends AppCompatActivity {
         setContentView(R.layout.activity_report);
 
         Intent intent = getIntent();
-        feed_id = intent.getStringExtra("after_feed_id");
-        user_id = intent.getStringExtra("toId");
+        s_title = intent.getStringExtra("title");
+        feed_id = intent.getStringExtra("feed_id");
+        to_id = intent.getStringExtra("to_id");
+
+        TextView explain_title = (TextView) findViewById(R.id.explain_title);
+        if (s_title != null && s_title.length() > 0)
+            explain_title.setText(s_title);
 
         ImageView btn_close = (ImageView) findViewById(R.id.btn_close);
 //        ImageView img_user = (ImageView) findViewById(R.id.img_user);
@@ -72,14 +78,9 @@ public class ReportActivity extends AppCompatActivity {
                     finish();
 
                     break;
-//                case R.id.btn_go_main:
-//                    // status == finish
-//                    new EvaluateFeedTask(ReportActivity.this).execute(user_id, feed_id, s_rating, "f");
-//
-//                    break;
                 case R.id.btn_submit:
                     String message = edit_report.getText().toString().trim();
-                    new ReportTask(ReportActivity.this).execute(user_id, feed_id, message);
+                    new ReportTask(ReportActivity.this).execute(to_id, feed_id, message);
 
                     break;
             }

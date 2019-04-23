@@ -97,7 +97,7 @@ public class SelectRestListAdapter extends RecyclerView.Adapter<SelectRestListAd
         public RelativeLayout layout_card;
 
         public ImageView img_rest;
-        public TextView txt_restName, txt_cnt;
+        public TextView txt_restName, txt_restArea, txt_cnt;
         public RelativeLayout layout_check;
         public CheckBox checkBox;
 
@@ -108,6 +108,7 @@ public class SelectRestListAdapter extends RecyclerView.Adapter<SelectRestListAd
             layout_card = itemView.findViewById(R.id.layout_card);
             img_rest = itemView.findViewById(R.id.img_rest);
             txt_restName = itemView.findViewById(R.id.txt_restName);
+            txt_restArea = itemView.findViewById(R.id.txt_restArea);
             txt_cnt = itemView.findViewById(R.id.txt_cnt);
 
             layout_check = itemView.findViewById(R.id.layout_check);
@@ -148,6 +149,7 @@ public class SelectRestListAdapter extends RecyclerView.Adapter<SelectRestListAd
                     }
                 });
                 txt_restName.setText(data.getRest_name());
+                txt_restArea.setText(data.getVicinity().split(" ")[1]);
                 if (data.getCnt() > 0)
                     txt_cnt.setText(data.getCnt() + "명");
 
@@ -172,12 +174,16 @@ public class SelectRestListAdapter extends RecyclerView.Adapter<SelectRestListAd
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             mContext.startActivity(intent);
                         } else {
-                            Intent intent = new Intent(mContext, PickRestLikeActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            intent.putExtra("timelike_id", ((SelectFeedFragment) fragment).timelike_id);
-                            ((MainActivity) mContext).overridePendingTransition(R.anim.slide_down, R.anim.slide_up);
-                            mContext.startActivity(intent);
+                            if (((SelectFeedFragment) fragment).mAdapter_date.getItemCount() > 1) {
+                                Intent intent = new Intent(mContext, PickRestLikeActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                intent.putExtra("timelike_id", ((SelectFeedFragment) fragment).timelike_id);
+                                ((MainActivity) mContext).overridePendingTransition(R.anim.slide_down, R.anim.slide_up);
+                                mContext.startActivity(intent);
+                            } else {
+                                Toast.makeText(mContext, "날짜를 먼저 선택해주세요.", Toast.LENGTH_SHORT).show();
+                            }
 
 
 

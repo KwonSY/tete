@@ -30,7 +30,6 @@ import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.firebase.client.ServerValue;
 import com.github.arturogutierrez.Badges;
@@ -74,8 +73,8 @@ public class ChatActivity extends AppCompatActivity {
     private LinearLayoutManager layoutManager;
 
     public DrawerLayout drawerLayout;
-    public TextView title_topbar, txt_userName;
-    public ImageView topbar_img_user;
+    public TextView title_topbar, txt_userName, no_chat_txt_userName, no_chat_explain;
+    public ImageView topbar_img_user, no_chat_img_user;
     public Button btn_call_rest;
     private ImageView icon_more_dots;
 
@@ -124,6 +123,21 @@ public class ChatActivity extends AppCompatActivity {
                 restData = (RestData) intent.getParcelableExtra("restData");
             else
                 restData = new RestData();
+
+
+            //상단바
+            title_topbar = (TextView) findViewById(R.id.title_topbar);
+            topbar_img_user = (ImageView) findViewById(R.id.topbar_img_user);
+            txt_userName = (TextView) findViewById(R.id.txt_userName);
+            title_topbar.setText("");
+            topbar_img_user.setOnClickListener(mOnClickListener);
+
+            //채팅 없을 때
+            layout_no_chat = (LinearLayout) findViewById(R.id.layout_no_chat);
+            no_chat_img_user = (ImageView) findViewById(R.id.no_chat_img_user);
+            no_chat_txt_userName = (TextView) findViewById(R.id.no_chat_txt_userName);
+            no_chat_explain = (TextView) findViewById(R.id.no_chat_explain);
+
             if (fromId == null) {
                 session = new SessionManager(getApplicationContext());
                 HashMap<String, String> user = session.getUserDetails();
@@ -131,39 +145,28 @@ public class ChatActivity extends AppCompatActivity {
                 Statics.my_username = user.get("my_username");
                 Statics.my_gender = user.get("my_gender");
                 fromId = Statics.my_id;
+
+                Intent intent1 = new Intent(ChatActivity.this, MainActivity.class);
+                intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                finish();
+            } else {
+
+                no_chat_img_user.setOnClickListener(mOnClickListener);
             }
             Log.e("abc", "fromId = " + fromId + ", toId = " + toId);
             Log.e("abc", "toUserName = " + toUserName);
             Log.e("abc", "toUserImg = " + toUserImg);
             Log.e("abc", "getRest_name = " + restData.getRest_name());
 
-            //상단바
-            title_topbar = (TextView) findViewById(R.id.title_topbar);
-            topbar_img_user = (ImageView) findViewById(R.id.topbar_img_user);
-            txt_userName = (TextView) findViewById(R.id.txt_userName);
-            title_topbar.setText("");
-//        Picasso.get().load(toUserImg)
-//                .placeholder(R.drawable.icon_noprofile_circle)
-//                .error(R.drawable.icon_noprofile_circle)
-//                .transform(new CircleTransform())
-//                .into(topbar_img_user);
-//        txt_userName.setText(toUserName);
-            topbar_img_user.setOnClickListener(mOnClickListener);
-
-            //채팅 없을 때
-            layout_no_chat = (LinearLayout) findViewById(R.id.layout_no_chat);
-            ImageView no_chat_img_user = (ImageView) findViewById(R.id.no_chat_img_user);
-            TextView no_chat_txt_userName = (TextView) findViewById(R.id.no_chat_txt_userName);
-            TextView no_chat_explain = (TextView) findViewById(R.id.no_chat_explain);
             Picasso.get().load(toUserImg)
                     .placeholder(R.drawable.icon_noprofile_circle)
                     .error(R.drawable.icon_noprofile_circle)
                     .transform(new CircleTransform())
                     .into(no_chat_img_user);
-            no_chat_txt_userName.setText(toUserName);
-            String str_no_chat = String.format(getResources().getString(R.string.chat_start), toUserName);
-            no_chat_explain.setText(str_no_chat);
-            no_chat_img_user.setOnClickListener(mOnClickListener);
+
+
 
             layoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
             layoutManager.setStackFromEnd(true);
@@ -238,7 +241,7 @@ public class ChatActivity extends AppCompatActivity {
                     break;
                 case R.id.btn_call_rest:
                     String uri = "tel:" + restData.getRest_phone();
-                    Log.e("abc", "tel : = " + uri);
+//                    Log.e("abc", "tel : = " + uri);
                     Intent intent1 = new Intent(Intent.ACTION_DIAL, Uri.parse(uri));
 //                    intent1.setData(Uri.parse(uri));
                     startActivity(intent1);
@@ -265,7 +268,12 @@ public class ChatActivity extends AppCompatActivity {
 
                                     return true;
                                 case R.id.report:
-                                    Toast.makeText(ChatActivity.this, "베타기능에 포함됩니다. 조금만 기다려주세요.", Toast.LENGTH_SHORT).show();
+                                    Intent intent3 = new Intent(ChatActivity.this, ReportActivity.class);
+                                    intent3.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                    intent3.putExtra("title", "신고하기");
+                                    intent3.putExtra("feed_id", "-1");
+                                    intent3.putExtra("to_id", toId);
+                                    startActivity(intent3);
 
                                     return true;
                             }

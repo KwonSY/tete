@@ -44,6 +44,7 @@ import honbab.voltage.com.utils.BitmapUtil;
 import honbab.voltage.com.utils.ButtonUtil;
 import honbab.voltage.com.utils.Request;
 import honbab.voltage.com.widget.CircleTransform;
+import honbab.voltage.com.widget.Encryption;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
 import okhttp3.OkHttpClient;
 
@@ -206,7 +207,7 @@ public class ProfileActivity extends AppCompatActivity {
 
                     break;
                 case R.id.btn_add_fr:
-                    if (fr_status.equals("fr")) {
+                    if (fr_status.equals("fr") || fr_status.equals("i_required")) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(ProfileActivity.this);
                         builder.setMessage("친구를 취소하시겠습니까?");
                         builder.setPositiveButton(R.string.yes,
@@ -343,6 +344,7 @@ public class ProfileActivity extends AppCompatActivity {
                 //generate hashMap to store encodedImage and the name
                 HashMap<String, String> detail = new HashMap<>();
                 detail.put("opt", "upload_profile");
+                detail.put("auth", Encryption.voltAuth());
                 detail.put("my_id", Statics.my_id);
                 detail.put("image", encodeImage);
 //                detail.put("name", name);
@@ -350,7 +352,7 @@ public class ProfileActivity extends AppCompatActivity {
                 //convert this HashMap to encodedUrl to send to php file
                 String dataToSend = hashMapToUrl(detail);
                 //make a Http request and send data to saveImage.php file
-                String response = Request.post(Statics.optUrl + "profile/index.php", dataToSend);
+                String response = Request.post(Statics.optUrl + "profile.php", dataToSend);
                 Log.e("abc", "response = " + response);
 
                 //return the response

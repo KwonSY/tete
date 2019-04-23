@@ -61,8 +61,20 @@
                     android:layout_alignBaseline="@id/txt_myName"
                     android:layout_marginLeft="17dp"
                     android:layout_toRightOf="@id/txt_myName"
-                    android:textSize="12sp"
-                    android:text="친구 0" />
+                    android:text="친구 0"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/cnt_reqfr"
+                    android:layout_width="5dp"
+                    android:layout_height="5dp"
+                    android:layout_alignBottom="@id/btn_go_babfrlist"
+                    android:layout_marginBottom="14dp"
+                    android:layout_toRightOf="@id/btn_go_babfrlist"
+                    android:background="@drawable/circle_red"
+                    android:text=""
+                    android:textColor="@color/white"
+                    android:textSize="10sp" />
 
                 <TextView
                     android:id="@+id/txt_comment"

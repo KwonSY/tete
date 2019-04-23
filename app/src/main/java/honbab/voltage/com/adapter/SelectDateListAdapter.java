@@ -32,6 +32,7 @@ import honbab.voltage.com.tete.R;
 import honbab.voltage.com.tete.Statics;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
 import honbab.voltage.com.widget.PickDateDialog;
+import me.toptas.fancyshowcase.FancyShowCaseView;
 import okhttp3.OkHttpClient;
 
 public class SelectDateListAdapter extends RecyclerView.Adapter<SelectDateListAdapter.ViewHolder> {
@@ -240,25 +241,22 @@ public class SelectDateListAdapter extends RecyclerView.Adapter<SelectDateListAd
 
                     data.setChecked(true);
 
-//                    Log.e("abc", position + ", data.getAreasList() = " + data.getAreasList());
-//                    ((SelectFeedFragment) fragment).mAdapter_area.clearItemList();
-//                    ((SelectFeedFragment) fragment).mAdapter_area = new SelectAreaListAdapter(mContext, data.getAreasList());
-//                    ((SelectFeedFragment) fragment).recyclerView_area.setAdapter(((SelectFeedFragment) fragment).mAdapter_area);
-//                    ((SelectFeedFragment) fragment).mAdapter_area.notifyDataSetChanged();
                     Log.e("abc", position + ", data.getRestList() = " + data.getRestList().size());
 //                    ((SelectFeedFragment) fragment).mAdapter_rest.clearItemList();
                     ((SelectFeedFragment) fragment).mAdapter_rest = new SelectRestListAdapter(mContext, data.getRestList());
+                    if (((SelectFeedFragment) fragment).mAdapter_rest.getItemCount() == 1) {
+                        showFancyShowCaseView();
+                    }
                     ((SelectFeedFragment) fragment).recyclerView_rest.setAdapter(((SelectFeedFragment) fragment).mAdapter_rest);
                     ((SelectFeedFragment) fragment).mAdapter_rest.notifyDataSetChanged();
                 } else {
                     data.setChecked(false);
                 }
             } else {//선택이 없으나, 사전에 체크 표기
-
+                
                 if (listViewItemList.size() == 1) {
                     ((SelectFeedFragment) fragment).timelike_id = data.getTimelike_id();
                     ((SelectFeedFragment) fragment).feed_time = data.getTime();
-//                    ((SelectFeedFragment) fragment).areaList = data.getAreasList();
                     SimpleDateFormat formatter1 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
                     SimpleDateFormat formatter2 = new SimpleDateFormat("M/d E요일");
                     Date date = formatter1.parse(data.getTime());
@@ -269,6 +267,10 @@ public class SelectDateListAdapter extends RecyclerView.Adapter<SelectDateListAd
 
                     ((SelectFeedFragment) fragment).mAdapter_rest.clearItemList();
                     ((SelectFeedFragment) fragment).mAdapter_rest = new SelectRestListAdapter(mContext, data.getRestList());
+                    Log.e("abc", " getItemCount1() = " + ((SelectFeedFragment) fragment).mAdapter_rest.getItemCount());
+                    if (((SelectFeedFragment) fragment).mAdapter_rest.getItemCount() == 1) {
+                        showFancyShowCaseView();
+                    }
                     ((SelectFeedFragment) fragment).recyclerView_rest.setAdapter(((SelectFeedFragment) fragment).mAdapter_rest);
                     ((SelectFeedFragment) fragment).mAdapter_rest.notifyDataSetChanged();
                 } else {
@@ -285,18 +287,30 @@ public class SelectDateListAdapter extends RecyclerView.Adapter<SelectDateListAd
 
                         data.setChecked(true);
 
-//                        ((SelectFeedFragment) fragment).mAdapter_area.clearItemList();
-//                        ((SelectFeedFragment) fragment).mAdapter_area = new SelectAreaListAdapter(mContext, data.getAreasList());
-//                        ((SelectFeedFragment) fragment).recyclerView_area.setAdapter(((SelectFeedFragment) fragment).mAdapter_area);
                         ((SelectFeedFragment) fragment).mAdapter_rest.clearItemList();
                         ((SelectFeedFragment) fragment).mAdapter_rest = new SelectRestListAdapter(mContext, data.getRestList());
+                        Log.e("abc", " getItemCount2() = " + ((SelectFeedFragment) fragment).mAdapter_rest.getItemCount());
+                        if (((SelectFeedFragment) fragment).mAdapter_rest.getItemCount() == 1) {
+                            showFancyShowCaseView();
+                        }
                         ((SelectFeedFragment) fragment).recyclerView_rest.setAdapter(((SelectFeedFragment) fragment).mAdapter_rest);
                         ((SelectFeedFragment) fragment).mAdapter_rest.notifyDataSetChanged();
                     }
                 }
+
+
+
             }
 
             checkBox.setChecked(data.isChecked());
+        }
+
+        public void showFancyShowCaseView() {
+            new FancyShowCaseView.Builder(((MainActivity) mContext))
+                    .title("\n\n음식점을 선택해보세요.")
+                    .focusOn(((SelectFeedFragment) fragment).recyclerView_rest.getChildAt(0))
+                    .build()
+                    .show();
         }
 
 //        @Override

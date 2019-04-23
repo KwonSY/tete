@@ -20,7 +20,6 @@ import honbab.voltage.com.fragment.SelectFeedFragment;
 import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
-import honbab.voltage.com.widget.PickAreaDialog;
 import okhttp3.OkHttpClient;
 
 public class SelectAreaListAdapter extends RecyclerView.Adapter<SelectAreaListAdapter.ViewHolder> {
@@ -110,13 +109,13 @@ public class SelectAreaListAdapter extends RecyclerView.Adapter<SelectAreaListAd
                 else
                     txt_area.setText("+");
 
-                checkBox.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        PickAreaDialog pickAreaDialog = new PickAreaDialog(mContext);
-                        pickAreaDialog.callFunction(((SelectFeedFragment) fragment).areaAllList);
-                    }
-                });
+//                checkBox.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        PickAreaDialog pickAreaDialog = new PickAreaDialog(mContext);
+//                        pickAreaDialog.callFunction(((SelectFeedFragment) fragment).areaAllList);
+//                    }
+//                });
             }
 
             try {

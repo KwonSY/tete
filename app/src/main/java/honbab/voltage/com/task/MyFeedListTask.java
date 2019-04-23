@@ -25,6 +25,7 @@ import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.tete.Statics;
 import honbab.voltage.com.widget.CircleTransform;
+import honbab.voltage.com.widget.Encryption;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -38,7 +39,8 @@ public class MyFeedListTask extends AsyncTask<Void, Void, Void> {
 
     public ArrayList<FeedData> feedList = new ArrayList<>();
     private int cnt_after = 0;
-    private String cnt_babfr;
+//    private String cnt_babfr;
+    private int cnt_babfr = 0; int cnt_reqfr = 0;
     private String my_name, my_img, my_comment;
     private String after_feed_id, host_id, host_name, host_img, guest_id, guest_name, guest_img;
 
@@ -59,10 +61,11 @@ public class MyFeedListTask extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... params) {
         FormBody body = new FormBody.Builder()
                 .add("opt", "my_feed_list")
+                .add("auth", Encryption.voltAuth())
                 .add("my_id", Statics.my_id)
                 .build();
 
-        Request request = new Request.Builder().url(Statics.optUrl + "tab2/index.php").post(body).build();
+        Request request = new Request.Builder().url(Statics.optUrl + "tab2.php").post(body).build();
 
         try {
             okhttp3.Response response = httpClient.newCall(request).execute();
@@ -71,7 +74,8 @@ public class MyFeedListTask extends AsyncTask<Void, Void, Void> {
 
                 JSONObject obj = new JSONObject(bodyStr);
 
-                cnt_babfr = obj.getString("cnt_babfr");
+                cnt_babfr = obj.getInt("cnt_babfr");
+                cnt_reqfr = obj.getInt("cnt_reqfr");
 
                 JSONObject myProfile = obj.getJSONObject("my");
                 my_name = myProfile.getString("name");
@@ -178,6 +182,11 @@ public class MyFeedListTask extends AsyncTask<Void, Void, Void> {
             ((MyFeedFragment) fragment).swipeContainer.setRefreshing(false);
 
             ((MyFeedFragment) fragment).btn_go_babfrlist.setText("친구 " + cnt_babfr);
+            if (cnt_reqfr > 0)
+                ((MyFeedFragment) fragment).cnt_reqfr.setVisibility(View.VISIBLE);
+            else
+                ((MyFeedFragment) fragment).cnt_reqfr.setVisibility(View.INVISIBLE);
+//            ((MyFeedFragment) fragment).cnt_reqfr.setText(cnt_reqfr);
 
             if (cnt_after > 0) {
                 Intent intent = new Intent(mContext, AfterEatingActivity.class);

@@ -7,6 +7,7 @@ import android.util.Log;
 import org.json.JSONObject;
 
 import honbab.voltage.com.tete.Statics;
+import honbab.voltage.com.widget.Encryption;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -37,11 +38,12 @@ public class EditCommentTask extends AsyncTask<Void, Void, String> {
 
         FormBody body = new FormBody.Builder()
                 .add("opt", "update_profile")
+                .add("auth", Encryption.voltAuth())
                 .add("my_id", Statics.my_id)
                 .add("comment", comment)
                 .build();
 
-        Request request = new Request.Builder().url(Statics.optUrl + "profile/index.php").post(body).build();
+        Request request = new Request.Builder().url(Statics.optUrl + "profile.php").post(body).build();
 
         try {
             okhttp3.Response response = httpClient.newCall(request).execute();

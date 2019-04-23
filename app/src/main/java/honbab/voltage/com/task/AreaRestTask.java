@@ -11,7 +11,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import honbab.voltage.com.data.AreaData;
-import honbab.voltage.com.fragment.SelectFeedFragment;
 import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.Statics;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
@@ -87,7 +86,7 @@ public class AreaRestTask extends AsyncTask<String, Void, ArrayList<AreaData>> {
 
         if (activityName.equals("MainActivity")) {
             if (areaList.size() > 0) {
-                ((SelectFeedFragment) fragment).areaAllList = areaList;
+//                ((SelectFeedFragment) fragment).areaAllList = areaList;
 //                ((SelectFeedFragment) fragment).areaNameList = areaNameList;
 
 //                ((SelectFeedFragment) fragment).spinnerAdapter = new ArrayAdapter(mContext, R.layout.item_row_spinner, areaNameList);

@@ -21,7 +21,7 @@
     <string name="cannot_reserve">예약이 불가합니다. 다른 분을 선택해주세요.</string>
     <string name="cannot_reserve_past">현재시간 이후로 선택해주세요.</string>
     <string name="chat">대화하기</string>
-    <string name="chat_start">밥을 같이먹는다는 것이 어쩌면 사소한 일이지만,\n정말 중요할 수도 있어요.\n%s님과 같먹 약속을 잡아보아요!!</string>
+    <string name="chat_start">\n%s님과 같이먹어요 :)\n\n식당예약을 별도로 되지 않습니다.\n우측 상단 식당번호로 예약잡아주세요.</string>
     <string name="change_password">비밀번호 변경</string>
     <string name="complete_reserv_with">%s님과 예약이 완료되었습니다.</string>
     <string name="confirm">확인</string>

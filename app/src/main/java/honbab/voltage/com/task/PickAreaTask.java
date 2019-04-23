@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.Statics;
+import honbab.voltage.com.widget.Encryption;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -37,12 +38,13 @@ public class PickAreaTask extends AsyncTask<String, Void, String> {
         Log.e("abc", "PickDateTask datetime = " + params[0]);
         FormBody body = new FormBody.Builder()
                 .add("opt", "pick_area")
+                .add("auth", Encryption.voltAuth())
                 .add("my_id", Statics.my_id)
                 .add("timelike_id", params[0])
                 .add("area_cd", params[1])
                 .build();
 
-        Request request = new Request.Builder().url(Statics.optUrl + "tab1/index.php").post(body).build();
+        Request request = new Request.Builder().url(Statics.optUrl + "tab1.php").post(body).build();
 
         try {
             okhttp3.Response response = httpClient.newCall(request).execute();

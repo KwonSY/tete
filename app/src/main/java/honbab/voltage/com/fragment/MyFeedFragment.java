@@ -11,7 +11,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +55,7 @@ public class MyFeedFragment extends Fragment {
     //마이프로필
     public View line_timeline_vertical;
     public ImageView img_my;
-    public TextView txt_myName, txt_comment, btn_go_babfrlist, btn_go_my_profile;
+    public TextView txt_myName, txt_comment, btn_go_babfrlist, cnt_reqfr, btn_go_my_profile;
     //마이피드
     public SwipeRefreshLayout swipeContainer_myfeed;
     public SwipeRefreshLayout swipeContainer;
@@ -104,7 +103,6 @@ public class MyFeedFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-        Log.e("abc", "Statics.my_id.length = " + Statics.my_id.length());
         if (Statics.my_id != null || Statics.my_id.length() > 0)
             new MyFeedListTask(getActivity()).execute();
 //        try {
@@ -141,6 +139,7 @@ public class MyFeedFragment extends Fragment {
         txt_myName = (TextView) getActivity().findViewById(R.id.txt_myName);
         txt_comment = (TextView) getActivity().findViewById(R.id.txt_comment);
         btn_go_babfrlist = (TextView) getActivity().findViewById(R.id.btn_go_babfrlist);
+        cnt_reqfr = (TextView) getActivity().findViewById(R.id.cnt_reqfr);
         btn_go_my_profile = (TextView) getActivity().findViewById(R.id.btn_go_my_profile);
         line_timeline_vertical = (View) getActivity().findViewById(R.id.line_timeline_vertical);
         img_my.setOnClickListener(mOnClickListener);

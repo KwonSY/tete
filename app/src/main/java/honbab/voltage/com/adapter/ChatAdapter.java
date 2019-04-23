@@ -95,7 +95,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
             txt_chatMessage_item.setText(data.getText());
             txt_chatUserName_item.setText(data.getToUserName());
 
-            SimpleDateFormat formatter = new SimpleDateFormat("MM/dd hh:mm");
+            SimpleDateFormat formatter = new SimpleDateFormat("MM/dd a hh:mm");
             Calendar calendar = Calendar.getInstance();
             calendar.setTimeInMillis(data.getTimestampLong());
             chatTime_right.setText(formatter.format(calendar.getTime()));

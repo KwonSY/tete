@@ -45,7 +45,7 @@ public class VersionTask extends AsyncTask<Void, Void, Void> {
                 .add("device", "android")
                 .build();
 
-        Request request = new Request.Builder().url(Statics.opt_url).post(body).build();
+        Request request = new Request.Builder().url(Statics.optUrl + "version.php").post(body).build();
 
         try {
             okhttp3.Response response = httpClient.newCall(request).execute();

@@ -3,6 +3,7 @@ package honbab.voltage.com.tete;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -18,7 +19,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
-import honbab.voltage.com.adapter.AutoCompleteAdapter;
 import honbab.voltage.com.adapter.BabFriendsAdapter;
 import honbab.voltage.com.data.UserData;
 import honbab.voltage.com.task.BabFrListTask;
@@ -46,7 +46,6 @@ public class BabFriendsActivity extends AppCompatActivity {
         TextView title_topbar = (TextView) findViewById(R.id.title_topbar);
         title_topbar.setText("밥친구 리스트");
 
-//        EditText edit_search;
         AutoCompleteTextView edit_search;
         edit_search = (AutoCompleteTextView) findViewById(R.id.edit_search_babfr);
         edit_search.addTextChangedListener(new TextWatcher() {
@@ -58,15 +57,20 @@ public class BabFriendsActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 Log.e("abc", "CharSequence = " + s);
-                try {
-                    ArrayList<UserData> userList = new SearchFrTask(BabFriendsActivity.this).execute(s.toString()).get();
-                    Log.e("abc", "CharSequence userList = " + userList.size());
-                    AutoCompleteAdapter mAdapter = new AutoCompleteAdapter(BabFriendsActivity.this, userList);
-                    edit_search.setAdapter(mAdapter);
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                if (s.length() > 0) {
+                    try {
+                        ArrayList<UserData> userList = new SearchFrTask(BabFriendsActivity.this).execute(s.toString()).get();
+                        BabFriendsAdapter mAdapter = new BabFriendsAdapter(BabFriendsActivity.this, userList);
+                        recyclerView_fr.setAdapter(mAdapter);
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                } else {
+                    //비어있을 때
+                    new BabFrListTask(BabFriendsActivity.this).execute();
                 }
             }
 
@@ -104,6 +108,7 @@ public class BabFriendsActivity extends AppCompatActivity {
         recyclerView_fr.setLayoutManager(layoutManager);
         BabFriendsAdapter mAdapter = new BabFriendsAdapter();
         recyclerView_fr.setAdapter(mAdapter);
+        recyclerView_fr.addItemDecoration(new DividerItemDecoration(recyclerView_fr.getContext(), DividerItemDecoration.VERTICAL));
 
 //        getPhoneNums();
 

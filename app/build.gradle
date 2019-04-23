@@ -10,8 +10,8 @@ android {
         applicationId "honbab.voltage.com.tete"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 39
-        versionName "1.0.30"
+        versionCode 43
+        versionName "1.0.34"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -125,6 +125,9 @@ dependencies {
 
     //Radio Button Group
     implementation 'com.github.ceryle:RadioRealButton:v2.1.1'
+
+    //Showcaseview
+    implementation 'com.github.faruktoptas:FancyShowCaseView:1.1.5'
 
     //Sliding Up Pannel
     implementation 'com.sothree.slidinguppanel:library:3.4.0'

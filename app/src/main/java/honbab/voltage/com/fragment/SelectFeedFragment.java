@@ -36,9 +36,7 @@ import honbab.voltage.com.adapter.SelectAreaListAdapter;
 import honbab.voltage.com.adapter.SelectDateListAdapter;
 import honbab.voltage.com.adapter.SelectRestListAdapter;
 import honbab.voltage.com.adapter.SelectUserListAdapter;
-import honbab.voltage.com.data.AreaData;
 import honbab.voltage.com.data.SelectDateData;
-import honbab.voltage.com.task.AreaRestTask;
 import honbab.voltage.com.task.ReservFeedTask;
 import honbab.voltage.com.task.SelectFeedListTask;
 import honbab.voltage.com.tete.JoinActivity;
@@ -78,7 +76,7 @@ public class SelectFeedFragment extends Fragment implements LocationListener,
     public String feed_time = "";
     public String feed_rest_id = "";
     public String to_id = "", to_name = "";
-    public ArrayList<AreaData> areaAllList;//xx
+//    public ArrayList<AreaData> areaAllList;//xx
 
     public ArrayList<SelectDateData> dateAllList = new ArrayList<>();
 //    public ArrayList<RestData> restLikeList = new ArrayList<>();
@@ -136,7 +134,7 @@ public class SelectFeedFragment extends Fragment implements LocationListener,
 ////            new SelectFeedListTask(getActivity()).execute(feed_time, area_cd, feed_rest_id, "");
 //        }
 
-        new AreaRestTask(getActivity()).execute();
+//        new AreaRestTask(getActivity()).execute();
 //        try {
 //            areaList.clear();
 //            areaList = new AreaRestTask(getActivity()).execute().get();

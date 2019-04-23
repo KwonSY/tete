@@ -22,13 +22,27 @@
         android:paddingLeft="30dp"
         android:paddingRight="30dp">
 
+        <TextView
+            android:id="@+id/explain_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="문의 또는 신고"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
         <EditText
             android:id="@+id/edit_report"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/border_round_gr1"
             android:gravity="top|left"
-            android:hint="200볼트에게 문의해주세요."
-            android:minHeight="200dp" />
+            android:hint="내용을 작성해주세요.."
+            android:minHeight="200dp"
+            android:minLines="3"
+            android:padding="10dp"
+            android:textSize="14sp" />
 
         <Button
             android:id="@+id/btn_submit"

@@ -20,6 +20,7 @@ import honbab.voltage.com.tete.ProfileActivity;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.tete.Statics;
 import honbab.voltage.com.widget.CircleTransform;
+import honbab.voltage.com.widget.Encryption;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -32,16 +33,13 @@ public class AccountTask extends AsyncTask<String, Void, UserData> {
     private Fragment fragment;
     private String activityName;
 
-//    HashMap<String, Integer> chatListHash = new HashMap<>();
-
-    private String user_id;
     private int seq;
-    private String user_name, user_img, comment, token, fr_status;
+    private String user_id, user_name, user_img, comment, token, fr_status;
 
     public AccountTask(Context mContext, int seq) {
         this.mContext = mContext;
         this.httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
-//        this.chatListHash = chatListHash;
+
         this.seq = seq;
     }
 
@@ -60,22 +58,23 @@ public class AccountTask extends AsyncTask<String, Void, UserData> {
     protected UserData doInBackground(String... objects) {
         UserData userData = new UserData();
         user_id = objects[0];
+        Log.e("abc", "user_id  objects[0] = " + user_id);
 
         FormBody body = new FormBody.Builder()
                 .add("opt", "account")
+                .add("auth", Encryption.voltAuth())
                 .add("my_id", Statics.my_id)
                 .add("user_id", objects[0])
                 .build();
 
-        Request request = new Request.Builder().url(Statics.optUrl + "profile/index.php").post(body).build();
+        Request request = new Request.Builder().url(Statics.optUrl + "profile.php").post(body).build();
 
         try {
             okhttp3.Response response = httpClient.newCall(request).execute();
             if (response.isSuccessful()) {
                 String bodyStr = response.body().string();
-
+                Log.e("abc", "AccountTask = " + bodyStr);
                 JSONObject obj = new JSONObject(bodyStr);
-                Log.e("abc", "AccountTask = " + obj);
 
                 JSONObject user_obj = obj.getJSONObject("user");
 //                user_id = user_obj.getString("sid");
@@ -93,10 +92,10 @@ public class AccountTask extends AsyncTask<String, Void, UserData> {
                 if (comment.equals("null"))
                     comment = "";
 
-                //fr_req
+                // 친구관계 fr_req
                 fr_status = user_obj.getString("fr_status");
 
-                userData = new UserData(user_id, user_name, age, gender, token, user_img, null, null);
+                userData = new UserData(user_id, user_name, age, gender, token, user_img, fr_status, null);
                 userData.setComment(comment);
             } else {
 //                    Log.d(TAG, "Error : " + response.code() + ", " + response.message());
@@ -112,6 +111,9 @@ public class AccountTask extends AsyncTask<String, Void, UserData> {
     @Override
     protected void onPostExecute(UserData userData) {
         super.onPostExecute(userData);
+
+        Log.e("abc", "AccountTask user_id = " + user_id);
+        Log.e("abc", "AccountTask userData.getUser_id() = " + userData.getUser_id());
 
         if (userData.getUser_id().equals(Statics.my_id)) {
             FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
@@ -168,7 +170,7 @@ public class AccountTask extends AsyncTask<String, Void, UserData> {
                 ((ProfileActivity) mContext).btn_add_fr.setEnabled(true);
             } else if (fr_status.equals("i_required")) {
                 ((ProfileActivity) mContext).btn_add_fr.setText("요청중");
-                ((ProfileActivity) mContext).btn_add_fr.setEnabled(false);
+                ((ProfileActivity) mContext).btn_add_fr.setEnabled(true);
             } else if (fr_status.equals("wait_accept")) {
                 ((ProfileActivity) mContext).explain_req_fr.setText(user_name + "님께서\n친구 요청중");
                 ((ProfileActivity) mContext).btn_add_fr.setText("수락");
@@ -192,7 +194,16 @@ public class AccountTask extends AsyncTask<String, Void, UserData> {
                     .error(R.drawable.icon_noprofile_circle)
                     .transform(new CircleTransform())
                     .into(((ChatActivity) mContext).topbar_img_user);
+            Picasso.get().load(user_img)
+                    .placeholder(R.drawable.icon_noprofile_circle)
+                    .error(R.drawable.icon_noprofile_circle)
+                    .transform(new CircleTransform())
+                    .into(((ChatActivity) mContext).no_chat_img_user);
+
             ((ChatActivity) mContext).txt_userName.setText(user_name);
+            ((ChatActivity) mContext).no_chat_txt_userName.setText(user_name);
+            String str_no_chat = String.format(mContext.getResources().getString(R.string.chat_start), user_name);
+            ((ChatActivity) mContext).no_chat_explain.setText(str_no_chat);
         }
 
     }

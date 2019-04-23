@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import honbab.voltage.com.data.UserData;
 import honbab.voltage.com.tete.Statics;
+import honbab.voltage.com.widget.Encryption;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -43,11 +44,12 @@ public class SearchFrTask extends AsyncTask<String, Void, ArrayList<UserData>> {
 
         FormBody body = new FormBody.Builder()
                 .add("opt", "search_friend")
-//                .add("from_id", Statics.my_id)
+                .add("auth", Encryption.voltAuth())
+                .add("my_id", Statics.my_id)
                 .add("user_name", params[0])
                 .build();
 
-        Request request = new Request.Builder().url(Statics.optUrl + "babfr/index.php").post(body).build();
+        Request request = new Request.Builder().url(Statics.optUrl + "babfr.php").post(body).build();
 
         try {
             okhttp3.Response response = httpClient.newCall(request).execute();

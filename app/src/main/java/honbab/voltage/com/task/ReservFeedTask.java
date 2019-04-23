@@ -14,6 +14,7 @@ import honbab.voltage.com.fragment.SelectFeedFragment;
 import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.tete.Statics;
+import honbab.voltage.com.widget.Encryption;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
@@ -44,6 +45,7 @@ public class ReservFeedTask extends AsyncTask<String, Void, String> {
 
         FormBody body = new FormBody.Builder()
                 .add("opt", "reserv_feed")
+                .add("auth", Encryption.voltAuth())
                 .add("my_id", Statics.my_id)
                 .add("to_id", params[0])
                 .add("rest_id", params[1])
@@ -51,7 +53,7 @@ public class ReservFeedTask extends AsyncTask<String, Void, String> {
 //                .add("comment", comment)
                 .build();
 
-        Request request = new Request.Builder().url(Statics.opt_url).post(body).build();
+        Request request = new Request.Builder().url(Statics.optUrl + "tab1.php").post(body).build();
 
         try {
             okhttp3.Response response = httpClient.newCall(request).execute();
