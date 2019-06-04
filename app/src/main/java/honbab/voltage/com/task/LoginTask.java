@@ -11,6 +11,7 @@ import android.widget.Toast;
 import org.json.JSONObject;
 
 import honbab.voltage.com.tete.MainActivity;
+import honbab.voltage.com.tete.MainActivity2;
 import honbab.voltage.com.tete.Statics;
 import honbab.voltage.com.widget.Encryption;
 import honbab.voltage.com.widget.SessionManager;
@@ -114,7 +115,7 @@ public class LoginTask extends AsyncTask<String, Void, String> {
 
                 //vvvvvvvvvvvv
 //                finish();
-                Intent intent = new Intent(mContext, MainActivity.class);
+                Intent intent = new Intent(mContext, MainActivity2.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 mContext.startActivity(intent);
             }

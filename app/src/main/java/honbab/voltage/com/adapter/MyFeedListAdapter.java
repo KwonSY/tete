@@ -50,7 +50,8 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
 
     public MyFeedListAdapter(Context mContext, ArrayList<FeedData> listViewItemList) {
         this.mContext = mContext;
-        this.httpClient = OkHttpClientSingleton.getInstance().getHttpClient();;
+        this.httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
+        ;
         this.listViewItemList = listViewItemList;
     }
 
@@ -58,7 +59,7 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
-        Log.e("abc", "zzzzzzzz viewType = " + viewType);
+
         if (viewType == TYPE_N) {
             view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_row_my_feed_n, parent, false);
         } else if (viewType == TYPE_W) {
@@ -179,6 +180,7 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
         TextView txt_userName, txt_userInfo;
         TextView txt_restName, txt_restAddress;
         TextView txt_date, txt_time;
+        TextView txt_sale;
         Button btn_go_chat;
 
         public ViewHolder(View itemView, int viewType) {
@@ -200,22 +202,28 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
             if (viewType == TYPE_N || viewType == TYPE_W) {
                 btn_feed_accept = itemView.findViewById(R.id.btn_feed_accept);
                 btn_feed_cancle = itemView.findViewById(R.id.btn_feed_cancle);
+                txt_sale = itemView.findViewById(R.id.txt_sale);
             } else {
                 //TYPE_Y
                 btn_go_chat = itemView.findViewById(R.id.btn_go_chat);
             }
         }
 
-        public void bindToPost(final  FeedData data, int viewType) {
-            Log.e("abc", "viewType = "+ viewType);
-            if (viewType == TYPE_N) {
+        public void bindToPost(final FeedData data, int viewType) {
+            if (viewType == TYPE_N || viewType == TYPE_W) {
+                if (viewType == TYPE_N) {
 
-            } else if (viewType == TYPE_W) {
-                btn_feed_accept.setText("수락 대기중");
-                btn_feed_accept.getLayoutParams().width = 362;
-                btn_feed_accept.setEnabled(false);
-                btn_feed_accept.setBackgroundResource(R.drawable.border_circle_gr_gr1);
+                } else if (viewType == TYPE_W) {
+                    btn_feed_accept.setText("수락 대기중");
+                    btn_feed_accept.getLayoutParams().width = 192;
+                    btn_feed_accept.setEnabled(false);
+                    btn_feed_accept.setBackgroundResource(R.drawable.border_circle_gr_gr1);
 //                btn_feed_cancle.setVisibility(View.GONE);
+                }
+
+                if (data.getSale() > 0)
+                    txt_sale.setVisibility(View.VISIBLE);
+                txt_sale.setText(String.valueOf(data.getSale()) + "%할인 이벤트");
             } else {
 //                final FeedData data = listViewItemList.get(position);
 
@@ -245,6 +253,7 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
                     Intent intent = new Intent(mContext, OneRestaurantActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.putExtra("feed_id", data.getFeed_id());
+                    intent.putExtra("rest_id", data.getRest_id());
                     intent.putExtra("rest_name", data.getRest_name());
                     intent.putExtra("compound_code", data.getCompound_code());
                     intent.putExtra("rest_phone", data.getRest_phone());
@@ -260,7 +269,7 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
                 }
             });
             Picasso.get().load(data.getUser_img())
-                    .resize(200,200)
+                    .resize(200, 200)
                     .centerCrop()
                     .placeholder(R.drawable.icon_noprofile_circle)
                     .error(R.drawable.icon_noprofile_circle)
@@ -288,7 +297,7 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
             });
 
             Picasso.get().load(data.getRest_img())
-                    .resize(400,400)
+                    .resize(400, 400)
                     .centerCrop()
                     .placeholder(R.drawable.icon_no_image)
                     .error(R.drawable.icon_no_image)
@@ -310,11 +319,12 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
 //        if (date[1].substring(0,1).equals("0"))
 //            date[1] = date[1].substring(1,2);
 
-            txt_date.setText(date[1]+ "\n" + date[2]);
-            if (Integer.parseInt(time[0]) <= 16)
-                txt_time.setText("점심");
-            else
-                txt_time.setText("저녁");
+            txt_date.setText(date[1] + "\n" + date[2]);
+//            if (Integer.parseInt(time[0]) <= 16)
+//                txt_time.setText("점심");
+//            else
+//                txt_time.setText("저녁");
+            txt_time.setText("");
 
 //            if (time[0].equals("14"))
 //                txt_time.setText("점심");
@@ -329,6 +339,7 @@ public class MyFeedListAdapter extends RecyclerView.Adapter<MyFeedListAdapter.Vi
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     intent.putExtra("compound_code", data.getCompound_code());
                     intent.putExtra("feed_id", data.getFeed_id());
+                    intent.putExtra("rest_id", data.getRest_id());
                     intent.putExtra("rest_name", data.getRest_name());
                     intent.putExtra("rest_phone", data.getRest_phone());
                     intent.putExtra("feed_time", data.getFeed_time());

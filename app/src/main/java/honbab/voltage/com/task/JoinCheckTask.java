@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import org.json.JSONObject;
 
-import honbab.voltage.com.tete.MainActivity;
+import honbab.voltage.com.tete.MainActivity2;
 import honbab.voltage.com.tete.Statics;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
 import honbab.voltage.com.widget.SessionManager;
@@ -103,7 +103,7 @@ public class JoinCheckTask extends AsyncTask<String, Void, JSONObject> {
 
             Toast.makeText(mContext.getApplicationContext(), "같이먹어요에 오신 것을 환영합니다.", Toast.LENGTH_SHORT).show();
 
-            Intent intent = new Intent(mContext, MainActivity.class);
+            Intent intent = new Intent(mContext, MainActivity2.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             mContext.startActivity(intent);
             ((Activity) mContext).finish();

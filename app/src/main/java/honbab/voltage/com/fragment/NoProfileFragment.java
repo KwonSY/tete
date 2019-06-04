@@ -1,10 +1,12 @@
 package honbab.voltage.com.fragment;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,6 +72,10 @@ public class NoProfileFragment extends Fragment {
         btn_go_login.setOnClickListener(mOnClickListener);
 
         progressDialog = new ProgressDialog(getActivity());
+
+        TextView btn_go_findpsw;
+        btn_go_findpsw = (TextView) getActivity().findViewById(R.id.btn_go_findpsw);
+        btn_go_findpsw.setOnClickListener(mOnClickListener);
     }
 
     @Override
@@ -123,6 +129,42 @@ public class NoProfileFragment extends Fragment {
                                     }
                                 });
                     }
+
+                    break;
+                case R.id.btn_go_findpsw:
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle("비밀번호 재설정");
+                    builder.setMessage("사용하시는 이메일 계정이 무엇인가요?");
+                    final EditText et = new EditText(getActivity());
+                    builder.setView(et);
+                    builder.setPositiveButton("재설정 메일 보내기",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    String emailAddress = et.getText().toString().trim();
+//                        Log.v(TAG, value);
+
+                                    mAuth.sendPasswordResetEmail(emailAddress)
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+                                                        Toast.makeText(getActivity().getApplicationContext(), "이메일을 확인해보세요.\n비밀번호 재설정을 하실 수 있습니다.", Toast.LENGTH_SHORT).show();
+
+                                                        dialog.dismiss();
+                                                    } else {
+                                                        Toast.makeText(getActivity().getApplicationContext(), "가입하지 않은 이메일입니다.", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+                                            });
+                                }
+                            });
+                    builder.setNegativeButton(R.string.no,
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+//                                holder.btn_check_feedee.setBackgroundResource(R.drawable.icon_check_n);
+                                }
+                            });
+                    builder.show();
 
                     break;
             }

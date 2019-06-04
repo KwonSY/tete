@@ -66,6 +66,8 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... params) {
+        Log.e("abc", "params[0] = " + params[0]);
+        Log.e("abc", "params[1] = " + params[1]);
         loadStatus = params[2];
 
         Calendar curCal = Calendar.getInstance();
@@ -89,7 +91,7 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
                 String bodyStr = response.body().string();
 
                 JSONObject obj = new JSONObject(bodyStr);
-//                Log.e("abc", "SelectFeedListTask obj : " + obj);
+                Log.e("abc", "SelectFeedListTask obj : " + obj);
 
 //                JSONArray areasList = obj.getJSONArray("area_cds");
 //                for (int i = 0; i<areasList.length(); i++) {
@@ -109,10 +111,10 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
                     String[] timeArr = time.split(" ");
                     String onlyTime = timeArr[1];
                     String timeName = "";
-                    if (onlyTime.equals("15:00:00"))
-                        timeName = "점심";
-                    else if (onlyTime.equals("21:00:00"))
-                        timeName = "저녁";
+//                    if (onlyTime.equals("15:00:00"))
+//                        timeName = "점심";
+//                    else if (onlyTime.equals("21:00:00"))
+//                        timeName = "저녁";
                     String day_of_week = time_obj.getString("day_of_week");
                     if (day_of_week.equals("Mon"))
                         day_of_week = "월";
@@ -131,10 +133,11 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
                     else
                         day_of_week = "";
                     int cnt_time = time_obj.getInt("cnt");
+                    Log.e("abc", "SelectFeedListTask cnt_time : " + cnt_time);
 
                     // 예약 음식점
                     JSONArray restArr = time_obj.getJSONArray("rests");
-                    Log.e("abc", "SelectFeedListTask restArr : " + restArr.toString());
+//                    Log.e("abc", "SelectFeedListTask restArr : " + restArr.toString());
                     ArrayList<RestData> restList = new ArrayList<>();
 
                     for (int j=0; j<restArr.length(); j++) {
@@ -151,9 +154,10 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
                         LatLng latLng = new LatLng(db_lat, db_lng);
                         String rest_phone = rest_obj.getString("phone");
                         String rest_img = rest_obj.getString("img_url");
+                        int sale = rest_obj.getInt("sale");
                         int cnt = rest_obj.getInt("cnt");
 
-                        RestData restData = new RestData(rest_id, rest_name, compound_code, latLng, place_id, rest_img, rest_phone, vicinity, cnt);
+                        RestData restData = new RestData(rest_id, rest_name, compound_code, latLng, place_id, rest_img, rest_phone, vicinity, sale, cnt);
                         restList.add(restData);
                     }
 
@@ -167,7 +171,7 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
 
                 // 예약 대기 사용자
                 JSONArray user_arr = obj.getJSONArray("users");
-                Log.e("abc", "SelectFeedListTask user_arr : " + user_arr.toString());
+//                Log.e("abc", "SelectFeedListTask user_arr : " + user_arr.toString());
                 for (int i = 0; i < user_arr.length(); i++) {
                     JSONObject user_obj = user_arr.getJSONObject(i);
                     String user_id = user_obj.getString("sid");
@@ -208,7 +212,6 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
 //            if (cnt_rest_arr == 0 && ((SelectFeedFragment) fragment).spinnerAdapter.getCount() > 1) {
 //                PickRestDialog dialog = new PickRestDialog(mContext);
 //                dialog.callFunction(null);
-//            }
 
 
             if (loadStatus.equals("readOnlyUser")) {
@@ -269,6 +272,8 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
 
                 ((SelectFeedFragment) fragment).swipeContainer.setRefreshing(false);
             }
+        } else if (activityName.equals("MainActivity2")) {
+
         }
     }
 

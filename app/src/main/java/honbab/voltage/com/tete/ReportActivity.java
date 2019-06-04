@@ -72,7 +72,7 @@ public class ReportActivity extends AppCompatActivity {
                 case R.id.btn_close:
                     // status == skip
 //                    new EvaluateFeedTask(ReportActivity.this).execute(user_id, feed_id, s_rating, "s");
-                    Intent intent = new Intent(ReportActivity.this, MainActivity.class);
+                    Intent intent = new Intent(ReportActivity.this, MainActivity2.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                     finish();

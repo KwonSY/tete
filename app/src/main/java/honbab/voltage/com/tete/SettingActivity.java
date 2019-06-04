@@ -168,7 +168,7 @@ public class SettingActivity extends AppCompatActivity {
                     session.logoutUser();
                     FirebaseAuth.getInstance().signOut();
 
-                    Intent intent2 = new Intent(SettingActivity.this, MainActivity.class);
+                    Intent intent2 = new Intent(SettingActivity.this, MainActivity2.class);
                     intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent2);
 

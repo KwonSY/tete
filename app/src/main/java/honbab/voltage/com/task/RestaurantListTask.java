@@ -66,8 +66,9 @@ public class RestaurantListTask extends AsyncTask<String, Void, ArrayList<RestDa
                     LatLng latLng = new LatLng(db_lat, db_lng);
                     String rest_phone = rest_obj.getString("phone");
                     String rest_img = rest_obj.getString("img_url");
+                    int sale = rest_obj.getInt("sale");
 
-                    RestData restData = new RestData(rest_id, rest_name, compound_code, latLng, place_id, rest_img, rest_phone, vicinity, 0);
+                    RestData restData = new RestData(rest_id, rest_name, compound_code, latLng, place_id, rest_img, rest_phone, vicinity, sale, 0);
                     restList.add(restData);
                 }
 

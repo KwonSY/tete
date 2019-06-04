@@ -132,11 +132,6 @@ public class LoginActivity extends BaseActivity {
                                             FirebaseUser user = mAuth.getCurrentUser();
 //                                            updateUI(user);
                                             new LoginByUidTask(LoginActivity.this).execute(user.getEmail(), user.getUid());
-
-//                                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-//                                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                                            startActivity(intent);
-//                                            finish();
                                         } else {
                                             progressDialog.dismiss();
 

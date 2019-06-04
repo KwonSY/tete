@@ -57,7 +57,9 @@ public class SelectDateListAdapter extends RecyclerView.Adapter<SelectDateListAd
         this.httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
         this.listViewItemList = listViewItemList;
 
-        fragment = ((MainActivity) mContext).getSupportFragmentManager().findFragmentByTag("page:0");
+        String activityName = mContext.getClass().getSimpleName();
+        if (activityName.equals("MainActivity"))
+            fragment = ((MainActivity) mContext).getSupportFragmentManager().findFragmentByTag("page:0");
     }
 
     @NonNull
@@ -147,8 +149,8 @@ public class SelectDateListAdapter extends RecyclerView.Adapter<SelectDateListAd
 
                 if (data.getCnt() > 0)
                     cnt_users.setText(String.format(mContext.getResources().getString(R.string.enable_cnt_feedee), String.valueOf(data.getCnt())));
-//                else
-//                    cnt_users.setText("-");
+                else
+                    cnt_users.setText("-");
 
                 checkBox.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -312,47 +314,6 @@ public class SelectDateListAdapter extends RecyclerView.Adapter<SelectDateListAd
                     .build()
                     .show();
         }
-
-//        @Override
-//        public void onClick(View v) {
-//            switch (v.getId()) {
-////                case R.id.layout_card:
-////                    Log.e("abc","layout_card");
-////
-////
-////                    break;
-////                case R.id.checkBox:
-////                    Log.e("abc","checkBox feed_time = " + ((SelectFeedFragment) fragment).feed_time);
-////
-////                    try {
-////                        Calendar calendar = Calendar.getInstance();
-////                        Date date_setting_time = new SimpleDateFormat("yyyyy-MM-dd HH:mm:ss").parse(listViewItemList.get(getAdapterPosition()).getTime());
-////                        calendar.setTime(date_setting_time);
-////
-////                        Calendar curCal = Calendar.getInstance();
-////                        long time_setting = calendar.getTimeInMillis();
-////                        long time_current = curCal.getTimeInMillis();
-////
-////                        if (time_setting > time_current) {
-////                            mSelectedItem = getAdapterPosition();
-////                            notifyItemRangeChanged(0, listViewItemList.size());
-////                            mAdapter.onItemHolderClick(ViewHolder.this);
-////
-////                            new SelectFeedListTask(mContext).execute(((SelectFeedFragment) fragment).feed_time,
-////                                    ((SelectFeedFragment) fragment).area_cd,
-////                                    ((SelectFeedFragment) fragment).feed_rest_id,
-////                                    "readOnlyUser");
-////                        } else {
-////                            checkBox.setVisibility(View.GONE);
-////                            Toast.makeText(mContext, R.string.cannot_reserve_past, Toast.LENGTH_SHORT).show();
-////                        }
-////                    } catch (ParseException e) {
-////                        e.printStackTrace();
-////                    }
-////
-////                    break;
-//            }
-//        }
     }
 
 //    public void removeAt(int position) {

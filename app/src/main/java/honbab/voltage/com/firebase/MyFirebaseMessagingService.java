@@ -23,6 +23,7 @@ import java.util.Map;
 
 import honbab.voltage.com.tete.ChatActivity;
 import honbab.voltage.com.tete.MainActivity;
+import honbab.voltage.com.tete.MainActivity2;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.tete.Statics;
 
@@ -164,7 +165,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private void sendNotification(Context mContext, RemoteMessage.Notification notification) {
 //        RemoteMessage.Notification notification =
 
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, MainActivity2.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         // Create the pending intent to launch the activity
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent, PendingIntent.FLAG_ONE_SHOT);
@@ -217,7 +218,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra("toId", data.get("toId"));
         } else {
-            intent = new Intent(this, MainActivity.class);
+            intent = new Intent(this, MainActivity2.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         }
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT);//PendingIntent.FLAG_UPDATE_CURRENT);

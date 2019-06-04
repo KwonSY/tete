@@ -2,16 +2,20 @@ package honbab.voltage.com.tete;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+
+import com.tooltip.Tooltip;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
@@ -107,33 +111,60 @@ public class PickRestLikeActivity extends AppCompatActivity {
         }
 
         ImageView btn_cancle = (ImageView) findViewById(R.id.btn_cancle);
-        btn_cancle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                new SelectFeedListTask(mContext).execute(((SelectFeedFragment) fragment).feed_time,
-////                        ((SelectFeedFragment) fragment).area_cd,
-//                        ((SelectFeedFragment) fragment).feed_rest_id,
-//                        "");
-
-//                dlg.dismiss();
-                onBackPressed();
-            }
-        });
-
         Button btn_go_return = (Button) findViewById(R.id.btn_go_return);
-        btn_go_return.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                new SelectFeedListTask(mContext).execute(((SelectFeedFragment) fragment).feed_time,
-////                        ((SelectFeedFragment) fragment).area_cd,
-//                        ((SelectFeedFragment) fragment).feed_rest_id,
-//                        "");
+        ImageView btn_report = (ImageView) findViewById(R.id.btn_report);
+        btn_cancle.setOnClickListener(mOnClickListener);
+        btn_go_return.setOnClickListener(mOnClickListener);
+        btn_report.setOnClickListener(mOnClickListener);
 
-//                dismiss();
-                onBackPressed();
-            }
-        });
-
-
+        showTooltip(btn_report, Gravity.BOTTOM);
     }
+
+    private View.OnClickListener mOnClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.btn_cancle:
+                    onBackPressed();
+
+                    break;
+                case R.id.btn_go_return:
+                    onBackPressed();
+
+                    break;
+                case R.id.btn_report:
+                    Intent intent1 = new Intent(PickRestLikeActivity.this, ReportActivity.class);
+                    intent1.putExtra("title", "문의하기");
+                    intent1.putExtra("feed_id", "addRestaurant");
+                    intent1.putExtra("to_id", "");
+                    startActivity(intent1);
+
+                    break;
+            }
+        }
+    };
+
+
+    private void showTooltip(View v, int gravity) {
+        float txtSize = 10;
+
+        ImageView btn = (ImageView) v;
+        Tooltip toolTip = new Tooltip.Builder(btn)
+                .setText("원하는 음식점/지역이\n없으신가요?")
+                .setTextColor(R.color.white)
+                .setTextSize(txtSize)
+                .setGravity(gravity)
+                .setCornerRadius(8f)
+                .setDismissOnClick(true)
+                .show();
+
+        Handler delayHandler = new Handler();
+        delayHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                toolTip.dismiss();
+            }
+        }, 1800);
+    }
+
 }

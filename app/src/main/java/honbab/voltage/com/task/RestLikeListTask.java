@@ -91,6 +91,7 @@ public class RestLikeListTask extends AsyncTask<Void, Void, ArrayList<RestLikeDa
                         String rest_phone = rest_obj.getString("phone");
                         String rest_img = rest_obj.getString("img_url");
                         String vicinity = rest_obj.getString("vicinity");
+                        int sale = rest_obj.getInt("sale");
 
                         ArrayList<UserData> usersList = new ArrayList<>();
                         //음식점좋아요 누른 User
@@ -105,7 +106,7 @@ public class RestLikeListTask extends AsyncTask<Void, Void, ArrayList<RestLikeDa
                             String token = user_obj.getString("token");
                             String user_img = Statics.main_url + user_obj.getString("img_url");
 
-                            UserData userData = new UserData(
+                            UserData userData = new UserData (
                                     user_id, user_name,
                                     age, gender, token, user_img, null, null);
                             usersList.add(userData);
@@ -115,8 +116,7 @@ public class RestLikeListTask extends AsyncTask<Void, Void, ArrayList<RestLikeDa
                                 feed_id, feed_time,
                                 null, null, null, null, null, null,
                                 rest_id, rest_name, compound_code, latLng, place_id, rest_img, rest_phone, vicinity,
-                                null
-                        );
+                                null, sale);
                         feedData.setUsersList(usersList);
                         feedList.add(feedData);
                     }

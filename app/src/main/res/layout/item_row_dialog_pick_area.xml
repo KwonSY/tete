@@ -25,6 +25,19 @@
             android:text=""
             android:textSize="12sp"
             android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txt_cnt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/txt_area"
+            android:layout_alignBaseline="@id/txt_area"
+            android:layout_marginLeft="3dp"
+            android:layout_toRightOf="@id/txt_area"
+            android:text=""
+            android:textColor="@color/grey"
+            android:textSize="8sp"
+            android:textStyle="italic" />
     </RelativeLayout>
 
     <CheckBox

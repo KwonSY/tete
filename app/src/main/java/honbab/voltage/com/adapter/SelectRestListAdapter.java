@@ -97,7 +97,7 @@ public class SelectRestListAdapter extends RecyclerView.Adapter<SelectRestListAd
         public RelativeLayout layout_card;
 
         public ImageView img_rest;
-        public TextView txt_restName, txt_restArea, txt_cnt;
+        public TextView txt_restName, txt_restArea, txt_sale, txt_cnt;
         public RelativeLayout layout_check;
         public CheckBox checkBox;
 
@@ -109,6 +109,7 @@ public class SelectRestListAdapter extends RecyclerView.Adapter<SelectRestListAd
             img_rest = itemView.findViewById(R.id.img_rest);
             txt_restName = itemView.findViewById(R.id.txt_restName);
             txt_restArea = itemView.findViewById(R.id.txt_restArea);
+            txt_sale = itemView.findViewById(R.id.txt_sale);
             txt_cnt = itemView.findViewById(R.id.txt_cnt);
 
             layout_check = itemView.findViewById(R.id.layout_check);
@@ -131,6 +132,7 @@ public class SelectRestListAdapter extends RecyclerView.Adapter<SelectRestListAd
                         Intent intent = new Intent(mContext, OneRestaurantActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 //                    intent.putExtra("feed_id", data.getFeed_id());
+                        intent.putExtra("rest_id", data.getRest_id());
                         intent.putExtra("rest_name", data.getRest_name());
                         intent.putExtra("compound_code", data.getCompound_code());
                         intent.putExtra("rest_phone", data.getRest_phone());
@@ -159,11 +161,22 @@ public class SelectRestListAdapter extends RecyclerView.Adapter<SelectRestListAd
                     e.printStackTrace();
                 }
 
+                if (data.getSale() > 0) {
+                    if (data.getSale() == 50)
+                        txt_sale.setText("반값");
+                    else
+                        txt_sale.setText(data.getSale() + "%");
+                } else {
+                    txt_sale.setText("");
+                    txt_sale.setVisibility(View.INVISIBLE);
+                }
             } else {
                 // TYPE_END
 //                layout_card.setBackgroundColor(Color.parseColor("#efefef"));
                 img_rest.setVisibility(View.GONE);
                 txt_restName.setVisibility(View.GONE);
+                txt_sale.setText("");
+                txt_sale.setVisibility(View.INVISIBLE);
 
                 checkBox.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -184,7 +197,6 @@ public class SelectRestListAdapter extends RecyclerView.Adapter<SelectRestListAd
                             } else {
                                 Toast.makeText(mContext, "날짜를 먼저 선택해주세요.", Toast.LENGTH_SHORT).show();
                             }
-
 
 
 //                            PickRestDialog dialog = new PickRestDialog(mContext);
@@ -209,6 +221,8 @@ public class SelectRestListAdapter extends RecyclerView.Adapter<SelectRestListAd
                     }
                 });
             }
+
+
         }
 
         public void setDateToView(RestData data, int position) throws Exception {

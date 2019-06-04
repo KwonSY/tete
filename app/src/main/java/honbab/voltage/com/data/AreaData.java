@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class AreaData implements Serializable {
     private String area_cd, area_name;
+    private int cnt = 0;
     private boolean checked = false;
     private int position = -1;
 
@@ -12,9 +13,10 @@ public class AreaData implements Serializable {
         this.area_name = null;
     }
 
-    public AreaData(String area_cd, String area_name) {
+    public AreaData(String area_cd, String area_name, int cnt) {
         this.area_cd = area_cd;
         this.area_name = area_name;
+        this.cnt = cnt;
     }
 
     public String getArea_cd() {
@@ -31,6 +33,14 @@ public class AreaData implements Serializable {
 
     public void setArea_name(String area_name) {
         this.area_name = area_name;
+    }
+
+    public int getCnt() {
+        return cnt;
+    }
+
+    public void setCnt(int cnt) {
+        this.cnt = cnt;
     }
 
     public boolean isChecked() {

@@ -9,7 +9,7 @@ import android.util.Log;
 
 import org.json.JSONObject;
 
-import honbab.voltage.com.tete.MainActivity;
+import honbab.voltage.com.tete.MainActivity2;
 import honbab.voltage.com.tete.Statics;
 import honbab.voltage.com.widget.Encryption;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
@@ -63,6 +63,7 @@ public class ReportTask extends AsyncTask<String, Void, Void> {
             Log.e("abc", "Error : " + e.getMessage());
             e.printStackTrace();
         }
+
         return null;
     }
 
@@ -73,7 +74,7 @@ public class ReportTask extends AsyncTask<String, Void, Void> {
         String activityName = mContext.getClass().getSimpleName();
 
         if (activityName.equals("ReportActivity")) {
-            Intent intent = new Intent(mContext, MainActivity.class);
+            Intent intent = new Intent(mContext, MainActivity2.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             mContext.startActivity(intent);
             ((Activity) mContext).finish();

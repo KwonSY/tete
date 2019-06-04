@@ -1,6 +1,7 @@
 package honbab.voltage.com.tete;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -21,6 +23,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
 
+import honbab.voltage.com.task.GetNoPlaceIdOneRestTask;
 import honbab.voltage.com.task.GetPhotoTask;
 import honbab.voltage.com.utils.ButtonUtil;
 import honbab.voltage.com.utils.GoogleMapUtil;
@@ -35,13 +38,14 @@ public class OneRestaurantActivity extends AppCompatActivity implements OnMapRea
     public TextView[] dots;
     public LinearLayout dotsLayout;
 
+    public RelativeLayout layout_star;
     public TextView txt_rest_address, txt_rating;
     private GoogleMap mMap;
     public Button btn_call;
 
     private Calendar calendar;
 
-    public String rest_name;
+    public String rest_id, rest_name;
     private String feed_id,
             compound_code, place_id, rest_phone, feed_time, vicinity,
             feeder_id, feeder_img, feeder_name;
@@ -61,6 +65,7 @@ public class OneRestaurantActivity extends AppCompatActivity implements OnMapRea
 
         Intent intent = getIntent();
         feed_id = intent.getStringExtra("feed_id");
+        rest_id = intent.getStringExtra("rest_id");
         rest_name = intent.getStringExtra("rest_name");
         compound_code = intent.getStringExtra("compound_code");
         rest_phone = intent.getStringExtra("rest_phone");
@@ -133,6 +138,9 @@ public class OneRestaurantActivity extends AppCompatActivity implements OnMapRea
         }
 
         btn_call = (Button) findViewById(R.id.btn_call);
+        btn_call.setOnClickListener(mOnClickListener);
+
+        layout_star = (RelativeLayout) findViewById(R.id.layout_star);
         txt_rest_address = (TextView) findViewById(R.id.txt_rest_address);
         txt_rating = (TextView) findViewById(R.id.txt_rating);
         View view_map_above = (View) findViewById(R.id.view_map_above);
@@ -148,8 +156,12 @@ public class OneRestaurantActivity extends AppCompatActivity implements OnMapRea
         ButtonUtil.setBackButtonClickListener(this);
 
         //뷰페이저, 디테일도 세팅
-        String url = GoogleMapUtil.getDetailUrl(OneRestaurantActivity.this, place_id);
-        new GetPhotoTask(OneRestaurantActivity.this, viewPager, dotsLayout).execute(url);
+        if (place_id.length() > 0) {
+            String url = GoogleMapUtil.getDetailUrl(OneRestaurantActivity.this, place_id);
+            new GetPhotoTask(OneRestaurantActivity.this, viewPager, dotsLayout).execute(url);
+        } else {
+            new GetNoPlaceIdOneRestTask(OneRestaurantActivity.this, viewPager, dotsLayout).execute(rest_id);
+        }
     }
 
     @Override
@@ -176,6 +188,12 @@ public class OneRestaurantActivity extends AppCompatActivity implements OnMapRea
                     intent2.putExtra("latLng", latLng);
                     intent2.putExtra("rest_name", rest_name);
                     startActivity(intent2);
+
+                    break;
+                case R.id.btn_call:
+                    String uri = "tel:" + rest_phone;
+                    Intent intent1 = new Intent(Intent.ACTION_DIAL, Uri.parse(uri));
+                    startActivity(intent1);
 
                     break;
             }

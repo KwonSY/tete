@@ -86,7 +86,7 @@ public class DialogRestListAdapter extends RecyclerView.Adapter<DialogRestListAd
     public class ViewHolder extends RecyclerView.ViewHolder {
         public CardView cardView;
         public ImageView img;
-        public TextView txt_restName, txt_restCnt;
+        public TextView txt_restName, txt_restCnt, txt_sale;
         public CheckBox checkBox;
 
         public ViewHolder(View itemView, int viewType) {
@@ -94,6 +94,7 @@ public class DialogRestListAdapter extends RecyclerView.Adapter<DialogRestListAd
 
             cardView = itemView.findViewById(R.id.cardView);
             img = itemView.findViewById(R.id.img);
+            txt_sale = itemView.findViewById(R.id.txt_sale);
             txt_restName = itemView.findViewById(R.id.txt_restName);
             txt_restCnt = itemView.findViewById(R.id.txt_restCnt);
             checkBox = itemView.findViewById(R.id.checkBox);
@@ -104,6 +105,10 @@ public class DialogRestListAdapter extends RecyclerView.Adapter<DialogRestListAd
                     .placeholder(R.drawable.icon_no_image)
                     .error(R.drawable.icon_no_image)
                     .into(img);
+
+            if (data.getSale() > 0)
+                txt_sale.setVisibility(View.VISIBLE);
+            txt_sale.setText(data.getSale() + "%할인");
 
             txt_restName.setText(data.getRest_name());
             if (data.getCnt() == 0)
@@ -148,6 +153,7 @@ public class DialogRestListAdapter extends RecyclerView.Adapter<DialogRestListAd
                     Log.e("abc", "checkBox 롱클릭 = " + data.getRest_name());
                     Intent intent = new Intent(mContext, OneRestaurantActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.putExtra("rest_id", data.getRest_id());
                     intent.putExtra("rest_name", data.getRest_name());
                     intent.putExtra("compound_code", data.getCompound_code());
                     intent.putExtra("latLng", data.getLatLng());

@@ -74,9 +74,10 @@ public class UserRestLikeListTask extends AsyncTask<String, Void, ArrayList<Rest
                     String rest_img = rest_obj.getString("img_url");
                     String vicinity = rest_obj.getString("vicinity");
                     String like_yn = rest_obj.getString("like_yn");
+                    int sale = rest_obj.getInt("sale");
 
                     RestData restData = new RestData(rest_id, rest_name,
-                            compound_code, latLng, place_id, rest_img, rest_phone, vicinity, 0);
+                            compound_code, latLng, place_id, rest_img, rest_phone, vicinity, sale, 0);
                     restData.setLike_yn(like_yn);
                     restLikeList.add(restData);
                 }

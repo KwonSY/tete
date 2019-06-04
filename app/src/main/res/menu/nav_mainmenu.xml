@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/nav_main"
+        android:title="메인" />
+
+    <item
+        android:id="@+id/nav_publiceat"
+        android:title="모여서 먹어요" />
+
+    <item
+        android:id="@+id/nav_match"
+        android:title="밥친구랑 둘이서 먹어요"/>
+
+    <item
+        android:id="@+id/nav_profile"
+        android:title="내 프로필"/>
+
+    <item
+        android:id="@+id/nav_announcement"
+        android:title="공지사항"/>
+
+    <item
+        android:id="@+id/nav_setting"
+        android:title="설정"/>
+
+</menu>

@@ -125,12 +125,13 @@ public class DialogDateListAdapter extends RecyclerView.Adapter<DialogDateListAd
                 e.printStackTrace();
             }
 
-            if (data.getTime().contains("12:00:00") || data.getTime().contains("13:00:00") || data.getTime().contains("14:00:00") || data.getTime().contains("15:00:00"))
-                txt_time.setText("점심");
-            else if (data.getTime().contains("17:00:00") || data.getTime().contains("18:00:00") || data.getTime().contains("19:00:00") || data.getTime().contains("20:00:00") || data.getTime().contains("21:00:00"))
-                txt_time.setText("저녁");
-            else
-                txt_time.setText(data.getTime());
+//            if (data.getTime().contains("12:00:00") || data.getTime().contains("13:00:00") || data.getTime().contains("14:00:00") || data.getTime().contains("15:00:00"))
+//                txt_time.setText("점심");
+//            else if (data.getTime().contains("17:00:00") || data.getTime().contains("18:00:00") || data.getTime().contains("19:00:00") || data.getTime().contains("20:00:00") || data.getTime().contains("21:00:00"))
+//                txt_time.setText("저녁");
+//            else
+//                txt_time.setText(data.getTime());
+            txt_time.setText("");
 
             if (data.getCnt() > 0)
                 cnt_users.setText(String.format(mContext.getResources().getString(R.string.enable_cnt_feedee), String.valueOf(data.getCnt())));

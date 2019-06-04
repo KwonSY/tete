@@ -22,6 +22,8 @@
         android:theme="@style/AppTheme"
         android:networkSecurityConfig="@xml/network_security_config">
 
+        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+
         <service android:name="honbab.voltage.com.firebase.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -43,7 +45,7 @@
             android:value="default_channel_id" />
 
         <activity
-            android:name="honbab.voltage.com.tete.MainActivity"
+            android:name="honbab.voltage.com.tete.MainActivity2"
             android:excludeFromRecents="false"
             android:exported="true"
             android:screenOrientation="portrait"
@@ -52,13 +54,13 @@
         
         <activity-alias
             android:name="LauncherActivity"
-            android:targetActivity="honbab.voltage.com.tete.MainActivity">
+            android:targetActivity="honbab.voltage.com.tete.MainActivity2">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
             <intent-filter>
-                <action android:name="MainActivity" />
+                <action android:name="MainActivity2" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity-alias>
@@ -116,6 +118,8 @@
         <activity android:name=".ProfileActivity"
             android:windowSoftInputMode="stateHidden"/>
         <activity android:name=".SettingActivity" />
+        <activity android:name=".SelectPublicAreaActivity" />
+        <activity android:name=".SelectPublicTimeActivity" />
 
         <activity android:name=".GodTinderActivity" />
 

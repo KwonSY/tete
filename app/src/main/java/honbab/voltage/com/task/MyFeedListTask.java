@@ -113,6 +113,7 @@ public class MyFeedListTask extends AsyncTask<Void, Void, Void> {
                     LatLng latLng = new LatLng(db_lat, db_lng);
                     String rest_phone = rest_obj.getString("phone");
                     String rest_img = rest_obj.getString("img_url");
+                    int sale = rest_obj.getInt("sale");
 
                     //참가자
                     JSONObject user_obj = obj2.getJSONArray("users").getJSONObject(0);
@@ -125,15 +126,17 @@ public class MyFeedListTask extends AsyncTask<Void, Void, Void> {
 
                     FeedData feedData;
                     if (host_id.equals(Statics.my_id)) {
+                        // 내가 호스트
                         feedData = new FeedData(feed_id, feed_time,
                                 user_id, user_name, user_age, user_gender, user_img, user_token,
                                 rest_id, rest_name, compound_code, latLng, place_id, rest_img, rest_phone, vicinity,
-                                status);
+                                status, sale);
                     } else {
+                        // 니가 호스트
                         feedData = new FeedData(feed_id, feed_time,
                                 host_id, host_name, host_age, host_gender, host_img, host_token,
                                 rest_id, rest_name, compound_code, latLng, place_id, rest_img, rest_phone, vicinity,
-                                status);
+                                status, sale);
                     }
                     feedList.add(feedData);
                 }

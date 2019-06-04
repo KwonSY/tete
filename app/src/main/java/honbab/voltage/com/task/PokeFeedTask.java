@@ -88,9 +88,10 @@ public class PokeFeedTask extends AsyncTask<String, Void, String> {
                 String rest_phone = rest_obj.getString("phone");
                 String rest_img = rest_obj.getString("img_url");
                 String vicinity = rest_obj.getString("vicinity");
+                int sale = rest_obj.getInt("sale");
 
                 restData = new RestData(rest_id, rest_name,
-                        compound_code, latLng, place_id, rest_img, rest_phone, vicinity, 0);
+                        compound_code, latLng, place_id, rest_img, rest_phone, vicinity, sale, 0);
             } else {
                 Log.d("abc", "Error : " + response.code() + ", " + response.message());
             }

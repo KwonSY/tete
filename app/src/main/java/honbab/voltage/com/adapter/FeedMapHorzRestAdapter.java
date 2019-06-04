@@ -63,6 +63,7 @@ public class FeedMapHorzRestAdapter extends RecyclerView.Adapter<FeedMapHorzRest
                 Intent intent = new Intent(mContext, OneRestaurantActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent.putExtra("feed_id", data.getFeed_id());
+                intent.putExtra("rest_id", data.getRest_id());
                 intent.putExtra("rest_name", data.getRest_name());
                 intent.putExtra("compound_code", data.getCompound_code());
                 intent.putExtra("rest_phone", data.getRest_phone());

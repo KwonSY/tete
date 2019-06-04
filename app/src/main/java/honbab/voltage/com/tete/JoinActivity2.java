@@ -41,6 +41,7 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
+import honbab.voltage.com.task.UpdateTokenTask;
 import honbab.voltage.com.utils.BitmapUtil;
 import honbab.voltage.com.widget.CircleTransform;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
@@ -172,10 +173,11 @@ public class JoinActivity2 extends AppCompatActivity {
 
                     break;
                 case R.id.btn_start:
-                    Log.e("abc", "timestamp = " + timestamp);
-                    Log.e("abc", "timestamp = " + timestamp.length());
-                    Log.e("abc", "radio_group = " + radio_group.getCheckedRadioButtonId());
-                    Log.e("abc", "numberPicker = " + numberPicker.getValue());
+//                    Log.e("abc", "timestamp = " + timestamp);
+//                    Log.e("abc", "timestamp = " + timestamp.length());
+//                    Log.e("abc", "radio_group = " + radio_group.getCheckedRadioButtonId());
+//                    Log.e("abc", "numberPicker = " + numberPicker.getValue());
+                    Log.e("abc", "token = " + token);
 
 //                    if (mImageUri == null) {
                     if (timestamp.length() == 0) {
@@ -255,8 +257,20 @@ public class JoinActivity2 extends AppCompatActivity {
 
                 session.createLoginSession(Statics.my_id, Statics.my_username, Statics.my_gender);
 
+                if (session.isLoggedIn()) {
+                    FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+                        @Override
+                        public void onSuccess(InstanceIdResult instanceIdResult) {
+                            token = instanceIdResult.getToken();
+
+                            if (token.length() > 0)
+                                new UpdateTokenTask(JoinActivity2.this).execute(token);
+                        }
+                    });
+                }
+
 //                finish();
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                Intent intent = new Intent(getApplicationContext(), MainActivity2.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
                 finish();

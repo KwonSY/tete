@@ -62,6 +62,7 @@ public class GridViewNearByAdapter extends RecyclerView.Adapter<GridViewNearByAd
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, OneRestaurantActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("rest_id", data.getRest_id());
                 intent.putExtra("rest_name", data.getRest_name());
                 intent.putExtra("compound_code", data.getCompound_code());
                 intent.putExtra("latLng", data.getLatLng());
@@ -85,6 +86,7 @@ public class GridViewNearByAdapter extends RecyclerView.Adapter<GridViewNearByAd
                         data.getRest_img(),
                         data.getRest_phone(),
                         data.getVicinity(),
+                        0,
                         0);
 
                 ((ReservActivity) mContext).layout_slidingPanel.setPanelState(SlidingUpPanelLayout.PanelState.ANCHORED);

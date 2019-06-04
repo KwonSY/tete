@@ -9,7 +9,7 @@ import android.util.Log;
 
 import org.json.JSONObject;
 
-import honbab.voltage.com.tete.MainActivity;
+import honbab.voltage.com.tete.MainActivity2;
 import honbab.voltage.com.tete.Statics;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
 import okhttp3.FormBody;
@@ -77,7 +77,7 @@ public class EvaluateFeedTask extends AsyncTask<String, Void, Void> {
 //        String activityName = mContext.getClass().getSimpleName();
 
         if (activityName.equals("AfterEatingActivity")) {
-            Intent intent = new Intent(mContext, MainActivity.class);
+            Intent intent = new Intent(mContext, MainActivity2.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             mContext.startActivity(intent);
             ((Activity) mContext).finish();

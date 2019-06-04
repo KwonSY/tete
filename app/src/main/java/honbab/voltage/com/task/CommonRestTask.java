@@ -75,6 +75,7 @@ public class CommonRestTask extends AsyncTask<String, Void, ArrayList<RestData>>
                     String rest_img = rest_obj.getString("img_url");
                     String rest_phone = rest_obj.getString("phone");
                     String vicinity = rest_obj.getString("vicinity");
+//                    int sale = rest_obj.getInt("sale");
 
 //                    if (pick_rest_id == null) {
 //                        defalutPos = 0;
@@ -82,7 +83,7 @@ public class CommonRestTask extends AsyncTask<String, Void, ArrayList<RestData>>
 //                        defalutPos = restList.size();
 //                    }
                     RestData restData = new RestData(rest_id, rest_name,
-                            compound_code, latLng, place_id, rest_img, rest_phone, vicinity, 0);
+                            compound_code, latLng, place_id, rest_img, rest_phone, vicinity, 0, 0);
                     restList.add(restData);
 //                    restNameList.add(rest_name);
                 }

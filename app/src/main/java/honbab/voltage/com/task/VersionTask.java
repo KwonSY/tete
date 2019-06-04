@@ -61,10 +61,23 @@ public class VersionTask extends AsyncTask<Void, Void, Void> {
                 text = obj.getString("text");
             } else {
                     Log.d("abc", "Error : " + response.code() + ", " + response.message());
+                try {
+                    Thread.sleep(10000);
+
+                    doInBackground();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
 
         } catch (Exception e) {
             Log.e("abc", "Error Version : " + e.getMessage());
+            try {
+                Thread.sleep(10000);
+            } catch (InterruptedException e1) {
+                e1.printStackTrace();
+            }
+
             e.printStackTrace();
         }
 

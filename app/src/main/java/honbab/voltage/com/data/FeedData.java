@@ -13,6 +13,7 @@ public class FeedData implements Serializable {
     private String rest_id;
     private String compound_code, place_id, rest_name, rest_phone, rest_img, vicinity;
     private String status;
+    private int sale = 0;
 
     private transient LatLng latLng;
     private Double latitude, longtitue;
@@ -24,12 +25,12 @@ public class FeedData implements Serializable {
 
     }
 
-    // parameter 16EA
+    // parameter 17EA
     public FeedData(String feed_id, String feed_time,
                     String user_id, String user_name, String user_age, String user_gender, String user_img, String token,
                     String rest_id, String rest_name,
                     String compound_code, LatLng latLng, String place_id, String rest_img, String rest_phone, String vicinity,
-                    String status) {
+                    String status, int sale) {
         this.feed_id = feed_id;
         this.feed_time = feed_time;
 
@@ -52,6 +53,7 @@ public class FeedData implements Serializable {
         this.rest_img = rest_img;
         this.vicinity = vicinity;
         this.status = status;
+        this.sale = sale;
     }
 
     public String getFeed_id() {
@@ -180,6 +182,14 @@ public class FeedData implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public int getSale() {
+        return sale;
+    }
+
+    public void setSale(int sale) {
+        this.sale = sale;
     }
 
     public LatLng getLatLng() {

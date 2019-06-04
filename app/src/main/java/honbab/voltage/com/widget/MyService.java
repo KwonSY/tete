@@ -11,7 +11,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
 
-import honbab.voltage.com.tete.MainActivity;
+import honbab.voltage.com.tete.MainActivity2;
 import honbab.voltage.com.tete.R;
 
 public class MyService extends Service {
@@ -33,7 +33,7 @@ public class MyService extends Service {
         Context context = getApplicationContext();
 
         PendingIntent action = PendingIntent.getActivity(context,
-                0, new Intent(context, MainActivity.class),
+                0, new Intent(context, MainActivity2.class),
                 PendingIntent.FLAG_CANCEL_CURRENT); // Flag indicating that if the described PendingIntent already exists, the current one should be canceled before generating a new one.
 
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

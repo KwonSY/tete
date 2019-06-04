@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_fragment_profile"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context="honbab.voltage.com.tete.MainActivity">
+
+    <View
+        android:id="@+id/line_maincolor"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="@color/mainColor" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="70dp"
+                android:layout_height="120dp"
+                android:src="@drawable/txt_logo_et" />
+
+            <Button
+                android:id="@+id/btn_go_select_public"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="참여하기" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="70dp"
+                android:layout_height="120dp"
+                android:src="@drawable/txt_logo_et" />
+
+            <Button
+                android:id="@+id/btn_go_select_personal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="참여하기" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+</RelativeLayout>

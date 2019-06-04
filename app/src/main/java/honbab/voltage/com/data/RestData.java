@@ -1,15 +1,14 @@
 package honbab.voltage.com.data;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.google.android.gms.maps.model.LatLng;
 
-public class RestData implements Parcelable {
+import java.io.Serializable;
+
+public class RestData implements Serializable {
 
     private String rest_id, rest_name, compound_code, place_id, rest_img, rest_phone, vicinity;
-//    private String type;
-    private int cnt;
+    private String type;
+    private int cnt = 0, sale = 0;
     private LatLng latLng;
     private double latitude, longtitue;
     private String like_yn;
@@ -26,12 +25,15 @@ public class RestData implements Parcelable {
         this.place_id = null;
         this.rest_img = null;
         this.rest_phone = null;
+        this.type = null;
         this.vicinity = null;
+        this.sale = 0;
     }
 
     // parameter 16EA
     public RestData(String rest_id, String rest_name,
-                    String compound_code, LatLng latLng, String place_id, String rest_img, String rest_phone, String vicinity, int cnt) {
+                    String compound_code, LatLng latLng, String place_id, String rest_img, String rest_phone, String vicinity,
+                    int sale, int cnt) {
         this.rest_id = rest_id;
         this.rest_name = rest_name;
         this.compound_code = compound_code;
@@ -47,35 +49,37 @@ public class RestData implements Parcelable {
         this.rest_img = rest_img;
         this.rest_phone = rest_phone;
         this.vicinity = vicinity;
+        this.sale = sale;
         this.cnt = cnt;
     }
 
-    protected RestData(Parcel in) {
-        rest_id = in.readString();
-        rest_name = in.readString();
-        compound_code = in.readString();
-        place_id = in.readString();
-        rest_img = in.readString();
-        rest_phone = in.readString();
-        vicinity = in.readString();
-        latLng = in.readParcelable(LatLng.class.getClassLoader());
-        latitude = in.readDouble();
-        longtitue = in.readDouble();
-//            latitude = latLng.latitude;
-//            longtitue = latLng.longitude;
-    }
+//    protected RestData(Parcel in) {
+//        rest_id = in.readString();
+//        rest_name = in.readString();
+//        compound_code = in.readString();
+//        place_id = in.readString();
+//        rest_img = in.readString();
+//        rest_phone = in.readString();
+//        vicinity = in.readString();
+//
+//        latLng = in.readParcelable(LatLng.class.getClassLoader());
+//        latitude = in.readDouble();
+//        longtitue = in.readDouble();
+////            latitude = latLng.latitude;
+////            longtitue = latLng.longitude;
+//    }
 
-    public static final Creator<RestData> CREATOR = new Creator<RestData>() {
-        @Override
-        public RestData createFromParcel(Parcel in) {
-            return new RestData(in);
-        }
-
-        @Override
-        public RestData[] newArray(int size) {
-            return new RestData[size];
-        }
-    };
+//    public static final Creator<RestData> CREATOR = new Creator<RestData>() {
+//        @Override
+//        public RestData createFromParcel(Parcel in) {
+//            return new RestData(in);
+//        }
+//
+//        @Override
+//        public RestData[] newArray(int size) {
+//            return new RestData[size];
+//        }
+//    };
 
     public String getRest_id() {
         return rest_id;
@@ -125,13 +129,13 @@ public class RestData implements Parcelable {
         this.rest_phone = rest_phone;
     }
 
-//    public String getType() {
-//        return type;
-//    }
-//
-//    public void setType(String type) {
-//        this.type = type;
-//    }
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public String getVicinity() {
         return vicinity;
@@ -173,6 +177,14 @@ public class RestData implements Parcelable {
         this.like_yn = like_yn;
     }
 
+    public int getSale() {
+        return sale;
+    }
+
+    public void setSale(int sale) {
+        this.sale = sale;
+    }
+
     public int getCnt() {
         return cnt;
     }
@@ -197,37 +209,39 @@ public class RestData implements Parcelable {
         this.position = position;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(rest_id);
-        dest.writeString(rest_name);
-        dest.writeString(compound_code);
-        dest.writeString(place_id);
-        dest.writeString(rest_img);
-        dest.writeString(rest_phone);
-//        dest.writeString(type);
-        dest.writeString(vicinity);
-        dest.writeParcelable(latLng, flags);
-        dest.writeDouble(latitude);
-        dest.writeDouble(longtitue);
-    }
-
-    private void readFromParcel(Parcel in){
-        rest_id = in.readString();
-        rest_name = in.readString();
-        compound_code = in.readString();
-        place_id = in.readString();
-        rest_img = in.readString();
-        rest_phone = in.readString();
-//        type = in.readString();
-        vicinity = in.readString();
-//        latLng = in.read;
-        latitude = in.readInt();
-        longtitue = in.readInt();
-    }
+//    @Override
+//    public int describeContents() {
+//        return 0;
+//    }
+//
+//    @Override
+//    public void writeToParcel(Parcel dest, int flags) {
+//        dest.writeString(rest_id);
+//        dest.writeString(rest_name);
+//        dest.writeString(compound_code);
+//        dest.writeString(place_id);
+//        dest.writeString(rest_img);
+//        dest.writeString(rest_phone);
+////        dest.writeString(type);
+//        dest.writeString(vicinity);
+//        dest.writeParcelable(latLng, flags);
+//        dest.writeDouble(latitude);
+//        dest.writeDouble(longtitue);
+//        dest.writeDouble(sale);
+//    }
+//
+//    private void readFromParcel(Parcel in){
+//        rest_id = in.readString();
+//        rest_name = in.readString();
+//        compound_code = in.readString();
+//        place_id = in.readString();
+//        rest_img = in.readString();
+//        rest_phone = in.readString();
+////        type = in.readString();
+//        vicinity = in.readString();
+////        latLng = in.read;
+//        latitude = in.readInt();
+//        longtitue = in.readInt();
+//        sale = in.readInt();
+//    }
 }

@@ -108,7 +108,7 @@ public class GetNearPlacesTaskForReserv extends AsyncTask<Object, String, String
             ((ReservActivity)mContext).recyclerView.setAdapter(((ReservActivity)mContext).mAdapter);
             ((ReservActivity)mContext).mAdapter.notifyDataSetChanged();
         } else if (mContext.getClass().equals(OneRestaurantActivity.class)) {
-            Log.e("abc", "여기 액티비티는 = OneRestaurantActivity ," + OneRestaurantActivity.class);
+//            Log.e("abc", "여기 액티비티는 = OneRestaurantActivity ," + OneRestaurantActivity.class);
 //            ((OneRestaurantActivity) mContext).mMapList = MapsActivity.mMapList;
 //
 //            String place_id = MapsActivity.mMapList.get(0).getPlace_id();

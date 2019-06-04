@@ -78,7 +78,7 @@ public class DialogAreaListAdapter extends RecyclerView.Adapter<DialogAreaListAd
         private DialogAreaListAdapter mAdapter;
 
         public RelativeLayout layout_card;
-        public TextView txt_area;
+        public TextView txt_area, txt_cnt;
         public CheckBox checkBox;
 
         public ViewHolder(View itemView, int viewType, final DialogAreaListAdapter mAdapter) {
@@ -87,12 +87,15 @@ public class DialogAreaListAdapter extends RecyclerView.Adapter<DialogAreaListAd
 
             layout_card = itemView.findViewById(R.id.layout_card);
             txt_area = itemView.findViewById(R.id.txt_area);
+            txt_cnt = itemView.findViewById(R.id.txt_cnt);
             checkBox = itemView.findViewById(R.id.checkBox);
         }
 
         public void bindToPost(final AreaData data, int viewType) {
+            if (data.getArea_name().length() > 5)
+                txt_area.setTextSize(10);
             txt_area.setText(data.getArea_name());
-
+            txt_cnt.setText(data.getCnt() + "명");
 //            layout_card.setOnClickListener(new View.OnClickListener() {
 //                @Override
 //                public void onClick(View v) {

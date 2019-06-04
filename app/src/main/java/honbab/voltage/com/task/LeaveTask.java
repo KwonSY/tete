@@ -12,6 +12,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import org.json.JSONObject;
 
 import honbab.voltage.com.tete.MainActivity;
+import honbab.voltage.com.tete.MainActivity2;
 import honbab.voltage.com.tete.Statics;
 import honbab.voltage.com.widget.Encryption;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
@@ -75,7 +76,7 @@ public class LeaveTask extends AsyncTask<String, Void, Void> {
         String activityName = mContext.getClass().getSimpleName();
 
         if (activityName.equals("ReportActivity")) {
-            Intent intent = new Intent(mContext, MainActivity.class);
+            Intent intent = new Intent(mContext, MainActivity2.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             mContext.startActivity(intent);
             ((Activity) mContext).finish();
@@ -83,7 +84,7 @@ public class LeaveTask extends AsyncTask<String, Void, Void> {
             session.logoutUser();
             FirebaseAuth.getInstance().signOut();
 
-            Intent intent = new Intent(mContext, MainActivity.class);
+            Intent intent = new Intent(mContext, MainActivity2.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             mContext.startActivity(intent);
             ((Activity) mContext).finish();

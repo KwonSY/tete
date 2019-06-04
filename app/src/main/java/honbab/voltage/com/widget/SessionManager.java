@@ -9,6 +9,7 @@ import android.content.SharedPreferences.Editor;
 import java.util.HashMap;
 
 import honbab.voltage.com.tete.MainActivity;
+import honbab.voltage.com.tete.MainActivity2;
 
 public class SessionManager extends Activity {
 	// Shared Preferences
@@ -68,7 +69,7 @@ public class SessionManager extends Activity {
 	public void checkLogin() {
 		// Check login status
 		if (!this.isLoggedIn()) {
-			Intent i = new Intent(_context, MainActivity.class);
+			Intent i = new Intent(_context, MainActivity2.class);
 			i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			_context.startActivity(i);
@@ -96,7 +97,7 @@ public class SessionManager extends Activity {
 		editor.clear();
 		editor.commit();
 
-		Intent i = new Intent(_context, MainActivity.class);
+		Intent i = new Intent(_context, MainActivity2.class);
 		// Closing all the Activities
 		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		// Add new Flag to start new Activity

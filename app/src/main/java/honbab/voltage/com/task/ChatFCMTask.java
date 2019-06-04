@@ -5,6 +5,7 @@ import android.util.Log;
 
 import honbab.voltage.com.data.FcmData;
 import honbab.voltage.com.tete.Statics;
+import honbab.voltage.com.widget.OkHttpClientSingleton;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -12,8 +13,8 @@ import okhttp3.Request;
 public class ChatFCMTask extends AsyncTask<FcmData, Void, Void> {
     private OkHttpClient httpClient;
 
-    public ChatFCMTask(OkHttpClient httpClient) {
-        this.httpClient = httpClient;
+    public ChatFCMTask() {
+        this.httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
     }
 
     @Override

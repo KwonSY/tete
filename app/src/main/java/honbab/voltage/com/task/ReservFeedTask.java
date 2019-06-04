@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import honbab.voltage.com.fragment.SelectFeedFragment;
 import honbab.voltage.com.tete.MainActivity;
+import honbab.voltage.com.tete.MainActivity2;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.tete.Statics;
 import honbab.voltage.com.widget.Encryption;
@@ -82,7 +83,7 @@ public class ReservFeedTask extends AsyncTask<String, Void, String> {
         String activityName = mContext.getClass().getSimpleName();
         if (activityName.equals("OneRestaurantActivity")) {
             if (result.equals("0")) {
-                Intent intent = new Intent(mContext, MainActivity.class);
+                Intent intent = new Intent(mContext, MainActivity2.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 mContext.startActivity(intent);
                 ((Activity) mContext).finish();
@@ -91,7 +92,7 @@ public class ReservFeedTask extends AsyncTask<String, Void, String> {
             }
         } else if (activityName.equals("ReservActivity")) {
             if (result.equals("0")) {
-                Intent intent2 = new Intent(mContext, MainActivity.class);
+                Intent intent2 = new Intent(mContext, MainActivity2.class);
                 intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 mContext.startActivity(intent2);
                 ((Activity) mContext).finish();

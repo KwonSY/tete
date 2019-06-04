@@ -64,7 +64,7 @@ public class RestLikeListAdapter extends RecyclerView.Adapter<RestLikeListAdapte
 
         RestData restData = new RestData(data.getRest_id(), data.getRest_name(),
                 data.getCompound_code(), data.getLatLng(),
-                data.getPlace_id(), data.getRest_img(), data.getRest_phone(), data.getVicinity(), 0);
+                data.getPlace_id(), data.getRest_img(), data.getRest_phone(), data.getVicinity(), 0, 0);
         ArrayList<UserData> usersList = data.getUsersList();
 
 
@@ -77,6 +77,7 @@ public class RestLikeListAdapter extends RecyclerView.Adapter<RestLikeListAdapte
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, OneRestaurantActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra("rest_id", data.getRest_id());
                 intent.putExtra("rest_name", data.getRest_name());
                 intent.putExtra("compound_code", data.getCompound_code());
                 intent.putExtra("rest_phone", data.getRest_phone());

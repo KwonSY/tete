@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="honbab.voltage.com.tete.SettingActivity">
+
+    <include
+        android:id="@+id/layout_topbar"
+        layout="@layout/layout_topbar_backtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/layout_topbar"
+        android:background="@color/white"
+        android:paddingLeft="18dp"
+        android:paddingTop="20dp"
+        android:paddingRight="18dp"
+        android:paddingBottom="28dp">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView_area"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="강남/ 강북 지역 석택"/>
+    </RelativeLayout>
+</RelativeLayout>

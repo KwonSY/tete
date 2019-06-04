@@ -102,7 +102,7 @@ public class ChatActivity extends AppCompatActivity {
             builder.setPositiveButton(R.string.yes,
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            Intent mStartActivity = new Intent(ChatActivity.this, MainActivity.class);
+                            Intent mStartActivity = new Intent(ChatActivity.this, MainActivity2.class);
                             int mPendingIntentId = 123456;
                             PendingIntent mPendingIntent = PendingIntent.getActivity(ChatActivity.this, mPendingIntentId, mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
                             AlarmManager mgr = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
@@ -146,7 +146,7 @@ public class ChatActivity extends AppCompatActivity {
                 Statics.my_gender = user.get("my_gender");
                 fromId = Statics.my_id;
 
-                Intent intent1 = new Intent(ChatActivity.this, MainActivity.class);
+                Intent intent1 = new Intent(ChatActivity.this, MainActivity2.class);
                 intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 intent1.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
@@ -462,7 +462,7 @@ public class ChatActivity extends AppCompatActivity {
                             mDatabase.child("user-messages").child(fromId).child(toId).removeValue();
 
                             finish();
-                            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                            Intent intent = new Intent(getApplicationContext(), MainActivity2.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
@@ -494,7 +494,7 @@ public class ChatActivity extends AppCompatActivity {
         }
 
         finish();
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        Intent intent = new Intent(getApplicationContext(), MainActivity2.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
@@ -527,7 +527,7 @@ public class ChatActivity extends AppCompatActivity {
                 edit_chat.setText("");
 
                 FcmData params = new FcmData(toToken, Statics.my_id, Statics.my_username, message);
-                new ChatFCMTask(httpClient).execute(params);
+                new ChatFCMTask().execute(params);
             }
         } else if (type.equals("a")) {
 
@@ -556,7 +556,7 @@ public class ChatActivity extends AppCompatActivity {
             edit_chat.setText("");
 
             FcmData params = new FcmData(toToken, Statics.my_id, Statics.my_username, message);
-            new ChatFCMTask(httpClient).execute(params);
+            new ChatFCMTask().execute(params);
         }
     }
 
@@ -586,7 +586,7 @@ public class ChatActivity extends AppCompatActivity {
 
                 RestData pickData = restList.get(r);
                 restData = new RestData(pickData.getRest_id(), pickData.getRest_name(),
-                        pickData.getCompound_code(), pickData.getLatLng(), pickData.getPlace_id(), pickData.getRest_img(), pickData.getRest_phone(), pickData.getVicinity(), 0);
+                        pickData.getCompound_code(), pickData.getLatLng(), pickData.getPlace_id(), pickData.getRest_img(), pickData.getRest_phone(), pickData.getVicinity(), pickData.getSale(), 0);
                 Log.e("abc", "rrrrr restData : " + pickData.getRest_img());
 
                 Picasso.get().load(restData.getRest_img())

@@ -80,6 +80,7 @@ public class GetPhotoTask extends AsyncTask<Object, String, String> {
     @Override
     protected void onPostExecute(String googlePlacesData) {
         super.onPostExecute(googlePlacesData);
+        Log.e("abc", "googlePlacesData = " + googlePlacesData);
 
         String activityName = mContext.getClass().getSimpleName();
 

@@ -176,7 +176,7 @@ public class SplashActivity extends AppCompatActivity {
         public void run() {
 //            Log.e("abc", "splashhandler Running = " + operations.size());
 //            if (operations.size() == 0) {
-                startActivity(new Intent(getApplication(), MainActivity.class)); // 로딩이 끝난후 이동할 Activity
+                startActivity(new Intent(getApplication(), MainActivity2.class)); // 로딩이 끝난후 이동할 Activity
                 SplashActivity.this.finish(); // 로딩페이지 Activity Stack에서 제거
 //            }
         }
@@ -184,7 +184,7 @@ public class SplashActivity extends AppCompatActivity {
 
     private class Restarthandler implements Runnable {
         public void run() {
-            Intent mStartActivity = new Intent(SplashActivity.this, MainActivity.class);
+            Intent mStartActivity = new Intent(SplashActivity.this, MainActivity2.class);
             int mPendingIntentId = 123456;
             PendingIntent mPendingIntent = PendingIntent.getActivity(SplashActivity.this, mPendingIntentId, mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
             AlarmManager mgr = (AlarmManager) SplashActivity.this.getSystemService(Context.ALARM_SERVICE);

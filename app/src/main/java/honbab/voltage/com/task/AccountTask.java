@@ -130,7 +130,7 @@ public class AccountTask extends AsyncTask<String, Void, UserData> {
 
         if (activityName == null) {
 
-        } else if (activityName.equals("MainActivity")) {
+        } else if (activityName.equals("MainActivity2")) {
 
         } else if (activityName.equals("ProfileActivity")) {
             if (seq == 0) {

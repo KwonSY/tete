@@ -62,7 +62,7 @@ public class AreaRestTask extends AsyncTask<String, Void, ArrayList<AreaData>> {
                     String area_cd = rest_obj.getString("area_cd");
                     String area_name = rest_obj.getString("name");
 
-                    AreaData restData = new AreaData(area_cd, area_name);
+                    AreaData restData = new AreaData(area_cd, area_name, 0);
                     areaList.add(restData);
                     areaNameList.add(area_name);
                 }

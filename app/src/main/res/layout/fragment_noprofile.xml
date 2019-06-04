@@ -72,4 +72,14 @@
         </RelativeLayout>
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/btn_go_findpsw"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="60dp"
+        android:layout_marginBottom="30dp"
+        android:text="비밀번호 찾기" />
 </RelativeLayout>
