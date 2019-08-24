@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -39,6 +40,7 @@ import honbab.voltage.com.task.JoinCheckTask;
 import honbab.voltage.com.task.LoginByUidTask;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
 import honbab.voltage.com.widget.SessionManager;
+import io.fabric.sdk.android.Fabric;
 import okhttp3.OkHttpClient;
 
 public class LoginActivity extends BaseActivity {
@@ -59,6 +61,7 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_login);
 
         httpClient = OkHttpClientSingleton.getInstance().getHttpClient();

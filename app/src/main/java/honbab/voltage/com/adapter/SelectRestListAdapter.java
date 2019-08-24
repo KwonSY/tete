@@ -25,7 +25,7 @@ import honbab.voltage.com.data.RestData;
 import honbab.voltage.com.fragment.SelectFeedFragment;
 import honbab.voltage.com.task.SelectFeedListTask;
 import honbab.voltage.com.tete.LoginActivity;
-import honbab.voltage.com.tete.MainActivity;
+import honbab.voltage.com.tete.MainActivity2;
 import honbab.voltage.com.tete.OneRestaurantActivity;
 import honbab.voltage.com.tete.PickRestLikeActivity;
 import honbab.voltage.com.tete.R;
@@ -55,7 +55,8 @@ public class SelectRestListAdapter extends RecyclerView.Adapter<SelectRestListAd
         this.httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
         this.listViewItemList = listViewItemList;
 
-        fragment = ((MainActivity) mContext).getSupportFragmentManager().findFragmentByTag("page:0");
+//        fragment = ((MainActivity) mContext).getSupportFragmentManager().findFragmentByTag("page:0");
+        fragment = ((MainActivity2) mContext).getSupportFragmentManager().findFragmentByTag("Match");
     }
 
     @NonNull
@@ -192,7 +193,8 @@ public class SelectRestListAdapter extends RecyclerView.Adapter<SelectRestListAd
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 intent.putExtra("timelike_id", ((SelectFeedFragment) fragment).timelike_id);
-                                ((MainActivity) mContext).overridePendingTransition(R.anim.slide_down, R.anim.slide_up);
+//                                ((MainActivity) mContext).overridePendingTransition(R.anim.slide_down, R.anim.slide_up);
+                                ((MainActivity2) mContext).overridePendingTransition(R.anim.slide_down, R.anim.slide_up);
                                 mContext.startActivity(intent);
                             } else {
                                 Toast.makeText(mContext, "날짜를 먼저 선택해주세요.", Toast.LENGTH_SHORT).show();

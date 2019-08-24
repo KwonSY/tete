@@ -22,7 +22,7 @@ import java.util.Date;
 
 import honbab.voltage.com.data.SelectDateData;
 import honbab.voltage.com.task.PickDateTask;
-import honbab.voltage.com.tete.MainActivity;
+import honbab.voltage.com.tete.MainActivity2;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
 import okhttp3.OkHttpClient;
@@ -51,7 +51,8 @@ public class DialogDateListAdapter extends RecyclerView.Adapter<DialogDateListAd
         this.httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
         this.listViewItemList = listViewItemList;
 
-        fragment = ((MainActivity) mContext).getSupportFragmentManager().findFragmentByTag("page:0");
+//        fragment = ((MainActivity) mContext).getSupportFragmentManager().findFragmentByTag("page:0");
+        fragment = ((MainActivity2) mContext).getSupportFragmentManager().findFragmentByTag("Match");
 
         curCal = Calendar.getInstance();
         curDate = curCal.getTime();

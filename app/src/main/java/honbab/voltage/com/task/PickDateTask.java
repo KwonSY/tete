@@ -9,7 +9,7 @@ import android.widget.Toast;
 import org.json.JSONObject;
 
 import honbab.voltage.com.fragment.SelectFeedFragment;
-import honbab.voltage.com.tete.MainActivity;
+import honbab.voltage.com.tete.MainActivity2;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.tete.Statics;
 import honbab.voltage.com.widget.Encryption;
@@ -32,7 +32,8 @@ public class PickDateTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPreExecute() {
-        fragment = ((MainActivity) mContext).getSupportFragmentManager().findFragmentByTag("page:0");
+//        fragment = ((MainActivity) mContext).getSupportFragmentManager().findFragmentByTag("page:0");
+        fragment = ((MainActivity2) mContext).getSupportFragmentManager().findFragmentByTag("Match");
     }
 
     @Override
@@ -99,6 +100,16 @@ public class PickDateTask extends AsyncTask<String, Void, String> {
 
                 new SelectFeedListTask(mContext).execute(((SelectFeedFragment) fragment).feed_time,
 //                        ((SelectFeedFragment) fragment).area_cd,
+                        ((SelectFeedFragment) fragment).feed_rest_id,
+                        "");//readBelowRest
+            } else if (result.equals("1")) {
+                Toast.makeText(mContext, R.string.cannot_reserve_past, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(mContext, R.string.cancle, Toast.LENGTH_SHORT).show();
+            }
+        } else if (activityName.equals("MainActivity2")) {
+            if (result.equals("0")) {
+                new SelectFeedListTask(mContext).execute(((SelectFeedFragment) fragment).feed_time,
                         ((SelectFeedFragment) fragment).feed_rest_id,
                         "");//readBelowRest
             } else if (result.equals("1")) {

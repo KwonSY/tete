@@ -69,6 +69,7 @@ public class SelectFeedFragment extends Fragment implements LocationListener,
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationClient;
 
+    private String activityName;
     public int split = 2;
     public String area_cd = "GNS1";
 //    public ArrayList<String> area_cds = new ArrayList<String>();
@@ -348,6 +349,9 @@ public class SelectFeedFragment extends Fragment implements LocationListener,
 //        Location location = locationManager.getLastKnownLocation(provider);
 //        Log.e("abc", "location = " + location);
 
+        Log.e("abc" , "프레그먼트로 바꿔볼까? = " + getActivity().getClass().getSimpleName());
+
+        activityName = getActivity().getClass().getSimpleName();
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager layoutManager2 = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
@@ -466,12 +470,16 @@ public class SelectFeedFragment extends Fragment implements LocationListener,
                         builder.setPositiveButton(R.string.go_to_login,
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
-                                        ((MainActivity) getActivity()).viewPager.setCurrentItem(1);
+                                        if (activityName.equals("MainActivity2")) {
+
+                                        } else {
+                                            ((MainActivity) getActivity()).viewPager.setCurrentItem(1);
 //                                            Intent intent = new Intent(getActivity(), LoginActivity.class);
 //                                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 //                                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //                                            startActivity(intent);
 //                                            getActivity().finish();
+                                        }
                                     }
                                 });
                         builder.setNegativeButton(R.string.join,

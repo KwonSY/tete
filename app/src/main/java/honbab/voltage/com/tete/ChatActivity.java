@@ -31,6 +31,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.crashlytics.android.Crashlytics;
 import com.firebase.client.ServerValue;
 import com.github.arturogutierrez.Badges;
 import com.github.arturogutierrez.BadgesNotSupportedException;
@@ -63,6 +64,7 @@ import honbab.voltage.com.widget.CircleTransform;
 import honbab.voltage.com.widget.CustomTimePickerDialog;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
 import honbab.voltage.com.widget.SessionManager;
+import io.fabric.sdk.android.Fabric;
 import okhttp3.OkHttpClient;
 
 public class ChatActivity extends AppCompatActivity {
@@ -93,6 +95,7 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_chat);
 
         if (!NetworkUtil.isOnline(this)) {
@@ -206,7 +209,7 @@ public class ChatActivity extends AppCompatActivity {
         if (NetworkUtil.isOnline(this)) {
             loadFirebaseDatabase(fromId, toId);
 
-            new CommonRestTask(ChatActivity.this, httpClient).execute(toId, null);
+            new CommonRestTask(ChatActivity.this).execute(toId, null);
 
             try {
                 Badges.setBadge(this, 0);
@@ -627,7 +630,7 @@ public class ChatActivity extends AppCompatActivity {
 //        });
 
         try {
-            restList = new CommonRestTask(ChatActivity.this, httpClient).execute(toId, restData.getRest_id()).get();
+            restList = new CommonRestTask(ChatActivity.this).execute(toId, restData.getRest_id()).get();
         } catch (ExecutionException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {

@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import honbab.voltage.com.data.RestData;
 import honbab.voltage.com.tete.ChatActivity;
 import honbab.voltage.com.tete.Statics;
+import honbab.voltage.com.widget.OkHttpClientSingleton;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -29,9 +30,9 @@ public class CommonRestTask extends AsyncTask<String, Void, ArrayList<RestData>>
 //    private int defalutPos = 0;
     private String user_id;
 
-    public CommonRestTask(Context mContext, OkHttpClient httpClient) {
+    public CommonRestTask(Context mContext) {
         this.mContext = mContext;
-        this.httpClient = httpClient;
+        this.httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
     }
 
     @Override

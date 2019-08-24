@@ -3,7 +3,7 @@ package honbab.voltage.com.data;
 import java.io.Serializable;
 
 public class AreaData implements Serializable {
-    private String area_cd, area_name;
+    private String area_cd, area_name, area_image;
     private int cnt = 0;
     private boolean checked = false;
     private int position = -1;
@@ -33,6 +33,14 @@ public class AreaData implements Serializable {
 
     public void setArea_name(String area_name) {
         this.area_name = area_name;
+    }
+
+    public String getArea_image() {
+        return area_image;
+    }
+
+    public void setArea_image(String area_image) {
+        this.area_image = area_image;
     }
 
     public int getCnt() {

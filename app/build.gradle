@@ -1,6 +1,21 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'io.fabric'
+
+buildscript {
+    repositories {
+        maven { url 'https://maven.fabric.io/public' }
+    }
+
+    dependencies {
+        classpath 'io.fabric.tools:gradle:1.+'
+    }
+}
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
 
 android {
     compileSdkVersion 28
@@ -66,6 +81,9 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
+    //fabric
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
+
     //facebook
     implementation 'com.facebook.android:facebook-login:4.39.0'
 
@@ -95,54 +113,62 @@ dependencies {
     //ByteStreams
     implementation 'com.google.guava:guava:18.0'
 
-    //CalendarView
+    // CalendarView
     implementation 'com.github.prolificinteractive:material-calendarview:1.4.3'
 
-    //circle imageview
+    // circle imageview
     implementation 'de.hdodenhof:circleimageview:2.2.0'
 
-    //glide
+    // glide
     implementation 'com.github.bumptech.glide:glide:4.4.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.4.0'
 
-    //gson
+    // gson
     implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
 
-    //kakao
+    // kakao
     implementation group: 'com.kakao.sdk', name: 'usermgmt', version: project.KAKAO_SDK_VERSION
     implementation group: 'com.kakao.sdk', name: 'kakaolink', version: project.KAKAO_SDK_VERSION
     implementation group: 'com.kakao.sdk', name: 'kakaotalk', version: project.KAKAO_SDK_VERSION
     implementation group: 'com.kakao.sdk', name: 'push', version: project.KAKAO_SDK_VERSION
 
-    //okhttp
+    // okhttp
+    implementation('com.squareup.retrofit2:retrofit:2.3.0') {
+        exclude module: 'okhttp'
+    }
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
 
-    //Picasso
+    // Picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
 
-    //photoView
+    // photoView
     implementation 'com.github.chrisbanes:PhotoView:v1.2.5'
 
-    //Radio Button Group
+    // Radio Button Group
     implementation 'com.github.ceryle:RadioRealButton:v2.1.1'
 
-    //Showcaseview
+    // retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+
+    // Showcaseview
     implementation 'com.github.faruktoptas:FancyShowCaseView:1.1.5'
 
-    //Sliding Up Pannel
+    // Sliding Up Pannel
     implementation 'com.sothree.slidinguppanel:library:3.4.0'
 
-    //segmented-control
+    // segmented-control
     implementation 'info.hoang8f:android-segmented:1.0.6'
 
-    //tinder
+    // tinder
     implementation 'com.makeramen:roundedimageview:2.3.0'
     implementation 'com.yuyakaido.android:card-stack-view:2.2.0'
 
     // ToolTips
     implementation 'com.github.vihtarb:tooltip:0.1.9'
 
-    //volley
+    // volley
     implementation 'com.android.volley:volley:1.1.0'
 }
 

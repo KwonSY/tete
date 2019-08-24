@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +20,7 @@ import java.util.ArrayList;
 import honbab.voltage.com.data.UserData;
 import honbab.voltage.com.fragment.SelectFeedFragment;
 import honbab.voltage.com.tete.LoginActivity;
-import honbab.voltage.com.tete.MainActivity;
+import honbab.voltage.com.tete.MainActivity2;
 import honbab.voltage.com.tete.ProfileActivity;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.tete.Statics;
@@ -45,7 +44,8 @@ public class SelectUserListAdapter extends RecyclerView.Adapter<SelectUserListAd
         this.httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
         this.listViewItemList = listViewItemList;
 
-        fragment = ((MainActivity) mContext).getSupportFragmentManager().findFragmentByTag("page:0");
+//        fragment = ((MainActivity) mContext).getSupportFragmentManager().findFragmentByTag("page:0");
+        fragment = ((MainActivity2) mContext).getSupportFragmentManager().findFragmentByTag("Match");
     }
 
     @NonNull
@@ -62,7 +62,7 @@ public class SelectUserListAdapter extends RecyclerView.Adapter<SelectUserListAd
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         final UserData data = listViewItemList.get(position);
-        Log.e("abc", "data = " + data.getImg_url());
+
         holder.bindToPost(data);
     }
 

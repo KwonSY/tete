@@ -22,6 +22,7 @@ import honbab.voltage.com.data.SelectDateData;
 import honbab.voltage.com.data.UserData;
 import honbab.voltage.com.fragment.SelectFeedFragment;
 import honbab.voltage.com.tete.MainActivity;
+import honbab.voltage.com.tete.MainActivity2;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.tete.Statics;
 import honbab.voltage.com.widget.Encryption;
@@ -53,7 +54,8 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPreExecute() {
-        fragment = ((MainActivity) mContext).getSupportFragmentManager().findFragmentByTag("page:0");
+        fragment = ((MainActivity2) mContext).getSupportFragmentManager().findFragmentByTag("Match");
+//        fragment = ((MainActivity) mContext).getSupportFragmentManager().findFragmentByTag("page:0");
 
         datePickedList.clear();
 //        restList.clear();
@@ -273,7 +275,67 @@ public class SelectFeedListTask extends AsyncTask<String, Void, String> {
                 ((SelectFeedFragment) fragment).swipeContainer.setRefreshing(false);
             }
         } else if (activityName.equals("MainActivity2")) {
+            ((SelectFeedFragment) fragment).split = split;
+//            Log.e("abc", "((SelectFeedFragment) fragment).spinnerAdapter.getCount() = " + ((SelectFeedFragment) fragment).spinnerAdapter.getCount());
+//
+//            if (cnt_rest_arr == 0 && ((SelectFeedFragment) fragment).spinnerAdapter.getCount() > 1) {
+//                PickRestDialog dialog = new PickRestDialog(mContext);
+//                dialog.callFunction(null);
 
+
+            if (loadStatus.equals("readOnlyUser")) {
+                if (((SelectFeedFragment) fragment).feed_time.equals(""))
+                    ((SelectFeedFragment) fragment).txt_explain_time.setText("");
+                if (((SelectFeedFragment) fragment).feed_rest_id.equals(""))
+                    ((SelectFeedFragment) fragment).txt_explain_rest.setText("-");
+
+                ((SelectFeedFragment) fragment).to_id = "";
+                ((SelectFeedFragment) fragment).txt_explain_reserv.setText(R.string.explain_choose_feedee);
+
+                ((SelectFeedFragment) fragment).mAdapter_user.clearItemList();
+                ((SelectFeedFragment) fragment).mAdapter_user = new SelectUserListAdapter(mContext, userList);
+                ((SelectFeedFragment) fragment).recyclerView_user.setAdapter(((SelectFeedFragment) fragment).mAdapter_user);
+                ((SelectFeedFragment) fragment).mAdapter_user.notifyDataSetChanged();
+            } else if (loadStatus.equals("readBelowRest")) {
+                ((SelectFeedFragment) fragment).to_id = "";
+                ((SelectFeedFragment) fragment).txt_explain_reserv.setText(R.string.explain_choose_feedee);
+
+//                ((SelectFeedFragment) fragment).mAdapter_rest.clearItemList();
+//                ((SelectFeedFragment) fragment).mAdapter_rest = new SelectRestListAdapter(mContext, restList);
+//                ((SelectFeedFragment) fragment).recyclerView_rest.setAdapter(((SelectFeedFragment) fragment).mAdapter_rest);
+//                ((SelectFeedFragment) fragment).mAdapter_rest.notifyDataSetChanged();
+
+                ((SelectFeedFragment) fragment).mAdapter_user.clearItemList();
+                ((SelectFeedFragment) fragment).mAdapter_user = new SelectUserListAdapter(mContext, userList);
+                ((SelectFeedFragment) fragment).recyclerView_user.setAdapter(((SelectFeedFragment) fragment).mAdapter_user);
+                ((SelectFeedFragment) fragment).mAdapter_user.notifyDataSetChanged();
+            } else {
+                ((SelectFeedFragment) fragment).feed_time = "";
+                ((SelectFeedFragment) fragment).feed_rest_id = "";
+                ((SelectFeedFragment) fragment).to_id = "";
+                ((SelectFeedFragment) fragment).txt_explain_time.setText("");
+                ((SelectFeedFragment) fragment).txt_explain_rest.setText("-");
+                ((SelectFeedFragment) fragment).txt_explain_reserv.setText(R.string.explain_choose_feedee);
+
+                ((SelectFeedFragment) fragment).mAdapter_date.clearItemList();
+                ((SelectFeedFragment) fragment).mAdapter_date = new SelectDateListAdapter(mContext, datePickedList);
+                if (((SelectFeedFragment) fragment).mAdapter_date.getItemCount() == 1) {
+                    new FancyShowCaseView.Builder(((MainActivity2) mContext))
+                            .title("시간을 선택해보세요.")
+                            .focusOn(((SelectFeedFragment) fragment).recyclerView_date.getChildAt(0))
+                            .build()
+                            .show();
+                }
+                ((SelectFeedFragment) fragment).recyclerView_date.setAdapter(((SelectFeedFragment) fragment).mAdapter_date);
+                ((SelectFeedFragment) fragment).mAdapter_date.notifyDataSetChanged();
+
+                ((SelectFeedFragment) fragment).mAdapter_user.clearItemList();
+                ((SelectFeedFragment) fragment).mAdapter_user = new SelectUserListAdapter(mContext, userList);
+                ((SelectFeedFragment) fragment).recyclerView_user.setAdapter(((SelectFeedFragment) fragment).mAdapter_user);
+                ((SelectFeedFragment) fragment).mAdapter_user.notifyDataSetChanged();
+
+                ((SelectFeedFragment) fragment).swipeContainer.setRefreshing(false);
+            }
         }
     }
 

@@ -30,6 +30,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.github.arturogutierrez.Badges;
@@ -46,12 +47,14 @@ import honbab.voltage.com.fragment.MainFragment;
 import honbab.voltage.com.fragment.NoProfileFragment;
 import honbab.voltage.com.fragment.ProfileFragment;
 import honbab.voltage.com.fragment.PublicEatFragment;
+import honbab.voltage.com.fragment.SelectFeedFragment;
 import honbab.voltage.com.task.AccountTask;
 import honbab.voltage.com.task.VersionTask;
 import honbab.voltage.com.utils.NetworkUtil;
 import honbab.voltage.com.widget.CircleTransform;
 import honbab.voltage.com.widget.MyService;
 import honbab.voltage.com.widget.SessionManager;
+import io.fabric.sdk.android.Fabric;
 
 public class MainActivity2 extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 //    private OkHttpClient httpClient;
@@ -77,6 +80,7 @@ public class MainActivity2 extends AppCompatActivity implements NavigationView.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main2);
 
         FacebookSdk.sdkInitialize(getApplicationContext());
@@ -185,6 +189,9 @@ public class MainActivity2 extends AppCompatActivity implements NavigationView.O
                 img_my_pic = (ImageView) headerLayout.findViewById(R.id.img_my_pic);
                 txt_my_name = (TextView) headerLayout.findViewById(R.id.txt_my_name);
                 txt_go_login = (TextView) headerLayout.findViewById(R.id.txt_go_login);
+                ImageView img_pay_heart = headerLayout.findViewById(R.id.img_pay_heart);
+                img_pay_heart.setColorFilter(R.color.orange);
+                img_my_pic.setOnClickListener(mOnClickListener);
             }
 
         }
@@ -281,11 +288,18 @@ public class MainActivity2 extends AppCompatActivity implements NavigationView.O
                     }
 
                     break;
-                case R.id.txt_go_login:
-                    Intent intent = new Intent(MainActivity2.this, LoginActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                case R.id.img_my_pic:
+                    Intent intent = new Intent(MainActivity2.this, ProfileActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("user_id", Statics.my_id);
                     startActivity(intent);
+
+                    break;
+                case R.id.txt_go_login:
+                    Intent intent2 = new Intent(MainActivity2.this, LoginActivity.class);
+                    intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent2);
 
                     break;
             }
@@ -304,7 +318,7 @@ public class MainActivity2 extends AppCompatActivity implements NavigationView.O
 
 
 
-    public static Fragment fragment;
+    public Fragment fragment;
     private FragmentManager fm;
     public FragmentTransaction ft, ft2;
 
@@ -322,12 +336,10 @@ public class MainActivity2 extends AppCompatActivity implements NavigationView.O
         } else if (id == R.id.nav_publiceat) {
             fragment = new PublicEatFragment();
             title = "PublicEat";
-        }
-// else if (id == R.id.nav_match) {
-//            fragment = new MatchFragment();
-//            title = "Match";
-//        }
- else if (id == R.id.nav_profile) {
+        } else if (id == R.id.nav_match) {
+            fragment = new SelectFeedFragment();
+            title = "Match";
+        } else if (id == R.id.nav_profile) {
             if (Integer.parseInt(Statics.my_id) < 0)
                 fragment = new NoProfileFragment();
             else
@@ -338,11 +350,20 @@ public class MainActivity2 extends AppCompatActivity implements NavigationView.O
 //            fragment = new AnnounceFragment();
 //            title = "Announce";
 //        }
-// else if (id == R.id.nav_setting) {
-////            Toast.makeText(this, "세팅", Toast.LENGTH_SHORT).show();
+        else if (id == R.id.nav_setting) {
+//            Toast.makeText(this, "세팅", Toast.LENGTH_SHORT).show();
 //            fragment = new SettingFragment();
 //            title = "Setting";
-//        }
+            if (Statics.my_id == null || Statics.my_id == "" || Integer.parseInt(Statics.my_id) < 1) {
+                Intent intent = new Intent(MainActivity2.this, LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            } else {
+                Intent intent = new Intent(MainActivity2.this, SettingActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+            }
+        }
         else {
             fragment = new MainFragment();
             title = "Main";
@@ -356,14 +377,14 @@ public class MainActivity2 extends AppCompatActivity implements NavigationView.O
 //            DateFragment.stopAnimate();
 //
             ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.fragment_main, fragment);
+            ft.replace(R.id.fragment_main, fragment, title);
             ft.addToBackStack(null);
             ft.commit();
         } else {
             fragment = new MainFragment();
 
             ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.fragment_main, fragment);
+            ft.replace(R.id.fragment_main, fragment, title);
             ft.addToBackStack(null);
             ft.commit();
         }

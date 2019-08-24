@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -16,7 +17,7 @@ import honbab.voltage.com.adapter.DialogDateListAdapter;
 import honbab.voltage.com.data.SelectDateData;
 import honbab.voltage.com.fragment.SelectFeedFragment;
 import honbab.voltage.com.task.SelectFeedListTask;
-import honbab.voltage.com.tete.MainActivity;
+import honbab.voltage.com.tete.MainActivity2;
 import honbab.voltage.com.tete.R;
 
 public class PickDateDialog {
@@ -28,7 +29,9 @@ public class PickDateDialog {
 
     public PickDateDialog(Context mContext) {
         this.mContext = mContext;
-        fragment = ((MainActivity) mContext).getSupportFragmentManager().findFragmentByTag("page:0");
+        Log.e("abc", "fff = " + ((MainActivity2) mContext).getSupportFragmentManager().getFragments());
+//        fragment = ((MainActivity) mContext).getSupportFragmentManager().findFragmentByTag("page:0");
+        fragment = ((MainActivity2) mContext).getSupportFragmentManager().findFragmentByTag("Match");
     }
 
     // 호출할 다이얼로그 함수를 정의한다.

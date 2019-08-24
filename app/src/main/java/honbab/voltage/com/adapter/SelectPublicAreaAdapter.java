@@ -14,23 +14,24 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 
-import honbab.voltage.com.data.SelectDateData;
+import honbab.voltage.com.data.AreaData;
 import honbab.voltage.com.tete.R;
-import honbab.voltage.com.widget.OkHttpClientSingleton;
-import okhttp3.OkHttpClient;
+import honbab.voltage.com.tete.SelectPublicTimeActivity;
 
 public class SelectPublicAreaAdapter extends RecyclerView.Adapter<SelectPublicAreaAdapter.ViewHolder> {
     private Context mContext;
-    private OkHttpClient httpClient;
+//    private OkHttpClient httpClient;
 
     int TYPE_TIME = 1;
 //    int TYPE_END = 2;
 
 //    private Fragment fragment;
 
-    public ArrayList<SelectDateData> listViewItemList = new ArrayList<>();
+    public ArrayList<AreaData> listViewItemList = new ArrayList<>();
     private int mSelectedItem = -1;
     private AdapterView.OnItemClickListener onItemClickListener;
 
@@ -38,9 +39,9 @@ public class SelectPublicAreaAdapter extends RecyclerView.Adapter<SelectPublicAr
 
     }
 
-    public SelectPublicAreaAdapter(Context mContext, ArrayList<SelectDateData> listViewItemList) {
+    public SelectPublicAreaAdapter(Context mContext, ArrayList<AreaData> listViewItemList) {
         this.mContext = mContext;
-        this.httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
+//        this.httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
         this.listViewItemList = listViewItemList;
 
 //        fragment = ((MainActivity) mContext).getSupportFragmentManager().findFragmentByTag("page:0");
@@ -59,7 +60,7 @@ public class SelectPublicAreaAdapter extends RecyclerView.Adapter<SelectPublicAr
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         if (getItemViewType(position) == TYPE_TIME) {
 
-            final SelectDateData data = listViewItemList.get(position);
+            final AreaData data = listViewItemList.get(position);
             data.setPosition(position);
 
             holder.bindToPost(data, getItemViewType(position));
@@ -103,9 +104,14 @@ public class SelectPublicAreaAdapter extends RecyclerView.Adapter<SelectPublicAr
             }
         }
 
-        public void bindToPost(final SelectDateData data, int viewType) {
+        public void bindToPost(final AreaData data, int viewType) {
             if (viewType == TYPE_TIME) {
-                txt_area.setText(data.getTimeName());
+                Picasso.get().load(data.getArea_image())
+                        .placeholder(R.drawable.icon_no_image)
+                        .error(R.drawable.icon_no_image)
+                        .into(img_area);
+
+                txt_area.setText(data.getArea_name());
 
                 try {
                     setDateToView(data, data.getPosition());
@@ -116,6 +122,8 @@ public class SelectPublicAreaAdapter extends RecyclerView.Adapter<SelectPublicAr
                 checkBox.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        Log.e("abc", "chatRoomName = " + data.getArea_cd());
+                        ((SelectPublicTimeActivity) mContext).chatRoomCd = data.getArea_cd();
 
                         mSelectedItem = getAdapterPosition();
                         notifyItemRangeChanged(0, listViewItemList.size());
@@ -144,88 +152,33 @@ public class SelectPublicAreaAdapter extends RecyclerView.Adapter<SelectPublicAr
             }
         }
 
-        public void setDateToView(SelectDateData data, int position) throws Exception {
+        public void setDateToView(AreaData data, int position) throws Exception {
 //            checkBox.setChecked(position == mSelectedItem);
             Log.e("abc", position + ", mSelectedItem = " + mSelectedItem);
 
-            if (mSelectedItem >= 0) {//선택이 되었으면
+            if (mSelectedItem >= 0) {
+                //선택이 되었으면
                 if (position == mSelectedItem) {
                     data.setChecked(true);
                 } else {
                     data.setChecked(false);
                 }
-            } else {//선택이 없으나, 사전에 체크 표기
-
+            } else {
+                //선택이 없으나, 사전에 체크 표기
                 if (listViewItemList.size() == 1) {
-
                     data.setChecked(true);
-
                 } else {
 //                    if (listViewItemList.size() == position + 1) {
                     if (position ==  0) {
-
-
                         data.setChecked(true);
-
-
                     }
                 }
-
-
 
             }
 
             checkBox.setChecked(data.isChecked());
         }
 
-        public void showFancyShowCaseView() {
-//            new FancyShowCaseView.Builder(((MainActivity) mContext))
-//                    .title("\n\n음식점을 선택해보세요.")
-//                    .focusOn(((SelectFeedFragment) fragment).recyclerView_rest.getChildAt(0))
-//                    .build()
-//                    .show();
-        }
-
-//        @Override
-//        public void onClick(View v) {
-//            switch (v.getId()) {
-////                case R.id.layout_card:
-////                    Log.e("abc","layout_card");
-////
-////
-////                    break;
-////                case R.id.checkBox:
-////                    Log.e("abc","checkBox feed_time = " + ((SelectFeedFragment) fragment).feed_time);
-////
-////                    try {
-////                        Calendar calendar = Calendar.getInstance();
-////                        Date date_setting_time = new SimpleDateFormat("yyyyy-MM-dd HH:mm:ss").parse(listViewItemList.get(getAdapterPosition()).getTime());
-////                        calendar.setTime(date_setting_time);
-////
-////                        Calendar curCal = Calendar.getInstance();
-////                        long time_setting = calendar.getTimeInMillis();
-////                        long time_current = curCal.getTimeInMillis();
-////
-////                        if (time_setting > time_current) {
-////                            mSelectedItem = getAdapterPosition();
-////                            notifyItemRangeChanged(0, listViewItemList.size());
-////                            mAdapter.onItemHolderClick(ViewHolder.this);
-////
-////                            new SelectFeedListTask(mContext).execute(((SelectFeedFragment) fragment).feed_time,
-////                                    ((SelectFeedFragment) fragment).area_cd,
-////                                    ((SelectFeedFragment) fragment).feed_rest_id,
-////                                    "readOnlyUser");
-////                        } else {
-////                            checkBox.setVisibility(View.GONE);
-////                            Toast.makeText(mContext, R.string.cannot_reserve_past, Toast.LENGTH_SHORT).show();
-////                        }
-////                    } catch (ParseException e) {
-////                        e.printStackTrace();
-////                    }
-////
-////                    break;
-//            }
-//        }
     }
 
 //    public void removeAt(int position) {

@@ -9,11 +9,15 @@ import android.view.View;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONObject;
 
 import honbab.voltage.com.data.UserData;
+import honbab.voltage.com.network.RestClient;
+import honbab.voltage.com.network.RetroInterface;
 import honbab.voltage.com.tete.ChatActivity;
 import honbab.voltage.com.tete.MainActivity;
 import honbab.voltage.com.tete.ProfileActivity;
@@ -25,6 +29,9 @@ import honbab.voltage.com.widget.OkHttpClientSingleton;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AccountTask extends AsyncTask<String, Void, UserData> {
     private Context mContext;
@@ -35,6 +42,12 @@ public class AccountTask extends AsyncTask<String, Void, UserData> {
 
     private int seq;
     private String user_id, user_name, user_img, comment, token, fr_status;
+
+    public AccountTask(Context mContext) {
+        this.mContext = mContext;
+        this.httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
+//        this.seq = seq;
+    }
 
     public AccountTask(Context mContext, int seq) {
         this.mContext = mContext;
@@ -59,6 +72,7 @@ public class AccountTask extends AsyncTask<String, Void, UserData> {
         UserData userData = new UserData();
         user_id = objects[0];
         Log.e("abc", "user_id  objects[0] = " + user_id);
+        Log.e("abc", "auth = " + Encryption.voltAuth());
 
         FormBody body = new FormBody.Builder()
                 .add("opt", "account")
@@ -115,23 +129,20 @@ public class AccountTask extends AsyncTask<String, Void, UserData> {
         Log.e("abc", "AccountTask user_id = " + user_id);
         Log.e("abc", "AccountTask userData.getUser_id() = " + userData.getUser_id());
 
-        if (userData.getUser_id().equals(Statics.my_id)) {
-            FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
-                @Override
-                public void onSuccess(InstanceIdResult instanceIdResult) {
-                    token = instanceIdResult.getToken();
-
-                    if (!userData.getToken().equals(token))
-                        new UpdateTokenTask(mContext).execute(token);
-                }
-            });
-        }
-
-
         if (activityName == null) {
 
         } else if (activityName.equals("MainActivity2")) {
+            if (userData.getUser_id().equals(Statics.my_id)) {
+                FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+                    @Override
+                    public void onSuccess(InstanceIdResult instanceIdResult) {
+                        token = instanceIdResult.getToken();
 
+                        if (!userData.getToken().equals(token))
+                            new UpdateTokenTask(mContext).execute(token);
+                    }
+                });
+            }
         } else if (activityName.equals("ProfileActivity")) {
             if (seq == 0) {
                 ((ProfileActivity) mContext).title_topbar.setText(user_name + mContext.getResources().getString(R.string.whose_profile));
@@ -208,4 +219,46 @@ public class AccountTask extends AsyncTask<String, Void, UserData> {
 
     }
 
+    // /login
+    UserData userData = new UserData();
+
+    public UserData login(String uid) {
+
+
+        RetroInterface service = RestClient.getService();
+
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("opt", "account");
+        jsonObject.addProperty("auth", Encryption.voltAuth());
+        jsonObject.addProperty("my_id", Statics.my_id);
+        jsonObject.addProperty("user_id", uid);
+
+        Call<JsonObject> call;
+        call = service.account(jsonObject);
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                try {
+                    if (response.isSuccessful()) {
+                        JsonObject obj = response.body();
+
+                        if (obj.has("user")) {
+                            JsonObject userObj = obj.get("user").getAsJsonObject();
+
+                            userData = new Gson().fromJson(userObj.getAsJsonObject(), UserData.class);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+
+            }
+        });
+
+        return userData;
+    }
 }

@@ -27,7 +27,7 @@ import honbab.voltage.com.data.SelectDateData;
 import honbab.voltage.com.fragment.SelectFeedFragment;
 import honbab.voltage.com.task.SelectFeedListTask;
 import honbab.voltage.com.tete.LoginActivity;
-import honbab.voltage.com.tete.MainActivity;
+import honbab.voltage.com.tete.MainActivity2;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.tete.Statics;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
@@ -58,8 +58,11 @@ public class SelectDateListAdapter extends RecyclerView.Adapter<SelectDateListAd
         this.listViewItemList = listViewItemList;
 
         String activityName = mContext.getClass().getSimpleName();
-        if (activityName.equals("MainActivity"))
-            fragment = ((MainActivity) mContext).getSupportFragmentManager().findFragmentByTag("page:0");
+        if (activityName.equals("MainActivity2"))
+            fragment = ((MainActivity2) mContext).getSupportFragmentManager().findFragmentByTag("Match");
+
+//        if (activityName.equals("MainActivity"))
+//            fragment = ((MainActivity) mContext).getSupportFragmentManager().findFragmentByTag("page:0");
     }
 
     @NonNull
@@ -308,7 +311,7 @@ public class SelectDateListAdapter extends RecyclerView.Adapter<SelectDateListAd
         }
 
         public void showFancyShowCaseView() {
-            new FancyShowCaseView.Builder(((MainActivity) mContext))
+            new FancyShowCaseView.Builder(((MainActivity2) mContext))
                     .title("\n\n음식점을 선택해보세요.")
                     .focusOn(((SelectFeedFragment) fragment).recyclerView_rest.getChildAt(0))
                     .build()

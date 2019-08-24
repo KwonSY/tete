@@ -71,6 +71,7 @@
 
 
         <activity android:name=".SplashActivity" />
+        <activity android:name=".MainActivity" />
 
         <activity android:name=".LoginActivity" />
         <activity
@@ -101,6 +102,7 @@
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity android:name=".DelayHandlerActivity" />
         <activity android:name=".DelayBefroePickRestActivity" />
+        <activity android:name=".GroupTalkActivity" />
         <activity android:name=".GridViewActivity" />
         <activity
             android:name=".MapsActivity"
@@ -109,6 +111,7 @@
         <activity android:name=".MyFeedListActivity" />
         <activity android:name=".ReportActivity" />
         <activity android:name=".ReservActivity" />
+
 
 
         <activity android:name=".OneImageActivity" />
@@ -144,6 +147,12 @@
             </intent-filter>
         </activity>
         <!-- facebook -->
+
+
+        <!--fabric-->
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="e6dba99e93b901548b4a155c0f956c83c729ce1b" />
 
     </application>
 
