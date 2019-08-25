@@ -50,14 +50,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
-import java.util.concurrent.ExecutionException;
 
 import honbab.voltage.com.data.ChatData;
 import honbab.voltage.com.data.ChatModel;
 import honbab.voltage.com.data.RestData;
 import honbab.voltage.com.data.UserData;
 import honbab.voltage.com.data.UserModel;
-import honbab.voltage.com.task.AccountTask;
 import honbab.voltage.com.utils.ButtonUtil;
 import honbab.voltage.com.utils.NetworkUtil;
 import honbab.voltage.com.widget.CircleTransform;
@@ -94,6 +92,7 @@ public class GroupTalkActivity extends AppCompatActivity {
     private ChatData chatData;
     public RestData restData;
     private String chatRoomCd = "";
+    private ArrayList<UserData> groupchatUsersList = new ArrayList<UserData>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,16 +121,16 @@ public class GroupTalkActivity extends AppCompatActivity {
             mDatabase = FirebaseDatabase.getInstance().getReference();
 
             Intent intent = getIntent();
+//            Bundle bundle = getIntent().getExtras();
+//            chatRoomCd = bundle.getString("chatRoomCd");
+//            groupchatUsersList = bundle.getParcelable("groupchatUsersList");
+
             chatRoomCd = intent.getStringExtra("chatRoomCd");
-//            destinationRoom = intent.getStringExtra("destinationRoom");
-
-//            toId = intent.getStringExtra("toId");
-//            Statics.to_id = toId;
-//            if (intent.getParcelableExtra("restData") != null)
-//                restData = (RestData) intent.getParcelableExtra("restData");
-//            else
-//                restData = new RestData();
-
+            groupchatUsersList = intent.getParcelableArrayListExtra("groupchatUsersList");
+            Log.e("abc", "groupchatUsersList1 = " + groupchatUsersList);
+//            Bundle bundle = getIntent().getExtras();
+            Log.e("abc", "groupchatUsersList2 = " + groupchatUsersList);
+            Log.e("abc", "groupchatUsersList size = " + groupchatUsersList.size());
 
             //상단바
             title_topbar = (TextView) findViewById(R.id.title_topbar);
@@ -597,8 +596,8 @@ public class GroupTalkActivity extends AppCompatActivity {
 
                     Log.e("abc", "comments.size() = " + chats.size());
                     if (chats.size() > 0) {
+                        txt_explain_no_chat.setVisibility(View.GONE);
 //                        if (!chats.get(chats.size() - 1).readUsers.containsKey(my_id)) {
-
 
 //                            FirebaseDatabase.getInstance().getReference().child("groupchats").child(chatRoomCd).child("messages")
 //                                    .updateChildren(readUsersMap).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -616,7 +615,7 @@ public class GroupTalkActivity extends AppCompatActivity {
                         //메세지가 갱신
 
                     } else {
-                        txt_explain_no_chat.setVisibility(View.GONE);
+                        txt_explain_no_chat.setVisibility(View.VISIBLE);
                     }
                 }
 
@@ -726,6 +725,7 @@ public class GroupTalkActivity extends AppCompatActivity {
                 if (data.uid.equals(my_id)) {
                     // 내가보낸 메세지
                     messageItem_linearlayout_main.setGravity(Gravity.RIGHT);
+                    textView_message.setGravity(Gravity.RIGHT);
 
                     textView_message.setText(data.message);
                     textView_message.setBackgroundResource(R.drawable.border_round_drgr1);
@@ -737,27 +737,25 @@ public class GroupTalkActivity extends AppCompatActivity {
                     imageView_profile.setVisibility(View.GONE);
                 } else {
                     // 상대방이 보낸 메세지
-                    messageItem_linearlayout_main.setGravity(Gravity.LEFT);
+                    int k = 0;
 
-                    try {
-                        userData = new AccountTask(GroupTalkActivity.this).execute(data.uid).get();
-
-                        //                Picasso.get().load(users.get(chats.get(position).uid).profileImageUrl)
-                        Picasso.get().load(userData.getImg_url())
-                                .placeholder(R.drawable.icon_noprofile_circle)
-                                .transform(new CircleTransform())
-                                .into(imageView_profile);
-//                    messageViewHolder.textview_name.setText(users.get(chats.get(position).uid).userName);
-                        textview_name.setText(userData.getUser_name());
-                        linearLayout_destination.setVisibility(View.VISIBLE);
-
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                    for (int i = 0; i<groupchatUsersList.size(); i++) {
+                        if (groupchatUsersList.get(i).getUser_id().equals(data.uid))
+                            k = i;
                     }
 
-//                Log.e("abc", "userName = " + users.get(chats.get(position).uid).userName);
+                    userData = groupchatUsersList.get(k);
+
+                    messageItem_linearlayout_main.setGravity(Gravity.LEFT);
+                    textView_message.setGravity(Gravity.LEFT);
+
+                    Picasso.get().load(userData.getImg_url())
+                            .placeholder(R.drawable.icon_noprofile_circle)
+                            .transform(new CircleTransform())
+                            .into(imageView_profile);
+//                    messageViewHolder.textview_name.setText(users.get(chats.get(position).uid).userName);
+                    textview_name.setText(userData.getUser_name());
+                    linearLayout_destination.setVisibility(View.VISIBLE);
                     textView_message.setBackgroundResource(R.drawable.border_round_drgr1);
                     textView_message.setText(data.message);
 //                textView_message.setTextSize(25);

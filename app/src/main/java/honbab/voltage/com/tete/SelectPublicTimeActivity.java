@@ -3,6 +3,7 @@ package honbab.voltage.com.tete;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -14,8 +15,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -29,6 +33,8 @@ import honbab.voltage.com.adapter.SelectPublicDateListAdapter;
 import honbab.voltage.com.data.AreaData;
 import honbab.voltage.com.data.ChatModel;
 import honbab.voltage.com.data.SelectDateData;
+import honbab.voltage.com.data.UserData;
+import honbab.voltage.com.task.AccountTask;
 import honbab.voltage.com.task.CityListTask;
 import honbab.voltage.com.utils.ButtonUtil;
 import honbab.voltage.com.widget.OkHttpClientSingleton;
@@ -51,6 +57,7 @@ public class SelectPublicTimeActivity extends AppCompatActivity {
     public String areaCd = "";
     public String chatRoomCd = "";
     private ArrayList<AreaData> areaList;
+    public ArrayList<UserData> groupchatUsersList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +67,7 @@ public class SelectPublicTimeActivity extends AppCompatActivity {
 
         httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
         session = new SessionManager(this.getApplicationContext());
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         TextView title_topbar = (TextView) findViewById(R.id.title_topbar);
         title_topbar.setText(R.string.select_date_and_area);
@@ -74,13 +82,7 @@ public class SelectPublicTimeActivity extends AppCompatActivity {
 //        calendar.setTime(formatter1.parse(clone().));
 
         String today = dateFormat1.format(date);
-//        Date today2 = dateFormat1.format(calendar);
         String tomorrow = dateFormat1.format(calendar.getTime());
-//        Date tomorrow = formatter1.parse(data.getTime());
-//        Date date = formatter1.parse(data.getTime());
-//        String str_feed_time = formatter2.format(date);
-//        Log.e("abc", "today = " + today.toString());
-//        Log.e("abc", "tomorrow = " + tomorrow.toString());
 
         //String timelike_id, String time, String timeName, String day_of_week, ArrayList<RestData> restList, int cnt, String status
         ArrayList<SelectDateData> dateList = new ArrayList<>();
@@ -121,8 +123,42 @@ public class SelectPublicTimeActivity extends AppCompatActivity {
         try {
             areaList = new CityListTask(SelectPublicTimeActivity.this).execute().get();
 
-            if (chatRoomCd.equals("") || chatRoomCd == null)
+            if (chatRoomCd.equals("") || chatRoomCd == null) {
                 chatRoomCd = areaList.get(0).getArea_cd();
+
+                mDatabase.child("groupchats").child(chatRoomCd).child("users").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        try {
+                            for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                                UserData userData = new AccountTask(SelectPublicTimeActivity.this).execute(userSnapshot.getKey()).get();
+//                                Log.e("abc", "userSnapshot.getValue(); = " + userSnapshot.getKey());
+
+                                groupchatUsersList.add(userData);
+                            }
+
+                            Log.e("abc", "사전에 저장 = " + groupchatUsersList.size());
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+//                        Map<String, Object> userObj;
+//                        Map<String, Object> userObj2 = dataSnapshot.getValue(userObj);
+//                        userObj.g
+//                        Log.e("abc", "dataSnapshot.getValue() = " + dataSnapshot.getValue());
+//                        Map<String, Object> userObj = mDatabase.child("groupchats").child(chatRoomCd).child("users").child(dataSnapshot.getKey()).;
+//                        Log.e("abc", "dataSnapshot.getKey() = " + dataSnapshot.getKey());
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
 
             mAdapter_area = new SelectPublicAreaAdapter(SelectPublicTimeActivity.this, areaList);
             recyclerView_area.setAdapter(mAdapter_area);
@@ -140,7 +176,6 @@ public class SelectPublicTimeActivity extends AppCompatActivity {
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.btn_go_select_area:
-//                    Log.e("abc", "my_id = " + Statics.my_id);
                     if (Integer.parseInt(Statics.my_id) < 0) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(SelectPublicTimeActivity.this);
                         builder.setMessage("로그인이 필요합니다. 로그인하시겠습니까?");
@@ -150,7 +185,6 @@ public class SelectPublicTimeActivity extends AppCompatActivity {
 //                                        new DelFrTask(SelectPublicTimeActivity.this).execute(user_id);
                                         Intent intent = new Intent(SelectPublicTimeActivity.this, LoginActivity.class);
                                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                        intent.putExtra("dateTime", dateTime);
                                         startActivity(intent);
                                     }
                                 });
@@ -162,7 +196,6 @@ public class SelectPublicTimeActivity extends AppCompatActivity {
                                 });
                         builder.show();
                     } else {
-                        mDatabase = FirebaseDatabase.getInstance().getReference();
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(SelectPublicTimeActivity.this);
                         builder.setMessage("<모여서먹어요>에 참여하시겠습니까?");
@@ -175,16 +208,6 @@ public class SelectPublicTimeActivity extends AppCompatActivity {
 //                                        chatModel.users.put(Statics.my_id, true);
 //                                        FirebaseDatabase.getInstance().getReference().child("groupchats").child("gangnam1").setValue(chatModel);
 
-                                        // vvvvv after
-//                                        String key = mDatabase.child("posts").push().getKey();
-//                                        Post post = new Post(userId, username, title, body);
-//                                        Map<String, Object> postValues = chatModel.users;
-
-//                                        Map<String, Object> childUpdates = new HashMap<>();
-//                                        childUpdates.put("/posts/" + key, postValues);
-//                                        childUpdates.put("/user-posts/" + userId + "/" + key, postValues);
-//                                        ChatModel.Chats comment = new ChatModel.Chats();
-                                        Log.e("abc", "chatModel.users = " + chatModel.users);
                                         chatModel.users.put(Statics.my_id, true);
                                         mDatabase.child("groupchats").child(chatRoomCd).child("users").updateChildren(chatModel.users);
 
@@ -192,7 +215,7 @@ public class SelectPublicTimeActivity extends AppCompatActivity {
                                         Intent intent = new Intent(SelectPublicTimeActivity.this, GroupTalkActivity.class);
                                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                         intent.putExtra("chatRoomCd", chatRoomCd);
-//                                        intent.putExtra("dateTime", dateTime);
+                                        intent.putParcelableArrayListExtra("groupchatUsersList", groupchatUsersList);
                                         startActivity(intent);
                                     }
                                 });

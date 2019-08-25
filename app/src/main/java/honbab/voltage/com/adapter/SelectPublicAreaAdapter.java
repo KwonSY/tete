@@ -14,11 +14,18 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import honbab.voltage.com.data.AreaData;
+import honbab.voltage.com.data.UserData;
+import honbab.voltage.com.task.AccountTask;
 import honbab.voltage.com.tete.R;
 import honbab.voltage.com.tete.SelectPublicTimeActivity;
 
@@ -122,12 +129,43 @@ public class SelectPublicAreaAdapter extends RecyclerView.Adapter<SelectPublicAr
                 checkBox.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Log.e("abc", "chatRoomName = " + data.getArea_cd());
                         ((SelectPublicTimeActivity) mContext).chatRoomCd = data.getArea_cd();
 
                         mSelectedItem = getAdapterPosition();
                         notifyItemRangeChanged(0, listViewItemList.size());
                         mAdapter.onItemHolderClick(ViewHolder.this);
+
+                        ((SelectPublicTimeActivity) mContext).groupchatUsersList.clear();
+                        FirebaseDatabase.getInstance().getReference().child("groupchats").child(data.getArea_cd()).child("users").addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                try {
+                                    for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                                        UserData userData = new AccountTask(mContext).execute(userSnapshot.getKey()).get();
+                                        Log.e("abc", "userData img = " + userData.getImg_url());
+
+                                        ((SelectPublicTimeActivity) mContext).groupchatUsersList.add(userData);
+                                    }
+                                } catch (ExecutionException e) {
+                                    e.printStackTrace();
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+
+//                        Map<String, Object> userObj;
+//                        Map<String, Object> userObj2 = dataSnapshot.getValue(userObj);
+//                        userObj.g
+//                        Log.e("abc", "dataSnapshot.getValue() = " + dataSnapshot.getValue());
+//                        Map<String, Object> userObj = mDatabase.child("groupchats").child(chatRoomCd).child("users").child(dataSnapshot.getKey()).;
+//                        Log.e("abc", "dataSnapshot.getKey() = " + dataSnapshot.getKey());
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
                     }
                 });
             } else {
