@@ -71,7 +71,7 @@ public class GroupTalkActivity extends AppCompatActivity {
     private LinearLayoutManager layoutManager;
 
     public DrawerLayout drawerLayout;
-//    public TextView title_topbar, txt_userName, no_chat_txt_userName, txt_explain_no_chat;
+    //    public TextView title_topbar, txt_userName, no_chat_txt_userName, txt_explain_no_chat;
     public TextView title_topbar, txt_explain_no_chat;
     public ImageView topbar_img_user, no_chat_img_user;
     public Button btn_call_rest;
@@ -79,14 +79,14 @@ public class GroupTalkActivity extends AppCompatActivity {
 
     private LinearLayout layout_no_chat;
     public RecyclerView recyclerView;
-//    public ChatAdapter mAdapter;
+    //    public ChatAdapter mAdapter;
     public GroupMessageRecyclerViewAdapter mAdapter;
     //채팅 입력창
     private EditText edit_chat;
     private TextView btn_send;
 
     private String my_id = Statics.my_id;
-//    public String fromId = Statics.my_id;
+    //    public String fromId = Statics.my_id;
 //    public String toId, toUserName = "상대방", toUserImg, toToken;
     private Map<String, UserModel> users = new HashMap<>();
     private ChatData chatData;
@@ -116,7 +116,6 @@ public class GroupTalkActivity extends AppCompatActivity {
                     });
             builder.show();
         } else {
-
             httpClient = OkHttpClientSingleton.getInstance().getHttpClient();
             mDatabase = FirebaseDatabase.getInstance().getReference();
 
@@ -142,14 +141,11 @@ public class GroupTalkActivity extends AppCompatActivity {
             loadFirebaseDatabase(chatRoomCd);
 
 
-
             //채팅 없을 때
             layout_no_chat = (LinearLayout) findViewById(R.id.layout_no_chat);
 //            no_chat_img_user = (ImageView) findViewById(R.id.no_chat_img_user);
 //            no_chat_txt_userName = (TextView) findViewById(R.id.no_chat_txt_userName);
             txt_explain_no_chat = (TextView) findViewById(R.id.txt_explain_no_chat);
-
-
 
 
             icon_more_dots = (ImageView) findViewById(R.id.icon_more_dots);
@@ -405,7 +401,7 @@ public class GroupTalkActivity extends AppCompatActivity {
 //    }
 
     private void sendMessage(String type) {
-        String message = "";
+//        String message = "";
 
         ChatModel.Chats comment = new ChatModel.Chats();
         comment.uid = my_id;
@@ -453,61 +449,6 @@ public class GroupTalkActivity extends AppCompatActivity {
 
             }
         });
-//        if (type.equals("t")) {
-//            if (edit_chat.getText().toString().length() > 0) {
-//                message = edit_chat.getText().toString();
-//                final HashMap<String, Object> timestamp = new HashMap<>();
-//                timestamp.put("time", ServerValue.TIMESTAMP);
-//
-//                ChatData chatData = new ChatData(type, fromId, toId, message, timestamp);
-//
-//                DatabaseReference id_message = mDatabase.child("messages").push();
-//                mDatabase.child("messages").child(id_message.getKey()).setValue(chatData);
-//
-//                Map<String, Object> taskMap = new HashMap<String, Object>();
-//                taskMap.put(id_message.getKey(), 1);
-//
-//                mDatabase.child("user-messages").child(String.valueOf(fromId)).child(String.valueOf(toId)).updateChildren(taskMap);
-//                mDatabase.child("user-messages").child(String.valueOf(toId)).child(String.valueOf(fromId)).updateChildren(taskMap);
-//
-//                chatData.setToUserName(toUserName);
-//
-//                recyclerView.setLayoutManager(layoutManager);
-//                mAdapter.notifyDataSetChanged();
-//                edit_chat.setText("");
-//
-//                FcmData params = new FcmData(toToken, Statics.my_id, Statics.my_username, message);
-//                new ChatFCMTask().execute(params);
-//            }
-//        } else if (type.equals("a")) {
-//
-//            message = toUserName + "님과 " +
-//                    month + "월 " + day + "일 " + hour + "시 " +
-////                    min + "분 " +
-//                    restData.getRest_name() + "에서 식사가 예약되었습니다.";
-//            final HashMap<String, Object> timestamp = new HashMap<>();
-//            timestamp.put("time", ServerValue.TIMESTAMP);
-//
-//            ChatData chatData = new ChatData(type, fromId, toId, message, timestamp);
-//
-//            DatabaseReference id_message = mDatabase.child("messages").push();
-//            mDatabase.child("messages").child(id_message.getKey()).setValue(chatData);
-//
-//            Map<String, Object> taskMap = new HashMap<String, Object>();
-//            taskMap.put(id_message.getKey(), 1);
-//
-//            mDatabase.child("user-messages").child(String.valueOf(fromId)).child(String.valueOf(toId)).updateChildren(taskMap);
-//            mDatabase.child("user-messages").child(String.valueOf(toId)).child(String.valueOf(fromId)).updateChildren(taskMap);
-//
-//            chatData.setToUserName(toUserName);
-//
-//            recyclerView.setLayoutManager(layoutManager);
-//            mAdapter.notifyDataSetChanged();
-//            edit_chat.setText("");
-//
-////            FcmData params = new FcmData(toToken, Statics.my_id, Statics.my_username, message);
-////            new ChatFCMTask().execute(params);
-//        }
     }
 
     public Spinner spinner_restName;
@@ -560,19 +501,18 @@ public class GroupTalkActivity extends AppCompatActivity {
     }
 
 
-
-
     private DatabaseReference databaseReference;
     ValueEventListener valueEventListener;
-//    List<ChatModel.Comment> comments = new ArrayList<>();
+    //    List<ChatModel.Comment> comments = new ArrayList<>();
     private List<ChatModel.Chats> chats = new ArrayList<>();
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm");
 
     int peopleCount = 0;
 
     private class GroupMessageRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-        public GroupMessageRecyclerViewAdapter() {
 
+        public GroupMessageRecyclerViewAdapter() {
+            Log.e("abc", "채팅 리프레쉬");
             getMessageList();
         }
 
@@ -583,37 +523,18 @@ public class GroupTalkActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     chats.clear();
-//                    Map<String, Object> readUsersMap = new HashMap<>();
+
                     for (DataSnapshot item : dataSnapshot.getChildren()) {
                         String key = item.getKey();
                         ChatModel.Chats comment_origin = item.getValue(ChatModel.Chats.class);
-//                        ChatModel.Chats comment_motify = item.getValue(ChatModel.Chats.class);
-//                        comment_motify.readUsers.put(my_id, true);
-
-//                        readUsersMap.put(key, comment_motify);
                         chats.add(comment_origin);
                     }
 
                     Log.e("abc", "comments.size() = " + chats.size());
                     if (chats.size() > 0) {
                         txt_explain_no_chat.setVisibility(View.GONE);
-//                        if (!chats.get(chats.size() - 1).readUsers.containsKey(my_id)) {
-
-//                            FirebaseDatabase.getInstance().getReference().child("groupchats").child(chatRoomCd).child("messages")
-//                                    .updateChildren(readUsersMap).addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                @Override
-//                                public void onComplete(@NonNull Task<Void> task) {
-//                                    notifyDataSetChanged();
-//                                    recyclerView.scrollToPosition(chats.size() - 1);
-//                                }
-//                            });
-//                        } else {
-                            notifyDataSetChanged();
-                            recyclerView.scrollToPosition(chats.size() - 1);
-//                        }
-
-                        //메세지가 갱신
-
+                        notifyDataSetChanged();
+                        recyclerView.scrollToPosition(chats.size() - 1);
                     } else {
                         txt_explain_no_chat.setVisibility(View.VISIBLE);
                     }
@@ -645,7 +566,7 @@ public class GroupTalkActivity extends AppCompatActivity {
             String time = simpleDateFormat.format(date);
             messageViewHolder.textView_timestamp.setText(time);
 
-            messageViewHolder.bindToPost(data);
+            messageViewHolder.bindToPost(messageViewHolder, data);
         }
 
 //        void setReadCounter(final int position, final TextView textView) {
@@ -689,6 +610,8 @@ public class GroupTalkActivity extends AppCompatActivity {
         }
 
         public class GroupMessageViewHodler extends RecyclerView.ViewHolder {
+            UserData userData = new UserData();
+
             public LinearLayout messageItem_linearlayout_main;
             public TextView textView_message;
             public TextView textview_name;
@@ -713,56 +636,60 @@ public class GroupTalkActivity extends AppCompatActivity {
                 textView_readCounter_right = (TextView) view.findViewById(R.id.messageItem_textview_readCounter_right);
             }
 
-            public void bindToPost(final ChatModel.Chats data) {
-                UserData userData = new UserData();
-
-
-//                Picasso.get().load(data.message)
-//                        .transform(new CircleTransform())
-//                        .into(imageView_profile);
-                textview_name.setText("하하");
+            public void bindToPost(GroupMessageViewHodler holder, final ChatModel.Chats data) {
+                holder.textview_name.setText("하하");
 
                 if (data.uid.equals(my_id)) {
                     // 내가보낸 메세지
-                    messageItem_linearlayout_main.setGravity(Gravity.RIGHT);
-                    textView_message.setGravity(Gravity.RIGHT);
+                    holder.messageItem_linearlayout_main.setGravity(Gravity.RIGHT);
+                    holder.textView_message.setGravity(Gravity.RIGHT);
 
-                    textView_message.setText(data.message);
-                    textView_message.setBackgroundResource(R.drawable.border_round_drgr1);
-                    linearLayout_destination.setVisibility(View.INVISIBLE);
+                    holder.textView_message.setText(data.message);
+                    holder.textView_message.setBackgroundResource(R.drawable.border_round_drgr1);
+                    holder.linearLayout_destination.setVisibility(View.INVISIBLE);
 //                messageViewHolder.textView_message.setTextSize(25);
 //                    linearLayout_main.setGravity(Gravity.RIGHT);
 //                setReadCounter(position, messageViewHolder.textView_readCounter_left);
 
-                    imageView_profile.setVisibility(View.GONE);
+                    holder.imageView_profile.setVisibility(View.GONE);
                 } else {
                     // 상대방이 보낸 메세지
                     int k = 0;
 
-                    for (int i = 0; i<groupchatUsersList.size(); i++) {
+                    for (int i = 0; i < groupchatUsersList.size(); i++) {
                         if (groupchatUsersList.get(i).getUser_id().equals(data.uid))
                             k = i;
                     }
 
                     userData = groupchatUsersList.get(k);
 
-                    messageItem_linearlayout_main.setGravity(Gravity.LEFT);
-                    textView_message.setGravity(Gravity.LEFT);
+                    holder.messageItem_linearlayout_main.setGravity(Gravity.LEFT);
+                    holder.textView_message.setGravity(Gravity.LEFT);
 
-                    Picasso.get().load(userData.getImg_url())
-                            .placeholder(R.drawable.icon_noprofile_circle)
-                            .transform(new CircleTransform())
-                            .into(imageView_profile);
-//                    messageViewHolder.textview_name.setText(users.get(chats.get(position).uid).userName);
-                    textview_name.setText(userData.getUser_name());
-                    linearLayout_destination.setVisibility(View.VISIBLE);
-                    textView_message.setBackgroundResource(R.drawable.border_round_drgr1);
-                    textView_message.setText(data.message);
+                    holder.imageView_profile.setVisibility(View.VISIBLE);
+                    Log.e("abc", "사진 URL = " + userData.getImg_url());
+                    if(userData.getImg_url()!=null && !userData.getImg_url().isEmpty()) {
+                        Picasso.get().load(userData.getImg_url())
+                                .placeholder(R.drawable.icon_noprofile_circle)
+                                .error(R.drawable.icon_noprofile_circle)
+                                .transform(new CircleTransform())
+                                .into(holder.imageView_profile);
+                    } else {
+                        Picasso.get().load(R.drawable.icon_noprofile_circle)
+                                .placeholder(R.drawable.icon_noprofile_circle)
+                                .error(R.drawable.icon_noprofile_circle)
+                                .transform(new CircleTransform())
+                                .into(holder.imageView_profile);
+//                        holder.imageView_profile.setImageDrawable(ContextCompat.getDrawable(GroupTalkActivity.this, R.drawable.icon_noprofile_circle));
+                    }
+                    holder.textview_name.setText(userData.getUser_name());
+                    holder.linearLayout_destination.setVisibility(View.VISIBLE);
+                    holder.textView_message.setBackgroundResource(R.drawable.border_round_drgr1);
+                    holder.textView_message.setText(data.message);
 //                textView_message.setTextSize(25);
-                    linearLayout_main.setGravity(Gravity.LEFT);
+                    holder.linearLayout_main.setGravity(Gravity.LEFT);
 //                setReadCounter(position, messageViewHolder.textView_readCounter_right);
                 }
-
 
 
             }

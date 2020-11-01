@@ -186,7 +186,11 @@ public class JoinActivity extends AppCompatActivity {
                     .add("password", password)
                     .build();
 
-            Request request = new Request.Builder().url(Statics.opt_url).post(body).build();
+            //before
+//            Request request = new Request.Builder().url(Statics.opt_url).post(body).build();
+            //after
+            Request request = new Request.Builder().url(Statics.optUrl + "join.php").post(body).build();
+
 
             try {
                 okhttp3.Response response = httpClient.newCall(request).execute();

@@ -109,6 +109,10 @@ public class SelectPublicTimeActivity extends AppCompatActivity {
         mAdapter_area = new SelectPublicAreaAdapter();
 //        mAdapter_area = new SelectPublicAreaAdapter(SelectPublicTimeActivity.this, dateList);
         recyclerView_area.setAdapter(mAdapter_area);
+        while (recyclerView_area.getItemDecorationCount() > 0) {
+            recyclerView_area.removeItemDecorationAt(0);
+        }
+        recyclerView_area.addItemDecoration(new SpacesItemDecoration(18));
 
         Button btn_go_select_area = (Button) findViewById(R.id.btn_go_select_area);
         btn_go_select_area.setOnClickListener(mOnClickListener);

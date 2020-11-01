@@ -3,7 +3,10 @@
     android:id="@+id/messageItem_linearlayout_main"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:paddingLeft="4dp"
+    android:paddingTop="4dp"
+    android:paddingRight="4dp">
 
     <LinearLayout
         android:id="@+id/messageItem_linearlayout_destination"
